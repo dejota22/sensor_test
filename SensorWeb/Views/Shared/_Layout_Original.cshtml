@@ -1,0 +1,222 @@
+﻿
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+
+<!doctype html>
+<html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    @*<link href="https://fonts.googleapis.com/css?family=Quicksand:400,600,700&display=swap" rel="stylesheet">*@
+
+    <link rel="stylesheet" href="@Url.Content("~/fonts/icomoon/style.css")">
+    <link rel="stylesheet" href="@Url.Content("~/css/owl.carousel.min.css")">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="@Url.Content("~/css/bootstrap.min.css")">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="@Url.Content("~/css/style.css")">
+    <link href="@Url.Content("~/css/screenCustom.css?p=7")" rel="stylesheet" />
+    <link href="@Url.Content("~/css/languageSwitcher.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/css/ImageSelect.css?p=4")" rel="stylesheet" />
+
+    <title>BosqueDevice</title>
+
+    <style>
+
+        .selected-lang:before{
+              background-image: url('@Url.Content(localizer.Get("urlFlag"))');
+        }
+
+        .en:before {
+            background-image: url('@Url.Content("~/images/flags/flagUnited.png")');
+        }
+
+        .pt:before {
+            background-image: url('@Url.Content("~/images/flags/flagBrazil.png")');
+        }
+
+        .sp:before {
+            background-image: url('@Url.Content("~/images/flags/flagSpanish.png")');
+        }
+
+    </style>
+</head>
+
+<body>
+
+    @if (ViewData["Error"] != null && !String.IsNullOrEmpty(ViewData["Error"].ToString()))
+    {
+        <script>
+            var msgError = '@ViewData["Error"].ToString()';
+            alert(msgError);
+        </script>
+    }
+
+    <div class="site-mobile-menu site-navbar-target">
+        <div class="site-mobile-menu-header">
+            <div class="site-mobile-menu-close mt-3">
+                <span class="icon-close2 js-menu-toggle"></span>
+            </div>
+        </div>
+        <div class="site-mobile-menu-body"></div>
+    </div> <!-- .site-mobile-menu -->
+    <!-- NAVBAR -->
+    <header class="site-navbar mt-3" style="height:0px">
+        <div class="container-fluid">
+
+            <div class="lang-menu" id="languageMenu">
+                <div id="selected-lang" class="selected-lang">
+                    @localizer.Get("Language")
+                </div>
+                <ul>
+                    <li>
+                        <a asp-controller="Home"
+                           asp-action="SetLanguage"
+                           asp-route-culture="pt"
+                           asp-route-returnUrl="@Context.Request.Path"
+                           value="Português" class="pt">
+                            Português
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Home"
+                           asp-action="SetLanguage"
+                           asp-route-culture="en"
+                           asp-route-returnUrl="@Context.Request.Path"
+                           value="English" class="en">
+                            English
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Home"
+                           asp-action="SetLanguage"
+                           asp-route-culture="es"
+                           asp-route-returnUrl="@Context.Request.Path"
+                           Value="Spanish" class="sp">
+                            Spanish
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+
+        <div class="row align-items-center">
+            <div class="site-logo col-6"><a href="Index">BosqueDevice</a></div>
+
+            <nav class="mx-auto site-navigation">
+                <ul class="site-menu js-clone-nav d-none d-xl-block ml-0 pl-0">
+                    <li>
+                        @Html.ActionLink("Home", "Index", "Home", null, new Dictionary<string, object> { { "class", "nav-link active" } })
+                    </li>
+
+                    <li class="has-children">
+                        <a>@localizer.Get("Records")</a>
+                        <ul class="dropdown">
+
+                            <li class="has-children">
+                                <a>@localizer.Get("Users")</a>
+                                <ul class="dropdown">
+                                    <li>@Html.ActionLink(@localizer.Get("User Type"), "Index", "UserType")</li>
+                                    @*<li>@Html.ActionLink(@localizer.Get("Contact Register"), "Index", "Contact")</li>*@
+                                    <li><a style="cursor:not-allowed">@localizer.Get("Contact Register") </a></li>
+                                    <li>@Html.ActionLink(@localizer.Get("User Register"), "Index", "User")</li>
+                                </ul>
+                            </li>
+
+                            <!--<li class="has-children">
+                                <a> @localizer.Get("Pulley") </a>
+                                <ul class="dropdown">
+                                    <li><a style="cursor:not-allowed">@localizer.Get("Pulley Type") </a></li>-->
+                                    @*<li><a style="cursor:not-allowed">@localizer.Get("Pulley Register") </a></li>*@
+                                <!--</ul>
+                            </li>
+
+                            <li class="has-children">
+                                <a>@localizer.Get("Pump")</a>
+                                <ul class="dropdown">
+                                    <li><a style="cursor:not-allowed">@localizer.Get("Pump Type")</a></li>-->
+                                    @*<li><a style="cursor:not-allowed">@localizer.Get("Pump Register")</a></li>*@
+                                <!--</ul>
+                            </li>
+
+                            <li class="has-children">
+                                <a>@localizer.Get("Ring")</a>
+                                <ul class="dropdown">
+                                    <li><a style="cursor:not-allowed">@localizer.Get("Ring Type")</a></li>-->
+                                    @*<li><a style="cursor:not-allowed">@localizer.Get("Ring Reggister")</a></li>*@
+                                <!--</ul>
+                            </li>-->
+
+                            <li class="has-children">
+                                <a>@localizer.Get("Company")</a>
+                                <ul class="dropdown">
+                                    @*<li><a>@localizer.Get("Company Unit Register")</a></li>
+                                      <li><a>@localizer.Get("Company Unit Sector Register")</a></li>*@
+                                    <li>@Html.ActionLink(@localizer.Get("Company Register"), "Index", "Company")</li>
+
+                                </ul>
+                            </li>
+
+                            <li class="has-children">
+                                <a>@localizer.Get("Devices")</a>
+                                <ul class="dropdown">
+                                   @* <li><a style="cursor:not-allowed">@localizer.Get("Devices")</a></li>*@
+                                    @*<li><a style="cursor:not-allowed" href="post-job.html">@localizer.Get("Compressor")</a></li>*@
+                                 @*   <li><a style="cursor:not-allowed" href="post-job.html">@localizer.Get("Machine")</a></li>*@
+                                    <li>@Html.ActionLink(@localizer.Get("Motor"), "Index", "Motor")</li>
+                                    <li>@Html.ActionLink(@localizer.Get("Device"), "Index", "Device")</li>
+                                  @*  <li><a style="cursor:not-allowed" href="post-job.html">@localizer.Get("Exhaust Fan")</a></li>*@
+                                    @*<li><a style="cursor:not-allowed" href="post-job.html">@localizer.Get("Coupling")</a></li>*@
+                                    @*<li><a style="cursor:not-allowed" href="post-job.html">@localizer.Get("Reducer")</a></li>*@
+                                    @*<li><a style="cursor:not-allowed" href="post-job.html">@localizer.Get("Coupling Type")</a></li>
+                                    <li><a style="cursor:not-allowed" href="post-job.html">@localizer.Get("Cardan Shaft Type")</a></li>
+                                    <li><a style="cursor:not-allowed" href="post-job.html">@localizer.Get("Actuation Type")</a></li>
+                                    <li><a style="cursor:not-allowed" href="post-job.html">@localizer.Get("Fixation Type")</a></li>*@
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="has-children">
+                        <a href="services.html">Dashboard</a>
+                        <ul class="dropdown">
+                            @*<li><a style="cursor:not-allowed" href="services.html">@localizer.Get("Devices")</a></li>*@
+                            <li>@Html.ActionLink(@localizer.Get("Devices"), "Index", "DashBoard")</li>                            
+                        </ul>
+                    </li>
+                    <li><a href="about.html">@localizer.Get("Reports")</a></li>
+                    <li><a href="about.html">@localizer.Get("About")</a></li>
+                    <li><a href="contact.html">@localizer.Get("Contact")</a></li>
+                    <li class="d-lg-none"><a href="post-job.html"><span class="mr-2">+</span> Post a Job</a></li>
+                    <li class="d-lg-none"><a href="login.html">Log In</a></li>
+
+                </ul>
+
+            </nav>
+        </div>
+    </header>
+
+    @*<div class="hero" style="padding-top:100px; background-image: url('../images/hero_1.jpg');">*@
+    <div class="hero" style="padding-top:100px; background:repeat; background-image: url('@Url.Content("~/Resources/fundo_login.png")');">
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script src="@Url.Content("~/js/jquery-3.3.1.min.js")"></script>        
+    <script src="@Url.Content("~/js/popper.min.js")"></script>
+    <script src="@Url.Content("~/js/bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/js/jquery.sticky.js")"></script>
+    <script src="@Url.Content("~/js/main.js")"></script>
+    <script src="@Url.Content("~/js/ImageSelect.js?p=530")"></script>
+    <script src="@Url.Content("~/js/site-custom.js")"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

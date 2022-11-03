@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div>
+
+        @RenderBody()
+
+        @if (ViewData["Error"] != null && !String.IsNullOrEmpty(ViewData["Error"].ToString()))
+        {
+            <script>
+            var msgError = '@ViewData["Error"].ToString()';
+            alert(msgError);
+            </script>
+        }
+
+    </div>
+</body>
+</html>

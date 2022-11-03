@@ -1,0 +1,234 @@
+2022-09-01T01:36:15.6512789-03:00  [INF] Now listening on: "https://localhost:5001" (d826f4b8)
+2022-09-01T01:36:15.6572374-03:00  [INF] Now listening on: "http://localhost:5000" (d826f4b8)
+2022-09-01T01:36:15.6587804-03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-09-01T01:36:15.6602139-03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-09-01T01:36:15.6614635-03:00  [INF] Content root path: "C:\Users\hreis\source\repos\SensorWeb\SensorWeb" (b5d60022)
+2022-09-01T01:37:41.5984006-03:00 0HMKBQE0R3OR0:00000001 [INF] Busca OK (0cbc04db)
+2022-09-01T01:37:41.6907124-03:00 0HMKBQE0R3OR0:00000001 [INF] Busca OK1 (8f16c1b4)
+2022-09-01T01:45:53.0406879-03:00  [INF] Now listening on: "https://localhost:5001" (d826f4b8)
+2022-09-01T01:45:53.0459338-03:00  [INF] Now listening on: "http://localhost:5000" (d826f4b8)
+2022-09-01T01:45:53.0482622-03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-09-01T01:45:53.0501983-03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-09-01T01:45:53.0517307-03:00  [INF] Content root path: "C:\Users\hreis\source\repos\SensorWeb\SensorWeb" (b5d60022)
+2022-09-01T01:46:38.3014474-03:00 0HMKBQJCUJOAD:00000001 [INF] Busca OK (0cbc04db)
+2022-09-01T01:46:38.4621881-03:00 0HMKBQJCUJOAD:00000001 [INF] Busca OK1 (8f16c1b4)
+2022-09-01T02:01:12.7689336-03:00  [INF] Now listening on: "https://localhost:5001" (d826f4b8)
+2022-09-01T02:01:12.8012352-03:00  [INF] Now listening on: "http://localhost:5000" (d826f4b8)
+2022-09-01T02:01:12.8037622-03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-09-01T02:01:12.8056502-03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-09-01T02:01:12.8074199-03:00  [INF] Content root path: "C:\Users\hreis\source\repos\SensorWeb\SensorWeb" (b5d60022)
+2022-09-01T02:02:12.8578509-03:00 0HMKBQRV2BAOG:00000001 [INF] Busca OK (0cbc04db)
+2022-09-01T02:02:12.9309918-03:00 0HMKBQRV2BAOG:00000001 [INF] Busca OK1 (8f16c1b4)
+2022-09-01T02:08:04.6013443-03:00 0HMKBQRV2BAOJ:00000001 [INF] Busca OK (0cbc04db)
+2022-09-01T02:08:04.6757707-03:00 0HMKBQRV2BAOJ:00000001 [INF] Busca OK1 (8f16c1b4)
+2022-09-01T02:13:14.0995491-03:00  [INF] Now listening on: "https://localhost:5001" (d826f4b8)
+2022-09-01T02:13:14.1064495-03:00  [INF] Now listening on: "http://localhost:5000" (d826f4b8)
+2022-09-01T02:13:14.1095537-03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-09-01T02:13:14.1111978-03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-09-01T02:13:14.1128039-03:00  [INF] Content root path: "C:\Users\hreis\source\repos\SensorWeb\SensorWeb" (b5d60022)
+2022-09-01T02:14:04.9020040-03:00 0HMKBR2M2TCGG:00000001 [INF] Busca OK (0cbc04db)
+2022-09-01T02:14:05.0817815-03:00 0HMKBR2M2TCGG:00000001 [INF] Busca OK1 (8f16c1b4)
+2022-09-01T02:18:41.2302706-03:00  [INF] Now listening on: "https://localhost:5001" (d826f4b8)
+2022-09-01T02:18:41.2385941-03:00  [INF] Now listening on: "http://localhost:5000" (d826f4b8)
+2022-09-01T02:18:41.2412389-03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-09-01T02:18:41.2642181-03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-09-01T02:18:41.2661355-03:00  [INF] Content root path: "C:\Users\hreis\source\repos\SensorWeb\SensorWeb" (b5d60022)
+2022-09-01T02:19:12.7576471-03:00 0HMKBR5NICVRG:00000001 [INF] Busca OK (0cbc04db)
+2022-09-01T02:19:13.1680604-03:00 0HMKBR5NICVRG:00000001 [INF] Busca OK1 (8f16c1b4)
+2022-09-01T02:23:19.0411823-03:00 0HMKBR5NICVRH:00000003 [INF] Busca OK (0cbc04db)
+2022-09-01T02:23:19.5322601-03:00 0HMKBR5NICVRH:00000003 [ERR] An exception occurred while iterating over the results of a query for context type '"Core.SensorContext"'."
+""System.Data.SqlTypes.SqlNullValueException: Data is Null. This method or property cannot be called on Null values.
+   at MySql.Data.MySqlClient.MySqlDataReader.GetFieldValue(Int32 index, Boolean checkNull)
+   at MySql.Data.MySqlClient.MySqlDataReader.GetString(Int32 i)
+   at lambda_method(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.Enumerator.MoveNext()" (f5c7ac34)
+System.Data.SqlTypes.SqlNullValueException: Data is Null. This method or property cannot be called on Null values.
+   at MySql.Data.MySqlClient.MySqlDataReader.GetFieldValue(Int32 index, Boolean checkNull)
+   at MySql.Data.MySqlClient.MySqlDataReader.GetString(Int32 i)
+   at lambda_method(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.Enumerator.MoveNext()
+2022-09-01T02:23:43.8606468-03:00 0HMKBR5NICVRH:00000003 [INF] Erro:Error mapping types.
+
+Mapping types:
+EntityQueryable`1 -> List`1
+Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable`1[[Core.Motor, Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] -> System.Collections.Generic.List`1[[SensorWeb.Models.MotorModel, SensorWeb, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] (5059be41)
+2022-09-01T02:23:44.2917009-03:00 0HMKBR5NICVRH:00000003 [ERR] An unhandled exception has occurred while executing the request. (48a46595)
+AutoMapper.AutoMapperMappingException: Error mapping types.
+
+Mapping types:
+EntityQueryable`1 -> List`1
+Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable`1[[Core.Motor, Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] -> System.Collections.Generic.List`1[[SensorWeb.Models.MotorModel, SensorWeb, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+ ---> System.Data.SqlTypes.SqlNullValueException: Data is Null. This method or property cannot be called on Null values.
+   at MySql.Data.MySqlClient.MySqlDataReader.GetFieldValue(Int32 index, Boolean checkNull)
+   at MySql.Data.MySqlClient.MySqlDataReader.GetString(Int32 i)
+   at lambda_method(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.Enumerator.MoveNext()
+   at lambda_method(Closure , Object , List`1 , ResolutionContext )
+   --- End of inner exception stack trace ---
+   at lambda_method(Closure , Object , List`1 , ResolutionContext )
+   at SensorWeb.Controllers.MotorController.Index() in C:\Users\hreis\source\repos\SensorWeb\SensorWeb\Controllers\MotorController.cs:line 45
+   at lambda_method(Closure , Object , Object[] )
+   at Microsoft.Extensions.Internal.ObjectMethodExecutor.Execute(Object target, Object[] parameters)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|24_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2022-09-01T02:23:57.5489036-03:00 0HMKBR5NICVRJ:00000001 [INF] Busca OK (0cbc04db)
+2022-09-01T02:23:57.6095390-03:00 0HMKBR5NICVRJ:00000001 [ERR] An exception occurred while iterating over the results of a query for context type '"Core.SensorContext"'."
+""System.Data.SqlTypes.SqlNullValueException: Data is Null. This method or property cannot be called on Null values.
+   at MySql.Data.MySqlClient.MySqlDataReader.GetFieldValue(Int32 index, Boolean checkNull)
+   at MySql.Data.MySqlClient.MySqlDataReader.GetString(Int32 i)
+   at lambda_method(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.Enumerator.MoveNext()" (f5c7ac34)
+System.Data.SqlTypes.SqlNullValueException: Data is Null. This method or property cannot be called on Null values.
+   at MySql.Data.MySqlClient.MySqlDataReader.GetFieldValue(Int32 index, Boolean checkNull)
+   at MySql.Data.MySqlClient.MySqlDataReader.GetString(Int32 i)
+   at lambda_method(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.Enumerator.MoveNext()
+   at lambda_method(Closure , Object , List`1 , ResolutionContext )
+2022-09-01T02:26:19.2762550-03:00 0HMKBR5NICVRJ:00000001 [INF] Erro:Error mapping types.
+
+Mapping types:
+EntityQueryable`1 -> List`1
+Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable`1[[Core.Motor, Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] -> System.Collections.Generic.List`1[[SensorWeb.Models.MotorModel, SensorWeb, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] (5059be41)
+2022-09-01T02:26:20.1067191-03:00 0HMKBR5NICVRJ:00000001 [ERR] An unhandled exception has occurred while executing the request. (48a46595)
+AutoMapper.AutoMapperMappingException: Error mapping types.
+
+Mapping types:
+EntityQueryable`1 -> List`1
+Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable`1[[Core.Motor, Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] -> System.Collections.Generic.List`1[[SensorWeb.Models.MotorModel, SensorWeb, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+ ---> System.Data.SqlTypes.SqlNullValueException: Data is Null. This method or property cannot be called on Null values.
+   at MySql.Data.MySqlClient.MySqlDataReader.GetFieldValue(Int32 index, Boolean checkNull)
+   at MySql.Data.MySqlClient.MySqlDataReader.GetString(Int32 i)
+   at lambda_method(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.Enumerator.MoveNext()
+   at lambda_method(Closure , Object , List`1 , ResolutionContext )
+   --- End of inner exception stack trace ---
+   at lambda_method(Closure , Object , List`1 , ResolutionContext )
+   at SensorWeb.Controllers.MotorController.Index() in C:\Users\hreis\source\repos\SensorWeb\SensorWeb\Controllers\MotorController.cs:line 45
+   at lambda_method(Closure , Object , Object[] )
+   at Microsoft.Extensions.Internal.ObjectMethodExecutor.Execute(Object target, Object[] parameters)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|24_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2022-09-01T02:26:33.9386411-03:00 0HMKBR5NICVRL:00000001 [INF] Busca OK (0cbc04db)
+2022-09-01T02:26:33.9913845-03:00 0HMKBR5NICVRL:00000001 [ERR] An exception occurred while iterating over the results of a query for context type '"Core.SensorContext"'."
+""System.Data.SqlTypes.SqlNullValueException: Data is Null. This method or property cannot be called on Null values.
+   at MySql.Data.MySqlClient.MySqlDataReader.GetFieldValue(Int32 index, Boolean checkNull)
+   at MySql.Data.MySqlClient.MySqlDataReader.GetString(Int32 i)
+   at lambda_method(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.Enumerator.MoveNext()" (f5c7ac34)
+System.Data.SqlTypes.SqlNullValueException: Data is Null. This method or property cannot be called on Null values.
+   at MySql.Data.MySqlClient.MySqlDataReader.GetFieldValue(Int32 index, Boolean checkNull)
+   at MySql.Data.MySqlClient.MySqlDataReader.GetString(Int32 i)
+   at lambda_method(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.Enumerator.MoveNext()
+2022-09-01T02:27:35.6643130-03:00 0HMKBR5NICVRL:00000001 [INF] Erro:Error mapping types.
+
+Mapping types:
+EntityQueryable`1 -> List`1
+Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable`1[[Core.Motor, Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] -> System.Collections.Generic.List`1[[SensorWeb.Models.MotorModel, SensorWeb, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] (5059be41)
+2022-09-01T02:27:36.0795911-03:00 0HMKBR5NICVRL:00000001 [ERR] An unhandled exception has occurred while executing the request. (48a46595)
+AutoMapper.AutoMapperMappingException: Error mapping types.
+
+Mapping types:
+EntityQueryable`1 -> List`1
+Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable`1[[Core.Motor, Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] -> System.Collections.Generic.List`1[[SensorWeb.Models.MotorModel, SensorWeb, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+ ---> System.Data.SqlTypes.SqlNullValueException: Data is Null. This method or property cannot be called on Null values.
+   at MySql.Data.MySqlClient.MySqlDataReader.GetFieldValue(Int32 index, Boolean checkNull)
+   at MySql.Data.MySqlClient.MySqlDataReader.GetString(Int32 i)
+   at lambda_method(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.Enumerator.MoveNext()
+   at lambda_method(Closure , Object , List`1 , ResolutionContext )
+   --- End of inner exception stack trace ---
+   at lambda_method(Closure , Object , List`1 , ResolutionContext )
+   at SensorWeb.Controllers.MotorController.Index() in C:\Users\hreis\source\repos\SensorWeb\SensorWeb\Controllers\MotorController.cs:line 45
+   at lambda_method(Closure , Object , Object[] )
+   at Microsoft.Extensions.Internal.ObjectMethodExecutor.Execute(Object target, Object[] parameters)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|24_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2022-09-01T02:27:46.4694977-03:00 0HMKBR5NICVRL:00000003 [INF] Busca OK (0cbc04db)
+2022-09-01T02:27:54.8310218-03:00 0HMKBR5NICVRL:00000003 [ERR] An exception occurred while iterating over the results of a query for context type '"Core.SensorContext"'."
+""System.Data.SqlTypes.SqlNullValueException: Data is Null. This method or property cannot be called on Null values.
+   at MySql.Data.MySqlClient.MySqlDataReader.GetFieldValue(Int32 index, Boolean checkNull)
+   at MySql.Data.MySqlClient.MySqlDataReader.GetString(Int32 i)
+   at lambda_method(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.Enumerator.MoveNext()" (f5c7ac34)
+System.Data.SqlTypes.SqlNullValueException: Data is Null. This method or property cannot be called on Null values.
+   at MySql.Data.MySqlClient.MySqlDataReader.GetFieldValue(Int32 index, Boolean checkNull)
+   at MySql.Data.MySqlClient.MySqlDataReader.GetString(Int32 i)
+   at lambda_method(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.Enumerator.MoveNext()
+   at System.Collections.Generic.LargeArrayBuilder`1.AddRange(IEnumerable`1 items)
+   at System.Collections.Generic.EnumerableHelpers.ToArray[T](IEnumerable`1 source)
+   at System.Linq.SystemCore_EnumerableDebugView`1.get_Items()
+2022-09-01T02:29:21.2670029-03:00 0HMKBR5NICVRL:00000003 [INF] Busca OK (0cbc04db)
+2022-09-01T02:29:21.2967150-03:00 0HMKBR5NICVRL:00000003 [INF] Busca OK1 (8f16c1b4)
+2022-09-01T02:31:29.5569055-03:00 0HMKBR5NICVRN:00000003 [INF] Busca OK (0cbc04db)
+2022-09-01T02:31:29.5649146-03:00 0HMKBR5NICVRN:00000003 [INF] Busca OK1 (8f16c1b4)
+2022-09-01T02:59:13.4494721-03:00  [INF] Now listening on: "https://localhost:5001" (d826f4b8)
+2022-09-01T02:59:13.4762601-03:00  [INF] Now listening on: "http://localhost:5000" (d826f4b8)
+2022-09-01T02:59:13.4793977-03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-09-01T02:59:13.4809861-03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-09-01T02:59:13.4825718-03:00  [INF] Content root path: "C:\Users\hreis\source\repos\SensorWeb\SensorWeb" (b5d60022)
+2022-09-01T02:59:32.5490637-03:00 0HMKBRSCFEDER:00000001 [INF] Busca OK (0cbc04db)
+2022-09-01T02:59:32.8817949-03:00 0HMKBRSCFEDER:00000001 [INF] Busca OK1 (8f16c1b4)
+2022-09-01T03:00:03.2669602-03:00 0HMKBRSCFEDES:00000001 [INF] Busca OK (0cbc04db)
+2022-09-01T03:00:03.2771811-03:00 0HMKBRSCFEDES:00000001 [INF] Busca OK1 (8f16c1b4)
+2022-09-01T03:03:22.9878587-03:00  [INF] Now listening on: "https://localhost:5001" (d826f4b8)
+2022-09-01T03:03:22.9936264-03:00  [INF] Now listening on: "http://localhost:5000" (d826f4b8)
+2022-09-01T03:03:22.9956639-03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-09-01T03:03:22.9974503-03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-09-01T03:03:22.9992584-03:00  [INF] Content root path: "C:\Users\hreis\source\repos\SensorWeb\SensorWeb" (b5d60022)
+2022-09-01T03:03:53.5055221-03:00 0HMKBRUMOHMB3:00000001 [INF] Busca OK (0cbc04db)
+2022-09-01T03:03:53.7404683-03:00 0HMKBRUMOHMB3:00000001 [INF] Busca OK1 (8f16c1b4)
+2022-09-01T03:06:10.7965415-03:00  [INF] Now listening on: "https://localhost:5001" (d826f4b8)
+2022-09-01T03:06:10.8104832-03:00  [INF] Now listening on: "http://localhost:5000" (d826f4b8)
+2022-09-01T03:06:10.8196530-03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-09-01T03:06:10.8217720-03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-09-01T03:06:10.8239496-03:00  [INF] Content root path: "C:\Users\hreis\source\repos\SensorWeb\SensorWeb" (b5d60022)

@@ -1,0 +1,117 @@
+﻿@model IEnumerable<MotorModel>
+
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+
+
+
+<div class="page-title">
+    <h3 class="breadcrumb-header">Cadastros</h3>
+</div>
+
+
+<div id="main-wrapper">
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="card card-white">
+
+                <div class="card-heading clearfix">
+
+                    <table style="width: 100%;">
+                        <tr>
+                            <td><h4 class="card-title">@localizer.Get("MotorTitle")</h4></td>
+                            <td style="text-align:right">
+
+                                <a href="@Url.Action("Create", "Motor" )" title="@localizer.Get("Add new")">
+                                    <button type="button" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> </button>
+                                </a>
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="table-responsive">
+                        <table id="example" class="display table" style="width:100%;text-align:center">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(modelItem => modelItem.Id)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(modelItem => modelItem.Tag)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(modelItem => modelItem.Name)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(modelItem => modelItem.Description)
+                                    </th>
+                                    @*<th class="sccentralize">
+                                    @Html.DisplayNameFor(modelItem => modelItem.UpdatedAt)
+                                </th>*@
+                                    <th style="text-align:center">
+                                        Ações
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Id)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Tag)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Description)
+                                    </td>
+                                    <td>
+                                        <table style="width:100%">
+                                            <tr>
+                                                <td style="padding:0 4px"><a href="@Url.Action("Details", "Motor", new { id = item.Id })" title="@localizer.Get("View")"><i class="fas fa-eye"></i></a></td>
+                                                <td style="padding:0 4px"><a href="@Url.Action("Edit", "Motor", new { id = item.Id })" title="@localizer.Get("Edit")"><i class="fas fa-edit" style="color:#ff6a00"></i></a></td>
+                                                <td style="padding:0 4px"><a href="@Url.Action("Delete", "Motor", new { id = item.Id })" title="@localizer.Get("Delete")" style="color:#ff0000"><i class="fas fa-window-close"></i></a></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                }
+
+
+
+
+
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- end page main wrapper -->
+<div class="page-footer">
+    <p>Iot Nest/Vibração &copy; <span class="current-year"></span>. Conteúdo de uso exclusivo.</p>
+</div>

@@ -1,0 +1,149 @@
+﻿@model SensorWeb.Models.DeviceModel
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+@inject Core.Service.ICompanyService companyService
+
+<h4 class="screenTitle">@localizer.Get("DeviceTitle") </h4>
+<hr />
+<div class="row screenCreate">
+    <div class="col-md-12">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*<div class="form-group">
+            <label asp-for="Id" class="control-label"></label>
+            <input asp-for="Id" class="form-control" readonly />
+            <span asp-validation-for="Id" class="text-danger"></span>
+        </div>*@
+            <div class="form-group col-md-4">
+                <label asp-for="Tag" class="control-label"></label>
+                <input asp-for="Tag" class="form-control" />
+                <span asp-validation-for="Tag" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-4">
+                <label asp-for="Code" class="control-label"></label>
+                <input asp-for="Code" class="form-control" />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
+
+            @*<div class="form-group col-md-4">
+                <label asp-for="CompanyId" class="control-label"></label>
+                @Html.DropDownListFor(model => model.CompanyId, new SelectList(companyService.GetQueryDropDownList(), "Key", "Value"),
+                                      @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
+                <span asp-validation-for="CompanyId" class="text-danger"></span>
+            </div>*@
+
+           @*<div class="form-group col-md-2" style="display: grid;">
+               <label class="control-label">Frequencia</label>
+               <select name="Frequency" id="Frequency" class="form-control" style="width:100%">
+                   <option value="1">15Hz</option>
+                   <option value="2">20Hz</option>
+                   <option value="3">25Hz</option>
+                   <option value="4">30Hz</option>
+                   <option value="5">35Hz</option>
+                   <option value="6">40Hz</option>
+                   <option value="7">45Hz</option>
+                   <option value="8">50Hz</option>
+                   <option value="9">55Hz</option>
+                   <option value="10">60Hz</option>
+                   <option value="11">65Hz</option>
+               </select>
+           </div>
+
+           <div class="form-group col-md-2" style="display: grid;">
+               <label class="control-label">BDR</label>
+               <select name="BDR" id="BDR" class="form-control" style="width:100%">
+                   <option value="1">52Hz</option>
+                   <option value="2">104Hz</option>
+                   <option value="3">208Hz</option>
+                   <option value="4">417Hz</option>
+                   <option value="5">833Hz</option>
+                   <option value="6">1.667Hz</option>
+                   <option value="7">3.333Hz</option>
+                   <option value="8">6.667Hz</option>
+                   <option value="9">13.333Hz</option>
+                   <option value="10">26.667Hz</option>
+               </select>
+           </div>
+           <div class="form-group col-md-2" style="display: grid;">
+               <label class="control-label">CutOff</label>
+               <select name="Cutoff" id="Cutoff" class="form-control" style="width:100%">
+                   <option value="1">6.667Hz</option>
+                   <option value="2">2.667Hz</option>
+                   <option value="3">1.333Hz</option>
+                   <option value="4">593Hz</option>
+                   <option value="5">267Hz</option>
+                   <option value="6">133Hz</option>
+                   <option value="7">67Hz</option>
+                   <option value="8">33Hz</option>
+               </select>
+           </div>
+
+           <div class="form-group col-md-2" style="display: grid;">
+               <label class="control-label">LPF</label>
+
+               <select name="LPF" id="LPF" style="width:100%" class="form-control">
+                   <option value="1">HPF - High Pass Filter </option>
+                   <option value="2">LPF - Low Pass Filter</option>
+                   <option value="3">LPF + LPF2_Off</option>
+               </select>
+           </div>
+           <div class="form-group col-md-2" style="display: grid;">
+               <label class="control-label">Lines</label>
+               <select name="lines" id="lines" style="width:100%" class="form-control">
+                   <option value="1">512</option>
+                   <option value="2">1024</option>
+                   <option value="3">2048</option>
+                   <option value="4">3456</option>
+                   <option value="5">4096</option>
+                   <option value="6">6144</option>
+                   <option value="7">8192</option>
+                   <option value="8">10240</option>
+                   <option value="9">16384</option>
+                   <option value="10">30080</option>
+               </select>
+           </div>
+           <div class="form-group col-md-2" style="display: grid;">
+               <label class="control-label">Eixos</label>
+               <select name="axles" id="axles" style="width:100%" class="form-control">
+                   <option value="1">Eixo X</option>
+                   <option value="2">Eixo Y</option>
+                   <option value="3">Eixo Z</option>
+                   <option value="4">Eixos X Y Z</option>
+               </select>
+           </div>
+       
+
+
+           <div class="form-group col-md-2" style="display: grid;">
+               <label class="control-label">Temperatura</label>
+               <input value="25 " class="form-control" />
+           </div>
+           <div class="form-group col-md-2" style="display: grid;">
+               <label class="control-label">RMS</label>
+               <input value="0 g" class="form-control" />
+
+           </div>
+           <div class="form-group col-md-2" style="display: grid;">
+               <label class="control-label">Bateria</label>
+               <input value="100%" class="form-control" />
+           </div>
+           <div class="form-group col-md-2" style="display: grid;">
+               <label class="control-label">Timer</label>
+               <input placeholder="Horas" class="form-control" />
+           </div>*@
+
+            <div class="form-group screenCreateControls">
+                <a href="@Url.Action("Index", "Device")"><input asp-action="Index" type="button" value="@localizer.Get("BackToList")" class="btn btn-primary" /></a>
+                <input type="submit" value="@localizer.Get("Create")" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<hr />
+
+@*<div>
+        <a asp-action="Index">@localizer.Get("BackToList")</a>
+    </div>*@
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

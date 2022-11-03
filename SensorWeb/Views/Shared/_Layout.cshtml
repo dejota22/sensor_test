@@ -1,0 +1,419 @@
+﻿
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+
+<!doctype html>
+<html>
+<head>
+
+    <!-- metas -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="." />
+
+    <!-- title  -->
+    <title>Iot Nest | Dashboard</title>
+
+    <!-- favicon -->
+    <link rel="shortcut icon" href="favicon.png">
+
+    <!-- common plugins -->
+    <link rel="stylesheet" href="@Url.Content("~/plugins/bootstrap/css/bootstrap.min.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/plugins/font-awesome/css/font-awesome.min.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/plugins/icomoon/style.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/plugins/uniform/css/default.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/plugins/switchery/switchery.min.css")" />
+    <link href="@Url.Content("~/css/languageSwitcher.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/css/ImageSelect.css?p=4")" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- nvd3 plugin -->
+    <link rel="stylesheet" href="@Url.Content("~/plugins/nvd3/nv.d3.min.css")" />
+
+    <!-- custom css -->
+    <link rel="stylesheet" href="@Url.Content("~/css/styles.css")" />
+
+    <!-- custom css -->
+    <link href="@Url.Content("~/css/custom.css")" rel="stylesheet">
+
+
+    <style>
+
+        .selected-lang:before{
+              background-image: url('@Url.Content(localizer.Get("urlFlag"))');
+        }
+
+        .en:before {
+            background-image: url('@Url.Content("~/images/flags/flagUnited.png")');
+        }
+
+        .pt:before {
+            background-image: url('@Url.Content("~/images/flags/flagBrazil.png")');
+        }
+
+        .sp:before {
+            background-image: url('@Url.Content("~/images/flags/flagSpanish.png")');
+        }
+
+    </style>
+</head>
+
+<body>
+
+    @if (ViewData["Error"] != null && !String.IsNullOrEmpty(ViewData["Error"].ToString()))
+    {
+        <script>
+            var msgError = '@ViewData["Error"].ToString()';
+            alert(msgError);
+        </script>
+    }
+
+    <!-- PAGE LOADING
+    ================================================== -->
+    <div id="preloader"></div>
+
+    <!-- PAGE CONTAINER
+    ================================================== -->
+    <div class="page-container">
+
+        <!-- PAGE SIDEBAR
+        ================================================== -->
+        <div class="page-sidebar">
+
+            <a class="logo-box" style="background-color:#014E6A">
+                <span>Iot Nest/Vibração</span>
+                <i class="icon-close" id="sidebar-toggle-button-close"></i>
+            </a>
+
+            <div class="page-sidebar-inner">
+
+                <div class="page-sidebar-menu">
+
+                    <ul class="accordion-menu">
+                        <li>
+                            <a href="/Home/Index">
+                                <i class="menu-icon icon-home4"></i><span>Home</span>
+
+                            </a>
+                        </li>                        
+                        <li>
+                            <a href="#!">
+                                <i class="menu-icon icon-public"></i><span>@localizer.Get("Records")</span><i class="accordion-icon fa fa-angle-left"></i>
+                            </a>
+                            <ul>
+                                @*<li><a href="#.html">Empresas</a></li>*@
+                                <li>
+                                    <a href="#!"><span>@localizer.Get("Company")</span><i class="accordion-icon fa fa-angle-left"></i></a>
+
+                                    <ul>
+                                        @*<li><a>@localizer.Get("Company Unit Register")</a></li>
+                <li><a>@localizer.Get("Company Unit Sector Register")</a></li>*@
+                                        <li>@Html.ActionLink(@localizer.Get("Company Register"), "Index", "Company")</li>
+                                    </ul>
+
+                                </li>
+
+                                <li>
+                                    <a href="#!"><span>@localizer.Get("Users")</span><i class="accordion-icon fa fa-angle-left"></i></a>
+
+                                    <ul>
+                                        <li>@Html.ActionLink(@localizer.Get("User Register"), "Index", "User")</li>
+                                        <li>@Html.ActionLink(@localizer.Get("User Type"), "Index", "UserType")</li>
+                                        <li><a style="cursor:not-allowed">@localizer.Get("Contact Register") </a></li>
+                                    </ul>
+
+                                </li>
+
+                                @*<li><a href="#.html">Dispositivos</a></li>*@
+
+                                <li>
+                                    <a href="#!"><span>@localizer.Get("Devices")</span><i class="accordion-icon fa fa-angle-left"></i></a>
+
+                                    <ul>
+                                        <li>@Html.ActionLink(@localizer.Get("Motor"), "Index", "Motor")</li>
+                                        <li>@Html.ActionLink(@localizer.Get("Device"), "Index", "Device")</li>
+                                    </ul>
+
+                                </li>
+
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#!">
+                                <i class="menu-icon icon-flash_on"></i><span>Dashboard</span><i class="accordion-icon fa fa-angle-left"></i>
+                            </a>
+                            <ul>
+                                <li>@Html.ActionLink(@localizer.Get("Devices"), "Index", "DashBoard")</li>
+                                <li><a href="#.html">Viking</a></li>
+                                @* <li><a href="#.html">Link 2</a></li>
+        <li><a href="#.html">Link 3</a></li>*@
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="#.html">
+                                <i class="menu-icon icon-layers"></i><span>Relatórios</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#.html">
+                                <i class="menu-icon icon-show_chart"></i><span>Sobre</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#.html">
+                                <i class="menu-icon icon-inbox"></i><span>Contato</span>
+                            </a>
+                        </li>
+
+                        <li class="menu-divider"></li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE CONTENT
+        ================================================== -->
+        <div class="page-content">
+
+            <!-- start page header -->
+            <div class="page-header">
+
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <!-- Brand and toggle get grouped for better mobile display -->
+                        <div class="navbar-header">
+                            <div class="logo-sm">
+                                <a href="#!" id="sidebar-toggle-button"><i class="fa fa-bars"></i></a>
+                                <a class="logo-box" href="#.html"><span>Menu</span></a>
+                            </div>
+                            <button type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                                <i class="fa fa-angle-down"></i>
+                            </button>
+                        </div>
+
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav">
+                                <li><a href="#!" id="collapsed-sidebar-toggle-button"><i class="fa fa-bars"></i></a></li>
+                                <li><a href="#!" id="toggle-fullscreen"><i class="fa fa-expand"></i></a></li>
+                            </ul>
+
+                            <ul class="nav navbar-nav navbar-right">
+
+                                <div class="lang-menu" style="padding-top: 29px; " id="languageMenu">
+                                    <div id="selected-lang" class="selected-lang">
+                                        @localizer.Get("Language")
+                                    </div>
+                                    <ul>
+                                        <li>
+                                            <a asp-controller="Home"
+                                               asp-action="SetLanguage"
+                                               asp-route-culture="pt"
+                                               asp-route-returnUrl="@Context.Request.Path"
+                                               value="Português" class="pt" style="font-size: 0.9em">
+                                                Português
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a asp-controller="Home"
+                                               asp-action="SetLanguage"
+                                               asp-route-culture="en"
+                                               asp-route-returnUrl="@Context.Request.Path"
+                                               value="English" class="en" style="font-size: 0.9em">
+                                                English
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a asp-controller="Home"
+                                               asp-action="SetLanguage"
+                                               asp-route-culture="es"
+                                               asp-route-returnUrl="@Context.Request.Path"
+                                               Value="Spanish" class="sp"style="font-size: 0.9em">
+                                                Spanish
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                </div>
+
+                                @*<li class="dropdown user-dropdown" style="padding-top:5px;font-size:0.9em">
+                                    <span style="color:#fff">PT-BR <img src="img/icone-pt-br.png" alt="ícone PT-BR" style="border:none;padding-left:5px"></span>
+                                </li>*@
+                            </ul>
+                        </div>
+                        <!-- /.navbar-collapse -->
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+            <!-- end page header -->
+            <!-- start page inner -->
+            <div class="page-inner">
+                @*<div class="page-title">
+                    <h3 class="breadcrumb-header">Home</h3>
+                </div>*@
+                <!-- start page main wrapper -->
+                <div id="main-wrapper">
+                    <div class="row">
+
+                        @RenderBody()
+
+                        @*<div>&nbsp;</div>
+
+                        <div><a href="cadastro-tipo-usuario.html">cadastro-tipo-usuario</a></div>
+                        <div><a href="cadastro-empresas.html">cadastro-empresas</a></div>
+                        <div><a href="cadastro-equipamento.html">cadastro-equipamento</a></div>
+                        <div><a href="formulario-cadastro-empresas.html">formulario-cadastro-empresas</a></div>
+                        <div><a href="formulario-cadastro-tipo-usuario.html">formulario-cadastro-tipo-usuario</a></div>
+                        <div><a href="formulario-cadastro-usuario.html">formulario-cadastro-usuario</a></div>
+                        <div><a href="acopladores-eixo-cardan.html">acopladores-eixo-cardan</a></div>
+                        <div><a href="redutores.html">redutores</a></div>
+                        <div><a href="bombas.html">bombas</a></div>
+                        <div><a href="ventilador-exaustor.html">ventilador-exaustor</a></div>
+                        <div><a href="coroa-correntes.html">coroa-correntes</a></div>
+                        <div><a href="leitura-sensor.html">leitura-sensor</a></div>
+                        <div><a href="acopladores.html">acopladores</a></div>
+                        <div><a href="formulario-cadastro-equipamento.html">formulario-cadastro-equipamento</a></div>
+                        <div><a href="dashboard.html">dashboard</a></div>
+                        <div><a href="formulario-cadastro-sensores.html">formulario-cadastro-sensores</a></div>
+                        <div><a href="qr-code.html">qr-code</a></div>
+
+                        <div>&nbsp;</div>
+                        <div>&nbsp;</div>
+                        <div>&nbsp;</div>*@
+
+                    </div>
+
+
+                </div>
+                <!-- end page main wrapper -->
+                <div class="page-footer">
+                    <p>Iot Nest/Vibração &copy; <span class="current-year"></span>. Conteúdo de uso exclusivo.</p>
+                </div>
+            </div>
+            <!-- end page inner -->
+            <!-- start page right sidebar -->
+            <!-- start chat right sidebar -->
+            <div class="page-right-sidebar" id="chat-right-sidebar">
+                <div class="page-right-sidebar-inner">
+                    <div class="right-sidebar-top">
+                        <div class="chat-top-info">
+                            <span class="chat-name">Jonas</span>
+                            <span class="chat-state">2h ago</span>
+                        </div>
+                        <a href="#!" class="right-sidebar-toggle chat-sidebar-close float-end" data-sidebar-id="chat-right-sidebar"><i class="icon-keyboard_arrow_right"></i></a>
+                    </div>
+                    <div class="right-sidebar-content">
+                        <div class="right-sidebar-chat slimscroll">
+                            <div class="chat-bubbles">
+                                <div class="chat-start-date">02/03/2019 5:58PM</div>
+                                <div class="chat-bubble them">
+                                    <div class="chat-bubble-img-container">
+                                        <img src="img/avatars/chat06.jpg" alt="...">
+                                    </div>
+                                    <div class="chat-bubble-text-container">
+                                        <span class="chat-bubble-text">Hello</span>
+                                    </div>
+                                </div>
+                                <div class="chat-bubble me">
+                                    <div class="chat-bubble-text-container">
+                                        <span class="chat-bubble-text">Hello!</span>
+                                    </div>
+                                </div>
+                                <div class="chat-start-date">03/02/2019 5:18AM</div>
+                                <div class="chat-bubble me">
+                                    <div class="chat-bubble-text-container">
+                                        <span class="chat-bubble-text">lorem</span>
+                                    </div>
+                                </div>
+                                <div class="chat-bubble them">
+                                    <div class="chat-bubble-img-container">
+                                        <img src="img/avatars/chat07.jpg" alt="...">
+                                    </div>
+                                    <div class="chat-bubble-text-container">
+                                        <span class="chat-bubble-text">ipsum dolor sit amet</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-write">
+                            <form class="form-horizontal" action="javascript:void(0);">
+                                <input type="text" class="form-control" placeholder="Say something">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end chat right sidebar -->
+            <!-- end page right sidebar -->
+
+        </div>
+
+    </div>
+
+    <!-- SCROLL TO TOP
+    ================================================== -->
+    <a href="#!" class="scroll-to-top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+
+    <!-- all js include start -->
+    <!-- jQuery -->
+    <script src="@Url.Content("~/plugins/jquery/jquery-3.1.0.min.js")"></script>
+
+    <!-- bootstrap -->
+    <script src="@Url.Content("~/plugins/bootstrap/js/bootstrap.min.js")"></script>
+
+    <!-- slimscroll -->
+    <script src="@Url.Content("~/plugins/jquery-slimscroll/jquery.slimscroll.min.js")"></script>
+
+    <!-- uniform -->
+    <script src="@Url.Content("~/plugins/uniform/js/jquery.uniform.standalone.js")"></script>
+
+    <!-- switchery -->
+    <script src="@Url.Content("~/plugins/switchery/switchery.min.js")"></script>
+
+    <!-- chartjs -->
+    <script src="@Url.Content("~/plugins/chartjs/chart.min.js")"></script>
+
+    <!-- d3.min -->
+    <script src="@Url.Content("~/plugins/d3/d3.min.js")"></script>
+
+    <!-- nv.d3.min -->
+    <script src="@Url.Content("~/plugins/nvd3/nv.d3.js")"></script>
+
+    <!-- float chart -->
+    <script src="@Url.Content("~/plugins/flot/jquery.flot.min.js")"></script>
+
+    <!-- float time -->
+    <script src="@Url.Content("~/plugins/flot/jquery.flot.time.min.js")"></script>
+
+    <!-- float symbol -->
+    <script src="@Url.Content("~/plugins/flot/jquery.flot.symbol.min.js")"></script>
+
+    <!-- float resize -->
+    <script src="@Url.Content("~/plugins/flot/jquery.flot.resize.min.js")"></script>
+
+    <!-- float tooltip -->
+    <script src="@Url.Content("~/plugins/flot/jquery.flot.tooltip.min.js")"></script>
+
+    <!-- float pie -->
+    <script src="@Url.Content("~/plugins/flot/jquery.flot.pie.min.js")"></script>
+
+    <!-- float pie -->
+    <script src="@Url.Content("~/js/pages/dashboard.js")"></script>
+
+    <!-- theme core scripts -->
+    <script src="@Url.Content("~/js/main.js")"></script>
+
+    <!-- custom js -->
+    <script src="@Url.Content("~/js/custom.js")"></script>
+
+    <!-- all js include end -->
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,253 @@
+﻿
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_LayoutLoginPage.cshtml";
+
+}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+    <!--<title>VibrationSensor</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">-->
+    <!--===============================================================================================-->
+    <!--<link rel="stylesheet" type="text/css" href="@Url.Content("~/vendor/bootstrap/css/bootstrap.min.css")">-->
+    <!--===============================================================================================-->
+    <!--<link rel="stylesheet" type="text/css" href="@Url.Content("~/fonts/font-awesome-4.7.0/css/font-awesome.min.css")">-->
+    <!--===============================================================================================-->
+    <!--<link rel="stylesheet" type="text/css" href="@Url.Content("~/fonts/Linearicons-Free-v1.0.0/icon-font.min.css")">-->
+    <!--===============================================================================================-->
+    <!--<link rel="stylesheet" type="text/css" href="@Url.Content("~/vendor/animate/animate.css")">-->
+    <!--===============================================================================================-->
+    <!--<link rel="stylesheet" type="text/css" href="@Url.Content("~/vendor/css-hamburgers/hamburgers.min.css")">-->
+    <!--===============================================================================================-->
+    <!--<link rel="stylesheet" type="text/css" href="@Url.Content("~/vendor/animsition/css/animsition.min.css")">-->
+    <!--===============================================================================================-->
+    <!--<link rel="stylesheet" type="text/css" href="@Url.Content("~/vendor/select2/select2.min.css")">-->
+    <!--===============================================================================================-->
+
+    <!--<link rel="stylesheet" type="text/css" href="@Url.Content("~/vendor/daterangepicker/daterangepicker.css")">-->
+    <!--===============================================================================================-->
+    <!--<link rel="stylesheet" type="text/css" href="@Url.Content("~/css/util.css")">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/main.css")">-->
+    <!--===============================================================================================-->
+    <!-- metas -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="." />
+
+    <!-- title  -->
+    <title>Iot Nest | Pulse</title>
+
+    <!-- favicon -->
+    <link rel="shortcut icon" href="favicon.png">
+
+    <!-- Web Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,500,500italic,700,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:700,400,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=PT+Serif' rel='stylesheet' type='text/css'>
+
+    <!-- Bootstrap core CSS -->
+    <link href="@Url.Content("~/bootstrap/css/bootstrap.css")" rel="stylesheet">
+
+    <!-- Font Awesome CSS -->
+    <link href="@Url.Content("~/login/font-awesome/css/font-awesome.css")" rel="stylesheet">
+    <link href="@Url.Content("~/login/fontello/css/fontello.css")" rel="stylesheet">
+
+    <link href="@Url.Content("~/login/animations.css")" rel="stylesheet">
+    <link href="@Url.Content("~/login/style.css")" rel="stylesheet">
+    <link href="@Url.Content("~/login/typography-default.css")" rel="stylesheet">
+    <link href="@Url.Content("~/login/skins/light_blue.css")" rel="stylesheet">
+
+
+
+</head>
+
+<body>
+
+    @Html.AntiForgeryToken()
+
+    <!-- scrollToTop -->
+    <!-- ================ -->
+    <div class="scrollToTop circle"><i class="icon-up-open-big"></i></div>
+
+    <!-- page wrapper start -->
+    <!-- ================ -->
+    <div class="page-wrapper">
+        <!-- background image -->
+        <div class="fullscreen-bg"></div>
+
+        <!-- banner start -->
+        <!-- ================ -->
+        <div class="pv-40 dark-translucent-bg">
+            <div class="container">
+
+                <div class="row justify-content-center">
+
+                    <div class="object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+
+
+                        <div class="col-auto">
+
+
+                            <div id="logo" class="logo text-center">
+                                <center><h3 class="margin-clear"><img src="@Url.Content("~/img/logo-iot-nest.png")" alt="IoT Nest" title="IoT Nest" style="width:280px;height:86px" /></h3></center>
+                            </div>
+
+
+                            <div class="form-block center-block p-30 light-gray-bg border-clear mt-3">
+
+                                <h2 class="title" style="text-transform:none"><i class="fa fa-lock" aria-hidden="true" style="padding-right:7px;font-size:0.8em"></i> @localizer.Get("RestrictedAccess")</h2>
+
+                                <div class="row">
+
+                                    <div class="col-md-12">
+
+
+
+                                        <form class="form-horizontal" action="#.asp" name="ficha" method="post" onsubmit="return ValidateForm()">
+
+                                            <div class="form-group has-feedback row">
+
+                                                <label for="inputUserName" class="col-md-3 text-md-right control-label col-form-label">@localizer.Get("User")</label>
+
+                                                <div class="col-md-8">
+                                                    <input type="text" maxlength="50" class="form-control" name="username" id="username" placeholder="Login: " required>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group has-feedback row">
+
+                                                <label for="inputPassword" class="col-md-3 text-md-right control-label col-form-label">@localizer.Get("Pass")</label>
+
+                                                <div class="col-md-8">
+                                                    <input type="password" maxlength="8" class="form-control" name="pass" id="pass" placeholder="Senha: " required>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <div class="ml-md-auto col-md-9">
+                                                    <button type="submit" class="btn btn-group btn-info btn-animated">Acessar <i class="fa fa-chevron-right"></i></button>
+                                                </div>
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                            <p class="mt-20 text-center">Copyright © IoT <strong>Nest/Vibração</strong></p>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <!-- Jquery and Bootstap core js files -->
+    <script src="@Url.Content("~/login/jquery.min.js")"></script>
+    <script src="@Url.Content("~/login/popper.min.js")"></script>
+    <script src="@Url.Content("~/bootstrap/js/bootstrap.min.js")"></script>
+
+    <!-- Modernizr javascript -->
+    <script src="@Url.Content("~/login/modernizr.js")"></script>
+    <script src="@Url.Content("~/login/waypoints/jquery.waypoints.min.js")"></script>
+    <script src="@Url.Content("~/login/waypoints/sticky.min.js")"></script>
+    <script src="@Url.Content("~/login/jquery.countTo.js")"></script>
+    <script src="@Url.Content("~/login/jquery.parallax-1.1.3.js")"></script>
+    <script src="@Url.Content("~/login/jquery.validate.js")"></script>
+    <script src="@Url.Content("~/login/owlcarousel2/owl.carousel.min.js")"></script>
+
+    <!-- Initialization of Plugins -->
+    <script src="@Url.Content("~/login/template.js")"></script>
+    <script src="@Url.Content("~/login/custom.js")"></script>
+
+</body>
+
+<!--<body>
+    
+
+    <div class="limiter" style=" background:repeat; background-image: url('@Url.Content("~/Resources/fundo_login.png") ');">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                <div class="login100-form-title" style="background-image: url('images/bg-01.jpg');">
+
+                    <span class="login100-form-title-1">
+                        @localizer.Get("RestrictedAccess")
+                    </span>
+                </div>
+
+                <form class="login100-form validate-form" action="Login" method="post">
+                    <div class="wrap-input100 validate-input m-b-26" data-validate="Usuário obrigatório">
+                        <span class="label-input100">@localizer.Get("User")</span>
+                        <input class="input100" type="text" name="username"--> @*placeholder="Usuário"*@<!-->
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input m-b-18" data-validate="Senha Obrigatória">
+                        <span class="label-input100">@localizer.Get("Pass")</span>
+                        <input class="input100" type="password" name="pass"--> @*placeholder="Senha"*@<!-->
+                        <span class="focus-input100"></span>
+                    </div>-->
+
+                    @*<div class="flex-sb-m w-full p-b-30">
+                            <div class="contact100-form-checkbox">
+                                <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
+                                <label class="label-checkbox100" for="ckb1">
+                                    Remember me
+                                </label>
+                            </div>
+
+                            <div>
+                                <a href="#" class="txt1">
+                                    Forgot Password?
+                                </a>
+                            </div>
+                        </div>*@
+
+                    <!--<div class="container-login100-form-btn">
+                        <button class="login100-form-btn" type="submit">
+                            Login
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>-->
+
+    <!-- Jquery and Bootstap core js files -->
+    <!--<script src="@Url.Content("~/login/jquery.min.js")"></script>
+    <script src="@Url.Content("~/login/popper.min.js")"></script>
+    <script src="@Url.Content("~/bootstrap/js/bootstrap.min.js")"></script>-->
+
+    <!-- Modernizr javascript -->
+    <!--<script src="@Url.Content("~/login/modernizr.js")"></script>
+    <script src="@Url.Content("~/login/waypoints/jquery.waypoints.min.js")"></script>
+    <script src="@Url.Content("~/login/waypoints/sticky.min.js")"></script>
+    <script src="@Url.Content("~/login/jquery.countTo.js")"></script>
+    <script src="@Url.Content("~/login/jquery.parallax-1.1.3.js")"></script>
+    <script src="@Url.Content("~/login/jquery.validate.js")"></script>
+    <script src="@Url.Content("~/login/owlcarousel2/owl.carousel.min.js")"></script>-->
+
+    <!-- Initialization of Plugins -->
+    <!--<script src="@Url.Content("~/login/template.js")"></script>
+    <script src="@Url.Content("~/login/custom.js")"></script>
+
+</body>-->
+</html>

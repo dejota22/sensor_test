@@ -1,0 +1,7 @@
+2022-07-12T21:23:51.7009759-03:00  [INF] Now listening on: "https://localhost:5001" (d826f4b8)
+2022-07-12T21:23:51.7060031-03:00  [INF] Now listening on: "http://localhost:5000" (d826f4b8)
+2022-07-12T21:23:51.7076009-03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-07-12T21:23:51.7088847-03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-07-12T21:23:51.7101263-03:00  [INF] Content root path: "C:\Users\hreis\source\repos\SensorWeb\SensorWeb" (b5d60022)
+2022-07-12T21:24:05.0692741-03:00 0HMJ4CNRCRUCE:00000001 [INF] Busca OK (0cbc04db)
+2022-07-12T21:24:05.2258066-03:00 0HMJ4CNRCRUCE:00000001 [INF] Busca OK 1 (8fc4e460)

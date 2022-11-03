@@ -1,0 +1,230 @@
+﻿@model SensorWeb.Models.CompanyModel
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+
+@inject Core.Service.ICompanyService companyService
+@inject Core.Service.IUserService userService
+@inject Core.Service.IDeviceService deviceService
+@*<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>*@
+
+<h4 class="screenTitle">@localizer.Get("CompanyTitle") </h4>
+<hr />
+
+
+@*<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/css/bootstrap-multiselect.css" />
+    <script type="text/javascript" src="https://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/js/bootstrap-multiselect.js"></script>
+    <script type="text/javascript">*@
+@*$(function () {
+            $('#lstFruits').multiselect({
+                includeSelectAllOption: true
+            });
+        });
+    </script>*@
+
+
+<div class="row screenCreate">
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="col-md-12 formclasscreate ">
+            <div class="form-group col-md-2">
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" class="form-control" readonly />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-5">
+                <label asp-for="LegalName" class="control-label"></label>
+                <input asp-for="LegalName" class="form-control" />
+                <span asp-validation-for="LegalName" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-5">
+                <label asp-for="TradeName" class="control-label"></label>
+                <input asp-for="TradeName" class="form-control" />
+                <span asp-validation-for="TradeName" class="text-danger"></span>
+
+            </div>
+        </div>
+
+        <div class="col-md-12 formclasscreate ">
+
+            <div class="form-group col-md-2">
+                <label asp-for="Cnpj" class="control-label"></label>
+                <input asp-for="Cnpj" class="form-control" />
+                <span asp-validation-for="Cnpj" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-7 ">
+                <label asp-for="Website" class="control-label"></label>
+                <input asp-for="Website" class="form-control" />
+                <span asp-validation-for="Website" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label asp-for="Country" class="control-label"></label>
+                <input asp-for="Country" class="form-control" />
+                <span asp-validation-for="Country" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!--<div class="col-md-12 formclasscreate ">-->
+        @*<div class="form-group col-md-4">
+                @Html.ListBoxFor(model => model.lstCompanySub, new SelectList(new[] { "" }));
+            </div>*@
+        <!--</div>-->
+
+        <div class="col-md-12 formclasscreate" style="display: flex;">
+
+            <div class="form-group col-md-4">
+                <label asp-for="lstCompanySubUnique" class="control-label"></label>
+                @Html.DropDownListFor(model => model.lstCompanySubUnique, new SelectList(companyService.GetQueryDropDownList(), "Key", "Value"),
+                                      @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
+                <span asp-validation-for="lstCompanySubUnique" class="text-danger"></span>
+            </div>
+
+            <div class="form-group col-md-2">
+                <input id="btnCompanySub" type="button" style="margin-top: 23px; margin-left: 30px;" value="@localizer.Get("Adicionar")" class="btn btn-primary" />
+            </div>
+
+            <div class="form-group col-md-4">
+                <label asp-for="lstUsersUnique" class="control-label"></label>
+                @Html.DropDownListFor(model => model.lstUsersUnique, new SelectList(userService.GetQueryDropDownList(), "Key", "Value"),
+                                      @localizer.Get("userSelect"), new Dictionary<string, object> { { "class", "form-control" } })
+                <span asp-validation-for="lstUsersUnique" class="text-danger"></span>
+            </div>
+
+            <div class="form-group col-md-2">
+                <input id="btnAddUser" type="button" style="margin-top: 23px; margin-left: 30px;" value="@localizer.Get("Adicionar")" class="btn btn-primary" />
+            </div>
+        </div>
+
+        <div class="col-md-12 formclasscreate" style="display: flex;">
+
+            <div class="form-group col-md-4">
+                @Html.ListBoxFor(model => model.lstCompanySub, new List<SelectListItem>(), new { style = "width:100%;min-height: 120px;" })
+            </div>
+
+            <div class="form-group col-md-2">
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.ListBoxFor(model => model.lstUsers, new List<SelectListItem>(), new { style = "width:100%;min-height: 120px;" })
+            </div>
+        </div>
+
+        <div class="col-md-12 formclasscreate" style="display: flex;">
+
+            <div class="form-group col-md-4">
+                <label asp-for="lstSensorUnique" class="control-label"></label>
+                @Html.DropDownListFor(model => model.lstSensorUnique, new SelectList(deviceService.GetQueryDropDownList(), "Key", "Value"),
+                                      @localizer.Get("DeviceSelect"), new Dictionary<string, object> { { "class", "form-control" } })
+                <span asp-validation-for="lstSensorUnique" class="text-danger"></span>
+            </div>
+
+            <div class="form-group col-md-2">
+                <input id="btnAddSensor" type="button" style="margin-top: 23px; margin-left: 30px;" value="@localizer.Get("Adicionar")" class="btn btn-primary" />
+            </div>
+        </div>
+
+        <div class="col-md-12 formclasscreate" style="display: flex;">
+
+            <div class="form-group col-md-4">
+                @Html.ListBoxFor(model => model.lstSensor, new List<SelectListItem>(), new { style = "width:100%;min-height: 120px;" })
+            </div>
+
+        </div>
+
+        <script>
+            $(document).on('click', '#btnCompanySub', funcAddCompanySub);
+
+            function funcAddCompanySub() {
+                var opt = document.createElement("option");
+                let selectedText = $('#lstCompanySubUnique option:selected').text();
+                let selectedValue = $('#lstCompanySubUnique option:selected').val();
+
+                opt.text = String(selectedText);
+                opt.value = String(selectedValue);
+                if (selectedValue > 0) {
+
+                    var itemExists = false;
+                    $("#lstCompanySub option").each(function () {
+                        if ($(this).val() == $.trim(String(selectedValue))) {
+                            itemExists = true;
+                        }
+                    });
+
+                    if (!itemExists) {
+                        document.getElementById("lstCompanySub").options.add(opt);
+                    }
+                }
+            }
+
+            $(document).on('click', '#btnAddUser', funcAddUser);
+
+            function funcAddUser() {
+                var opt = document.createElement("option");
+                let selectedText = $('#lstUsersUnique option:selected').text();
+                let selectedValue = $('#lstUsersUnique option:selected').val();
+
+                opt.text = String(selectedText);
+                opt.value = String(selectedValue);
+
+                if (selectedValue > 0) {
+                    var itemExists = false;
+                    $("#lstUsers option").each(function () {
+                        if ($(this).val() == $.trim(String(selectedValue))) {
+                            itemExists = true;
+                        }
+                    });
+
+                    if (!itemExists) {
+                        document.getElementById("lstUsers").options.add(opt);
+                    }
+                }
+            }
+
+            $(document).on('click', '#btnAddSensor', funcAddSensor);
+
+            function funcAddSensor() {
+                var opt = document.createElement("option");
+                let selectedText = $('#lstSensorUnique option:selected').text();
+                let selectedValue = $('#lstSensorUnique option:selected').val();
+
+                opt.text = String(selectedText);
+                opt.value = String(selectedValue);
+
+                if (selectedValue > 0) {
+                    var itemExists = false;
+                    $("#lstSensor option").each(function () {
+                        if ($(this).val() == $.trim(String(selectedValue))) {
+                            itemExists = true;
+                        }
+                    });
+
+                    if (!itemExists) {
+                        document.getElementById("lstSensor").options.add(opt);
+                    }
+                }
+            }
+
+        </script>
+
+
+
+
+
+        </br>
+        <div class="form-group screenCreateControls">
+            <a href="@Url.Action("Index", "Company")"><input asp-action="Index" type="button" value="@localizer.Get("BackToList")" class="btn btn-primary" /></a>
+            <input type="submit" value="@localizer.Get("Create")" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+@*<hr />*@
+
+@*<div>
+        <a asp-action="Index">@localizer.Get("BackToList")</a>
+    </div>*@
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,600 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="About" xml:space="preserve">
+    <value>Sobre</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Ações</value>
+  </data>
+  <data name="Actuation Type" xml:space="preserve">
+    <value>Tipo de Atuador</value>
+  </data>
+  <data name="Add new" xml:space="preserve">
+    <value>Adicionar novo registro</value>
+  </data>
+  <data name="BackToList" xml:space="preserve">
+    <value>Voltar</value>
+  </data>
+  <data name="Bushing" xml:space="preserve">
+    <value>Mancais do Motor</value>
+  </data>
+  <data name="Carcase" xml:space="preserve">
+    <value>Carcaça</value>
+  </data>
+  <data name="Cardan Shaft Type" xml:space="preserve">
+    <value>Tipo de Eixo Cardan</value>
+  </data>
+  <data name="CardanShaft" xml:space="preserve">
+    <value>Eixo Cardan</value>
+  </data>
+  <data name="CardanShaftType" xml:space="preserve">
+    <value>Eixo Cardan</value>
+  </data>
+  <data name="CardanShaftTypeSelect" xml:space="preserve">
+    <value>-- Selecione o Tipo de Eixo Cardan --</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Categoria</value>
+  </data>
+  <data name="Cnpj" xml:space="preserve">
+    <value>CNPJ</value>
+  </data>
+  <data name="Code" xml:space="preserve">
+    <value>Código</value>
+  </data>
+  <data name="Code Required" xml:space="preserve">
+    <value>Campo Código é obrigatório</value>
+  </data>
+  <data name="Company" xml:space="preserve">
+    <value>Empresas</value>
+  </data>
+  <data name="Company Register" xml:space="preserve">
+    <value>Cadastro de Empresas</value>
+  </data>
+  <data name="Company Unit Register" xml:space="preserve">
+    <value>Cadastro de Unidade/Empresa</value>
+  </data>
+  <data name="Company Unit Sector Register" xml:space="preserve">
+    <value>Cadastro de Setor/Tag</value>
+  </data>
+  <data name="CompanyId" xml:space="preserve">
+    <value>Empresa</value>
+  </data>
+  <data name="CompanySelect" xml:space="preserve">
+    <value>-- Selecione a Empresa --</value>
+  </data>
+  <data name="CompanyTitle" xml:space="preserve">
+    <value>Cadastro de Empresas</value>
+  </data>
+  <data name="Compressor" xml:space="preserve">
+    <value>Compressores</value>
+  </data>
+  <data name="CompressorBrand" xml:space="preserve">
+    <value>Marca</value>
+  </data>
+  <data name="CompressorDescription" xml:space="preserve">
+    <value>Descrição</value>
+  </data>
+  <data name="CompressorModel" xml:space="preserve">
+    <value>Modelo</value>
+  </data>
+  <data name="CompressorSelect" xml:space="preserve">
+    <value>-- Selecione o Tipo de Compressor --</value>
+  </data>
+  <data name="CompressorTag" xml:space="preserve">
+    <value>Tag</value>
+  </data>
+  <data name="CompressorType" xml:space="preserve">
+    <value>Compressor</value>
+  </data>
+  <data name="CompressorTypeSelect" xml:space="preserve">
+    <value>-- Selecione o Tipo de Compressor --</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>Contato</value>
+  </data>
+  <data name="Contact Register" xml:space="preserve">
+    <value>Cadastro de Contatos</value>
+  </data>
+  <data name="ContactId" xml:space="preserve">
+    <value>Contato</value>
+  </data>
+  <data name="ContactTitle" xml:space="preserve">
+    <value>Cadastro de Contatos</value>
+  </data>
+  <data name="CoroaBox" xml:space="preserve">
+    <value>Coroa/Correntes</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Pais</value>
+  </data>
+  <data name="Coupling" xml:space="preserve">
+    <value>Acopladores</value>
+  </data>
+  <data name="Coupling Type" xml:space="preserve">
+    <value>Tipo de Acoplamento</value>
+  </data>
+  <data name="CouplingBrand" xml:space="preserve">
+    <value>Marca</value>
+  </data>
+  <data name="CouplingDescription" xml:space="preserve">
+    <value>Descrição</value>
+  </data>
+  <data name="CouplingModel" xml:space="preserve">
+    <value>Modelo</value>
+  </data>
+  <data name="CouplingType" xml:space="preserve">
+    <value>Acoplamento</value>
+  </data>
+  <data name="CouplingTypeSelect" xml:space="preserve">
+    <value>-- Selecione o Tipo de Acoplamento --</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Salvar</value>
+  </data>
+  <data name="CvPotency" xml:space="preserve">
+    <value>Potencia CV</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Deletar</value>
+  </data>
+  <data name="DeleteRegister" xml:space="preserve">
+    <value>Deseja deletar o registro?</value>
+  </data>
+  <data name="Department" xml:space="preserve">
+    <value>Departamento</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Descrição</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Sensores</value>
+  </data>
+  <data name="DeviceId" xml:space="preserve">
+    <value>Sensor</value>
+  </data>
+  <data name="DeviceMeasureSelect" xml:space="preserve">
+    <value>-- Dados Recebidos --</value>
+  </data>
+  <data name="Devices" xml:space="preserve">
+    <value>Dispositivos</value>
+  </data>
+  <data name="DeviceSelect" xml:space="preserve">
+    <value>-- Selecione o Sensor --</value>
+  </data>
+  <data name="DeviceTitle" xml:space="preserve">
+    <value>Cadastro de Sensores</value>
+  </data>
+  <data name="Document" xml:space="preserve">
+    <value>CPF</value>
+  </data>
+  <data name="DocumentInvalid" xml:space="preserve">
+    <value>Cpf Inválido</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+  <data name="ElectricCurrent" xml:space="preserve">
+    <value>Corrente (I)</value>
+  </data>
+  <data name="EletricMotor" xml:space="preserve">
+    <value>Motor Elétrico</value>
+  </data>
+  <data name="ExaustFan" xml:space="preserve">
+    <value>Ventilador/Exaustor</value>
+  </data>
+  <data name="Exhaust Fan" xml:space="preserve">
+    <value>Exaustores</value>
+  </data>
+  <data name="ExhaustFanBrand" xml:space="preserve">
+    <value>Marca</value>
+  </data>
+  <data name="ExhaustFanDescription" xml:space="preserve">
+    <value>Descrição</value>
+  </data>
+  <data name="ExhaustFanModel" xml:space="preserve">
+    <value>Modelo</value>
+  </data>
+  <data name="ExhaustFanNumberOfBlades" xml:space="preserve">
+    <value>Número de Pás</value>
+  </data>
+  <data name="ExhaustFanRotorDiameter" xml:space="preserve">
+    <value>Ø do Rotor</value>
+  </data>
+  <data name="ExhaustFanTag" xml:space="preserve">
+    <value>Tag</value>
+  </data>
+  <data name="Fixation Type" xml:space="preserve">
+    <value>Tipo de Fixação</value>
+  </data>
+  <data name="FixationType" xml:space="preserve">
+    <value>Fixação/Base</value>
+  </data>
+  <data name="FixationTypeSelect" xml:space="preserve">
+    <value>-- Selecione o Tipo de Fixação --</value>
+  </data>
+  <data name="Frequency" xml:space="preserve">
+    <value>Hz</value>
+  </data>
+  <data name="Incorrect Password" xml:space="preserve">
+    <value>Senha Inválida</value>
+  </data>
+  <data name="Invalid Email" xml:space="preserve">
+    <value>Email Inválido</value>
+  </data>
+  <data name="Invalid Name" xml:space="preserve">
+    <value>Nome Inválido</value>
+  </data>
+  <data name="Ip" xml:space="preserve">
+    <value>Grau de Proteção</value>
+  </data>
+  <data name="IsActive" xml:space="preserve">
+    <value>Ativo</value>
+  </data>
+  <data name="IsolationClass" xml:space="preserve">
+    <value>Classe de Isolação</value>
+  </data>
+  <data name="KwPotency" xml:space="preserve">
+    <value>Potencia Kw</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Português</value>
+  </data>
+  <data name="Last Name" xml:space="preserve">
+    <value>Sobrenome</value>
+  </data>
+  <data name="LegalName" xml:space="preserve">
+    <value>Razão Social</value>
+  </data>
+  <data name="Lubrification" xml:space="preserve">
+    <value>Lubrificação</value>
+  </data>
+  <data name="Machine" xml:space="preserve">
+    <value>Maquinas</value>
+  </data>
+  <data name="MachineSelect" xml:space="preserve">
+    <value>-- Selecione o Tipo de Motor --</value>
+  </data>
+  <data name="MachineType" xml:space="preserve">
+    <value>Motor</value>
+  </data>
+  <data name="Manufacturer" xml:space="preserve">
+    <value>Fabricante</value>
+  </data>
+  <data name="Motor" xml:space="preserve">
+    <value>Equipamento</value>
+  </data>
+  <data name="MotorSelect" xml:space="preserve">
+    <value>-- Selecione a Tag -- </value>
+  </data>
+  <data name="MotorTitle" xml:space="preserve">
+    <value>Cadastro de Equipamento</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Observation" xml:space="preserve">
+    <value>Observação</value>
+  </data>
+  <data name="Pass" xml:space="preserve">
+    <value>Senha</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Senha</value>
+  </data>
+  <data name="Password Confirm" xml:space="preserve">
+    <value>Confirmação de Senha</value>
+  </data>
+  <data name="Pf" xml:space="preserve">
+    <value>Ft. Potencia</value>
+  </data>
+  <data name="Pulley" xml:space="preserve">
+    <value>Polias</value>
+  </data>
+  <data name="Pulley Register" xml:space="preserve">
+    <value>Cadastro de Polias</value>
+  </data>
+  <data name="Pulley Type" xml:space="preserve">
+    <value>Tipo de Polia</value>
+  </data>
+  <data name="PulleyBeltQuantity" xml:space="preserve">
+    <value>N° Correias</value>
+  </data>
+  <data name="PulleyBetweenAxles" xml:space="preserve">
+    <value>Entre Eixos (L)</value>
+  </data>
+  <data name="PulleyBox" xml:space="preserve">
+    <value>Polias/Correntes</value>
+  </data>
+  <data name="PulleyD1" xml:space="preserve">
+    <value>Ø Motriz (d1)</value>
+  </data>
+  <data name="PulleyD2" xml:space="preserve">
+    <value>Ø Movida (d2)</value>
+  </data>
+  <data name="PulleyRatio" xml:space="preserve">
+    <value>Relação</value>
+  </data>
+  <data name="PulleyType" xml:space="preserve">
+    <value>Polia</value>
+  </data>
+  <data name="Pump" xml:space="preserve">
+    <value>Bombas</value>
+  </data>
+  <data name="Pump Register" xml:space="preserve">
+    <value>Cadastro de Bombas</value>
+  </data>
+  <data name="Pump Type" xml:space="preserve">
+    <value>Tipo de Bombas</value>
+  </data>
+  <data name="PumpBrand" xml:space="preserve">
+    <value>Marca</value>
+  </data>
+  <data name="PumpDescription" xml:space="preserve">
+    <value>Descrição</value>
+  </data>
+  <data name="PumpModel" xml:space="preserve">
+    <value>Modelo</value>
+  </data>
+  <data name="PumpTag" xml:space="preserve">
+    <value>Tag</value>
+  </data>
+  <data name="PumpType" xml:space="preserve">
+    <value>Tipo de Bomba</value>
+  </data>
+  <data name="PumpTypeSelect" xml:space="preserve">
+    <value>-- Selecione o Tipo de Bomba --</value>
+  </data>
+  <data name="Records" xml:space="preserve">
+    <value>Cadastros</value>
+  </data>
+  <data name="Reducer" xml:space="preserve">
+    <value>Redutores</value>
+  </data>
+  <data name="ReducerBrand" xml:space="preserve">
+    <value>Marca</value>
+  </data>
+  <data name="ReducerDescription" xml:space="preserve">
+    <value>Descrição</value>
+  </data>
+  <data name="ReducerModel" xml:space="preserve">
+    <value>Modelo</value>
+  </data>
+  <data name="ReducerNumberOfAxles" xml:space="preserve">
+    <value>N°de Eixos</value>
+  </data>
+  <data name="ReducerRatio" xml:space="preserve">
+    <value>Relação</value>
+  </data>
+  <data name="ReducerSerialNumber" xml:space="preserve">
+    <value>Número de Série</value>
+  </data>
+  <data name="ReducerTag" xml:space="preserve">
+    <value>Tag</value>
+  </data>
+  <data name="Reports" xml:space="preserve">
+    <value>Relatórios</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>Campo Obrigatório</value>
+  </data>
+  <data name="RestrictedAccess" xml:space="preserve">
+    <value>Acesso Restrito</value>
+  </data>
+  <data name="Rg" xml:space="preserve">
+    <value>RG</value>
+  </data>
+  <data name="Ring" xml:space="preserve">
+    <value>Anéis</value>
+  </data>
+  <data name="Ring Regsister" xml:space="preserve">
+    <value>Cadastro de Anéis</value>
+  </data>
+  <data name="Ring Type" xml:space="preserve">
+    <value>Tipo de Anéis</value>
+  </data>
+  <data name="RingBetweenAxles" xml:space="preserve">
+    <value>Entre Eixos (L)</value>
+  </data>
+  <data name="RingDriveGearTeethZ1" xml:space="preserve">
+    <value>Dentes Engrenagem Motriz (Z1)</value>
+  </data>
+  <data name="RingDriveGearTeethZ2" xml:space="preserve">
+    <value>Dentes Engrenagem Motora (Z2)</value>
+  </data>
+  <data name="RingRatio" xml:space="preserve">
+    <value>Relação</value>
+  </data>
+  <data name="RpmPotency" xml:space="preserve">
+    <value>Pt. RPM</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Salvar</value>
+  </data>
+  <data name="Sf" xml:space="preserve">
+    <value>Ft. Serviço</value>
+  </data>
+  <data name="TagMotor" xml:space="preserve">
+    <value>Tag Motor</value>
+  </data>
+  <data name="te" xml:space="preserve">
+    <value>teste</value>
+  </data>
+  <data name="This user is inactive" xml:space="preserve">
+    <value>O usuario esta inativo</value>
+  </data>
+  <data name="TradeName" xml:space="preserve">
+    <value>Nome Fantasia</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="UpdatedAt" xml:space="preserve">
+    <value>Data de Atualização</value>
+  </data>
+  <data name="UpdateDate" xml:space="preserve">
+    <value>Data de Atualização</value>
+  </data>
+  <data name="urlFlag" xml:space="preserve">
+    <value>~/images/flags/flagBrazil.png</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Usuário</value>
+  </data>
+  <data name="User Register" xml:space="preserve">
+    <value>Cadastro de Usuários</value>
+  </data>
+  <data name="User Type" xml:space="preserve">
+    <value>Tipo de Usuário</value>
+  </data>
+  <data name="UserLoginInvalid" xml:space="preserve">
+    <value>Login ou senha incorreto</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Usuários</value>
+  </data>
+  <data name="userSelect" xml:space="preserve">
+    <value>-- Selecione o Usuário --</value>
+  </data>
+  <data name="UserTitle" xml:space="preserve">
+    <value>Cadastro de Usuários</value>
+  </data>
+  <data name="UserTypeId" xml:space="preserve">
+    <value>Tipo de usuário</value>
+  </data>
+  <data name="UserTypeSelect" xml:space="preserve">
+    <value>-- Selecione o Tipo de usuário --</value>
+  </data>
+  <data name="UserTypeTitle" xml:space="preserve">
+    <value>Cadastro de Tipo de Usuário</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Visualizar</value>
+  </data>
+  <data name="Voltage" xml:space="preserve">
+    <value>Tensão (V)</value>
+  </data>
+  <data name="Website" xml:space="preserve">
+    <value>Site</value>
+  </data>
+  <data name="Yeld" xml:space="preserve">
+    <value>Rendimento</value>
+  </data>
+</root>

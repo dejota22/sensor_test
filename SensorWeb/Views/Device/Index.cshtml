@@ -1,0 +1,173 @@
+﻿@model IEnumerable<DeviceModel>
+
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+
+
+
+
+
+<div class="page-title">
+    <h3 class="breadcrumb-header">Cadastros</h3>
+</div>
+
+
+<div id="main-wrapper">
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="card card-white">
+
+                <div class="card-heading clearfix">
+
+                    <table style="width: 100%;">
+                        <tr>
+                            <td><h4 class="card-title">@localizer.Get("DeviceTitle")</h4></td>
+                            <td style="text-align:right">
+
+                                <a href="@Url.Action("Create", "Device" )" title="@localizer.Get("Add new")">
+                                    <button type="button" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> </button>
+                                </a>
+
+
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="table-responsive">
+                        <table id="example" class="display table" style="width:100%;text-align:center">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(modelItem => modelItem.Id)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(modelItem => modelItem.Tag)
+                                    </th>
+                                    <th class="sccentralize">
+                                        @Html.DisplayNameFor(modelItem => modelItem.Code)
+                                    </th>
+
+                                    @*<th style="text-align:start">
+                                        @Html.DisplayNameFor(modelItem => modelItem.CompanyId)
+                                    </th>*@
+
+                                    <th style="text-align:center">
+                                        @localizer.Get("QrCode")
+                                    </th>
+
+                                    <th style="text-align:center">
+                                        @localizer.Get("Actions")
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Id)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Tag)
+                                    </td>
+                                    <td class="sccentralize">
+                                        @Html.DisplayFor(modelItem => item.Code)
+                                    </td>
+                                    @*<td style="text-align:start">
+                                        @Html.DisplayFor(modelItem => item.Company.LegalName)
+                                    </td>*@
+                                    <td style="text-align:center">
+                                        <img style="height:50px;width:50px;cursor:pointer" id="img_@item.Id" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String( item.QrCodeImg))" />
+                                    </td>
+                                    <td>
+                                        <table style="width:100%">
+                                            <tr>
+                                                <td style="padding:0 4px"><a href="@Url.Action("Details", "Device", new { id = item.Id })" title="@localizer.Get("View")"><i class="fas fa-eye"></i></a></td>
+                                                <td style="padding:0 4px"><a href="@Url.Action("Edit", "Device", new { id = item.Id })" title="@localizer.Get("Edit")"><i class="fas fa-edit" style="color:#ff6a00"></i></a></td>
+                                                <td style="padding:0 4px"><a href="@Url.Action("Delete", "Device", new { id = item.Id })" title="@localizer.Get("Delete")" style="color:#ff0000"><i class="fas fa-window-close"></i></a></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function () {
+                                            // Query the element
+                                            const printBtn = document.getElementById('img_@item.Id');
+
+                                            printBtn.addEventListener('click', function () {
+                                                // Create a fake iframe
+                                                const iframe = document.createElement('iframe');
+
+                                                // Make it hidden
+                                                iframe.style.height = 0;
+                                                iframe.style.visibility = 'hidden';
+                                                iframe.style.width = 0;
+
+                                                // Set the iframe's source
+                                                iframe.setAttribute('srcdoc', '<html><body></body></html>');
+
+                                                document.body.appendChild(iframe);
+
+                                                iframe.contentWindow.addEventListener('afterprint', function () {
+                                                    iframe.parentNode.removeChild(iframe);
+                                                });
+
+                                                iframe.addEventListener('load', function () {
+                                                    // Clone the image
+                                                    const image = document.getElementById('img_@item.Id').cloneNode();
+                                                    image.style.width = '20%';
+                                                    image.style.height = '20%';
+
+                                                    // Append the image to the iframe's body
+                                                    const body = iframe.contentDocument.body;
+                                                    body.style.textAlign = 'center';
+                                                    body.appendChild(image);
+
+                                                    image.addEventListener('load', function () {
+                                                        // Invoke the print when the image is ready
+                                                        iframe.contentWindow.print();
+                                                    });
+                                                });
+                                            });
+                                        });
+
+                                    </script>
+
+                                }
+
+
+
+
+
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- end page main wrapper -->
+<div class="page-footer">
+    <p>Iot Nest/Vibração &copy; <span class="current-year"></span>. Conteúdo de uso exclusivo.</p>
+</div>

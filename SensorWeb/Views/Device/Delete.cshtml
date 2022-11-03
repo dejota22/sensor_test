@@ -1,0 +1,35 @@
+﻿@model SensorWeb.Models.DeviceModel
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+
+
+<h4 style="color:white; text-align:center">@localizer.Get("DeviceTitle") </h4>
+<hr />
+
+<h5 style="color:white;">@localizer.Get("DeleteRegister")?</h5>
+<div class="row screenCreate">
+    <div class="col-md-12 formclasscreate">
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Id)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Id)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Tag)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Code)
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-12 ">
+        <div class="form-group screenCreateControls col-md-6">
+            <form asp-action="Delete">
+                <input type="submit" value="@localizer.Get("Delete")" class="btn btn-danger" />
+                <a asp-action="Index" class="btn btn-primary">@localizer.Get("BackToList")</a>
+            </form>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,7 @@
+2022-08-26T14:44:13.5826675-03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-08-26T14:44:13.6020485-03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-08-26T14:44:13.6047965-03:00  [INF] Content root path: "C:\Users\hreis\source\repos\SensorWeb\SensorApi" (b5d60022)
+2022-08-26T15:01:27.9192059-03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-08-26T15:01:27.9374099-03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-08-26T15:01:27.9417069-03:00  [INF] Content root path: "C:\Users\hreis\source\repos\SensorWeb\SensorApi" (b5d60022)
+2022-08-26T15:01:32.0459847-03:00 80000012-0006-fc00-b63f-84710c7967bb [INF] Acesso ok (942bcd96)
