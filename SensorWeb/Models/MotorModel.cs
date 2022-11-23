@@ -227,18 +227,6 @@ namespace SensorWeb.Models
         [Display(Name = "Observation")]
         public string Observation { get; set; }
 
-
-        public int? DeviceFrequency { get; set; }
-        public int? DeviceBdr { get; set; }
-        public string DeviceCutoff { get; set; }
-        public int? DeviceLpf { get; set; }
-        public int? DeviceLines { get; set; }
-        public int? DeviceAxles { get; set; }
-        public string DeviceRms { get; set; }
-        public string DeviceBattery { get; set; }
-        public int? DeviceHours { get; set; }
-        public int? DeviceTemperature { get; set; }
-
         //public virtual ActuationType ActuationType { get; set; }
         //public virtual CardanShaftType CardanShaftType { get; set; }
         //public virtual Coupling Coupling { get; set; }

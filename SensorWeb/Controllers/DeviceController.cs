@@ -214,5 +214,13 @@ namespace SensorWeb.Controllers
                 return View();
             }
         }
+
+        public JsonResult GetDeviceData(int id)
+        {
+            Device device = _DeviceService.Get(id);
+            DeviceModel deviceModel = _mapper.Map<DeviceModel>(device);
+
+            return Json(deviceModel);
+        }
     }
 }

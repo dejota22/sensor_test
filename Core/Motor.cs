@@ -77,16 +77,6 @@ namespace Core
         public int? CompanyId { get; set; }
         public int? TypeId { get; set; }
         public string SectorDesc { get; set; }
-        public int? DeviceFrequency { get; set; }
-        public string DeviceBdr { get; set; }
-        public string DeviceCutoff { get; set; }
-        public int? DeviceLpf { get; set; }
-        public int? DeviceLines { get; set; }
-        public int? DeviceAxles { get; set; }
-        public string DeviceRms { get; set; }
-        public string DeviceBattery { get; set; }
-        public int? DeviceHours { get; set; }
-        public int? DeviceTemperature { get; set; }
 
         public virtual Device Device { get; set; }
     }

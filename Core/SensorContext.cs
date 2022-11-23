@@ -545,6 +545,48 @@ namespace Core
 
                 entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
 
+                entity.Property(e => e.Axies).HasColumnName("axies");
+
+                entity.Property(e => e.Battery)
+                    .HasColumnName("battery")
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Bdr)
+                    .HasColumnName("bdr")
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Cutoff)
+                    .HasColumnName("cutoff")
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Frequency).HasColumnName("frequency");
+
+                entity.Property(e => e.Hours).HasColumnName("hours");
+
+                entity.Property(e => e.Lines).HasColumnName("lines");
+
+                entity.Property(e => e.Lpf).HasColumnName("lpf");
+
+                entity.Property(e => e.Rms)
+                    .HasColumnName("rms")
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Temperature).HasColumnName("temperature");
+
+                entity.Property(e => e.RmsMax)
+                    .HasColumnName("rmsmax")
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RmsMin)
+                    .HasColumnName("rmsmin")
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Device)
                     .HasForeignKey(d => d.CompanyId)
@@ -849,39 +891,7 @@ namespace Core
 
                 entity.Property(e => e.Description).HasColumnName("description");
 
-                entity.Property(e => e.DeviceAxles).HasColumnName("device_axles");
-
-                entity.Property(e => e.DeviceBattery)
-                    .HasColumnName("device_battery")
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.DeviceBdr)
-                    .HasColumnName("device_bdr")
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.DeviceCutoff)
-                    .HasColumnName("device_cutoff")
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.DeviceFrequency).HasColumnName("device_frequency");
-
-                entity.Property(e => e.DeviceHours).HasColumnName("device_hours");
-
                 entity.Property(e => e.DeviceId).HasColumnName("device_id");
-
-                entity.Property(e => e.DeviceLines).HasColumnName("device_lines");
-
-                entity.Property(e => e.DeviceLpf).HasColumnName("device_lpf");
-
-                entity.Property(e => e.DeviceRms)
-                    .HasColumnName("device_rms")
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.DeviceTemperature).HasColumnName("device_temperature");
 
                 entity.Property(e => e.ElectricCurrent).HasColumnName("electric_current");
 

@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Anderson\\HD_Lenovo\\Trabalho\\IOT Nest\\Projetos Sensor\\SensorWebIOTNest\\SensorWeb\\Core\\Core.csproj": {}
+    "D:\\Dev\\repos\\SensorWeb\\Core\\Core.csproj": {}
   },
   "projects": {
-    "C:\\Anderson\\HD_Lenovo\\Trabalho\\IOT Nest\\Projetos Sensor\\SensorWebIOTNest\\SensorWeb\\Core\\Core.csproj": {
+    "D:\\Dev\\repos\\SensorWeb\\Core\\Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Anderson\\HD_Lenovo\\Trabalho\\IOT Nest\\Projetos Sensor\\SensorWebIOTNest\\SensorWeb\\Core\\Core.csproj",
+        "projectUniqueName": "D:\\Dev\\repos\\SensorWeb\\Core\\Core.csproj",
         "projectName": "Core",
-        "projectPath": "C:\\Anderson\\HD_Lenovo\\Trabalho\\IOT Nest\\Projetos Sensor\\SensorWebIOTNest\\SensorWeb\\Core\\Core.csproj",
-        "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-        "outputPath": "C:\\Anderson\\HD_Lenovo\\Trabalho\\IOT Nest\\Projetos Sensor\\SensorWebIOTNest\\SensorWeb\\Core\\obj\\",
+        "projectPath": "D:\\Dev\\repos\\SensorWeb\\Core\\Core.csproj",
+        "packagesPath": "C:\\Users\\icaro\\.nuget\\packages\\",
+        "outputPath": "D:\\Dev\\repos\\SensorWeb\\Core\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\icaro\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -65,16 +61,31 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[3.1.10, 3.1.10]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[3.1.0, 3.1.0]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[3.1.0, 3.1.0]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.408\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }

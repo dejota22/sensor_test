@@ -34,6 +34,27 @@
         //aFunc($("#TypeId").val());
     });
 
+    $(document).on('change', '#DeviceId', function () {
+        $.get('@Url.Content("~/Device/GetDeviceData")?id=' + $("#DeviceId").val(), function (data) {
+            if (data != null && data.id != null)
+            {
+                $("#DFrequency").val(data.frequency);
+                $("#DBdr").val(data.bdr);
+                $("#DCutoff").val(data.cutoff);
+                $("#DLpf").val(data.lpf);
+                $("#DLines").val(data.lines);
+                $("#DAxies").val(data.axies);
+
+                $("#DTemperature").val(data.temperature);
+                $("#DRms").val(data.rms);
+                $("#DBattery").val(data.battery);
+                $("#DHours").val(data.hours);
+                $("#DRmsMax").val(data.rmsMax);
+                $("#DRmsMin").val(data.rmsMin);
+            }
+        });
+    });
+
     function hideGroups() {
         $(".motorgroup").hide();
         $(".acopladorgroup").hide();
@@ -640,88 +661,32 @@
             <div class="col-md-12 formclasscreate">
                 <div class="form-group col-md-2" style="display: grid;">
                     <label class="control-label">Frequencia</label>
-                    <select name="DeviceFrequency" id="DeviceFrequency" class="form-control" asp-for="DeviceFrequency" style="width:100%">
-                        <option value="15">15Hz</option>
-                        <option value="20">20Hz</option>
-                        <option value="25">25Hz</option>
-                        <option value="30">30Hz</option>
-                        <option value="35">35Hz</option>
-                        <option value="40">40Hz</option>
-                        <option value="45">45Hz</option>
-                        <option value="50">50Hz</option>
-                        <option value="55">55Hz</option>
-                        <option value="60">60Hz</option>
-                        <option value="65">65Hz</option>
-                    </select>
-                    <span asp-validation-for="DeviceFrequency" class="text-danger"></span>
+                        <input id="DFrequency" class="form-control" readonly />
                 </div>
 
                 <div class="form-group col-md-2" style="display: grid;">
                     <label class="control-label">BDR</label>
-                    <select name="DeviceBdr" id="DeviceBdr" class="form-control" asp-for="DeviceBdr" style="width:100%">
-                        <option value="52">52Hz</option>
-                        <option value="104">104Hz</option>
-                        <option value="208">208Hz</option>
-                        <option value="417">417Hz</option>
-                        <option value="833">833Hz</option>
-                        <option value="1.667">1.667Hz</option>
-                        <option value="3.333">3.333Hz</option>
-                        <option value="6.667">6.667Hz</option>
-                        <option value="13.333">13.333Hz</option>
-                        <option value="26.667">26.667Hz</option>
-                    </select>
-                    <span asp-validation-for="DeviceBdr" class="text-danger"></span>
+                    <input id="DBdr" class="form-control" readonly />
                 </div>
+
                 <div class="form-group col-md-2" style="display: grid;">
                     <label class="control-label">CutOff</label>
-                    <select name="DeviceCutoff" id="DeviceCutoff" asp-for="DeviceCutoff" class="form-control" style="width:100%">
-                        <option value="6.667">6.667Hz</option>
-                        <option value="2.667">2.667Hz</option>
-                        <option value="1.333">1.333Hz</option>
-                        <option value="593">593Hz</option>
-                        <option value="267">267Hz</option>
-                        <option value="133">133Hz</option>
-                        <option value="67">67Hz</option>
-                        <option value="33">33Hz</option>
-                    </select>
-                    <span asp-validation-for="DeviceCutoff" class="text-danger"></span>
+                    <input id="DCutoff" class="form-control" readonly />
                 </div>
 
                 <div class="form-group col-md-2" style="display: grid;">
                     <label class="control-label">LPF</label>
-
-                    <select name="DeviceLpf" id="DeviceLpf" style="width:100%" asp-for="DeviceLpf" class="form-control">
-                        <option value="1">HPF - High Pass Filter </option>
-                        <option value="2">LPF - Low Pass Filter</option>
-                        <option value="3">LPF + LPF2_Off</option>
-                    </select>
-                    <span asp-validation-for="DeviceLpf" class="text-danger"></span>
+                    <input id="DLpf" class="form-control" readonly />
                 </div>
+
                 <div class="form-group col-md-2" style="display: grid;">
                     <label class="control-label">Lines</label>
-                    <select name="DeviceLines" id="DeviceLines" asp-for="DeviceLines" style="width:100%" class="form-control">
-                        <option value="512">512</option>
-                        <option value="1024">1024</option>
-                        <option value="2048">2048</option>
-                        <option value="3456">3456</option>
-                        <option value="4096">4096</option>
-                        <option value="6144">6144</option>
-                        <option value="8192">8192</option>
-                        <option value="10240">10240</option>
-                        <option value="16384">16384</option>
-                        <option value="30080">30080</option>
-                    </select>
-                    <span asp-validation-for="DeviceLines" class="text-danger"></span>
+                    <input id="DLines" class="form-control" readonly />
                 </div>
+
                 <div class="form-group col-md-2" style="display: grid;">
                     <label class="control-label">Eixos</label>
-                    <select name="DeviceAxles" id="DeviceAxles" asp-for="DeviceAxles" style="width:100%" class="form-control">
-                        <option value="1">Eixo X</option>
-                        <option value="2">Eixo Y</option>
-                        <option value="3">Eixo Z</option>
-                        <option value="4">Eixos X Y Z</option>
-                    </select>
-                    <span asp-validation-for="DeviceAxles" class="text-danger"></span>
+                    <input id="DAxies" class="form-control" readonly />
                 </div>
             </div>
 
@@ -729,24 +694,32 @@
 
                 <div class="form-group col-md-2" style="display: grid;">
                     <label class="control-label">Temperatura</label>
-                    <input value="25" asp-for="DeviceTemperature" name="DeviceTemperature" idfor="DeviceTemperature" class="form-control" />
-                    <span asp-validation-for="DeviceTemperature" class="text-danger"></span>
+                    <input id="DTemperature" class="form-control" readonly />
                 </div>
+
                 <div class="form-group col-md-2" style="display: grid;">
                     <label class="control-label">RMS</label>
-                    <input value="0 g" asp-for="DeviceRms" id="DeviceRms" name="DeviceRms" class="form-control" />
-                    <span asp-validation-for="DeviceRms" class="text-danger"></span>
-
+                    <input id="DRms" class="form-control" readonly />
                 </div>
+
                 <div class="form-group col-md-2" style="display: grid;">
                     <label class="control-label">Bateria</label>
-                    <input value="100%" asp-for="DeviceBattery" name="DeviceBattery" id="DeviceBattery" class="form-control" />
-                    <span asp-validation-for="DeviceBattery" class="text-danger"></span>
+                        <input id="DBattery" class="form-control" readonly />
                 </div>
+
                 <div class="form-group col-md-2" style="display: grid;">
                     <label class="control-label">Timer</label>
-                    <input placeholder="Horas" asp-for="DeviceHours" id="DeviceHours" name="DeviceHours" class="form-control" />
-                    <span asp-validation-for="DeviceHours" class="text-danger"></span>
+                    <input id="DHours" class="form-control" readonly />
+                </div>
+
+                <div class="form-group col-md-2" style="display: grid;">
+                    <label class="control-label">RMS Máximo</label>
+                        <input id="DRmsMax" class="form-control" readonly />
+                </div>
+
+                    <div class="form-group col-md-2" style="display: grid;">
+                    <label class="control-label">RMS Mínimo</label>
+                    <input id="DRmsMin" class="form-control" readonly />
                 </div>
             </div>
             @*  *@

@@ -24,3 +24,16 @@ C:\Anderson\HD_Lenovo\Trabalho\IOT Nest\Projetos Sensor\SensorWebIOTNest\SensorW
 C:\Anderson\HD_Lenovo\Trabalho\IOT Nest\Projetos Sensor\SensorWebIOTNest\SensorWeb\Core\obj\Debug\netcoreapp3.1\Core.dll
 C:\Anderson\HD_Lenovo\Trabalho\IOT Nest\Projetos Sensor\SensorWebIOTNest\SensorWeb\Core\obj\Debug\netcoreapp3.1\Core.pdb
 C:\Anderson\HD_Lenovo\Trabalho\IOT Nest\Projetos Sensor\SensorWebIOTNest\SensorWeb\Core\obj\Debug\netcoreapp3.1\Core.genruntimeconfig.cache
+D:\Dev\repos\SensorWeb\Core\bin\Debug\netcoreapp3.1\Core.deps.json
+D:\Dev\repos\SensorWeb\Core\bin\Debug\netcoreapp3.1\Core.runtimeconfig.json
+D:\Dev\repos\SensorWeb\Core\bin\Debug\netcoreapp3.1\Core.runtimeconfig.dev.json
+D:\Dev\repos\SensorWeb\Core\bin\Debug\netcoreapp3.1\Core.dll
+D:\Dev\repos\SensorWeb\Core\bin\Debug\netcoreapp3.1\Core.pdb
+D:\Dev\repos\SensorWeb\Core\obj\Debug\netcoreapp3.1\Core.csproj.AssemblyReference.cache
+D:\Dev\repos\SensorWeb\Core\obj\Debug\netcoreapp3.1\Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\Dev\repos\SensorWeb\Core\obj\Debug\netcoreapp3.1\Core.AssemblyInfoInputs.cache
+D:\Dev\repos\SensorWeb\Core\obj\Debug\netcoreapp3.1\Core.AssemblyInfo.cs
+D:\Dev\repos\SensorWeb\Core\obj\Debug\netcoreapp3.1\Core.csproj.CoreCompileInputs.cache
+D:\Dev\repos\SensorWeb\Core\obj\Debug\netcoreapp3.1\Core.dll
+D:\Dev\repos\SensorWeb\Core\obj\Debug\netcoreapp3.1\Core.pdb
+D:\Dev\repos\SensorWeb\Core\obj\Debug\netcoreapp3.1\Core.genruntimeconfig.cache

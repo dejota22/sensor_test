@@ -40,6 +40,18 @@ namespace SensorService
                             Tag = Device.Tag,
                             CreatedAt = Device.CreatedAt,
                             UpdatedAt = Device.UpdatedAt,
+                            Frequency = Device.Frequency,
+                            Axies = Device.Axies,
+                            Battery = Device.Battery,
+                            Bdr = Device.Bdr,
+                            Cutoff = Device.Cutoff,
+                            Hours = Device.Hours,
+                            Lines = Device.Lines,
+                            Lpf = Device.Lpf,
+                            Rms = Device.Rms,
+                            RmsMax = Device.RmsMax,
+                            RmsMin = Device.RmsMin,
+                            Temperature = Device.Temperature
                         };
 
             return query;
@@ -110,6 +122,18 @@ namespace SensorService
                             Id = Device.Id,
                             Reducer = Device.Reducer,
                             UpdatedAt = Device.UpdatedAt,
+                            Temperature = Device.Temperature,
+                            RmsMin = Device.RmsMin,
+                            RmsMax = Device.RmsMax,
+                            Rms = Device.Rms,
+                            Lpf = Device.Lpf,
+                            Lines = Device.Lines,
+                            Hours = Device.Hours,
+                            Cutoff = Device.Cutoff,
+                            Bdr = Device.Bdr,
+                            Axies = Device.Axies,
+                            Battery = Device.Battery,
+                            Frequency = Device.Frequency,
 
                             Company = new Company()
                             {

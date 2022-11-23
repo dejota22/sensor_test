@@ -22,6 +22,19 @@ namespace Core
         public DateTime UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
 
+        public int? Frequency { get; set; }
+        public int? Bdr { get; set; }
+        public string Cutoff { get; set; }
+        public int? Lpf { get; set; }
+        public int? Lines { get; set; }
+        public int? Axies { get; set; }
+        public string Rms { get; set; }
+        public string Battery { get; set; }
+        public int? Hours { get; set; }
+        public int? Temperature { get; set; }
+        public string RmsMax { get; set; }
+        public string RmsMin { get; set; }
+
         //public virtual Company Company { get; set; }
         //public virtual ICollection<Compressor> Compressor { get; set; }
         //public virtual ICollection<Dados> Dados { get; set; }
