@@ -29,7 +29,7 @@ namespace SensorWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
             //Injeção Dependencia DbContext 
             services.AddDbContext<SensorContext>(options => options.UseMySQL(Configuration.GetConnectionString("localdb")));
