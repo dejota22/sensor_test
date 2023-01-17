@@ -18,7 +18,7 @@ namespace SensorWeb.Models
         public string SectorDesc { get; set; }
 
         [Display(Name = "MachineType")]        
-        public int MachineId { get; set; }        
+        public int? MachineId { get; set; }        
        // public int? ActuationTypeId { get; set; }
 
         [Display(Name = "FixationType")]
