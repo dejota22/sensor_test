@@ -43,8 +43,12 @@
                 $("#DRms").val(data.rms);
                 $("#DBattery").val(data.battery);
                 $("#DHours").val(data.hours);
-                $("#DRmsMax").val(data.rmsMax);
-                $("#DRmsMin").val(data.rmsMin);
+                $("#DVelocityMin").val(data.velocityMin);
+                $("#DVelocityMax").val(data.velocityMax);
+                $("#DAccelerationMin").val(data.accelerationMin);
+                $("#DAccelerationMax").val(data.accelerationMax);
+                $("#DCrestFactorMin").val(data.crestFactorMin);
+                $("#DCrestFactorMax").val(data.crestFactorMax);
             }
         });
     }
@@ -686,7 +690,6 @@
                 </div>
 
                 <div class="col-md-12 formclasscreate">
-
                     <div class="form-group col-md-2" style="display: grid;">
                         <label class="control-label">Temperatura</label>
                         <input id="DTemperature" class="form-control" readonly />
@@ -708,13 +711,35 @@
                     </div>
 
                     <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">RMS Máximo</label>
-                        <input id="DRmsMax" class="form-control" readonly />
+                        <label class="control-label">Global em Velocidade (Min)</label>
+                        <input id="DVelocityMin" class="form-control" readonly />
                     </div>
 
                     <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">RMS Mínimo</label>
-                        <input id="DRmsMin" class="form-control" readonly />
+                        <label class="control-label">Global em Velocidade (Max)</label>
+                        <input id="DVelocityMax" class="form-control" readonly />
+                    </div>
+                </div>
+
+                <div class="col-md-12 formclasscreate">
+                    <div class="form-group col-md-2" style="display: grid;">
+                        <label class="control-label">Global em Aceleração (Min)</label>
+                        <input id="DAccelerationMin" class="form-control" readonly />
+                    </div>
+
+                    <div class="form-group col-md-2" style="display: grid;">
+                        <label class="control-label">Global em Aceleração (Max)</label>
+                        <input id="DAccelerationMax" class="form-control" readonly />
+                    </div>
+
+                    <div class="form-group col-md-2" style="display: grid;">
+                        <label class="control-label">Fator de Crista (Min)</label>
+                        <input id="DCrestFactorMin" class="form-control" readonly />
+                    </div>
+
+                    <div class="form-group col-md-2" style="display: grid;">
+                        <label class="control-label">Fator de Crista (Max)</label>
+                        <input id="DCrestFactorMax" class="form-control" readonly />
                     </div>
                 </div>
                 @*  *@

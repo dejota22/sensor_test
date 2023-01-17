@@ -587,6 +587,18 @@ namespace Core
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
+                entity.Property(e => e.VelocityMin).HasColumnName("velocitymin");
+
+                entity.Property(e => e.VelocityMax).HasColumnName("velocitymax");
+
+                entity.Property(e => e.AccelerationMin).HasColumnName("accelerationmin");
+
+                entity.Property(e => e.AccelerationMax).HasColumnName("accelerationmax");
+
+                entity.Property(e => e.CrestFactorMin).HasColumnName("crest_factormin");
+
+                entity.Property(e => e.CrestFactorMax).HasColumnName("crest_factormax");
+
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Device)
                     .HasForeignKey(d => d.CompanyId)

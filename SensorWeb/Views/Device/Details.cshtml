@@ -31,10 +31,10 @@
                     </div>
 
                     @*<div class="form-group">
-                        <label asp-for="CompanyId" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.CompanyId, new SelectList(companyService.GetQueryDropDownList(), "Key", "Value"),
-                                              @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
-                        <span asp-validation-for="CompanyId" class="text-danger"></span>
+                    <label asp-for="CompanyId" class="control-label"></label>
+                    @Html.DropDownListFor(model => model.CompanyId, new SelectList(companyService.GetQueryDropDownList(), "Key", "Value"),
+                    @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
+                    <span asp-validation-for="CompanyId" class="text-danger"></span>
                     </div>*@
 
                 </div>
@@ -44,51 +44,51 @@
                         @*<img style="max-height: 120px;margin-top:20px" src="@Url.Content("~/Resources/QrCodeTags/" + ViewData["imgQrCode"])" />*@
                         @if (Model != null)
                         {
-                           <img style="max-height: 120px; margin-top: 20px; cursor: pointer;" id="image" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(Model.QrCodeImg))" />
+                            <img style="max-height: 120px; margin-top: 20px; cursor: pointer;" id="image" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String(Model.QrCodeImg))" />
                         }
                     </div>
                 </div>
 
                 @*<script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        // Query the element
-                        const printBtn = document.getElementById('image');
+                document.addEventListener('DOMContentLoaded', function () {
+                // Query the element
+                const printBtn = document.getElementById('image');
 
-                        printBtn.addEventListener('click', function () {
-                            // Create a fake iframe
-                            const iframe = document.createElement('iframe');
+                printBtn.addEventListener('click', function () {
+                // Create a fake iframe
+                const iframe = document.createElement('iframe');
 
-                            // Make it hidden
-                            iframe.style.height = 0;
-                            iframe.style.visibility = 'hidden';
-                            iframe.style.width = 0;
+                // Make it hidden
+                iframe.style.height = 0;
+                iframe.style.visibility = 'hidden';
+                iframe.style.width = 0;
 
-                            // Set the iframe's source
-                            iframe.setAttribute('srcdoc', '<html><body></body></html>');
+                // Set the iframe's source
+                iframe.setAttribute('srcdoc', '<html><body></body></html>');
 
-                            document.body.appendChild(iframe);
+                document.body.appendChild(iframe);
 
-                            iframe.contentWindow.addEventListener('afterprint', function () {
-                                iframe.parentNode.removeChild(iframe);
-                            });
+                iframe.contentWindow.addEventListener('afterprint', function () {
+                iframe.parentNode.removeChild(iframe);
+                });
 
-                            iframe.addEventListener('load', function () {
-                                // Clone the image
-                                const image = document.getElementById('image').cloneNode();
-                                image.style.maxWidth = '100%';
+                iframe.addEventListener('load', function () {
+                // Clone the image
+                const image = document.getElementById('image').cloneNode();
+                image.style.maxWidth = '100%';
 
-                                // Append the image to the iframe's body
-                                const body = iframe.contentDocument.body;
-                                body.style.textAlign = 'center';
-                                body.appendChild(image);
+                // Append the image to the iframe's body
+                const body = iframe.contentDocument.body;
+                body.style.textAlign = 'center';
+                body.appendChild(image);
 
-                                image.addEventListener('load', function () {
-                                    // Invoke the print when the image is ready
-                                    iframe.contentWindow.print();
-                                });
-                            });
-                        });
-                    });
+                image.addEventListener('load', function () {
+                // Invoke the print when the image is ready
+                iframe.contentWindow.print();
+                });
+                });
+                });
+                });
 
                 </script>*@
             </div>
@@ -217,15 +217,41 @@
                 </div>
 
                 <div class="form-group col-md-3" style="display: grid;">
-                    <label class="control-label">RMS Máximo</label>
-                    <input asp-for="RmsMax" id="RmsMax" name="RmsMax" class="form-control" disabled />
-                    <span asp-validation-for="RmsMax" class="text-danger"></span>
+                    <label class="control-label">Global em velocidade</label>
+                    <input asp-for="VelocityMin" id="VelocityMin" name="VelocityMin" class="form-control" disabled />
+                    <span asp-validation-for="VelocityMin" class="text-danger"></span>
                 </div>
 
                 <div class="form-group col-md-3" style="display: grid;">
-                    <label class="control-label">RMS Mínimo</label>
-                    <input asp-for="RmsMin" id="RmsMin" name="RmsMin" class="form-control" disabled />
-                    <span asp-validation-for="RmsMin" class="text-danger"></span>
+                    <label class="control-label">Global em velocidade</label>
+                    <input asp-for="VelocityMax" id="VelocityMin" name="VelocityMax" class="form-control" disabled />
+                    <span asp-validation-for="VelocityMax" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-3" style="display: grid;">
+                    <label class="control-label">Global em aceleração</label>
+                    <input asp-for="AccelerationMin" name="AccelerationMin" id="AccelerationMin" class="form-control" disabled />
+                    <span asp-validation-for="AccelerationMin" class="text-danger"></span>
+                </div>
+
+                <div class="form-group col-md-3" style="display: grid;">
+                    <label class="control-label">Global em aceleração</label>
+                    <input asp-for="AccelerationMax" id="AccelerationMax" name="AccelerationMax" class="form-control" disabled />
+                    <span asp-validation-for="AccelerationMax" class="text-danger"></span>
+                </div>
+
+                <div class="form-group col-md-3" style="display: grid;">
+                    <label class="control-label">Fator de Crista</label>
+                    <input asp-for="CrestFactorMin" id="CrestFactorMin" name="CrestFactorMin" class="form-control" disabled />
+                    <span asp-validation-for="CrestFactorMin" class="text-danger"></span>
+                </div>
+
+                <div class="form-group col-md-3" style="display: grid;">
+                    <label class="control-label">Fator de Crista</label>
+                    <input asp-for="CrestFactorMax" id="CrestFactorMax" name="CrestFactorMax" class="form-control" disabled />
+                    <span asp-validation-for="CrestFactorMax" class="text-danger"></span>
                 </div>
             </div>
 
@@ -244,5 +270,7 @@
     </div>*@
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

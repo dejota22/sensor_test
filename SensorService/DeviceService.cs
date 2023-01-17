@@ -51,7 +51,13 @@ namespace SensorService
                             Rms = Device.Rms,
                             RmsMax = Device.RmsMax,
                             RmsMin = Device.RmsMin,
-                            Temperature = Device.Temperature
+                            Temperature = Device.Temperature,
+                            VelocityMin = Device.VelocityMin,
+                            VelocityMax = Device.VelocityMax,
+                            AccelerationMin = Device.AccelerationMin,
+                            AccelerationMax = Device.AccelerationMax,
+                            CrestFactorMin = Device.CrestFactorMin,
+                            CrestFactorMax = Device.CrestFactorMax
                         };
 
             return query;
@@ -116,7 +122,7 @@ namespace SensorService
                             Dados = Device.Dados,
                             Compressor = Device.Compressor,
                             CreatedAt = Device.CreatedAt,
-                            DeletedAt =  Device.DeletedAt,
+                            DeletedAt = Device.DeletedAt,
                             ExhaustFan = Device.ExhaustFan,
                             Pump = Device.Pump,
                             Id = Device.Id,
@@ -134,12 +140,18 @@ namespace SensorService
                             Axies = Device.Axies,
                             Battery = Device.Battery,
                             Frequency = Device.Frequency,
+                            VelocityMin = Device.VelocityMin,
+                            VelocityMax = Device.VelocityMax,
+                            AccelerationMin = Device.AccelerationMin,
+                            AccelerationMax = Device.AccelerationMax,
+                            CrestFactorMax = Device.CrestFactorMax,
+                            CrestFactorMin = Device.CrestFactorMin,
 
                             Company = new Company()
                             {
                                 LegalName = Device.Company.LegalName,
                                 TradeName = Device.Company.TradeName,
-                                Cnpj = Device.Company.Cnpj                                
+                                Cnpj = Device.Company.Cnpj
                             }
                         };
 

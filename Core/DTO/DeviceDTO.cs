@@ -34,6 +34,12 @@ namespace Core
         public int? Temperature { get; set; }
         public string RmsMax { get; set; }
         public string RmsMin { get; set; }
+        public int? VelocityMin { get; set; }
+        public int? VelocityMax { get; set; }
+        public int? AccelerationMin { get; set; }
+        public int? AccelerationMax { get; set; }
+        public int? CrestFactorMin { get; set; }
+        public int? CrestFactorMax { get; set; }
 
         //public virtual Company Company { get; set; }
         //public virtual ICollection<Compressor> Compressor { get; set; }
