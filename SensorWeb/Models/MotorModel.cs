@@ -52,7 +52,7 @@ namespace SensorWeb.Models
         //[Required(ErrorMessage = "Required")]
 
         public string Name { get; set; }
-        [Display(Name = "TagMotor")]
+        [Display(Name = "Tag")]
         //[Required(ErrorMessage = "Required")]
         public string Tag { get; set; }
 
