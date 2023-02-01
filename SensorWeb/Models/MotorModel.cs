@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -230,7 +231,7 @@ namespace SensorWeb.Models
         //public virtual ActuationType ActuationType { get; set; }
         //public virtual CardanShaftType CardanShaftType { get; set; }
         //public virtual Coupling Coupling { get; set; }
-        //public virtual Device Device { get; set; }
+        public virtual Device Device { get; set; }
         //public virtual FixationType FixationType { get; set; }
         //public virtual Machine Machine { get; set; }
         //public virtual Pulley Pulley { get; set; }

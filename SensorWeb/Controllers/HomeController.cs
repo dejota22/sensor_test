@@ -1,31 +1,45 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Core;
+using Core.Service;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using SensorService;
 using SensorWeb.Models;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 
 namespace SensorWeb.Controllers
 {
     public class HomeController : BaseController
     {
+        IMotorService _motorService;
+        IMapper _mapper;
         private readonly ILogger<HomeController> _logger;
         private readonly IStringLocalizer<Resources.CommonResources> _localizer;
 
-        public HomeController(ILogger<HomeController> logger, IStringLocalizer<Resources.CommonResources> localizer)
+        public HomeController(IMotorService motorService,
+                                IMapper mapper,
+                                IStringLocalizer<Resources.CommonResources> localizer,
+                                ILogger<HomeController> logger)
         {
-            _logger = logger;
+            _motorService = motorService;
+            _mapper = mapper;
             _localizer = localizer;
+            _logger = logger;
         }
 
         public IActionResult Index()
         {
-            
+            var listaMotores = _motorService.GetAll();
+            var listaMotorModel = _mapper.Map<List<MotorModel>>(listaMotores);
 
-            return View();
+            return View(listaMotorModel.OrderBy(x => x.Id));
         }
 
         public IActionResult Privacy()

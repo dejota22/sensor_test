@@ -1,8 +1,59 @@
-﻿@{
+﻿@model IEnumerable<MotorModel>
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<!--<div class="text-center">
-    <h3 class="display-2">Bem vindo ao sistema de gerenciamento de dispositivos</h3>-->
-   @* <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
-<!--</div>-->
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-white">
+                <div class="card-heading clearfix">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td><h4 class="card-title">Listagem de sensores</h4></td>                            
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="example" class="display table" style="width:100%;text-align:center">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(modelItem => modelItem.Name)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(modelItem => modelItem.Device.Code)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(modelItem => modelItem.Device.Tag)
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Device.Code)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Device.Tag)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
