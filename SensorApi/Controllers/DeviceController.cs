@@ -132,7 +132,6 @@ namespace SensorApi.Controllers
             return contRes;
         }
 
-        [AllowAnonymous]
         [HttpPost]
         [Route("deviceGlobal")]
         public ContentResult AddDeviceGlobal([FromBody] DeviceGlobal deviceGlobal)
@@ -163,7 +162,6 @@ namespace SensorApi.Controllers
             return contRes;
         }
 
-        [AllowAnonymous]
         [HttpPost]
         [Route("deviceData")]
         public ContentResult AddDeviceData([FromBody] DeviceData deviceData)
