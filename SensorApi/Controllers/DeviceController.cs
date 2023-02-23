@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using AutoMapper;
 using Core;
 using Core.ApiModel.Request;
@@ -14,9 +11,7 @@ using Core.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SensorApi.Interfaces;
-using Microsoft.Extensions.Logging;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Newtonsoft.Json;
 
 namespace SensorApi.Controllers
 {
@@ -43,7 +38,7 @@ namespace SensorApi.Controllers
         /// <summary>
         /// Construtor
         /// </summary>        
-        public DeviceController(IDeviceMeasureService DeviceMeasureService, IMotorService MotorService, IDeviceService DeviceService, IJwtAuth jwtAuth, IMapper mapper, 
+        public DeviceController(IDeviceMeasureService DeviceMeasureService, IMotorService MotorService, IDeviceService DeviceService, IJwtAuth jwtAuth, IMapper mapper,
             IMachineService MachineService, IFixationTypeService FixationService, ICouplingTypeService CouplingService,
             ICardanShaftTypeService CardanShaftTypeService, IPumpTypeService PumpTypeService, ICompressorTypeService CompressorTypeService)
         {
@@ -58,7 +53,7 @@ namespace SensorApi.Controllers
             _CardanShaftTypeService = CardanShaftTypeService;
             _PumpTypeService = PumpTypeService;
             _CompressorTypeService = CompressorTypeService;
-          //  _logger = logger;
+            //  _logger = logger;
         }
 
         [AllowAnonymous]
@@ -116,18 +111,18 @@ namespace SensorApi.Controllers
             try
             {
                 deviMes.XAxle = devicemeasure.D.Where(x => !String.IsNullOrEmpty(x.x)).FirstOrDefault().x; //Eixo x
-                    }
+            }
             catch { }
             try
             {
                 deviMes.YAxle = devicemeasure.D.Where(y => !String.IsNullOrEmpty(y.y)).FirstOrDefault().y; //Eixo y
-             }
+            }
             catch { }
             try
             {
                 deviMes.ZAxle = devicemeasure.D.Where(z => !String.IsNullOrEmpty(z.z)).FirstOrDefault().z; //Eixo z
-               }
-            catch { } 
+            }
+            catch { }
 
             _DeviceMeasureService.Insert(deviMes);
 
@@ -137,8 +132,70 @@ namespace SensorApi.Controllers
             return contRes;
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("deviceGlobal")]
+        public ContentResult AddDeviceGlobal([FromBody] DeviceGlobal deviceGlobal)
+        {
+            string respJson;
+            if (deviceGlobal == null)
+            {
+                respJson = "{\"Erro Interno\":\"Erro na leitura dos dados recebidos - Estrutura vazia\"}";
+                ContentResult contRes1 = Content(Newtonsoft.Json.Linq.JObject.Parse(respJson).ToString(), "application/json");
+                contRes1.StatusCode = (int)HttpStatusCode.InternalServerError;
+                return contRes1;
+            }
+
+            var path = "C:\\Log\\global.txt";
+            var text = String.Format("{0}: {1}", DateTime.Now, JsonConvert.SerializeObject(deviceGlobal));
+
+            if (!System.IO.File.Exists(path))
+            {
+                var createFile = System.IO.File.Create(path);
+                createFile.Close();
+            }
+
+            System.IO.File.AppendAllText(path, text + Environment.NewLine);
+
+            respJson = "{\"Message\":\"Dados recebidos com sucesso!\"}";
+            ContentResult contRes = Content(Newtonsoft.Json.Linq.JObject.Parse(respJson).ToString(), "application/json");
+            contRes.StatusCode = (int)HttpStatusCode.OK;
+            return contRes;
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("deviceData")]
+        public ContentResult AddDeviceData([FromBody] DeviceData deviceData)
+        {
+            string respJson;
+            if (deviceData == null)
+            {
+                respJson = "{\"Erro Interno\":\"Erro na leitura dos dados recebidos - Estrutura vazia\"}";
+                ContentResult contRes1 = Content(Newtonsoft.Json.Linq.JObject.Parse(respJson).ToString(), "application/json");
+                contRes1.StatusCode = (int)HttpStatusCode.InternalServerError;
+                return contRes1;
+            }
+
+            var path = "C:\\Log\\data.txt";
+            var text = String.Format("{0}: {1}", DateTime.Now, JsonConvert.SerializeObject(deviceData));
+
+            if (!System.IO.File.Exists(path))
+            {
+                var createFile = System.IO.File.Create(path);
+                createFile.Close();
+            }
+
+            System.IO.File.AppendAllText(path, text + Environment.NewLine);
+
+            respJson = "{\"Message\":\"Dados recebidos com sucesso!\"}";
+            ContentResult contRes = Content(Newtonsoft.Json.Linq.JObject.Parse(respJson).ToString(), "application/json");
+            contRes.StatusCode = (int)HttpStatusCode.OK;
+            return contRes;
+        }
+
         #region abc
-        [AllowAnonymous]           
+        [AllowAnonymous]
         [HttpGet("deviceById")]
         public Motor GetDeviceById(int Id)
         {
@@ -149,8 +206,8 @@ namespace SensorApi.Controllers
         [HttpPost("createDevice")]
         public ContentResult AddDevice(MotorModel motor)
         {
-            if ( motor.CompressorTypeId == 0 ) 
-                 motor.CompressorTypeId = 1;
+            if (motor.CompressorTypeId == 0)
+                motor.CompressorTypeId = 1;
 
             try
             {
@@ -167,7 +224,7 @@ namespace SensorApi.Controllers
             }
             catch (Exception e)
             {
-                var respJson = "{\"Message\":\"Erro ao adicionar Equipamento\",\"Erro\":\"" + e.Message.ToString()+":"+e.InnerException.Message.ToString() + "\"}";
+                var respJson = "{\"Message\":\"Erro ao adicionar Equipamento\",\"Erro\":\"" + e.Message.ToString() + ":" + e.InnerException.Message.ToString() + "\"}";
                 ContentResult contRes1 = Content(Newtonsoft.Json.Linq.JObject.Parse(respJson).ToString(), "application/json");
                 contRes1.StatusCode = (int)HttpStatusCode.InternalServerError;
                 return contRes1;
@@ -198,8 +255,6 @@ namespace SensorApi.Controllers
             return _MachineService.GetQueryDropDownList();
         }
 
-      
-
         // GET: api/<MembersController>
         [AllowAnonymous]
         [HttpGet("getFixationType")]
@@ -228,7 +283,7 @@ namespace SensorApi.Controllers
         // GET: api/<MembersController>
         [AllowAnonymous]
         [HttpGet("getPumpType")]
-        public List<SelectListItemDTO> GetPumpType ()
+        public List<SelectListItemDTO> GetPumpType()
         {
             return _PumpTypeService.GetQueryDropDownList();
         }
@@ -267,35 +322,35 @@ namespace SensorApi.Controllers
             return listMotor;
         }
 
-    //[AllowAnonymous]
-    //// GET: api/<MembersController>
-    //[HttpGet]
-    //public IEnumerable<Motor> AllMembers()
-    //{
-    //    ////return lstMember;
-    //    return _MotorService.GetAll();
-    //}
+        //[AllowAnonymous]
+        //// GET: api/<MembersController>
+        //[HttpGet]
+        //public IEnumerable<Motor> AllMembers()
+        //{
+        //    ////return lstMember;
+        //    return _MotorService.GetAll();
+        //}
 
-    //// GET: api/<DeviceController>
-    //[AllowAnonymous]
-    //[HttpGet]
-    //[Produces("application/json")]
-    //public ContentResult GetA()
-    //{
-    //    string respJson = "{\"Status\":\"Active\",\"Connection\":\"Ok\"}";
-    //    ContentResult contRes1 = Content(Newtonsoft.Json.Linq.JObject.Parse(respJson).ToString(), "application/json");
-    //    return contRes1;
-    //}
+        //// GET: api/<DeviceController>
+        //[AllowAnonymous]
+        //[HttpGet]
+        //[Produces("application/json")]
+        //public ContentResult GetA()
+        //{
+        //    string respJson = "{\"Status\":\"Active\",\"Connection\":\"Ok\"}";
+        //    ContentResult contRes1 = Content(Newtonsoft.Json.Linq.JObject.Parse(respJson).ToString(), "application/json");
+        //    return contRes1;
+        //}
 
 
-    //// GET api/<MembersController>/5
-    //[HttpGet("{id}")]
-    //public Member MemberByid(int id)
-    //{
-    //    return lstMember.Find(x => x.Id == id);
-    //}
+        //// GET api/<MembersController>/5
+        //[HttpGet("{id}")]
+        //public Member MemberByid(int id)
+        //{
+        //    return lstMember.Find(x => x.Id == id);
+        //}
 
-    [AllowAnonymous]
+        [AllowAnonymous]
         // POST api/<MembersController>
         [HttpPost("authentication")]
         public IActionResult Authentication([FromBody] UserCredential userCredential)
