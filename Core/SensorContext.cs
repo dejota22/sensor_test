@@ -51,7 +51,7 @@ namespace Core
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 //optionsBuilder.UseMySQL("server=localhost;port=3306;user=root;password=Rick@159989;database=mydb");
-                optionsBuilder.UseMySQL("server=localhost;port=3306;user=root;password=wA4Sx_3MB42nyuQe;database=sensordb");
+                optionsBuilder.UseMySQL("server=iotdev.cwupbex41i4c.us-east-2.rds.amazonaws.com;port=3306;user=admin;password=OiW65^X1f9T6;database=sensorDB");
             }
         }
 
