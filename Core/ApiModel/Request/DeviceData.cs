@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Core.ApiModel.Request
 {
@@ -17,22 +18,19 @@ namespace Core.ApiModel.Request
         public double Dec { get; set; }
 
         [JsonProperty("setup")]
-        public string Setup { get; set; }
+        public List<Setup> Setup { get; set; }
 
         [JsonProperty("tipo")]
         public string Tipo { get; set; }
 
-        [JsonProperty("eixo")]
-        public string Eixo { get; set; }
+        [JsonProperty("ms_acc")]
+        public double RmsAcc { get; set; }
 
-        [JsonProperty("rms_acc_y")]
-        public double RmsAccY { get; set; }
+        [JsonProperty("rms_spd")]
+        public double RmsSpd { get; set; }
 
-        [JsonProperty("rms_spd_y")]
-        public double RmsSpdY { get; set; }
-
-        [JsonProperty("ftr_crista_y")]
-        public double FtrCristaY { get; set; }
+        [JsonProperty("ftr_crista")]
+        public double FtrCrista { get; set; }
 
         [JsonProperty("alarme")]
         public int Alarme { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Core.ApiModel.Request
 {
@@ -10,6 +11,9 @@ namespace Core.ApiModel.Request
         [JsonProperty("seq")]
         public int Seq { get; set; }
 
+        [JsonProperty("versao")]
+        public string Versao { get; set; }
+
         [JsonProperty("leituras_efetuadas")]
         public int LeiturasEfetuadas { get; set; }
 
@@ -19,8 +23,14 @@ namespace Core.ApiModel.Request
         [JsonProperty("q_totais_enviados")]
         public int QTotaisEnviados { get; set; }
 
+        [JsonProperty("setup")]
+        public List<Setup> Setup { get; set; } 
+
         [JsonProperty("alarme")]
         public int Alarme { get; set; }
+
+        [JsonProperty("temp")]
+        public double Temp { get; set; }
 
         [JsonProperty("rms_acc_x")]
         public double RmsAccX { get; set; }
