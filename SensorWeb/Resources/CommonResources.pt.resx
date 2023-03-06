@@ -183,6 +183,9 @@
   <data name="CompanyTitle" xml:space="preserve">
     <value>Cadastro de Empresas</value>
   </data>
+  <data name="CompanyTypeSelect" xml:space="preserve">
+    <value>-- Selecione o Tipo de Empresa --</value>
+  </data>
   <data name="Compressor" xml:space="preserve">
     <value>Compressores</value>
   </data>
@@ -392,6 +395,9 @@
   </data>
   <data name="Observation" xml:space="preserve">
     <value>Observação</value>
+  </data>
+  <data name="ParentCompanySelect" xml:space="preserve">
+    <value>-- Selecione a Empresa Gerenciadora --</value>
   </data>
   <data name="Pass" xml:space="preserve">
     <value>Senha</value>

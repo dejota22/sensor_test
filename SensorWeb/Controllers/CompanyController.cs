@@ -13,7 +13,8 @@ namespace SensorWeb.Controllers
 {
     public class CompanyController : BaseController
     {
-        ICompanyService _CompanyService;
+        ICompanyService _companyService;
+        ICompanyTypeService _companyTypeService;
         IMapper _mapper;
         private readonly IStringLocalizer<Resources.CommonResources> _localizer;
 
@@ -23,11 +24,13 @@ namespace SensorWeb.Controllers
         /// <param name="CompanyService"></param>
         /// <param name="mapper"></param>
         /// <param name="localizer"></param>
-        public CompanyController(ICompanyService CompanyService,
+        public CompanyController(ICompanyService companyService,
+                                  ICompanyTypeService companyTypeService,
                                   IMapper mapper,
                                   IStringLocalizer<Resources.CommonResources> localizer)
         {
-            _CompanyService = CompanyService;
+            _companyService = companyService;
+            _companyTypeService = companyTypeService;
             _mapper = mapper;
             _localizer = localizer;
         }
@@ -35,23 +38,16 @@ namespace SensorWeb.Controllers
         // GET: CompanyController
         public ActionResult Index()
         {
-            var listaUsuarios = _CompanyService.GetAll();
-            var listaCompanyModel = _mapper.Map<List<CompanyModel>>(listaUsuarios);
+            var listaCompany = _companyService.GetAll();
+            var listaCompanyModel = _mapper.Map<List<CompanyModel>>(listaCompany);
 
-            //foreach (var CompanyModel in listaCompanyModel)
-            //{
-            //    CompanyModel.Contact = _mapper.Map<List<ContactModel>>(_CompanyService.GetAll())
-            //}
-
-            //Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
-          //  ViewData["Title"] = _localizer["CompanyTittle"];
             return View(listaCompanyModel.OrderBy(x => x.Id));
         }
 
         // GET: CompanyController/Details/5
         public ActionResult Details(int id)
         {
-            Company Company = _CompanyService.Get(id);
+            Company Company = _companyService.Get(id);
             CompanyModel CompanyModel = _mapper.Map<CompanyModel>(Company);
             return View(CompanyModel);
         }
@@ -61,15 +57,12 @@ namespace SensorWeb.Controllers
         {
             CompanyModel user = new CompanyModel()
             {
-                Id = _CompanyService.GetlastCode()
+                Id = _companyService.GetlastCode()
             };
 
             return View(user);
         }
 
-
-
-        public List<SelectListItem> Fruits { get; set; }
         // POST: CompanyController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -79,36 +72,14 @@ namespace SensorWeb.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    //#region multiselect
-
-                    //var fruits = (from fruit in CompanyModel.lstCompanySub
-                    //    select new SelectListItem
-                    //    {
-                    //        Text = fruit.Text,
-                    //        Value = fruit.Value.ToString()
-                    //    }).ToList();
-                    //this.Fruits = fruits;
-
-                    //string[] fruitIds = Request.Form["lstFruits"].ToString().Split(",");
-                    //foreach (string id in fruitIds)
-                    //{
-                    //    //if (!string.IsNullOrEmpty(id))
-                    //    //{
-                    //    //    string name = this.Fruits.Where(x => x.Value == id).FirstOrDefault().Text;
-                    //    //    this.Message += "Id: " + id + "  Fruit Name: " + name + "\\n";
-                    //    //}
-                    //}
-
-                    //#endregion
-
-                    CompanyModel.Id = _CompanyService.GetlastCode();
+                    CompanyModel.Id = _companyService.GetlastCode();
                     var Company = _mapper.Map<Company>(CompanyModel);
-                    _CompanyService.Insert(Company);
+                    _companyService.Insert(Company);
                 }
 
                 return RedirectToAction(nameof(Index));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return View();
             }
@@ -117,7 +88,7 @@ namespace SensorWeb.Controllers
         // GET: CompanyController/Edit/5
         public ActionResult Edit(int id)
         {
-            Company Company = _CompanyService.Get(id);
+            Company Company = _companyService.Get(id);
             CompanyModel CompanyModel = _mapper.Map<CompanyModel>(Company);
             return View(CompanyModel);
         }
@@ -132,7 +103,7 @@ namespace SensorWeb.Controllers
                 if (ModelState.IsValid)
                 {
                     var Company = _mapper.Map<Company>(CompanyModel);
-                    _CompanyService.Edit(Company);
+                    _companyService.Edit(Company);
 
                 }
 
@@ -147,7 +118,7 @@ namespace SensorWeb.Controllers
         // GET: CompanyController/Delete/5
         public ActionResult Delete(int id)
         {
-            Company Company = _CompanyService.Get(id);
+            Company Company = _companyService.Get(id);
             CompanyModel CompanyModel = _mapper.Map<CompanyModel>(Company);
             return View(CompanyModel);
         }
@@ -159,7 +130,7 @@ namespace SensorWeb.Controllers
         {
             try
             {
-                _CompanyService.Remove(id);
+                _companyService.Remove(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -27,13 +27,20 @@ namespace SensorWeb.Models
 
         [Display(Name = "Country")]
         public string Country { get; set; }
+
+        [Display(Name = "Empresa Gerenciadora")]
+        public int ParentCompanyId { get; set; }
+
+        [Display(Name = "Tipo empresa")]
+        [Required(ErrorMessage = "Required")]
+        public string CompanyTypeId { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         [Display(Name = "UpdateDate")]
         public DateTime UpdatedAt { get; set; }
+
         public DateTime? DeletedAt { get; set; }
-
-
         [Display(Name = "Empresas Locatárias")]
         public List<SelectListItem> lstCompanySub { get; set; }
 
@@ -53,8 +60,7 @@ namespace SensorWeb.Models
         
         [Display(Name = "Sensores")]
         public List<SelectListItem> lstSensor { get; set; }
-
-
+        
         public virtual string UpdatedAtSt { get { return UpdatedAt.ToShortDateString(); } }
     }
 }

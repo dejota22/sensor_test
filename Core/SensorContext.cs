@@ -18,6 +18,7 @@ namespace Core
         public virtual DbSet<ActuationType> ActuationType { get; set; }
         public virtual DbSet<CardanShaftType> CardanShaftType { get; set; }
         public virtual DbSet<Company> Company { get; set; }
+        public virtual DbSet<CompanyType> CompanyType { get; set; }
         public virtual DbSet<CompanySub> CompanySub { get; set; }
         public virtual DbSet<CompanyUnit> CompanyUnit { get; set; }
         public virtual DbSet<CompanyUnitSector> CompanyUnitSector { get; set; }
@@ -99,6 +100,12 @@ namespace Core
             {
                 entity.ToTable("company");
 
+                entity.HasIndex(e => e.CompanyTypeId)
+                    .HasName("fk_company_company_type_idx");
+
+                entity.HasIndex(e => e.ParentCompanyId)
+                    .HasName("fk_company_company_idx");
+
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Cnpj)
@@ -133,6 +140,39 @@ namespace Core
                     .HasColumnName("website")
                     .HasMaxLength(255)
                     .IsUnicode(false);
+
+                entity.Property(e => e.CompanyTypeId).HasColumnName("company_type_id");
+                entity.HasOne(d => d.CompanyType)
+                    .WithMany(p => p.Company)
+                    .HasForeignKey(d => d.CompanyTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_company_company_type");
+
+                entity.Property(e => e.ParentCompanyId).HasColumnName("parent_company_id");
+                entity.HasOne(d => d.ParentCompany)
+                    .WithMany(p => p.ParentCompanyCol)
+                    .HasForeignKey(d => d.ParentCompanyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_company_company");
+            });
+
+            modelBuilder.Entity<CompanyType>(entity =>
+            {
+                entity.ToTable("company_type");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+
+                entity.Property(e => e.DeletedAt).HasColumnName("deleted_at");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(45)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
             });
 
             modelBuilder.Entity<CompanySub>(entity =>
