@@ -21,7 +21,7 @@ namespace Core.ApiModel.Request
         public List<Setup> Setup { get; set; }
 
         [JsonProperty("tipo")]
-        public string Tipo { get; set; }
+        public int Tipo { get; set; }
 
         [JsonProperty("ms_acc")]
         public double RmsAcc { get; set; }

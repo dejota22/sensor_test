@@ -2,11 +2,11 @@
 {
     public class Setup
     {
-        public string ODR { get; set; }
-        public string FreqCut { get; set; }
-        public string Eixo { get; set; }
-        public string FS { get; set; }
-        public string Filtro { get; set; }
-        public string Amostras { get; set; }
+        public int ODR { get; set; }
+        public int FreqCut { get; set; }
+        public int Eixo { get; set; }
+        public int FS { get; set; }
+        public int Filtro { get; set; }
+        public int Amostras { get; set; }
     }
 }
