@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Core.ApiModel.Request
 {
-    public class DeviceData
+    public class DeviceDataRequest
     {
         [JsonProperty("id")]
         public string Id { get; set; }

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SensorApi.Interfaces;
 using Newtonsoft.Json;
+using Core.ApiModel.Response;
 
 namespace SensorApi.Controllers
 {
@@ -134,7 +135,7 @@ namespace SensorApi.Controllers
 
         [HttpPost]
         [Route("deviceGlobal")]
-        public ContentResult AddDeviceGlobal([FromBody] DeviceGlobal deviceGlobal)
+        public ContentResult AddDeviceGlobal([FromBody] DeviceGlobalRequest deviceGlobal)
         {
             string respJson;
             if (deviceGlobal == null)
@@ -156,7 +157,83 @@ namespace SensorApi.Controllers
 
             System.IO.File.AppendAllText(path, text + Environment.NewLine);
 
-            respJson = "{\"Message\":\"Dados recebidos com sucesso!\"}";
+            var response = new DeviceGlobalResponse
+            {
+                Gatilhos = new List<Gatilho>()
+                {
+                    new Gatilho
+                    {
+                        Config = 0,
+                        RmsAccRed = 5.25,
+                        RmsAccYel = 5.25,
+                        MinRmsAcc = 5.25,
+                        MaxVar = 25
+                    }
+                },
+                Lora = new List<Lora>()
+                {
+                    new Lora
+                    {
+                        Config = 0,
+                        Canal = 4,
+                        End = 69,
+                        Gtw = 61,
+                        Skw = 70,
+                        Sf = 7,
+                        Bw = 7
+                    }
+                },
+                Sensor = new List<Sensor>()
+                {
+                    new Sensor
+                    {
+                        Config = 0,
+                        SetupAcc = new List<Setup>()
+                        {
+                            new Setup
+                            {
+                                ODR = 1,
+                                FreqCut = 0,
+                                Filtro = 0,
+                                Amostras = 2
+                            }
+                        },
+                        SetupSpd = new List<Setup>()
+                        {
+                            new Setup
+                            {
+                                ODR = 1,
+                                FreqCut = 0,
+                                Filtro = 0,
+                                Amostras = 4
+
+                            }
+                        },
+                        SetupUsr = new List<Setup>()
+                        {
+                            new Setup
+                            {
+                                ODR = 1,
+                                FreqCut = 2,
+                                Filtro = 0,
+                                Amostras = 2
+                            }
+                        }
+                    }
+                },
+                Tempos = new List<Tempo>()
+                {
+                    new Tempo
+                    {
+                        Config = 0,
+                        SSleep = 600,
+                        EnviaCard = 10
+                    }
+                }
+            };
+
+            respJson = JsonConvert.SerializeObject(response);
+
             ContentResult contRes = Content(Newtonsoft.Json.Linq.JObject.Parse(respJson).ToString(), "application/json");
             contRes.StatusCode = (int)HttpStatusCode.OK;
             return contRes;
@@ -164,7 +241,7 @@ namespace SensorApi.Controllers
 
         [HttpPost]
         [Route("deviceData")]
-        public ContentResult AddDeviceData([FromBody] DeviceData deviceData)
+        public ContentResult AddDeviceData([FromBody] DeviceDataRequest deviceData)
         {
             string respJson;
             if (deviceData == null)
