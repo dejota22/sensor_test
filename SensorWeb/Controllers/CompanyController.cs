@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core;
 using Core.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
@@ -11,6 +12,7 @@ using System.Linq;
 
 namespace SensorWeb.Controllers
 {
+    [Authorize]
     public class CompanyController : BaseController
     {
         ICompanyService _companyService;

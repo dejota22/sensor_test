@@ -1,5 +1,6 @@
 using Core;
 using Core.Service;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SensorService;
 using SensorWeb.Resources;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
@@ -24,7 +26,7 @@ namespace SensorWeb
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }        
+        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -41,7 +43,7 @@ namespace SensorWeb
             services.AddTransient<ICompanyTypeService, CompanyTypeService>();
             services.AddTransient<IContactService, ContactService>();
             services.AddTransient<IDeviceMeasureService, DeviceMeasureService>();
-           
+
             services.AddTransient<IFixationTypeService, FixationTypeService>();
             services.AddTransient<ICouplingTypeService, CouplingTypeService>();
             services.AddTransient<ICardanShaftTypeService, CardanShaftTypeService>();
@@ -54,7 +56,6 @@ namespace SensorWeb
             services.AddTransient<ICompanyUserService, CompanyUserService>();
             //Injeção dependencia Mappers
             services.AddAutoMapper(typeof(Startup).Assembly);
-
 
             services.AddRazorPages();
 
@@ -86,6 +87,12 @@ namespace SensorWeb
 
             services.AddSingleton<CommonLocalizationService>();
 
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Login";
+                });
+
             //services.Configure<IISOptions>(options =>
             //{
             //    options.ForwardClientCertificate = false;
@@ -111,6 +118,7 @@ namespace SensorWeb
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -119,7 +127,7 @@ namespace SensorWeb
                     name: "default",
                     pattern: "{controller=Login}/{action=Login}/{id?}");
             });
-            
+
             loggerFactory.AddFile("Logs/log_{Date}.txt");
 
             var localizeOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
@@ -127,7 +135,7 @@ namespace SensorWeb
             app.UseRequestLocalization(localizeOptions.Value);
 
             var localizationOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>().Value;
-            app.UseRequestLocalization(localizationOptions);            
+            app.UseRequestLocalization(localizationOptions);
         }
     }
 }

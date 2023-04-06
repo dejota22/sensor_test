@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
 using Core;
 using Core.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using SensorWeb.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SensorWeb.Controllers
 {
+    [Authorize]
     public class DashBoardController : BaseController
     {
         IDeviceMeasureService _DeviceMeasureService;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core;
 using Core.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using SensorWeb.Models;
@@ -10,6 +11,7 @@ using System.Linq;
 
 namespace SensorWeb.Controllers
 {
+    [Authorize]
     public class UserController : BaseController
     {
         IUserService _userService;

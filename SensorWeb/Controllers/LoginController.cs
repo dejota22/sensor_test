@@ -1,33 +1,39 @@
 ﻿using Core.Service;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 using Core;
 using System;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace SensorWeb.Controllers
 {
+    [Authorize]
     public class LoginController : BaseController
     {
-
         IUserService _userService;
-        
-        readonly SensorWeb.Resources.CommonLocalizationService _localizer;
+        readonly Resources.CommonLocalizationService _localizer;
 
-        public LoginController(IUserService userService, SensorWeb.Resources.CommonLocalizationService localizer)
+        public LoginController(IUserService userService, Resources.CommonLocalizationService localizer)
         {
             _userService = userService;
             _localizer = localizer;
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult Login()
-        {            
+        {
             return View();
         }
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public ActionResult Login(string username, string pass)
+        [AllowAnonymous]
+        public async Task<ActionResult> Login(string username, string pass, string returnUrl)
         {
             if (username is null)
             {
@@ -41,7 +47,7 @@ namespace SensorWeb.Controllers
 
             var passCrypto = MD5Hash.CalculaHash(pass);
 
-            var userLogin = _userService.Login(username, passCrypto);            
+            var userLogin = _userService.Login(username, passCrypto);
 
             if (userLogin is null)
             {
@@ -55,8 +61,25 @@ namespace SensorWeb.Controllers
                 return View();
             }
 
-            return RedirectToAction("Index", "Home");
+            var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, userLogin.Id.ToString()),
+                    new Claim(ClaimTypes.Email, userLogin.Email),
+                    // new Claim(ClaimTypes.Role, userLogin.UserType.ToString())
+                };
+
+            var claimsIdentity = new ClaimsIdentity(claims, "Login");
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+            return Redirect(returnUrl ?? "/Home/Index");
         }
 
+        public async Task<ActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            return RedirectToAction("Login", "Login");
+        }
     }
 }

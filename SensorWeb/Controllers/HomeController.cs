@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
-using Core;
 using Core.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using SensorService;
 using SensorWeb.Models;
 using System;
 using System.Collections.Generic;
@@ -16,6 +15,7 @@ using System.Threading;
 
 namespace SensorWeb.Controllers
 {
+    [Authorize]
     public class HomeController : BaseController
     {
         IMotorService _motorService;

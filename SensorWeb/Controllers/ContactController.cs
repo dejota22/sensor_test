@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core;
 using Core.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SensorWeb.Models;
 using System;
@@ -9,6 +10,7 @@ using System.Linq;
 
 namespace SensorWeb.Controllers
 {
+    [Authorize]
     public class ContactController : BaseController
     {
         IContactService _ContactService;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core;
 using Core.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -11,6 +12,7 @@ using System.Linq;
 
 namespace SensorWeb.Controllers
 {
+    [Authorize]
     public class MotorController : BaseController
     {
         IMotorService _MotorService;

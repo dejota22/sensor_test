@@ -93,7 +93,6 @@
                         <li>
                             <a href="/Home/Index">
                                 <i class="menu-icon icon-home4"></i><span>Home</span>
-
                             </a>
                         </li>                        
                         <li>
@@ -107,7 +106,7 @@
 
                                     <ul>
                                         @*<li><a>@localizer.Get("Company Unit Register")</a></li>
-                <li><a>@localizer.Get("Company Unit Sector Register")</a></li>*@
+                                        <li><a>@localizer.Get("Company Unit Sector Register")</a></li>*@
                                         <li>@Html.ActionLink(@localizer.Get("Company Register"), "Index", "Company")</li>
                                     </ul>
 
@@ -149,8 +148,7 @@
         <li><a href="#.html">Link 3</a></li>*@
                             </ul>
                         </li>
-
-                        <li>
+@*                        <li>
                             <a href="#.html">
                                 <i class="menu-icon icon-layers"></i><span>Relatórios</span>
                             </a>
@@ -165,6 +163,11 @@
                         <li>
                             <a href="#.html">
                                 <i class="menu-icon icon-inbox"></i><span>Contato</span>
+                            </a>
+                        </li>*@
+                        <li>
+                            <a href="/Login/Logout">
+                                <i class="menu-icon icon-exit"></i><span>Sair</span>
                             </a>
                         </li>
 

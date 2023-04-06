@@ -7,16 +7,16 @@ using SensorWeb.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 using System.Drawing;
-using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using QRCoder;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SensorWeb.Controllers
 {
+    [Authorize]
     public class DeviceController : BaseController
     {
         IDeviceService _DeviceService;
