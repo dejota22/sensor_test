@@ -1,0 +1,105 @@
+﻿@model IEnumerable<MotorModel>
+
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+
+<div class="page-title">
+    <h3 class="breadcrumb-header">Relatório</h3>
+</div>
+
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="row text-center">
+                <div class="col-sm border"><b>ACIONAMENTO</b></div>
+                <div class="col-sm border"><b>ACIONADO</b></div>
+            </div>
+            <div class="row text-center">
+                <div class="col-sm border"><input type="text" id="acionamento" name="acionamento"></div>
+                <div class="col-sm border"><input type="text" id="acionado" name="acionamento"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm border">
+                    <b>ALARME: </b>
+                    <select name="select">
+                        <option value="verde">Verde</option>
+                        <option value="amarelo">Amarelo</option>
+                        <option value="vermelho">Vermelho</option>
+                    </select>
+                </div>
+                <div class="col-sm border">
+                    <b>ALARME: </b>
+                    <select name="select">
+                        <option value="verde">Verde</option>
+                        <option value="amarelo">Amarelo</option>
+                        <option value="vermelho">Vermelho</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="border text-center"><b>VELOCIDADE</b></div>
+            </div>
+            <div class="row">
+                <div class="col-sm border"><b>PONTO MAX: </b><input type="text" id="vel-ponto-max1" name="vel-ponto-max1"></div>
+                <div class="col-sm border"><b>PONTO MAX: </b><input type="text" id="vel-ponto-max2" name="vel-ponto-max2"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm border"><b>VEL. </b><input type="text" id="vel1" name="vel1"></div>
+                <div class="col-sm border"><b>VEL. </b><input type="text" id="vel2" name="vel2"></div>
+            </div>
+            <div class="row">
+                <div class="border text-center"><b>ACELERAÇÃO</b></div>
+            </div>
+            <div class="row">
+                <div class="col-sm border"><b>PONTO MAX: </b><input type="text" id="ace-ponto-max1" name="ace-ponto-max1"></div>
+                <div class="col-sm border"><b>PONTO MAX: </b><input type="text" id="ace-ponto-max2" name="ace-ponto-max2"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm border"><b>ACEL. </b><input type="text" id="ace1" name="ace1"></div>
+                <div class="col-sm border"><b>ACEL. </b><input type="text" id="ace2" name="ace2"></div>
+            </div>
+            <div class="row">
+                <div class="border text-center"><b>OBSERVAÇÕES RELEVANTES</b></div>
+            </div>
+            <div class="row">
+                <textarea rows="10" class="border" type="text" id="observacoes" name="observacoes"></textarea>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="row">
+                <div class="border"><b>DIAGNÓSTICO</b></div>
+            </div>
+            <div class="row">
+                <textarea rows="6" class="border" type="text" id="diagnostico" name="diagnostico"></textarea>
+            </div>
+            <div class="row">
+                <div class="border"><b>AÇÃO RECOMENDADA</b></div>
+            </div>
+            <div class="row">
+                <textarea rows="15" class="border" type="text" id="diagnostico" name="diagnostico"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="border text-center"><b>GRÁFICO</b></div>
+            </div>
+            <div class="row">
+                <div class="col-sm border"><b>Equipamento: </b><input type="text" id="equipamento" name="equipamento"></div>
+                <div class="col-sm border"><b>PONTO: </b><input type="text" id="equipamento" name="equipamento"></div>
+                <div class="col-sm border"><b>TIPO: </b><input type="text" id="equipamento" name="equipamento"></div>
+                <div class="col-sm border"><b>UNIDADE: </b><input type="text" id="equipamento" name="equipamento"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 my-4">
+            <button type="button" class="btn btn-primary">IMPRIMIR</button>
+        </div>
+    </div>
+</div>
+
+<!-- end page main wrapper -->
+<div class="page-footer">
+    <p>Iot Nest/Vibração &copy; <span class="current-year"></span>. Conteúdo de uso exclusivo.</p>
+</div>
