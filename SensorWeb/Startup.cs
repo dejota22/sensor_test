@@ -91,6 +91,7 @@ namespace SensorWeb
                 .AddCookie(options =>
                 {
                     options.LoginPath = "/Login";
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
                 });
 
             //services.Configure<IISOptions>(options =>

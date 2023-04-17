@@ -1,4 +1,5 @@
 ﻿using Core;
+using Core.DTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -42,8 +43,8 @@ namespace SensorWeb.Models
         public int? AccelerationMax { get; set; }
         public int? CrestFactorMin { get; set; }
         public int? CrestFactorMax { get; set; }
-
         public virtual Company Company { get; set; }
+        public List<SelectListItemDTO> Companies { get; set; }
         //public virtual ICollection<Compressor> Compressor { get; set; }
         //public virtual ICollection<Dados> Dados { get; set; }
         //public virtual ICollection<ExhaustFan> ExhaustFan { get; set; }

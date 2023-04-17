@@ -13,24 +13,21 @@
 
 <div id="main-wrapper">
     <div class="row">
-
         <div class="col-md-12">
-
             <div class="card card-white">
-
                 <div class="card-heading clearfix">
-
                     <table style="width: 100%;">
                         <tr>
                             <td><h4 class="card-title">@localizer.Get("DeviceTitle")</h4></td>
-                            <td style="text-align:right">
+                            @if (User.IsInRole("Administrator"))
+                            {
+                                <td style="text-align:right">
 
-                                <a href="@Url.Action("Create", "Device" )" title="@localizer.Get("Add new")">
-                                    <button type="button" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> </button>
-                                </a>
-
-
-                            </td>
+                                    <a href="@Url.Action("Create", "Device" )" title="@localizer.Get("Add new")">
+                                        <button type="button" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> </button>
+                                    </a>
+                                </td>
+                            }
                         </tr>
 
                     </table>
@@ -54,7 +51,7 @@
                                     </th>
 
                                     @*<th style="text-align:start">
-                                        @Html.DisplayNameFor(modelItem => modelItem.CompanyId)
+                                    @Html.DisplayNameFor(modelItem => modelItem.CompanyId)
                                     </th>*@
 
                                     <th style="text-align:center">
@@ -71,77 +68,77 @@
                             <tbody>
                                 @foreach (var item in Model)
                                 {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Id)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Tag)
-                                    </td>
-                                    <td class="sccentralize">
-                                        @Html.DisplayFor(modelItem => item.Code)
-                                    </td>
-                                    @*<td style="text-align:start">
-                                        @Html.DisplayFor(modelItem => item.Company.LegalName)
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Id)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Tag)
+                                        </td>
+                                        <td class="sccentralize">
+                                            @Html.DisplayFor(modelItem => item.Code)
+                                        </td>
+                                        @*<td style="text-align:start">
+                                    @Html.DisplayFor(modelItem => item.Company.LegalName)
                                     </td>*@
-                                    <td style="text-align:center">
-                                        <img style="height:50px;width:50px;cursor:pointer" id="img_@item.Id" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String( item.QrCodeImg))" />
-                                    </td>
-                                    <td>
-                                        <table style="width:100%">
-                                            <tr>
-                                                <td style="padding:0 4px"><a href="@Url.Action("Details", "Device", new { id = item.Id })" title="@localizer.Get("View")"><i class="fas fa-eye"></i></a></td>
-                                                <td style="padding:0 4px"><a href="@Url.Action("Edit", "Device", new { id = item.Id })" title="@localizer.Get("Edit")"><i class="fas fa-edit" style="color:#ff6a00"></i></a></td>
-                                                <td style="padding:0 4px"><a href="@Url.Action("Delete", "Device", new { id = item.Id })" title="@localizer.Get("Delete")" style="color:#ff0000"><i class="fas fa-window-close"></i></a></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
+                                        <td style="text-align:center">
+                                            <img style="height:50px;width:50px;cursor:pointer" id="img_@item.Id" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String( item.QrCodeImg))" />
+                                        </td>
+                                        <td>
+                                            <table style="width:100%">
+                                                <tr>
+                                                    <td style="padding:0 4px"><a href="@Url.Action("Details", "Device", new { id = item.Id })" title="@localizer.Get("View")"><i class="fas fa-eye"></i></a></td>
+                                                    <td style="padding:0 4px"><a href="@Url.Action("Edit", "Device", new { id = item.Id })" title="@localizer.Get("Edit")"><i class="fas fa-edit" style="color:#ff6a00"></i></a></td>
+                                                    <td style="padding:0 4px"><a href="@Url.Action("Delete", "Device", new { id = item.Id })" title="@localizer.Get("Delete")" style="color:#ff0000"><i class="fas fa-window-close"></i></a></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
 
 
                                     @*<script>
-                                        document.addEventListener('DOMContentLoaded', function () {
-                                            // Query the element
-                                            const printBtn = document.getElementById('img_@item.Id');
+                                document.addEventListener('DOMContentLoaded', function () {
+                                // Query the element
+                                const printBtn = document.getElementById('img_@item.Id');
 
-                                            printBtn.addEventListener('click', function () {
-                                                // Create a fake iframe
-                                                const iframe = document.createElement('iframe');
+                                printBtn.addEventListener('click', function () {
+                                // Create a fake iframe
+                                const iframe = document.createElement('iframe');
 
-                                                // Make it hidden
-                                                iframe.style.height = 0;
-                                                iframe.style.visibility = 'hidden';
-                                                iframe.style.width = 0;
+                                // Make it hidden
+                                iframe.style.height = 0;
+                                iframe.style.visibility = 'hidden';
+                                iframe.style.width = 0;
 
-                                                // Set the iframe's source
-                                                iframe.setAttribute('srcdoc', '<html><body></body></html>');
+                                // Set the iframe's source
+                                iframe.setAttribute('srcdoc', '<html><body></body></html>');
 
-                                                document.body.appendChild(iframe);
+                                document.body.appendChild(iframe);
 
-                                                iframe.contentWindow.addEventListener('afterprint', function () {
-                                                    iframe.parentNode.removeChild(iframe);
-                                                });
+                                iframe.contentWindow.addEventListener('afterprint', function () {
+                                iframe.parentNode.removeChild(iframe);
+                                });
 
-                                                iframe.addEventListener('load', function () {
-                                                    // Clone the image
-                                                    const image = document.getElementById('img_@item.Id').cloneNode();
-                                                    image.style.width = '20%';
-                                                    image.style.height = '20%';
+                                iframe.addEventListener('load', function () {
+                                // Clone the image
+                                const image = document.getElementById('img_@item.Id').cloneNode();
+                                image.style.width = '20%';
+                                image.style.height = '20%';
 
-                                                    // Append the image to the iframe's body
-                                                    const body = iframe.contentDocument.body;
-                                                    body.style.textAlign = 'center';
-                                                    body.appendChild(image);
+                                // Append the image to the iframe's body
+                                const body = iframe.contentDocument.body;
+                                body.style.textAlign = 'center';
+                                body.appendChild(image);
 
-                                                    image.addEventListener('load', function () {
-                                                        // Invoke the print when the image is ready
-                                                        iframe.contentWindow.print();
-                                                    });
-                                                });
-                                            });
-                                        });
+                                image.addEventListener('load', function () {
+                                // Invoke the print when the image is ready
+                                iframe.contentWindow.print();
+                                });
+                                });
+                                });
+                                });
 
-                                    </script>*@
+                                </script>*@
 
                                 }
 

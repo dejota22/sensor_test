@@ -1,4 +1,5 @@
 ﻿using Core;
+using Core.DTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -232,6 +233,8 @@ namespace SensorWeb.Models
         //public virtual CardanShaftType CardanShaftType { get; set; }
         //public virtual Coupling Coupling { get; set; }
         public virtual Device Device { get; set; }
+
+        public List<SelectListItemDTO> Companies { get; set; }
         //public virtual FixationType FixationType { get; set; }
         //public virtual Machine Machine { get; set; }
         //public virtual Pulley Pulley { get; set; }

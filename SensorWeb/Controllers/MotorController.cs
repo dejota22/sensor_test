@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Core;
+using Core.DTO;
 using Core.Service;
+using Core.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -9,6 +11,7 @@ using SensorWeb.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace SensorWeb.Controllers
 {
@@ -17,6 +20,8 @@ namespace SensorWeb.Controllers
     {
         IMotorService _MotorService;
         IMapper _mapper;
+        IUserService _userService;
+        ICompanyService _companyService;
         private readonly IStringLocalizer<Resources.CommonResources> _localizer;
 
         private readonly ILogger<MotorController> _logger;
@@ -27,11 +32,15 @@ namespace SensorWeb.Controllers
         /// <param name="mapper"></param>
         /// <param name="localizer"></param>
         public MotorController(IMotorService MotorService,
+                                  IUserService UserService,
+                                  ICompanyService CompanyService,
                                   IMapper mapper,
                                   IStringLocalizer<Resources.CommonResources> localizer,
                                   ILogger<MotorController> logger)
         {
             _MotorService = MotorService;
+            _userService = UserService; ;
+            _companyService = CompanyService;
             _mapper = mapper;
             _localizer = localizer;
             _logger = logger;
@@ -42,27 +51,28 @@ namespace SensorWeb.Controllers
         {
             try
             {
-                var listaUsuarios = _MotorService.GetAll();
-                _logger.LogInformation($"Busca OK");
-                var listaMotorModel = _mapper.Map<List<MotorModel>>(listaUsuarios);
-                _logger.LogInformation($"Busca OK1");
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = _userService.Get(Convert.ToInt32(userId));
+                var userCompany = user.Contact.CompanyId;
+                var companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany).ToList();
 
-                //foreach (var MotorModel in listaMotorModel)
-                //{
-                //    MotorModel.Contact = _mapper.Map<List<ContactModel>>(_MotorService.GetAll())
-                //}
+                var listaMotors = _MotorService.GetAll();
 
-                //Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
-                //  ViewData["Title"] = _localizer["MotorTittle"];
+                var listaMotorModel = _mapper.Map<List<MotorModel>>(listaMotors);
+
+                if (user.UserType.Name != Constants.Roles.Administrator)
+                {
+                    listaMotorModel = listaMotorModel.Where(x => x.CompanyId == userCompany || companies.Any(x => x.Id == userCompany)).ToList();
+                }
 
                 return View(listaMotorModel.OrderBy(x => x.Id));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogInformation($"Erro:{ex.Message}");
                 throw;
             }
-        
+
         }
 
         // GET: MotorController/Details/5
@@ -76,12 +86,21 @@ namespace SensorWeb.Controllers
         // GET: MotorController/Create
         public ActionResult Create()
         {
-            //MotorModel motor = new MotorModel()
-            //{
-            //    Id = _MotorService.GetlastCode()
-            //};
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _userService.Get(Convert.ToInt32(userId));
+            var userCompany = user.Contact.CompanyId;
 
-            return View();
+            var motorModel = new MotorModel
+            {
+                Companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany || x.Id == userCompany)
+                    .Select(y => new SelectListItemDTO()
+                    {
+                        Key = y.Id,
+                        Value = y.TradeName
+                    }).Distinct().ToList()
+            };
+
+            return View(motorModel);
         }
 
         // POST: MotorController/Create
@@ -103,7 +122,7 @@ namespace SensorWeb.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return View();
             }
