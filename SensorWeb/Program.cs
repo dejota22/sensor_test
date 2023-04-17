@@ -24,7 +24,5 @@ namespace SensorWeb
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-
-
     }
 }

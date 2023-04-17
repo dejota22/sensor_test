@@ -7,7 +7,7 @@ using Core.Service;
 
 namespace SensorService
 {
-  public  class UserService : IUserService
+    public class UserService : IUserService
     {
         private readonly SensorContext _context;
 
@@ -78,8 +78,6 @@ namespace SensorService
         private IQueryable<User> GetQuery()
         {
             IQueryable<User> tb_user = _context.User;
-            //var query = from user in tb_user
-            //            select user;
 
             var query = from user in tb_user
                         where user.Contact.Id.Equals(user.ContactId)
@@ -94,8 +92,14 @@ namespace SensorService
                             UpdatedAt = user.UpdatedAt,
                             Password = user.Password,
                             UserTypeId = user.UserTypeId,
+                            UserType = new UserType()
+                            {
+                                Id = user.UserType.Id,
+                                Name = user.UserType.Name,
+                                CreatedAt = user.Contact.CreatedAt,
+                                UpdatedAt = user.Contact.UpdatedAt,
+                            },
                             ContactId = user.ContactId,
-
                             Contact = new Contact()
                             {
                                 FirstName = user.Contact.FirstName,
@@ -107,28 +111,20 @@ namespace SensorService
                                 Rg = user.Contact.Rg,
                                 Email = user.Contact.Email,
                                 IsActive = user.Contact.IsActive,
-                                Id = user.Contact.Id
+                                Id = user.Contact.Id,
+                                Company = new Company()
+                                {
+                                    Id = user.Contact.Company.Id,
+                                    CompanyType = new CompanyType()
+                                    {
+                                        Id = user.Contact.Company.CompanyType.Id,
+                                        Name = user.Contact.Company.CompanyType.Name
+                                    }
+                                }
                             }
                         };
 
-            //var query2 = _context.User
-            //       .Select(x => new Contact
-            //       {
-            //           Id = x.Contact.Id,
-            //           FirstName = x.Contact.FirstName,
-            //       });
             return query;
-
-            //IQueryable<User> tb_user = _context.User;
-            //var query = from user in tb_user
-            //            select user;
-
-            //var query2 = _context.User
-            //       .Select(x => new Contact
-            //       {
-            //           Id = x.Contact.Id,
-            //           FirstName = x.Contact.FirstName,
-            //       });
         }
 
         User IUserService.Get(int idUser)
@@ -136,9 +132,9 @@ namespace SensorService
             return GetQuery().Where(x => x.Id.Equals(idUser)).FirstOrDefault();
         }
 
-        User IUserService.Login(string login,string pass)
+        User IUserService.Login(string login, string pass)
         {
-            return GetQuery().Where(x => x.Email.Equals(login) &&  x.Password.Equals(pass)).FirstOrDefault();
+            return GetQuery().Where(x => x.Email.Equals(login) && x.Password.Equals(pass)).FirstOrDefault();
         }
 
         IEnumerable<User> IUserService.GetAll()
@@ -179,7 +175,7 @@ namespace SensorService
         {
             user.Contact = new Contact
             {
-                FirstName = user.Contact.FirstName,                
+                FirstName = user.Contact.FirstName,
                 Email = user.Email,
                 CompanyId = user.Contact.CompanyId,
                 IsActive = 1,
@@ -192,7 +188,7 @@ namespace SensorService
 
             user.UserTypeId = user.UserTypeId;
             user.IsActive = 1;
-            
+
             _context.Add(user);
             _context.SaveChanges();
             return user.Id;
@@ -217,7 +213,7 @@ namespace SensorService
                          select new SelectListItemDTO()
                          {
                              Key = User.Id,
-                             Value = String.Concat(User.Contact.FirstName ," ", User.Contact.Surname)
+                             Value = String.Concat(User.Contact.FirstName, " ", User.Contact.Surname)
                          }).Distinct().ToList();
 
             return query;

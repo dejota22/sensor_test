@@ -44,23 +44,6 @@
             </div>
         </div>
 
-        <div class="col-md-12 formclasscreate">
-            <div class="form-group col-md-6" style=" display: grid;">
-                <label asp-for="CompanyTypeId" class="control-label"></label>
-                @Html.DropDownListFor(model => model.CompanyTypeId,
-                new SelectList(companyTypeService.GetQueryDropDownList(), "Key", "Value")
-                , @localizer.Get("CompanyTypeSelect"), new Dictionary<string, object> { { "class", "form-control" } })
-                <span asp-validation-for="CompanyTypeId" class="text-danger"></span>
-            </div>
-            <div class="form-group col-md-6">
-                <label asp-for="ParentCompanyId" class="control-label"></label>
-                @Html.DropDownListFor(model => model.ParentCompanyId,
-                new SelectList(companyService.GetQueryDropDownList(), "Key", "Value")
-                , @localizer.Get("ParentCompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
-                <span asp-validation-for="ParentCompanyId" class="text-danger"></span>
-            </div>
-        </div>
-
         <div class="form-group screenCreateControls">
             <a href="@Url.Action("Index", "Company")"><input asp-action="Index" type="button" value="@localizer.Get("BackToList")" class="btn btn-primary" /></a>
             <input type="submit" value="@localizer.Get("Save")" class="btn btn-primary" />

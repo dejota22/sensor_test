@@ -65,7 +65,7 @@ namespace SensorWeb.Controllers
                 {
                     new Claim(ClaimTypes.NameIdentifier, userLogin.Id.ToString()),
                     new Claim(ClaimTypes.Email, userLogin.Email),
-                    // new Claim(ClaimTypes.Role, userLogin.UserType.ToString())
+                    new Claim(ClaimTypes.Role, userLogin.UserType.Name)
                 };
 
             var claimsIdentity = new ClaimsIdentity(claims, "Login");

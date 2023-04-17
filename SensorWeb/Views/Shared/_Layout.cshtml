@@ -1,5 +1,4 @@
-﻿
-@inject SensorWeb.Resources.CommonLocalizationService localizer
+﻿@inject SensorWeb.Resources.CommonLocalizationService localizer
 
 <!doctype html>
 <html>
@@ -39,8 +38,8 @@
 
     <style>
 
-        .selected-lang:before{
-              background-image: url('@Url.Content(localizer.Get("urlFlag"))');
+        .selected-lang:before {
+            background-image: url('@Url.Content(localizer.Get("urlFlag"))');
         }
 
         .en:before {
@@ -86,15 +85,13 @@
             </a>
 
             <div class="page-sidebar-inner">
-
                 <div class="page-sidebar-menu">
-
                     <ul class="accordion-menu">
                         <li>
                             <a href="/Home/Index">
                                 <i class="menu-icon icon-home4"></i><span>Home</span>
                             </a>
-                        </li>                        
+                        </li>
                         <li>
                             <a href="#!">
                                 <i class="menu-icon icon-public"></i><span>@localizer.Get("Records")</span><i class="accordion-icon fa fa-angle-left"></i>
@@ -114,27 +111,19 @@
 
                                 <li>
                                     <a href="#!"><span>@localizer.Get("Users")</span><i class="accordion-icon fa fa-angle-left"></i></a>
-
                                     <ul>
                                         <li>@Html.ActionLink(@localizer.Get("User Register"), "Index", "User")</li>
                                         <li>@Html.ActionLink(@localizer.Get("User Type"), "Index", "UserType")</li>
                                         <li><a style="cursor:not-allowed">@localizer.Get("Contact Register") </a></li>
                                     </ul>
-
                                 </li>
-
-                                @*<li><a href="#.html">Dispositivos</a></li>*@
-
                                 <li>
                                     <a href="#!"><span>@localizer.Get("Devices")</span><i class="accordion-icon fa fa-angle-left"></i></a>
-
                                     <ul>
                                         <li>@Html.ActionLink(@localizer.Get("Motor"), "Index", "Motor")</li>
                                         <li>@Html.ActionLink(@localizer.Get("Device"), "Index", "Device")</li>
                                     </ul>
-
                                 </li>
-
                             </ul>
                         </li>
                         <li>
@@ -144,35 +133,19 @@
                             <ul>
                                 <li>@Html.ActionLink(@localizer.Get("Devices"), "Index", "DashBoard")</li>
                                 <li><a href="#.html">Viking</a></li>
-                                @* <li><a href="#.html">Link 2</a></li>
-        <li><a href="#.html">Link 3</a></li>*@
                             </ul>
                         </li>
-@*                        <li>
-                            <a href="#.html">
-                                <i class="menu-icon icon-layers"></i><span>Relatórios</span>
+                        <li>
+                            <a href="/Report/Index">
+                                <i class="menu-icon icon-layers"></i><span>Relatório</span>
                             </a>
                         </li>
-
-                        <li>
-                            <a href="#.html">
-                                <i class="menu-icon icon-show_chart"></i><span>Sobre</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#.html">
-                                <i class="menu-icon icon-inbox"></i><span>Contato</span>
-                            </a>
-                        </li>*@
                         <li>
                             <a href="/Login/Logout">
                                 <i class="menu-icon icon-exit"></i><span>Sair</span>
                             </a>
                         </li>
-
                         <li class="menu-divider"></li>
-
                     </ul>
                 </div>
             </div>
@@ -184,7 +157,6 @@
 
             <!-- start page header -->
             <div class="page-header">
-
                 <nav class="navbar navbar-default">
                     <div class="container-fluid">
                         <!-- Brand and toggle get grouped for better mobile display -->
@@ -207,7 +179,6 @@
                             </ul>
 
                             <ul class="nav navbar-nav navbar-right">
-
                                 <div class="lang-menu" style="padding-top: 29px; " id="languageMenu">
                                     <div id="selected-lang" class="selected-lang">
                                         @localizer.Get("Language")
@@ -236,7 +207,7 @@
                                                asp-action="SetLanguage"
                                                asp-route-culture="es"
                                                asp-route-returnUrl="@Context.Request.Path"
-                                               Value="Spanish" class="sp"style="font-size: 0.9em">
+                                               Value="Spanish" class="sp" style="font-size: 0.9em">
                                                 Spanish
                                             </a>
                                         </li>
@@ -245,7 +216,7 @@
                                 </div>
 
                                 @*<li class="dropdown user-dropdown" style="padding-top:5px;font-size:0.9em">
-                                    <span style="color:#fff">PT-BR <img src="img/icone-pt-br.png" alt="ícone PT-BR" style="border:none;padding-left:5px"></span>
+                                <span style="color:#fff">PT-BR <img src="img/icone-pt-br.png" alt="ícone PT-BR" style="border:none;padding-left:5px"></span>
                                 </li>*@
                             </ul>
                         </div>
@@ -258,7 +229,7 @@
             <!-- start page inner -->
             <div class="page-inner">
                 @*<div class="page-title">
-                    <h3 class="breadcrumb-header">Home</h3>
+                <h3 class="breadcrumb-header">Home</h3>
                 </div>*@
                 <!-- start page main wrapper -->
                 <div id="main-wrapper">
@@ -416,7 +387,6 @@
     <script src="@Url.Content("~/js/custom.js")"></script>
 
     <!-- all js include end -->
-
     @RenderSection("Scripts", required: false)
 </body>
 </html>
