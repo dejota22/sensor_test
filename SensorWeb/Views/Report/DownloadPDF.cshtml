@@ -1,0 +1,157 @@
+﻿@model ReportModel
+
+<style type="text/css">
+
+    textarea {
+        border: none;
+        outline: none;
+        padding: 0;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: calc(-1 * var(--bs-gutter-y));
+        margin-right: calc(-.5 * var(--bs-gutter-x));
+        margin-left: calc(-.5 * var(--bs-gutter-x));
+    }
+
+        .row > * {
+            flex-shrink: 0;
+            width: 100%;
+            max-width: 100%;
+            padding-right: calc(var(--bs-gutter-x) * .5);
+            padding-left: calc(var(--bs-gutter-x) * .5);
+            margin-top: var(--bs-gutter-y);
+        }
+
+    .col-sm {
+        flex: 1 0 0%;
+    }
+
+    .col-sm-4 {
+        flex: 0 0 auto;
+        width: 33.33333333%;
+    }
+
+    .col-sm-8 {
+        flex: 0 0 auto;
+        width: 66.66666667%;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .border {
+        border: 2px solid;
+    }
+
+    .border-right {
+        border-right: 2px solid;
+    }
+
+    .border-bottom {
+        border-bottom: 2px solid;
+    }
+
+    .circulo {
+        height: 10px;
+        width: 50px;
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .verde {
+        background-color: green;
+    }
+
+    .amarelo {
+        background-color: yellow;
+    }
+
+    .vermelho {
+        background-color: red;
+    }
+
+</style>
+
+<div class="row border">
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="row text-center border-bottom">
+                <div class="col-sm border-right"><b>@Html.DisplayNameFor(m => m.Acionamento)</b></div>
+                <div class="col-sm border-right"><b>@Html.DisplayNameFor(m => m.Acionado)</b></div>
+            </div>
+            <div class="row text-center border-bottom">
+                <div class="col-sm border-right">@Html.DisplayTextFor(m => m.Acionamento)</div>
+                <div class="col-sm border-right">@Html.DisplayTextFor(m => m.Acionado)</div>
+            </div>
+            <div class="row border-bottom">
+                <div class="col-sm border-right">
+
+                    <b>@Html.DisplayNameFor(m => m.AlarmeAcionamento): </b><span class="circulo @Html.DisplayTextFor(m => m.AlarmeAcionamento)"></span>@Html.DisplayTextFor(m => m.AlarmeAcionamento)
+                </div>
+                <div class="col-sm border-right">
+                    <b>@Html.DisplayNameFor(m => m.AlarmeAcionamento): </b><span class="circulo @Html.DisplayTextFor(m => m.AlarmeAcionado)"></span>@Html.DisplayTextFor(m => m.AlarmeAcionado)
+                </div>
+            </div>
+            <div class="row border-bottom border-right">
+                <div class="text-center"><b>@Html.DisplayNameFor(m => m.Velocidade)</b></div>
+            </div>
+            <div class="row border-bottom">
+                <div class="col-sm border-right"><b>@Html.DisplayNameFor(m => m.PontoMaxVel1) </b>@Html.DisplayTextFor(m => m.PontoMaxVel1)</div>
+                <div class="col-sm border-right"><b>@Html.DisplayNameFor(m => m.PontoMaxVel2) </b>@Html.DisplayTextFor(m => m.PontoMaxVel2)</div>
+            </div>
+            <div class="row border-bottom">
+                <div class="col-sm border-right"><b>@Html.DisplayNameFor(m => m.Vel1) </b>@Html.DisplayTextFor(m => m.Vel1)</div>
+                <div class="col-sm border-right"><b>@Html.DisplayNameFor(m => m.Vel2) </b>@Html.DisplayTextFor(m => m.Vel2)</div>
+            </div>
+            <div class="row border-bottom border-right">
+                <div class="text-center"><b>@Html.DisplayNameFor(m => m.Aceleracao)</b></div>
+            </div>
+            <div class="row border-bottom">
+                <div class="col-sm border-right"><b>@Html.DisplayNameFor(m => m.PontoMaxAce1) </b>@Html.DisplayTextFor(m => m.PontoMaxAce1)</div>
+                <div class="col-sm border-right"><b>@Html.DisplayNameFor(m => m.PontoMaxAce2) </b>@Html.DisplayTextFor(m => m.PontoMaxAce2)</div>
+            </div>
+            <div class="row border-bottom">
+                <div class="col-sm border-right"><b>@Html.DisplayNameFor(m => m.Acel1) </b>@Html.DisplayTextFor(m => m.Acel1)</div>
+                <div class="col-sm border-right"><b>@Html.DisplayNameFor(m => m.Acel2) </b>@Html.DisplayTextFor(m => m.Acel2)</div>
+            </div>
+            <div class="row border-bottom border-right">
+                <div class="text-center"><b>@Html.DisplayNameFor(m => m.ObservacoesRelevantes)</b></div>
+            </div>
+            <div class="row border-bottom border-right">
+                <textarea asp-for="ObservacoesRelevantes" rows="10"></textarea>
+                @*@Html.DisplayTextFor(m => m.ObservacoesRelevantes)*@
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="row border-bottom">
+                <div class="text-center"><b>@Html.DisplayNameFor(m => m.Diagnostico)</b></div>
+            </div>
+            <div class="row border-bottom" style="padding-bottom: 6px">
+                <textarea asp-for="Diagnostico" rows="6"></textarea>
+            </div>
+            <div class="row border-bottom">
+                <div class="text-center"><b>@Html.DisplayNameFor(m => m.AcaoRecomendada)</b></div>
+            </div>
+            <div class="row border-bottom" style="padding-bottom: 4px">
+                <textarea asp-for="AcaoRecomendada" rows="12"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="row border-bottom">
+                <div class="text-center"><b>@Html.DisplayNameFor(m => m.Grafico)</b></div>
+            </div>
+            <div class="row ">
+                <div class="col-sm border-right"><b>@Html.DisplayNameFor(m => m.Equipamento): </b>@Html.DisplayTextFor(m => m.Equipamento)</div>
+                <div class="col-sm border-right"><b>@Html.DisplayNameFor(m => m.Ponto): </b>@Html.DisplayTextFor(m => m.Ponto)</div>
+                <div class="col-sm border-right"><b>@Html.DisplayNameFor(m => m.Tipo): </b>@Html.DisplayTextFor(m => m.Tipo)</div>
+                <div class="col-sm"><b>@Html.DisplayNameFor(m => m.Unidade): </b>@Html.DisplayTextFor(m => m.Unidade)</div>
+            </div>
+        </div>
+    </div>
+</div>

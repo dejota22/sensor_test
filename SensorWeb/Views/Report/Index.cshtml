@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MotorModel>
+﻿@model ReportModel
 
 @inject SensorWeb.Resources.CommonLocalizationService localizer
 
@@ -6,98 +6,93 @@
     <h3 class="breadcrumb-header">Relatório</h3>
 </div>
 
-<div id="main-wrapper">
-    <div class="row">
-        <div class="col-sm-8">
-            <div class="row text-center">
-                <div class="col-sm border"><b>ACIONAMENTO</b></div>
-                <div class="col-sm border"><b>ACIONADO</b></div>
-            </div>
-            <div class="row text-center">
-                <div class="col-sm border"><input type="text" id="acionamento" name="acionamento"></div>
-                <div class="col-sm border"><input type="text" id="acionado" name="acionamento"></div>
-            </div>
-            <div class="row">
-                <div class="col-sm border">
-                    <b>ALARME: </b>
-                    <select name="select">
-                        <option value="verde">Verde</option>
-                        <option value="amarelo">Amarelo</option>
-                        <option value="vermelho">Vermelho</option>
-                    </select>
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row form-group">
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="row text-center">
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Acionamento)</b></div>
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Acionado)</b></div>
                 </div>
-                <div class="col-sm border">
-                    <b>ALARME: </b>
-                    <select name="select">
-                        <option value="verde">Verde</option>
-                        <option value="amarelo">Amarelo</option>
-                        <option value="vermelho">Vermelho</option>
-                    </select>
+                <div class="row text-center">
+                    <div class="col-sm border"><input asp-for="Acionamento"></div>
+                    <div class="col-sm border"><input asp-for="Acionado"></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm border">
+                        <b>@Html.DisplayNameFor(m => m.AlarmeAcionamento): </b>@Html.DropDownListFor(m => m.AlarmeAcionamento, new SelectList(Enum.GetValues(typeof(Alarme))))
+                    </div>
+                    <div class="col-sm border">
+                        <b>@Html.DisplayNameFor(m => m.AlarmeAcionado): </b>@Html.DropDownListFor(m => m.AlarmeAcionado, new SelectList(Enum.GetValues(typeof(Alarme))))
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="border text-center"><b>@Html.DisplayNameFor(m => m.Velocidade)</b></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.PontoMaxVel1) </b><input asp-for="PontoMaxVel1"></div>
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.PontoMaxVel2) </b><input asp-for="PontoMaxVel2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Vel1) </b><input asp-for="Vel1"></div>
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Vel2) </b><input asp-for="Vel2"></div>
+                </div>
+                <div class="row">
+                    <div class="border text-center"><b>@Html.DisplayNameFor(m => m.Aceleracao)</b></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.PontoMaxAce1) </b><input asp-for="PontoMaxAce1"></div>
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.PontoMaxAce2) </b><input asp-for="PontoMaxAce2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Acel1) </b><input asp-for="Acel1"></div>
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Acel2) </b><input asp-for="Acel2"></div>
+                </div>
+                <div class="row">
+                    <div class="border text-center"><b>@Html.DisplayNameFor(m => m.ObservacoesRelevantes)</b></div>
+                </div>
+                <div class="row">
+                    <textarea asp-for="ObservacoesRelevantes" rows="10" class="border"></textarea>
                 </div>
             </div>
-            <div class="row">
-                <div class="border text-center"><b>VELOCIDADE</b></div>
-            </div>
-            <div class="row">
-                <div class="col-sm border"><b>PONTO MAX: </b><input type="text" id="vel-ponto-max1" name="vel-ponto-max1"></div>
-                <div class="col-sm border"><b>PONTO MAX: </b><input type="text" id="vel-ponto-max2" name="vel-ponto-max2"></div>
-            </div>
-            <div class="row">
-                <div class="col-sm border"><b>VEL. </b><input type="text" id="vel1" name="vel1"></div>
-                <div class="col-sm border"><b>VEL. </b><input type="text" id="vel2" name="vel2"></div>
-            </div>
-            <div class="row">
-                <div class="border text-center"><b>ACELERAÇÃO</b></div>
-            </div>
-            <div class="row">
-                <div class="col-sm border"><b>PONTO MAX: </b><input type="text" id="ace-ponto-max1" name="ace-ponto-max1"></div>
-                <div class="col-sm border"><b>PONTO MAX: </b><input type="text" id="ace-ponto-max2" name="ace-ponto-max2"></div>
-            </div>
-            <div class="row">
-                <div class="col-sm border"><b>ACEL. </b><input type="text" id="ace1" name="ace1"></div>
-                <div class="col-sm border"><b>ACEL. </b><input type="text" id="ace2" name="ace2"></div>
-            </div>
-            <div class="row">
-                <div class="border text-center"><b>OBSERVAÇÕES RELEVANTES</b></div>
-            </div>
-            <div class="row">
-                <textarea rows="10" class="border" type="text" id="observacoes" name="observacoes"></textarea>
+            <div class="col-sm-4">
+                <div class="row">
+                    <div class="border"><b>@Html.DisplayNameFor(m => m.Diagnostico)</b></div>
+                </div>
+                <div class="row">
+                    <textarea asp-for="Diagnostico" rows="6" class="border"></textarea>
+                </div>
+                <div class="row">
+                    <div class="border"><b>@Html.DisplayNameFor(m => m.AcaoRecomendada)</b></div>
+                </div>
+                <div class="row">
+                    <textarea asp-for="AcaoRecomendada" rows="15" class="border"></textarea>
+                </div>
             </div>
         </div>
-        <div class="col-sm-4">
-            <div class="row">
-                <div class="border"><b>DIAGNÓSTICO</b></div>
-            </div>
-            <div class="row">
-                <textarea rows="6" class="border" type="text" id="diagnostico" name="diagnostico"></textarea>
-            </div>
-            <div class="row">
-                <div class="border"><b>AÇÃO RECOMENDADA</b></div>
-            </div>
-            <div class="row">
-                <textarea rows="15" class="border" type="text" id="diagnostico" name="diagnostico"></textarea>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="border text-center"><b>@Html.DisplayNameFor(m => m.Grafico)</b></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Equipamento): </b><input asp-for="Equipamento"></div>
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Ponto): </b><input asp-for="Ponto"></div>
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Tipo): </b><input asp-for="Tipo"></div>
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Unidade): </b><input asp-for="Unidade"></div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="row">
-                <div class="border text-center"><b>GRÁFICO</b></div>
-            </div>
-            <div class="row">
-                <div class="col-sm border"><b>Equipamento: </b><input type="text" id="equipamento" name="equipamento"></div>
-                <div class="col-sm border"><b>PONTO: </b><input type="text" id="equipamento" name="equipamento"></div>
-                <div class="col-sm border"><b>TIPO: </b><input type="text" id="equipamento" name="equipamento"></div>
-                <div class="col-sm border"><b>UNIDADE: </b><input type="text" id="equipamento" name="equipamento"></div>
-            </div>
+    <div class="row form-group">
+        <div>
+            <b>@Html.DisplayNameFor(m => m.NomeArquivo): </b><input asp-for="NomeArquivo">
+            <input type="submit" value="@localizer.Get("Create")" class="btn btn-primary" />
         </div>
+
     </div>
-    <div class="row">
-        <div class="col-sm-4 my-4">
-            <button type="button" class="btn btn-primary">IMPRIMIR</button>
-        </div>
-    </div>
-</div>
+</form>
 
 <!-- end page main wrapper -->
 <div class="page-footer">
