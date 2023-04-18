@@ -64,7 +64,7 @@ namespace SensorWeb.Controllers
             var userCompany = user.Contact.CompanyId;
             var companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany).ToList();
 
-            var listaDevices = _deviceService.GetAll().Where(x => x.CompanyId == userCompany || companies.Any(x => x.Id == userCompany)).ToList();
+            var listaDevices = _deviceService.GetAll().Where(x => x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId)).ToList();
             var listaDeviceModel = _mapper.Map<List<DeviceModel>>(listaDevices);
 
             foreach (var DeviceModel in listaDeviceModel)

@@ -62,7 +62,7 @@ namespace SensorWeb.Controllers
 
                 if (user.UserType.Name != Constants.Roles.Administrator)
                 {
-                    listaMotorModel = listaMotorModel.Where(x => x.CompanyId == userCompany || companies.Any(x => x.Id == userCompany)).ToList();
+                    listaMotorModel = listaMotorModel.Where(x => x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId)).ToList();
                 }
 
                 return View(listaMotorModel.OrderBy(x => x.Id));

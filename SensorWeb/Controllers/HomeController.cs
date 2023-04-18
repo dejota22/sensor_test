@@ -46,7 +46,7 @@ namespace SensorWeb.Controllers
 
         public IActionResult Index()
         {
-            var listaMotores = _motorService.GetAll();
+            var listaMotores = _motorService.GetAll().ToList();
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _userService.Get(Convert.ToInt32(userId));
@@ -55,7 +55,7 @@ namespace SensorWeb.Controllers
 
             if (user.UserType.Name != Constants.Roles.Administrator)
             {
-                listaMotores = listaMotores.Where(x => x.CompanyId == userCompany || companies.Any(x => x.Id == userCompany)).ToList();
+                listaMotores = listaMotores.Where(x => x.CompanyId.Value == userCompany || companies.Any(y => y.Id == x.CompanyId.Value)).ToList();
             }
 
             var listaMotorModel = _mapper.Map<List<MotorModel>>(listaMotores);
