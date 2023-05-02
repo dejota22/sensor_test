@@ -5,58 +5,118 @@ namespace Core.ApiModel.Request
 {
     public class DeviceGlobalRequest
     {
+        [JsonProperty("gtw")]
+        public string Gtw { get; set; }
+
         [JsonProperty("id")]
         public string Id { get; set; }
+
+        [JsonProperty("ver")]
+        public string Ver { get; set; }
 
         [JsonProperty("seq")]
         public int Seq { get; set; }
 
-        [JsonProperty("versao")]
-        public string Versao { get; set; }
+        [JsonProperty("resets")]
+        public int Resets { get; set; }
 
-        [JsonProperty("leituras_efetuadas")]
-        public int LeiturasEfetuadas { get; set; }
+        [JsonProperty("card_lidos")]
+        public int CardLidos { get; set; }
 
-        [JsonProperty("q_cards_enviados")]
-        public int QCardsEnviados { get; set; }
+        [JsonProperty("card_send")]
+        public int CardSend { get; set; }
 
-        [JsonProperty("q_totais_enviados")]
-        public int QTotaisEnviados { get; set; }
+        [JsonProperty("relat_send")]
+        public int RelatSend { get; set; }
 
-        [JsonProperty("setup")]
-        public List<Setup> Setup { get; set; } 
+        [JsonProperty("relat_erros")]
+        public int RelatErros { get; set; }
 
-        [JsonProperty("alarme")]
-        public int Alarme { get; set; }
+        [JsonProperty("setup_bf")]
+        public List<SetupBf> SetupBf { get; set; }
+
+        [JsonProperty("setup_af")]
+        public List<SetupAf> SetupAf { get; set; }
+
+        [JsonProperty("freq")]
+        public double Freq { get; set; }
 
         [JsonProperty("temp")]
         public double Temp { get; set; }
 
-        [JsonProperty("rms_acc_x")]
-        public double RmsAccX { get; set; }
+        [JsonProperty("alrm")]
+        public int Alrm { get; set; }
 
-        [JsonProperty("rms_acc_y")]
-        public double RmsAccY { get; set; }
+        [JsonProperty("rms_bf_acc_X")]
+        public double RmsBfAccX { get; set; }
 
-        [JsonProperty("rms_acc_z")]
-        public double RmsAccZ { get; set; }
+        [JsonProperty("rms_bf_acc_Y")]
+        public double RmsBfAccY { get; set; }
 
-        [JsonProperty("rms_spd_x")]
-        public double RmsSpdX { get; set; }
+        [JsonProperty("rms_bf_acc_Z")]
+        public double RmsBfAccZ { get; set; }
 
-        [JsonProperty("rms_spd_y")]
-        public double RmsSpdY { get; set; }
+        [JsonProperty("rms_bf_spd_X")]
+        public double RmsBfSpdX { get; set; }
 
-        [JsonProperty("rms_spd_z")]
-        public double RmsSpdZ { get; set; }
+        [JsonProperty("rms_bf_spd_Y")]
+        public double RmsBfSpdY { get; set; }
 
-        [JsonProperty("ftr_crista_x")]
-        public double FtrCristaX { get; set; }
+        [JsonProperty("rms_bf_spd_Z")]
+        public double RmsBfSpdZ { get; set; }
 
-        [JsonProperty("ftr_crista_y")]
-        public double FtrCristaY { get; set; }
+        [JsonProperty("rms_af_acc_X")]
+        public double RmsAfAccX { get; set; }
 
-        [JsonProperty("ftr_crista_z")]
-        public double FtrCristaZ { get; set; }
+        [JsonProperty("rms_af_acc_Y")]
+        public double RmsAfAccY { get; set; }
+
+        [JsonProperty("rms_af_acc_Z")]
+        public double RmsAfAccZ { get; set; }
+
+        [JsonProperty("rms_af_spd_X")]
+        public double RmsAfSpdX { get; set; }
+
+        [JsonProperty("rms_af_spd_Y")]
+        public double RmsAfSpdY { get; set; }
+
+        [JsonProperty("rms_af_spd_Z")]
+        public int RmsAfSpdZ { get; set; }
+    }
+
+    public class SetupAf
+    {
+        [JsonProperty("odr")]
+        public int Odr { get; set; }
+
+        [JsonProperty("freq_cut")]
+        public int FreqCut { get; set; }
+
+        [JsonProperty("filtro")]
+        public int Filtro { get; set; }
+
+        [JsonProperty("fs")]
+        public int Fs { get; set; }
+
+        [JsonProperty("amostras")]
+        public int Amostras { get; set; }
+    }
+
+    public class SetupBf
+    {
+        [JsonProperty("odr")]
+        public int Odr { get; set; }
+
+        [JsonProperty("freq_cut")]
+        public int FreqCut { get; set; }
+
+        [JsonProperty("filtro")]
+        public int Filtro { get; set; }
+
+        [JsonProperty("fs")]
+        public int Fs { get; set; }
+
+        [JsonProperty("amostras")]
+        public int Amostras { get; set; }
     }
 }

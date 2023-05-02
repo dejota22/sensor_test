@@ -5,6 +5,9 @@ namespace Core.ApiModel.Request
 {
     public class DeviceDataRequest
     {
+        [JsonProperty("gtw")]
+        public string Gtw { get; set; }
+
         [JsonProperty("id")]
         public string Id { get; set; }
 
@@ -23,7 +26,7 @@ namespace Core.ApiModel.Request
         [JsonProperty("tipo")]
         public int Tipo { get; set; }
 
-        [JsonProperty("ms_acc")]
+        [JsonProperty("rms_acc")]
         public double RmsAcc { get; set; }
 
         [JsonProperty("rms_spd")]
@@ -37,6 +40,5 @@ namespace Core.ApiModel.Request
 
         [JsonProperty("dado")]
         public string Dado { get; set; }
-
     }
 }

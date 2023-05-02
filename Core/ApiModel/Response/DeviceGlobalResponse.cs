@@ -16,8 +16,8 @@ namespace Core.ApiModel.Response
         [JsonProperty("sensor")]
         public List<Sensor> Sensor { get; set; }
 
-        [JsonProperty("tempos")]
-        public List<Tempo> Tempos { get; set; }
+        [JsonProperty("horarios")]
+        public List<Horario> Horarios { get; set; }
     }
 
     public class Gatilho
@@ -82,16 +82,55 @@ namespace Core.ApiModel.Response
         public List<Setup> SetupUsr { get; set; }
     }
 
-    public class Tempo
+    public class Horario
     {
         [JsonProperty("config")]
         public int Config { get; set; }
 
-        [JsonProperty("s_sleep")]
-        public int SSleep { get; set; }
+        [JsonProperty("modo_hora")]
+        public int ModoHora { get; set; }
 
-        [JsonProperty("envia_card")]
-        public int EnviaCard { get; set; }
+        [JsonProperty("dias_run")]
+        public string DiasRun { get; set; }
+
+        [JsonProperty("inicio_turno")]
+        public string InicioTurno { get; set; }
+
+        [JsonProperty("fim_turno")]
+        public string FimTurno { get; set; }
+
+        [JsonProperty("intervalo_analise")]
+        public string IntervaloAnalise { get; set; }
+
+        [JsonProperty("intervalo_analise_alarme")]
+        public string IntervaloAnaliseAlarme { get; set; }
+
+        [JsonProperty("quant_alarme")]
+        public int QuantAlarme { get; set; }
+
+        [JsonProperty("quant_horarios_cards")]
+        public string QuantHorariosCards { get; set; }
+
+        [JsonProperty("horarios_envios_card")]
+        public List<HorariosEnviosCard> HorariosEnviosCard { get; set; }
+
+        [JsonProperty("dia_envio_relat")]
+        public string DiaEnvioRelat { get; set; }
+
+        [JsonProperty("hora_envio_relat")]
+        public string HoraEnvioRelat { get; set; }
+
+        [JsonProperty("t_card_normal")]
+        public string TCardNormal { get; set; }
     }
+
+    public class HorariosEnviosCard
+    {
+        [JsonProperty("hora")]
+        public string Hora { get; set; }
+    }
+
+
+
 }
 

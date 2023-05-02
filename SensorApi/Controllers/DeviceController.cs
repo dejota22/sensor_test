@@ -194,6 +194,8 @@ namespace SensorApi.Controllers
                             {
                                 ODR = 1,
                                 FreqCut = 0,
+                                Eixo = 7,
+                                FS = 4,
                                 Filtro = 0,
                                 Amostras = 2
                             }
@@ -204,6 +206,8 @@ namespace SensorApi.Controllers
                             {
                                 ODR = 1,
                                 FreqCut = 0,
+                                Eixo = 7,
+                                FS = 4,
                                 Filtro = 0,
                                 Amostras = 4
 
@@ -215,19 +219,49 @@ namespace SensorApi.Controllers
                             {
                                 ODR = 1,
                                 FreqCut = 2,
+                                Eixo = 2,
+                                FS = 2,
                                 Filtro = 0,
                                 Amostras = 2
                             }
                         }
                     }
                 },
-                Tempos = new List<Tempo>()
+                Horarios = new List<Horario>()
                 {
-                    new Tempo
+                    new Horario
                     {
                         Config = 0,
-                        SSleep = 600,
-                        EnviaCard = 10
+                        ModoHora = 1,
+                        DiasRun = "__SQQTS_",
+                        InicioTurno = "07:00",
+                        FimTurno = "17:00",
+                        IntervaloAnalise = "60",
+                        IntervaloAnaliseAlarme = "20",
+                        QuantAlarme = 5,
+                        QuantHorariosCards = "4",
+                        HorariosEnviosCard = new List<HorariosEnviosCard>()
+                        {
+                            new HorariosEnviosCard
+                            {
+                                Hora = "08:00"
+                            },
+                            new HorariosEnviosCard
+                            {
+                                Hora = "08:00"
+                            },
+                            new HorariosEnviosCard
+                            {
+                                Hora = "14:30"
+                            },
+                            new HorariosEnviosCard
+                            {
+                                Hora = "16:00"
+                            }
+                        },
+                        DiaEnvioRelat = "__S_Q_S_",
+                        HoraEnvioRelat = "16:00",
+                        TCardNormal = "6"
                     }
                 }
             };
