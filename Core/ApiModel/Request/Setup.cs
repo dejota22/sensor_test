@@ -1,12 +1,25 @@
-﻿namespace Core.ApiModel.Request
+﻿using Newtonsoft.Json;
+
+namespace Core.ApiModel.Request
 {
     public class Setup
     {
-        public int ODR { get; set; }
+        [JsonProperty("odr")]
+        public int Odr { get; set; }
+
+        [JsonProperty("freq_cut")]
         public int FreqCut { get; set; }
-        public int Eixo { get; set; }
-        public int FS { get; set; }
+
+        [JsonProperty("filtro")]
         public int Filtro { get; set; }
+
+        [JsonProperty("eixo")]
+        public int Eixo { get; set; }
+
+        [JsonProperty("fs")]
+        public int Fs { get; set; }
+
+        [JsonProperty("amostras")]
         public int Amostras { get; set; }
     }
 }

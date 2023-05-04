@@ -159,30 +159,6 @@ namespace SensorApi.Controllers
 
             var response = new DeviceGlobalResponse
             {
-                Gatilhos = new List<Gatilho>()
-                {
-                    new Gatilho
-                    {
-                        Config = 0,
-                        RmsAccRed = 5.25,
-                        RmsAccYel = 5.25,
-                        MinRmsAcc = 5.25,
-                        MaxVar = 25
-                    }
-                },
-                Lora = new List<Lora>()
-                {
-                    new Lora
-                    {
-                        Config = 0,
-                        Canal = 4,
-                        End = 69,
-                        Gtw = 61,
-                        Skw = 70,
-                        Sf = 7,
-                        Bw = 7
-                    }
-                },
                 Sensor = new List<Sensor>()
                 {
                     new Sensor
@@ -192,10 +168,10 @@ namespace SensorApi.Controllers
                         {
                             new Setup
                             {
-                                ODR = 1,
-                                FreqCut = 0,
+                                Odr = 1,
+                                FreqCut = 2,
                                 Eixo = 7,
-                                FS = 4,
+                                Fs = 4,
                                 Filtro = 0,
                                 Amostras = 2
                             }
@@ -204,25 +180,24 @@ namespace SensorApi.Controllers
                         {
                             new Setup
                             {
-                                ODR = 1,
+                                Odr = 0,
                                 FreqCut = 0,
                                 Eixo = 7,
-                                FS = 4,
+                                Fs = 2,
                                 Filtro = 0,
                                 Amostras = 4
-
                             }
                         },
                         SetupUsr = new List<Setup>()
                         {
                             new Setup
                             {
-                                ODR = 1,
-                                FreqCut = 2,
+                                Odr = 0,
+                                FreqCut = 6,
                                 Eixo = 2,
-                                FS = 2,
+                                Fs = 0,
                                 Filtro = 0,
-                                Amostras = 2
+                                Amostras = 1
                             }
                         }
                     }
@@ -233,37 +208,71 @@ namespace SensorApi.Controllers
                     {
                         Config = 0,
                         ModoHora = 1,
-                        DiasRun = "__SQQTS_",
+                        ContaEnvios = 6,
+                        DiasRun = "_SSQQTSD",
                         InicioTurno = "07:00",
-                        FimTurno = "17:00",
-                        IntervaloAnalise = "60",
-                        IntervaloAnaliseAlarme = "20",
-                        QuantAlarme = 5,
-                        QuantHorariosCards = "4",
+                        FimTurno = "18:00",
+                        IntervaloAnalise = 60,
+                        IntervaloAnaliseAlarme = 20,
+                        QuantAlarme = 6,
+                        QuantHorariosCards = 6,
                         HorariosEnviosCard = new List<HorariosEnviosCard>()
                         {
                             new HorariosEnviosCard
                             {
-                                Hora = "08:00"
+                                Hora = "08:15"
                             },
                             new HorariosEnviosCard
                             {
-                                Hora = "08:00"
+                                Hora = "11:15"
                             },
                             new HorariosEnviosCard
                             {
-                                Hora = "14:30"
+                                Hora = "13:15"
                             },
                             new HorariosEnviosCard
                             {
-                                Hora = "16:00"
+                                Hora = "15:15"
+                            },
+                            new HorariosEnviosCard
+                            {
+                                Hora = "17:15"
+                            },
+                            new HorariosEnviosCard
+                            {
+                                Hora = "17:48"
                             }
                         },
-                        DiaEnvioRelat = "__S_Q_S_",
-                        HoraEnvioRelat = "16:00",
-                        TCardNormal = "6"
+                        DiaEnvioRelat = "_SSQQTSD",
+                        HoraEnvioRelat = "15:00"
                     }
-                }
+                },
+                Gatilhos = new List<Gatilho>()
+                {
+                    new Gatilho
+                    {
+                        Config = 0,
+                        MaxRmsRed = 16,
+                        MaxRmsYel = 12.5,
+                        MinRms = 5.230000019,
+                        MaxPercent = 20
+                    }
+                },
+                Lora = new List<Lora>()
+                {
+                    new Lora
+                    {
+                        Config = 0,
+                        Canal = 4,
+                        End = 69,
+                        Gtw = 61,
+                        Syn = 70,
+                        Sf = 7,
+                        Bw = 7
+                    }
+                },
+                Versao = "1.3.1",
+                Sn = "0102030405060708"
             };
 
             respJson = JsonConvert.SerializeObject(response);
