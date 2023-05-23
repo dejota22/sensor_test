@@ -690,16 +690,6 @@ namespace Core
 
                 entity.Property(e => e.Temperature).HasColumnName("temperature");
 
-                entity.Property(e => e.RmsMax)
-                    .HasColumnName("rmsmax")
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.RmsMin)
-                    .HasColumnName("rmsmin")
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.VelocityMin).HasColumnName("velocitymin");
 
                 entity.Property(e => e.VelocityMax).HasColumnName("velocitymax");

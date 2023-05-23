@@ -18,8 +18,6 @@ namespace Core.DTO
         public string Battery { get; set; }
         public int? Hours { get; set; }
         public int? Temperature { get; set; }
-        public string RmsMax { get; set; }
-        public string RmsMin { get; set; }
         public int? VelocityMin { get; set; }
         public int? VelocityMax { get; set; }
         public int? AccelerationMin { get; set; }

@@ -44,8 +44,6 @@ namespace SensorService
                             Lines = register.Lines,
                             Lpf = register.Lpf,
                             Rms = register.Rms,
-                            RmsMax = register.RmsMax,
-                            RmsMin = register.RmsMin,
                             Temperature = register.Temperature,
                             VelocityMin = register.VelocityMin,
                             VelocityMax = register.VelocityMax,
