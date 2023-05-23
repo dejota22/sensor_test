@@ -16,14 +16,14 @@ using System.Security.Claims;
 namespace SensorWeb.Controllers
 {
     [Authorize]
-    public class ConfigurationController : BaseController
+    public class DeviceMeasureController : BaseController
     {
         IDeviceMeasureService _deviceMeasureService;
         IMotorService _motorService;
         IUserService _userService;
         ICompanyService _companyService;
         IMapper _mapper;
-        private readonly ILogger<ConfigurationController> _logger;
+        private readonly ILogger<DeviceMeasureController> _logger;
         private readonly IStringLocalizer<Resources.CommonResources> _localizer;
 
         /// <summary>
@@ -32,13 +32,13 @@ namespace SensorWeb.Controllers
         /// <param name="DeviceMeasureService"></param>
         /// <param name="mapper"></param>
         /// <param name="localizer"></param>
-        public ConfigurationController(IDeviceMeasureService DeviceMeasureService,
+        public DeviceMeasureController(IDeviceMeasureService DeviceMeasureService,
                                    IMotorService MotorService,
                                    IUserService UserService,
                                    ICompanyService CompanyService,
                                    IMapper mapper,
                                    IStringLocalizer<Resources.CommonResources> localizer,
-                                   ILogger<ConfigurationController> logger)
+                                   ILogger<DeviceMeasureController> logger)
         {
             _deviceMeasureService = DeviceMeasureService;
             _motorService = MotorService;
@@ -74,6 +74,28 @@ namespace SensorWeb.Controllers
                 _logger.LogInformation($"Erro:{ex.Message}");
                 throw;
             }
-        }     
+        }
+
+        // POST: DeviceMeasureController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(DeviceMeasureModel deviceMeasureModel)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    deviceMeasureModel.Id = _deviceMeasureService.GetlastCode();
+                    var deviceMeasure = _mapper.Map<DeviceMeasure>(deviceMeasureModel);
+                    _deviceMeasureService.Insert(deviceMeasure);
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                return View();
+            }
+        }
     }
 }

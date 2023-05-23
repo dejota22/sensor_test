@@ -85,47 +85,47 @@ namespace SensorApi.Controllers
                 return contRes1;
             }
 
-            //Faz busca do Motor para salvar informaões no Measure
-            //var getDevice = _MotorService.GetBymotorTag(devicemeasure.T);
+            ////Faz busca do Motor para salvar informaões no Measure
+            ////var getDevice = _MotorService.GetBymotorTag(devicemeasure.T);
 
-            var getDevice = _DeviceService.GetByDeviceTag(devicemeasure.T);
-            if (getDevice == null)
-            {
-                respJson = "{\"Erro\":\"Tag do Sensor não encontrado no cadastro\"}";
-                ContentResult contRes1 = Content(Newtonsoft.Json.Linq.JObject.Parse(respJson).ToString(), "application/json");
-                contRes1.StatusCode = (int)HttpStatusCode.InternalServerError;
-                return contRes1;
-            }
+            //var getDevice = _DeviceService.GetByDeviceTag(devicemeasure.T);
+            //if (getDevice == null)
+            //{
+            //    respJson = "{\"Erro\":\"Tag do Sensor não encontrado no cadastro\"}";
+            //    ContentResult contRes1 = Content(Newtonsoft.Json.Linq.JObject.Parse(respJson).ToString(), "application/json");
+            //    contRes1.StatusCode = (int)HttpStatusCode.InternalServerError;
+            //    return contRes1;
+            //}
 
-            DeviceMeasure deviMes = new DeviceMeasure
-            {
-                //MotorId = getDevice.Id,
-                DeviceId = getDevice.Id,
-                Temperature = devicemeasure.E, //Temperature
-                ReadDataType = devicemeasure.R, //Tipo de Leitura 
-                CreatedAt = DateTime.Now,
-                YAxle = string.Empty,
-                ZAxle = string.Empty,
-                XAxle = string.Empty,
-            };
+            //DeviceMeasure deviMes = new DeviceMeasure
+            //{
+            //    //MotorId = getDevice.Id,
+            //    DeviceId = getDevice.Id,
+            //    Temperature = devicemeasure.E, //Temperature
+            //    ReadDataType = devicemeasure.R, //Tipo de Leitura 
+            //    CreatedAt = DateTime.Now,
+            //    YAxle = string.Empty,
+            //    ZAxle = string.Empty,
+            //    XAxle = string.Empty,
+            //};
 
-            try
-            {
-                deviMes.XAxle = devicemeasure.D.Where(x => !String.IsNullOrEmpty(x.x)).FirstOrDefault().x; //Eixo x
-            }
-            catch { }
-            try
-            {
-                deviMes.YAxle = devicemeasure.D.Where(y => !String.IsNullOrEmpty(y.y)).FirstOrDefault().y; //Eixo y
-            }
-            catch { }
-            try
-            {
-                deviMes.ZAxle = devicemeasure.D.Where(z => !String.IsNullOrEmpty(z.z)).FirstOrDefault().z; //Eixo z
-            }
-            catch { }
+            //try
+            //{
+            //    deviMes.XAxle = devicemeasure.D.Where(x => !String.IsNullOrEmpty(x.x)).FirstOrDefault().x; //Eixo x
+            //}
+            //catch { }
+            //try
+            //{
+            //    deviMes.YAxle = devicemeasure.D.Where(y => !String.IsNullOrEmpty(y.y)).FirstOrDefault().y; //Eixo y
+            //}
+            //catch { }
+            //try
+            //{
+            //    deviMes.ZAxle = devicemeasure.D.Where(z => !String.IsNullOrEmpty(z.z)).FirstOrDefault().z; //Eixo z
+            //}
+            //catch { }
 
-            _DeviceMeasureService.Insert(deviMes);
+            //_DeviceMeasureService.Insert(deviMes);
 
             respJson = "{\"T\":\"13b579\",\"R\":\"S6302$\",\"S\":\"14400\"}";
             ContentResult contRes = Content(Newtonsoft.Json.Linq.JObject.Parse(respJson).ToString(), "application/json");
@@ -165,7 +165,7 @@ namespace SensorApi.Controllers
                     {
                         Config = 0,
                         SetupAcc = new List<Setup>()
-                        {
+                        {   
                             new Setup
                             {
                                 Odr = 1,

@@ -163,19 +163,6 @@
                             <td>
                                 <label class="control-label">Dados</label>
                             </td>
-                            <td>
-                                @Html.DropDownListFor(model => model.ReadDataType, new SelectList(deviceMeasureService.GetQueryDropDownListByDeviceId(Convert.ToInt32(@ViewData["DeviceId"])), "Value", "Value"),
-                                @localizer.Get("DeviceMeasureSelect"), new Dictionary<string, object> { { "class", "form-control" } })
-                                <span asp-validation-for="ReadDataType" class="text-danger"></span>
-
-                                <script>
-                                    $(document).ready(function () {
-                                        $('#ReadDataType').on('change', function () {
-                                            $(this).closest('form').submit();
-                                        });
-                                    });
-                                </script>
-                            </td>
                         </tr>
                         <tr>
                             <td>

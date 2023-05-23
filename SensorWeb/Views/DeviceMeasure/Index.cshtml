@@ -1,0 +1,184 @@
+﻿@model SensorWeb.Models.DeviceMeasureModel
+
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+
+@inject Core.Service.IDeviceMeasureService deviceMeasureService
+@inject Core.Service.IMotorService motorService
+@inject Core.Service.ICompanyService companyService
+
+<h4 style="text-align:center">Configuração Leitura</h4>
+<hr />
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 pl-0 pr-0" style="display:flex">
+            <div class="col-md-12 pl-0 pr-0">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="CompanyId" class="control-label"></label>
+                        @Html.DropDownListFor(model => model.CompanyId, new SelectList(companyService.GetQueryDropDownList(), "Key", "Value"),
+                        @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
+                        <span asp-validation-for="CompanyId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="MotorId" class="control-label"></label>
+                        @Html.DropDownListFor(model => model.MotorId, new SelectList(motorService.GetQueryDropDownListByTag(), "Key", "Value"),
+                        @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "class", "form-control" } })
+                        <span asp-validation-for="MotorId" class="text-danger"></span>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">Frequencia</label>
+                            <select name="Frequency" id="Frequency" class="form-control" asp-for="Frequency" style="width:100%">
+                                <option value="">Selecionar</option>
+                                <option value="15">15Hz</option>
+                                <option value="20">20Hz</option>
+                                <option value="25">25Hz</option>
+                                <option value="30">30Hz</option>
+                                <option value="35">35Hz</option>
+                                <option value="40">40Hz</option>
+                                <option value="45">45Hz</option>
+                                <option value="50">50Hz</option>
+                                <option value="55">55Hz</option>
+                                <option value="60">60Hz</option>
+                                <option value="65">65Hz</option>
+                            </select>
+                            <span asp-validation-for="Frequency" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">BDR</label>
+                            <select name="Bdr" id="Bdr" class="form-control" asp-for="Bdr" style="width:100%">
+                                <option value="">Selecionar</option>
+                                <option value="52">52Hz</option>
+                                <option value="104">104Hz</option>
+                                <option value="208">208Hz</option>
+                                <option value="417">417Hz</option>
+                                <option value="833">833Hz</option>
+                                <option value="1.667">1.667Hz</option>
+                                <option value="3.333">3.333Hz</option>
+                                <option value="6.667">6.667Hz</option>
+                                <option value="13.333">13.333Hz</option>
+                                <option value="26.667">26.667Hz</option>
+                            </select>
+                            <span asp-validation-for="Bdr" class="text-danger"></span>
+                        </div>                            <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">CutOff</label>
+                            <select name="Cutoff" id="Cutoff" class="form-control" asp-for="Cutoff" style="width:100%">
+                                <option value="">Selecionar</option>
+                                <option value="6.667">6.667Hz</option>
+                                <option value="2.667">2.667Hz</option>
+                                <option value="1.333">1.333Hz</option>
+                                <option value="593">593Hz</option>
+                                <option value="267">267Hz</option>
+                                <option value="133">133Hz</option>
+                                <option value="67">67Hz</option>
+                                <option value="33">33Hz</option>
+                            </select>
+                            <span asp-validation-for="Cutoff" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">LPF</label>
+                            <select name="Lpf" id="Lpf" style="width:100%" asp-for="Lpf" class="form-control">
+                                <option value="">Selecionar</option>
+                                <option value="1">HPF - High Pass Filter </option>
+                                <option value="2">LPF - Low Pass Filter</option>
+                                <option value="3">LPF + LPF2_Off</option>
+                            </select>
+                            <span asp-validation-for="Lpf" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">Lines</label>
+                            <select name="Lines" id="Lines" asp-for="Lines" style="width:100%" class="form-control">
+                                <option value="">Selecionar</option>
+                                <option value="512">512</option>
+                                <option value="1024">1024</option>
+                                <option value="2048">2048</option>
+                                <option value="3456">3456</option>
+                                <option value="4096">4096</option>
+                                <option value="6144">6144</option>
+                                <option value="8192">8192</option>
+                                <option value="10240">10240</option>
+                                <option value="16384">16384</option>
+                                <option value="30080">30080</option>
+                            </select>
+                            <span asp-validation-for="Lines" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">Eixos</label>
+                            <select name="Axies" id="Axies" asp-for="Axies" style="width:100%" class="form-control">
+                                <option value="">Selecionar</option>
+                                <option value="1">Eixo X</option>
+                                <option value="2">Eixo Y</option>
+                                <option value="3">Eixo Z</option>
+                                <option value="4">Eixos X Y Z</option>
+                            </select>
+                            <span asp-validation-for="Axies" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">Temperatura</label>
+                            <input value="25" asp-for="Temperature" name="Temperature" id="Temperature" class="form-control" />
+                            <span asp-validation-for="Temperature" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">RMS</label>
+                            <input value="0 g" asp-for="Rms" id="Rms" name="Rms" class="form-control" />
+                            <span asp-validation-for="Rms" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">Bateria</label>
+                            <input value="100%" asp-for="Battery" name="Battery" id="Battery" class="form-control" />
+                            <span asp-validation-for="Battery" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">Timer</label>
+                            <input placeholder="Horas" asp-for="Hours" id="Hours" name="Hours" class="form-control" />
+                            <span asp-validation-for="Hours" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">Global em velocidade</label>
+                            <input placeholder="Mínimo mm/s" asp-for="VelocityMin" id="VelocityMin" name="VelocityMin" class="form-control" />
+                            <span asp-validation-for="VelocityMin" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">Global em velocidade</label>
+                            <input placeholder="Máximo mm/s" asp-for="VelocityMax" id="VelocityMin" name="VelocityMax" class="form-control" />
+                            <span asp-validation-for="VelocityMax" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">Global em aceleração</label>
+                            <input placeholder="Mínimo mm/s" asp-for="AccelerationMin" name="AccelerationMin" id="AccelerationMin" class="form-control" />
+                            <span asp-validation-for="AccelerationMin" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">Global em aceleração</label>
+                            <input placeholder="Máximo mm/s" asp-for="AccelerationMax" id="AccelerationMax" name="AccelerationMax" class="form-control" />
+                            <span asp-validation-for="AccelerationMax" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">Fator de Crista</label>
+                            <input placeholder="Mínimo mm/s" asp-for="CrestFactorMin" id="CrestFactorMin" name="CrestFactorMin" class="form-control" />
+                            <span asp-validation-for="CrestFactorMin" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">Fator de Crista</label>
+                            <input placeholder="Máximo mm/s" asp-for="CrestFactorMax" id="CrestFactorMax" name="CrestFactorMax" class="form-control" />
+                            <span asp-validation-for="CrestFactorMax" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group" style="margin-top:100px">
+                            <input type="submit" value="Salvar Leitura" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

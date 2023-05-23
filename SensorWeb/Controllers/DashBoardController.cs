@@ -66,27 +66,27 @@ namespace SensorWeb.Controllers
 
                         if (readDate != null)
                         {
-                            XAxle = readDate.XAxle;
-                            YAxle = readDate.YAxle;
-                            ZAxle = readDate.ZAxle;
+                            //XAxle = readDate.XAxle;
+                            //YAxle = readDate.YAxle;
+                            //ZAxle = readDate.ZAxle;
                         }
                     }
                     else
                     {
                         var measureListMotorId = _DeviceMeasureService.GetAll().FirstOrDefault();
 
-                        XAxle = measureListMotorId.XAxle;
-                        YAxle = measureListMotorId.YAxle;
-                        ZAxle = measureListMotorId.ZAxle;
+                        //XAxle = measureListMotorId.XAxle;
+                        //YAxle = measureListMotorId.YAxle;
+                        //ZAxle = measureListMotorId.ZAxle;
                     }
                 }
                 else
                 {
                     var measureListMotorId = _DeviceMeasureService.GetAll().FirstOrDefault();
 
-                    XAxle = measureListMotorId.XAxle;
-                    YAxle = measureListMotorId.YAxle;
-                    ZAxle = measureListMotorId.ZAxle;
+                    //XAxle = measureListMotorId.XAxle;
+                    //YAxle = measureListMotorId.YAxle;
+                    //ZAxle = measureListMotorId.ZAxle;
                 }
             }
             catch (Exception e)

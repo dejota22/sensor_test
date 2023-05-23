@@ -23,7 +23,7 @@ namespace Core.Service
 
         int GetlastCode();
 
-        DeviceMeasure GetByReadDataType(string readData);
+        //DeviceMeasure GetByReadDataType(string readData);
 
         List<SelectListItemDTO> GetQueryDropDownList();
 

@@ -35,11 +35,25 @@ namespace SensorService
                         {                            
                             Id = register.Id,
                             MotorId = register.Id,
+                            Frequency = register.Frequency,
+                            Axies = register.Axies,
+                            Battery = register.Battery,
+                            Bdr = register.Bdr,
+                            Cutoff = register.Cutoff,
+                            Hours = register.Hours,
+                            Lines = register.Lines,
+                            Lpf = register.Lpf,
+                            Rms = register.Rms,
+                            RmsMax = register.RmsMax,
+                            RmsMin = register.RmsMin,
                             Temperature = register.Temperature,
-                            ReadDataType = register.ReadDataType,
-                            XAxle = register.XAxle,
-                            YAxle = register.YAxle,
-                            ZAxle = register.ZAxle,
+                            VelocityMin = register.VelocityMin,
+                            VelocityMax = register.VelocityMax,
+                            AccelerationMin = register.AccelerationMin,
+                            AccelerationMax = register.AccelerationMax,
+                            CrestFactorMin = register.CrestFactorMin,
+                            CrestFactorMax = register.CrestFactorMax,
+                            Sent = register.Sent,
                             CreatedAt = register.CreatedAt                            
                         };            
 
@@ -67,7 +81,7 @@ namespace SensorService
                          select new SelectListItemDTO()
                          {
                              Key = deviceMeasure.Id,
-                             Value = deviceMeasure.CreatedAt.ToString("dd/MM/yyyy H:mm:ss") + " " + deviceMeasure.ReadDataType 
+                             Value = deviceMeasure.CreatedAt.ToString("dd/MM/yyyy H:mm:ss") + " " + deviceMeasure.Id 
                          }).Distinct().ToList();
 
             return query;
@@ -85,7 +99,7 @@ namespace SensorService
                          select new SelectListItemDTO()
                          {
                              Key = deviceMeasure.Id,
-                             Value = deviceMeasure.CreatedAt.ToString("dd/MM/yyyy H:mm:ss") + " " + deviceMeasure.ReadDataType
+                             Value = deviceMeasure.CreatedAt.ToString("dd/MM/yyyy H:mm:ss") + " " + deviceMeasure.Id
                          }).Distinct().ToList();
 
             return query;
@@ -103,7 +117,7 @@ namespace SensorService
                          select new SelectListItemDTO()
                          {
                              Key = deviceMeasure.Id,
-                             Value = deviceMeasure.CreatedAt.ToString("dd/MM/yyyy H:mm:ss") + " - " + deviceMeasure.ReadDataType + " - " + deviceMeasure.Id
+                             Value = deviceMeasure.CreatedAt.ToString("dd/MM/yyyy H:mm:ss") + " - " + deviceMeasure.Id
                          }).Distinct().ToList();
 
             return query;
@@ -135,10 +149,10 @@ namespace SensorService
             return GetQuery().Where(x => x.Id.Equals(id)).FirstOrDefault();
         }
 
-        DeviceMeasure IDeviceMeasureService.GetByReadDataType(string readData)
-        {
-            return GetQuery().Where(x => x.ReadDataType.Equals(readData)).FirstOrDefault();
-        }
+        //DeviceMeasure IDeviceMeasureService.GetByReadDataType(string readData)
+        //{
+        //    return GetQuery().Where(x => x.ReadDataType.Equals(readData)).FirstOrDefault();
+        //}
 
         //UserType IUserTypeService.Get(int iduserType)
         //{
@@ -211,7 +225,14 @@ namespace SensorService
 
         public int GetlastCode()
         {
-            throw new NotImplementedException();
+                        try
+            {
+                return GetQuery().ToList().LastOrDefault().Id + 1;
+            }
+            catch (Exception e)
+            {
+                return 1;
+            }
         }
 
         List<SelectListItemDTO> IDeviceMeasureService.GetQueryDropDownList(int IdMotor)

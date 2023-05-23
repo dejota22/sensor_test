@@ -658,32 +658,59 @@ namespace Core
 
                 entity.Property(e => e.MotorId).HasColumnName("motor_id");
 
-                entity.Property(e => e.ReadDataType)
-                    .IsRequired()
-                    .HasColumnName("read_data_type")
-                    .HasMaxLength(255)
+                entity.Property(e => e.Axies).HasColumnName("axies");
+
+                entity.Property(e => e.Battery)
+                    .HasColumnName("battery")
+                    .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Temperature)
-                    .IsRequired()
-                    .HasColumnName("temperature")
-                    .HasMaxLength(255)
+                entity.Property(e => e.Bdr)
+                    .HasColumnName("bdr")
+                    .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.XAxle)
-                    .IsRequired()
-                    .HasColumnName("x_axle")
-                    .HasColumnType("longtext");
+                entity.Property(e => e.Cutoff)
+                    .HasColumnName("cutoff")
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.YAxle)
-                    .IsRequired()
-                    .HasColumnName("y_axle")
-                    .HasColumnType("longtext");
+                entity.Property(e => e.Frequency).HasColumnName("frequency");
 
-                entity.Property(e => e.ZAxle)
-                    .IsRequired()
-                    .HasColumnName("z_axle")
-                    .HasColumnType("longtext");
+                entity.Property(e => e.Hours).HasColumnName("hours");
+
+                entity.Property(e => e.Lines).HasColumnName("lines");
+
+                entity.Property(e => e.Lpf).HasColumnName("lpf");
+
+                entity.Property(e => e.Rms)
+                    .HasColumnName("rms")
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Temperature).HasColumnName("temperature");
+
+                entity.Property(e => e.RmsMax)
+                    .HasColumnName("rmsmax")
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RmsMin)
+                    .HasColumnName("rmsmin")
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.VelocityMin).HasColumnName("velocitymin");
+
+                entity.Property(e => e.VelocityMax).HasColumnName("velocitymax");
+
+                entity.Property(e => e.AccelerationMin).HasColumnName("accelerationmin");
+
+                entity.Property(e => e.AccelerationMax).HasColumnName("accelerationmax");
+
+                entity.Property(e => e.CrestFactorMin).HasColumnName("crest_factormin");
+
+                entity.Property(e => e.CrestFactorMax).HasColumnName("crest_factormax");
             });
 
             modelBuilder.Entity<ExhaustFan>(entity =>
