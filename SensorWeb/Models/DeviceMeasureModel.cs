@@ -9,6 +9,7 @@ namespace SensorWeb.Models
     public class DeviceMeasureModel : BaseModel
     {
         public int Id { get; set; }
+        public int CompanyId { get; set; }
         public int MotorId { get; set; }
         public string Temperature { get; set; }
         public string ReadDataType { get; set; }
