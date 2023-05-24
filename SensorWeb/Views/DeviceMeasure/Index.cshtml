@@ -9,176 +9,649 @@
 <h4 style="text-align:center">Configuração Leitura</h4>
 <hr />
 <div class="container">
-    <div class="row">
-        <div class="col-md-12 pl-0 pr-0" style="display:flex">
-            <div class="col-md-12 pl-0 pr-0">
-                <form asp-action="Create">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group col-md-4">
-                        <label asp-for="CompanyId" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.CompanyId, new SelectList(companyService.GetQueryDropDownList(), "Key", "Value"),
-                        @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
-                        <span asp-validation-for="CompanyId" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label asp-for="MotorId" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.MotorId, new SelectList(motorService.GetQueryDropDownListByTag(), "Key", "Value"),
-                        @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "class", "form-control" } })
-                        <span asp-validation-for="MotorId" class="text-danger"></span>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">Frequencia</label>
-                            <select name="Frequency" id="Frequency" class="form-control" asp-for="Frequency" style="width:100%">
-                                <option value="">Selecionar</option>
-                                <option value="15">15Hz</option>
-                                <option value="20">20Hz</option>
-                                <option value="25">25Hz</option>
-                                <option value="30">30Hz</option>
-                                <option value="35">35Hz</option>
-                                <option value="40">40Hz</option>
-                                <option value="45">45Hz</option>
-                                <option value="50">50Hz</option>
-                                <option value="55">55Hz</option>
-                                <option value="60">60Hz</option>
-                                <option value="65">65Hz</option>
-                            </select>
-                            <span asp-validation-for="Frequency" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">BDR</label>
-                            <select name="Bdr" id="Bdr" class="form-control" asp-for="Bdr" style="width:100%">
-                                <option value="">Selecionar</option>
-                                <option value="52">52Hz</option>
-                                <option value="104">104Hz</option>
-                                <option value="208">208Hz</option>
-                                <option value="417">417Hz</option>
-                                <option value="833">833Hz</option>
-                                <option value="1.667">1.667Hz</option>
-                                <option value="3.333">3.333Hz</option>
-                                <option value="6.667">6.667Hz</option>
-                                <option value="13.333">13.333Hz</option>
-                                <option value="26.667">26.667Hz</option>
-                            </select>
-                            <span asp-validation-for="Bdr" class="text-danger"></span>
-                        </div>                            <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">CutOff</label>
-                            <select name="Cutoff" id="Cutoff" class="form-control" asp-for="Cutoff" style="width:100%">
-                                <option value="">Selecionar</option>
-                                <option value="6.667">6.667Hz</option>
-                                <option value="2.667">2.667Hz</option>
-                                <option value="1.333">1.333Hz</option>
-                                <option value="593">593Hz</option>
-                                <option value="267">267Hz</option>
-                                <option value="133">133Hz</option>
-                                <option value="67">67Hz</option>
-                                <option value="33">33Hz</option>
-                            </select>
-                            <span asp-validation-for="Cutoff" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">LPF</label>
-                            <select name="Lpf" id="Lpf" style="width:100%" asp-for="Lpf" class="form-control">
-                                <option value="">Selecionar</option>
-                                <option value="1">HPF - High Pass Filter </option>
-                                <option value="2">LPF - Low Pass Filter</option>
-                                <option value="3">LPF + LPF2_Off</option>
-                            </select>
-                            <span asp-validation-for="Lpf" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">Lines</label>
-                            <select name="Lines" id="Lines" asp-for="Lines" style="width:100%" class="form-control">
-                                <option value="">Selecionar</option>
-                                <option value="512">512</option>
-                                <option value="1024">1024</option>
-                                <option value="2048">2048</option>
-                                <option value="3456">3456</option>
-                                <option value="4096">4096</option>
-                                <option value="6144">6144</option>
-                                <option value="8192">8192</option>
-                                <option value="10240">10240</option>
-                                <option value="16384">16384</option>
-                                <option value="30080">30080</option>
-                            </select>
-                            <span asp-validation-for="Lines" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">Eixos</label>
-                            <select name="Axies" id="Axies" asp-for="Axies" style="width:100%" class="form-control">
-                                <option value="">Selecionar</option>
-                                <option value="1">Eixo X</option>
-                                <option value="2">Eixo Y</option>
-                                <option value="3">Eixo Z</option>
-                                <option value="4">Eixos X Y Z</option>
-                            </select>
-                            <span asp-validation-for="Axies" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">Temperatura</label>
-                            <input value="25" asp-for="Temperature" name="Temperature" id="Temperature" class="form-control" />
-                            <span asp-validation-for="Temperature" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">RMS</label>
-                            <input value="0 g" asp-for="Rms" id="Rms" name="Rms" class="form-control" />
-                            <span asp-validation-for="Rms" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">Bateria</label>
-                            <input value="100%" asp-for="Battery" name="Battery" id="Battery" class="form-control" />
-                            <span asp-validation-for="Battery" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">Timer</label>
-                            <input placeholder="Horas" asp-for="Hours" id="Hours" name="Hours" class="form-control" />
-                            <span asp-validation-for="Hours" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">Global em velocidade</label>
-                            <input placeholder="Mínimo mm/s" asp-for="VelocityMin" id="VelocityMin" name="VelocityMin" class="form-control" />
-                            <span asp-validation-for="VelocityMin" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">Global em velocidade</label>
-                            <input placeholder="Máximo mm/s" asp-for="VelocityMax" id="VelocityMin" name="VelocityMax" class="form-control" />
-                            <span asp-validation-for="VelocityMax" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">Global em aceleração</label>
-                            <input placeholder="Mínimo mm/s" asp-for="AccelerationMin" name="AccelerationMin" id="AccelerationMin" class="form-control" />
-                            <span asp-validation-for="AccelerationMin" class="text-danger"></span>
-                        </div>
 
-                        <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">Global em aceleração</label>
-                            <input placeholder="Máximo mm/s" asp-for="AccelerationMax" id="AccelerationMax" name="AccelerationMax" class="form-control" />
-                            <span asp-validation-for="AccelerationMax" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">Fator de Crista</label>
-                            <input placeholder="Mínimo mm/s" asp-for="CrestFactorMin" id="CrestFactorMin" name="CrestFactorMin" class="form-control" />
-                            <span asp-validation-for="CrestFactorMin" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">Fator de Crista</label>
-                            <input placeholder="Máximo mm/s" asp-for="CrestFactorMax" id="CrestFactorMax" name="CrestFactorMax" class="form-control" />
-                            <span asp-validation-for="CrestFactorMax" class="text-danger"></span>
+    <nav>
+        <div class="nav nav-tabs" id="deviceTab" role="tablist">
+
+            <a class="nav-item nav-link active" id="config-tab" data-toggle="tab" href="#config" role="tab" aria-controls="config" aria-selected="true">Configuração</a>
+            <a class="nav-item nav-link" id="tempo-tab" data-toggle="tab" href="#tempo" role="tab" aria-controls="tempo" aria-selected="false">Tempo</a>
+            <a class="nav-item nav-link" id="old-tab" data-toggle="tab" href="#old" role="tab" aria-controls="old" aria-selected="false">OLD</a>
+
+        </div>
+    </nav>
+
+    <form asp-action="Create">
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="tab-content" id="deviceTabContent">
+
+            <div class="tab-pane fade show active" id="config" role="tabpanel" aria-labelledby="config-tab">
+
+                <div class="row">
+                    <div class="card" style="">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Configuração Aceleração</h6>
+                            <div class="row">
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">acc_odr</label>
+                                    <select name="acc_odr" id="acc_odr" style="width:100%" asp-for="acc_odr" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">26K</option>
+                                        <option value="1">3K3</option>
+                                        <option value="2">1K6</option>
+                                        <option value="3">1K1</option>
+                                        <option value="4">0K8</option>
+                                    </select>
+                                    <span asp-validation-for="acc_odr" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">acc_freq_cut</label>
+                                    <select name="acc_freq_cut" id="acc_freq_cut" style="width:100%" asp-for="acc_freq_cut" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">6K6</option>
+                                        <option value="1">2K6</option>
+                                        <option value="2">1K3</option>
+                                        <option value="3">0K5</option>
+                                        <option value="4">0K2</option>
+                                        <option value="5">0K1</option>
+                                        <option value="6">K67</option>
+                                    </select>
+                                    <span asp-validation-for="acc_freq_cut" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">acc_filtro</label>
+                                    <select name="acc_filtro" id="acc_filtro" style="width:100%" asp-for="acc_filtro" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">FPB</option>
+                                        <option value="1">FPA</option>
+                                    </select>
+                                    <span asp-validation-for="acc_filtro" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">acc_eixo</label>
+                                    <select name="acc_eixo" id="acc_eixo" style="width:100%" asp-for="acc_eixo" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="1">X</option>
+                                        <option value="2">Y</option>
+                                        <option value="3">Z</option>
+                                        <option value="4">XY</option>
+                                        <option value="5">XZ</option>
+                                        <option value="6">YZ</option>
+                                        <option value="7">XYZ</option>
+                                    </select>
+                                    <span asp-validation-for="acc_eixo" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">acc_fs</label>
+                                    <select name="acc_fs" id="acc_fs" style="width:100%" asp-for="acc_fs" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">02G</option>
+                                        <option value="1">16G</option>
+                                        <option value="2">04G</option>
+                                        <option value="3">08G</option>
+                                        <option value="4">AUTO</option>
+                                    </select>
+                                    <span asp-validation-for="acc_fs" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">acc_amostras</label>
+                                    <select name="acc_amostras" id="acc_amostras" style="width:100%" asp-for="acc_amostras" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="1">1024</option>
+                                        <option value="2">2048</option>
+                                        <option value="3">3072</option>
+                                        <option value="4">4096</option>
+                                        <option value="5">6144</option>
+                                        <option value="6">8192</option>
+                                    </select>
+                                    <span asp-validation-for="acc_amostras" class="text-danger"></span>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-                    <div>
-                        <div class="form-group" style="margin-top:100px">
-                            <input type="submit" value="Salvar Leitura" class="btn btn-primary" />
+                </div>
+
+                <div class="row">
+                    <div class="card" style="">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Configuração Velocidade</h6>
+                            <div class="row">
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">spd_odr</label>
+                                    <select name="spd_odr" id="spd_odr" style="width:100%" asp-for="spd_odr" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">26K</option>
+                                        <option value="1">3K3</option>
+                                        <option value="2">1K6</option>
+                                        <option value="3">1K1</option>
+                                        <option value="4">0K8</option>
+                                    </select>
+                                    <span asp-validation-for="spd_odr" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">spd_freq_cut</label>
+                                    <select name="spd_freq_cut" id="spd_freq_cut" style="width:100%" asp-for="spd_freq_cut" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">6K6</option>
+                                        <option value="1">2K6</option>
+                                        <option value="2">1K3</option>
+                                        <option value="3">0K5</option>
+                                        <option value="4">0K2</option>
+                                        <option value="5">0K1</option>
+                                        <option value="6">K67</option>
+                                    </select>
+                                    <span asp-validation-for="spd_freq_cut" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">spd_filtro</label>
+                                    <select name="spd_filtro" id="spd_filtro" style="width:100%" asp-for="spd_filtro" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">FPB</option>
+                                        <option value="1">FPA</option>
+                                    </select>
+                                    <span asp-validation-for="spd_filtro" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">spd_eixo</label>
+                                    <select name="spd_eixo" id="spd_eixo" style="width:100%" asp-for="spd_eixo" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="1">X</option>
+                                        <option value="2">Y</option>
+                                        <option value="3">Z</option>
+                                        <option value="4">XY</option>
+                                        <option value="5">XZ</option>
+                                        <option value="6">YZ</option>
+                                        <option value="7">XYZ</option>
+                                    </select>
+                                    <span asp-validation-for="spd_eixo" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">spd_fs</label>
+                                    <select name="spd_fs" id="spd_fs" style="width:100%" asp-for="spd_fs" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">02G</option>
+                                        <option value="1">16G</option>
+                                        <option value="2">04G</option>
+                                        <option value="3">08G</option>
+                                        <option value="4">AUTO</option>
+                                    </select>
+                                    <span asp-validation-for="spd_fs" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">spd_amostras</label>
+                                    <select name="spd_amostras" id="spd_amostras" style="width:100%" asp-for="spd_amostras" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="1">1024</option>
+                                        <option value="2">2048</option>
+                                        <option value="3">3072</option>
+                                        <option value="4">4096</option>
+                                        <option value="5">6144</option>
+                                        <option value="6">8192</option>
+                                    </select>
+                                    <span asp-validation-for="spd_amostras" class="text-danger"></span>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-                </form>
+                </div>
+
+                <div class="row">
+                    <div class="card" style="">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Configuração Usuário</h6>
+                            <div class="row">
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">usr_odr</label>
+                                    <select name="usr_odr" id="usr_odr" style="width:100%" asp-for="usr_odr" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">26K</option>
+                                        <option value="1">3K3</option>
+                                        <option value="2">1K6</option>
+                                        <option value="3">1K1</option>
+                                        <option value="4">0K8</option>
+                                    </select>
+                                    <span asp-validation-for="usr_odr" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">usr_freq_cut</label>
+                                    <select name="usr_freq_cut" id="usr_freq_cut" style="width:100%" asp-for="usr_freq_cut" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">6K6</option>
+                                        <option value="1">2K6</option>
+                                        <option value="2">1K3</option>
+                                        <option value="3">0K5</option>
+                                        <option value="4">0K2</option>
+                                        <option value="5">0K1</option>
+                                        <option value="6">K67</option>
+                                    </select>
+                                    <span asp-validation-for="usr_freq_cut" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">usr_filtro</label>
+                                    <select name="usr_filtro" id="usr_filtro" style="width:100%" asp-for="usr_filtro" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">FPB</option>
+                                        <option value="1">FPA</option>
+                                    </select>
+                                    <span asp-validation-for="usr_filtro" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">usr_eixo</label>
+                                    <select name="usr_eixo" id="usr_eixo" style="width:100%" asp-for="usr_eixo" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="1">X</option>
+                                        <option value="2">Y</option>
+                                        <option value="3">Z</option>
+                                        <option value="4">XY</option>
+                                        <option value="5">XZ</option>
+                                        <option value="6">YZ</option>
+                                        <option value="7">XYZ</option>
+                                    </select>
+                                    <span asp-validation-for="usr_eixo" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">usr_fs</label>
+                                    <select name="usr_fs" id="usr_fs" style="width:100%" asp-for="usr_fs" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">02G</option>
+                                        <option value="1">16G</option>
+                                        <option value="2">04G</option>
+                                        <option value="3">08G</option>
+                                        <option value="4">AUTO</option>
+                                    </select>
+                                    <span asp-validation-for="usr_fs" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">usr_amostras</label>
+                                    <select name="usr_amostras" id="usr_amostras" style="width:100%" asp-for="usr_amostras" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="1">1024</option>
+                                        <option value="2">2048</option>
+                                        <option value="3">3072</option>
+                                        <option value="4">4096</option>
+                                        <option value="5">6144</option>
+                                        <option value="6">8192</option>
+                                    </select>
+                                    <span asp-validation-for="usr_amostras" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="tab-pane fade" id="tempo" role="tabpanel" aria-labelledby="tempo-tab">
+
+                <div class="row">
+                    <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">modo_hora</label>
+                            <input type="number" max="1" min="0" value="" asp-for="modo_hora" name="modo_hora" id="modo_hora" class="form-control" />
+                        <span asp-validation-for="modo_hora" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">conta_envios</label>
+                            <input value="" asp-for="conta_envios" name="conta_envios" id="conta_envios" class="form-control" />
+                        <span asp-validation-for="conta_envios" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">dias_run</label>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <button class="btn btn-sm btn-outline-primary btn-dias_run" id="btn-dias_run1" type="button" value="Domingo">D</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dias_run" id="btn-dias_run2" type="button" value="Segunda">S</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dias_run" id="btn-dias_run3" type="button" value="Terça">T</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dias_run" id="btn-dias_run4" type="button" value="Quarta">Q</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dias_run" id="btn-dias_run5" type="button" value="Quinta">Q</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dias_run" id="btn-dias_run6" type="button" value="Sexta">S</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dias_run" id="btn-dias_run7" type="button" value="Sábado">S</button>
+                        </div>
+                        <input type="hidden" id="dias_run" name="dias_run" value="________" />
+                        <span asp-validation-for="dias_run" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">inicio_turno</label>
+                            <input type="time" value="" asp-for="inicio_turno" name="inicio_turno" id="inicio_turno" class="form-control" />
+                            <span asp-validation-for="inicio_turno" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">fim_turno</label>
+                        <input type="time" value="" asp-for="fim_turno" name="fim_turno" id="fim_turno" class="form-control" />
+                        <span asp-validation-for="fim_turno" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">intervalo_analise</label>
+                            <input value="" asp-for="intervalo_analise" name="intervalo_analise" id="intervalo_analise" class="form-control" />
+                            <span asp-validation-for="intervalo_analise" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">intervalo_analise_alarme</label>
+                            <input value="" asp-for="intervalo_analise_alarme" name="intervalo_analise_alarme" id="intervalo_analise_alarme" class="form-control" />
+                            <span asp-validation-for="intervalo_analise_alarme" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">quant_alarme</label>
+                            <input value="" asp-for="quant_alarme" name="quant_alarme" id="quant_alarme" class="form-control" />
+                        <span asp-validation-for="quant_alarme" class="text-danger"></span>
+                    </div>
+                </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">quant_horarios_cards</label>
+                            <input value="" asp-for="quant_horarios_cards" name="quant_horarios_cards" id="quant_horarios_cards" class="form-control" />
+                            <span asp-validation-for="quant_horarios_cards" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">dia_envio_relat</label>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="#btn-dia_envio_relat7" type="button" value="Domingo">D</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="#btn-dia_envio_relat6" type="button" value="Segunda">S</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="#btn-dia_envio_relat5" type="button" value="Terça">T</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="#btn-dia_envio_relat4" type="button" value="Quarta">Q</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="#btn-dia_envio_relat3" type="button" value="Quinta">Q</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="#btn-dia_envio_relat2" type="button" value="Sexta">S</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="#btn-dia_envio_relat1" type="button" value="Sábado">S</button>
+                        </div>
+                        <input type="hidden" id="dia_envio_relat" name="dia_envio_relat" value="________" />
+                            <span asp-validation-for="dia_envio_relat" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-3" style="display: grid;">
+                            <label class="control-label">hora_envio_relat</label>
+                            <input type="time" value="" asp-for="hora_envio_relat" name="hora_envio_relat" id="hora_envio_relat" class="form-control" />
+                            <span asp-validation-for="hora_envio_relat" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="card" style="">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Horas</h6>
+                                <div class="row horas-row" >
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+
+            <div class="tab-pane fade" id="old" role="tabpanel" aria-labelledby="old-tab">
+
+                <div class="row">
+                    <div class="col-md-12 pl-0 pr-0" style="display:flex">
+                        <div class="col-md-12 pl-0 pr-0">
+                            
+                                <div class="form-group col-md-4">
+                                    <label asp-for="CompanyId" class="control-label"></label>
+                                    @Html.DropDownListFor(model => model.CompanyId, new SelectList(companyService.GetQueryDropDownList(), "Key", "Value"),
+                                    @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
+                                    <span asp-validation-for="CompanyId" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label asp-for="MotorId" class="control-label"></label>
+                                    @Html.DropDownListFor(model => model.MotorId, new SelectList(motorService.GetQueryDropDownListByTag(), "Key", "Value"),
+                                    @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "class", "form-control" } })
+                                    <span asp-validation-for="MotorId" class="text-danger"></span>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Frequencia</label>
+                                        <select name="Frequency" id="Frequency" class="form-control" asp-for="Frequency" style="width:100%">
+                                            <option value="">Selecionar</option>
+                                            <option value="15">15Hz</option>
+                                            <option value="20">20Hz</option>
+                                            <option value="25">25Hz</option>
+                                            <option value="30">30Hz</option>
+                                            <option value="35">35Hz</option>
+                                            <option value="40">40Hz</option>
+                                            <option value="45">45Hz</option>
+                                            <option value="50">50Hz</option>
+                                            <option value="55">55Hz</option>
+                                            <option value="60">60Hz</option>
+                                            <option value="65">65Hz</option>
+                                        </select>
+                                        <span asp-validation-for="Frequency" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">BDR</label>
+                                        <select name="Bdr" id="Bdr" class="form-control" asp-for="Bdr" style="width:100%">
+                                            <option value="">Selecionar</option>
+                                            <option value="52">52Hz</option>
+                                            <option value="104">104Hz</option>
+                                            <option value="208">208Hz</option>
+                                            <option value="417">417Hz</option>
+                                            <option value="833">833Hz</option>
+                                            <option value="1.667">1.667Hz</option>
+                                            <option value="3.333">3.333Hz</option>
+                                            <option value="6.667">6.667Hz</option>
+                                            <option value="13.333">13.333Hz</option>
+                                            <option value="26.667">26.667Hz</option>
+                                        </select>
+                                        <span asp-validation-for="Bdr" class="text-danger"></span>
+                                    </div>                            <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">CutOff</label>
+                                        <select name="Cutoff" id="Cutoff" class="form-control" asp-for="Cutoff" style="width:100%">
+                                            <option value="">Selecionar</option>
+                                            <option value="6.667">6.667Hz</option>
+                                            <option value="2.667">2.667Hz</option>
+                                            <option value="1.333">1.333Hz</option>
+                                            <option value="593">593Hz</option>
+                                            <option value="267">267Hz</option>
+                                            <option value="133">133Hz</option>
+                                            <option value="67">67Hz</option>
+                                            <option value="33">33Hz</option>
+                                        </select>
+                                        <span asp-validation-for="Cutoff" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">LPF</label>
+                                        <select name="Lpf" id="Lpf" style="width:100%" asp-for="Lpf" class="form-control">
+                                            <option value="">Selecionar</option>
+                                            <option value="1">HPF - High Pass Filter </option>
+                                            <option value="2">LPF - Low Pass Filter</option>
+                                            <option value="3">LPF + LPF2_Off</option>
+                                        </select>
+                                        <span asp-validation-for="Lpf" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Lines</label>
+                                        <select name="Lines" id="Lines" asp-for="Lines" style="width:100%" class="form-control">
+                                            <option value="">Selecionar</option>
+                                            <option value="512">512</option>
+                                            <option value="1024">1024</option>
+                                            <option value="2048">2048</option>
+                                            <option value="3456">3456</option>
+                                            <option value="4096">4096</option>
+                                            <option value="6144">6144</option>
+                                            <option value="8192">8192</option>
+                                            <option value="10240">10240</option>
+                                            <option value="16384">16384</option>
+                                            <option value="30080">30080</option>
+                                        </select>
+                                        <span asp-validation-for="Lines" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Eixos</label>
+                                        <select name="Axies" id="Axies" asp-for="Axies" style="width:100%" class="form-control">
+                                            <option value="">Selecionar</option>
+                                            <option value="1">Eixo X</option>
+                                            <option value="2">Eixo Y</option>
+                                            <option value="3">Eixo Z</option>
+                                            <option value="4">Eixos X Y Z</option>
+                                        </select>
+                                        <span asp-validation-for="Axies" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Temperatura</label>
+                                        <input value="" asp-for="Temperature" name="Temperature" id="Temperature" class="form-control" />
+                                        <span asp-validation-for="Temperature" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">RMS</label>
+                                        <input value="0 g" asp-for="Rms" id="Rms" name="Rms" class="form-control" />
+                                        <span asp-validation-for="Rms" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Bateria</label>
+                                        <input value="100%" asp-for="Battery" name="Battery" id="Battery" class="form-control" />
+                                        <span asp-validation-for="Battery" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Timer</label>
+                                        <input placeholder="Horas" asp-for="Hours" id="Hours" name="Hours" class="form-control" />
+                                        <span asp-validation-for="Hours" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Global em velocidade</label>
+                                        <input placeholder="Mínimo mm/s" asp-for="VelocityMin" id="VelocityMin" name="VelocityMin" class="form-control" />
+                                        <span asp-validation-for="VelocityMin" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Global em velocidade</label>
+                                        <input placeholder="Máximo mm/s" asp-for="VelocityMax" id="VelocityMin" name="VelocityMax" class="form-control" />
+                                        <span asp-validation-for="VelocityMax" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Global em aceleração</label>
+                                        <input placeholder="Mínimo mm/s" asp-for="AccelerationMin" name="AccelerationMin" id="AccelerationMin" class="form-control" />
+                                        <span asp-validation-for="AccelerationMin" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Global em aceleração</label>
+                                        <input placeholder="Máximo mm/s" asp-for="AccelerationMax" id="AccelerationMax" name="AccelerationMax" class="form-control" />
+                                        <span asp-validation-for="AccelerationMax" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Fator de Crista</label>
+                                        <input placeholder="Mínimo mm/s" asp-for="CrestFactorMin" id="CrestFactorMin" name="CrestFactorMin" class="form-control" />
+                                        <span asp-validation-for="CrestFactorMin" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Fator de Crista</label>
+                                        <input placeholder="Máximo mm/s" asp-for="CrestFactorMax" id="CrestFactorMax" name="CrestFactorMax" class="form-control" />
+                                        <span asp-validation-for="CrestFactorMax" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div>
+            <div class="form-group" style="margin-top:20px">
+                <input type="submit" value="Salvar Leitura" class="btn btn-primary" />
             </div>
         </div>
-    </div>
+
+    </form>
+    
+
+
 </div>
+
+
+<script>
+    $('#deviceTab a').on('click', function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    });
+
+    $('.btn-dias_run').on('click', function(){
+        if ($(this).hasClass('active') == false)
+            $(this).addClass('active');
+        else
+            $(this).removeClass('active');
+
+        $('#dias_run').val(setDaysField('#btn-dias_run'));
+    });
+
+    $('.btn-dia_envio_relat').on('click', function () {
+        if ($(this).hasClass('active') == false)
+            $(this).addClass('active');
+        else
+            $(this).removeClass('active');
+
+        $('#dia_envio_relat').val(setDaysField('#btn-dia_envio_relat'));
+    });
+
+    $('#quant_horarios_cards').blur(function(){
+        let quantVal = Number($('#quant_horarios_cards').val());
+        let horasGroup = '';
+        for (let i = 0; i < quantVal; i++) {
+            horasGroup += '<div class="form-group col-md-3">' +
+                '<input type="time" value="" asp-for="DeviceMeasureHorariosEnviosCard[' + i + '].Hora" name="DeviceMeasureHorariosEnviosCard[' + i + '].Hora" id="DeviceMeasureHorariosEnviosCard[' + i + '].Hora" class="form-control" />' +
+                '</div>';
+        }
+
+        $('.horas-row').html($(horasGroup));
+    });
+
+    function setDaysField(idPart)
+    {
+        let diasRunString = '_';
+
+        if ($(idPart + '7').hasClass('active'))
+            diasRunString += 'S';
+        else
+            diasRunString += '_';
+
+        if ($(idPart + '6').hasClass('active'))
+            diasRunString += 'S';
+        else
+            diasRunString += '_';
+
+        if ($(idPart + '5').hasClass('active'))
+            diasRunString += 'Q';
+        else
+            diasRunString += '_';
+
+        if ($(idPart + '4').hasClass('active'))
+            diasRunString += 'Q';
+        else
+            diasRunString += '_';
+
+        if ($(idPart + '3').hasClass('active'))
+            diasRunString += 'T';
+        else
+            diasRunString += '_';
+
+        if ($(idPart + '2').hasClass('active'))
+            diasRunString += 'S';
+        else
+            diasRunString += '_';
+
+        if ($(idPart + '1').hasClass('active'))
+            diasRunString += 'D';
+        else
+            diasRunString += '_';
+
+        return diasRunString;
+    }
+</script>

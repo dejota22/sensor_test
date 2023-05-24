@@ -31,6 +31,7 @@ namespace Core
         public virtual DbSet<Dados> Dados { get; set; }
         public virtual DbSet<Device> Device { get; set; }
         public virtual DbSet<DeviceMeasure> DeviceMeasure { get; set; }
+        public virtual DbSet<DeviceMeasureHorariosEnviosCard> DeviceMeasureHorariosEnviosCard { get; set; }
         public virtual DbSet<ExhaustFan> ExhaustFan { get; set; }
         public virtual DbSet<FixationType> FixationType { get; set; }
         public virtual DbSet<Machine> Machine { get; set; }
@@ -701,6 +702,60 @@ namespace Core
                 entity.Property(e => e.CrestFactorMin).HasColumnName("crest_factormin");
 
                 entity.Property(e => e.CrestFactorMax).HasColumnName("crest_factormax");
+
+
+                entity.Property(e => e.acc_odr).HasColumnName("acc_odr");
+                entity.Property(e => e.acc_freq_cut).HasColumnName("acc_freq_cut");
+                entity.Property(e => e.acc_filtro).HasColumnName("acc_filtro");
+                entity.Property(e => e.acc_eixo).HasColumnName("acc_eixo");
+                entity.Property(e => e.acc_fs).HasColumnName("acc_fs");
+                entity.Property(e => e.acc_amostras).HasColumnName("acc_amostras");
+
+                entity.Property(e => e.spd_odr).HasColumnName("spd_odr");
+                entity.Property(e => e.spd_freq_cut).HasColumnName("spd_freq_cut");
+                entity.Property(e => e.spd_filtro).HasColumnName("spd_filtro");
+                entity.Property(e => e.spd_eixo).HasColumnName("spd_eixo");
+                entity.Property(e => e.spd_fs).HasColumnName("spd_fs");
+                entity.Property(e => e.spd_amostras).HasColumnName("spd_amostras");
+
+                entity.Property(e => e.usr_odr).HasColumnName("usr_odr");
+                entity.Property(e => e.usr_freq_cut).HasColumnName("usr_freq_cut");
+                entity.Property(e => e.usr_filtro).HasColumnName("usr_filtro");
+                entity.Property(e => e.usr_eixo).HasColumnName("usr_eixo");
+                entity.Property(e => e.usr_fs).HasColumnName("usr_fs");
+                entity.Property(e => e.usr_amostras).HasColumnName("usr_amostras");
+
+                entity.Property(e => e.modo_hora).HasColumnName("modo_hora");
+                entity.Property(e => e.conta_envios).HasColumnName("conta_envios");
+                entity.Property(e => e.dias_run).HasColumnName("dias_run").IsUnicode(false);
+                entity.Property(e => e.inicio_turno).HasColumnName("inicio_turno").IsUnicode(false);
+                entity.Property(e => e.fim_turno).HasColumnName("fim_turno").IsUnicode(false);
+                entity.Property(e => e.intervalo_analise).HasColumnName("intervalo_analise");
+                entity.Property(e => e.intervalo_analise_alarme).HasColumnName("intervalo_analise_alarme");
+                entity.Property(e => e.quant_alarme).HasColumnName("quant_alarme");
+                entity.Property(e => e.quant_horarios_cards).HasColumnName("quant_horarios_cards");
+                entity.Property(e => e.dia_envio_relat).HasColumnName("dia_envio_relat").IsUnicode(false);
+                entity.Property(e => e.hora_envio_relat).HasColumnName("hora_envio_relat").IsUnicode(false);
+            });
+
+            modelBuilder.Entity<DeviceMeasureHorariosEnviosCard>(entity =>
+            {
+                entity.ToTable("device_measure_horarios_envios_card");
+
+                //entity.HasIndex(e => e.DeviceMeasureId)
+                //    .HasName("fk_device_measure_horarios_envios_card1_idx");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.DeviceMeasureId).HasColumnName("device_measure_id");
+
+                entity.Property(e => e.Hora).HasColumnName("hora");
+
+                //entity.HasOne(d => d.DeviceMeasure)
+                //    .WithMany(p => p.DeviceMeasureHorariosEnviosCard)
+                //    .HasForeignKey(d => d.DeviceMeasureId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("fk_device_measure_horarios_envios_card1");
             });
 
             modelBuilder.Entity<ExhaustFan>(entity =>

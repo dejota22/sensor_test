@@ -83,12 +83,12 @@ namespace SensorWeb.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
+                //if (ModelState.IsValid)
+                //{
                     deviceMeasureModel.Id = _deviceMeasureService.GetlastCode();
                     var deviceMeasure = _mapper.Map<DeviceMeasure>(deviceMeasureModel);
                     _deviceMeasureService.Insert(deviceMeasure);
-                }
+                //}
 
                 return RedirectToAction(nameof(Index));
             }
