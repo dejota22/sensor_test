@@ -8,6 +8,11 @@ namespace Core.DTO
 {
     public class DeviceConfigurationModel
     {
+        public DeviceConfigurationModel() 
+        {
+            DeviceConfigurationHorariosEnviosCard = new List<DeviceConfigurationHorariosEnviosCard>();
+        }
+
         public int Id { get; set; }
 
         [Display(Name = "Empresa")]

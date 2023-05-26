@@ -334,12 +334,12 @@
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
                             <label class="control-label">modo_hora</label>
-                            <input type="number" max="1" min="0" value="" asp-for="modo_hora" name="modo_hora" id="modo_hora" class="form-control" />
+                            <input type="number" max="1" min="0" value="@Model.modo_hora" asp-for="modo_hora" name="modo_hora" id="modo_hora" class="form-control" />
                         <span asp-validation-for="modo_hora" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">conta_envios</label>
-                            <input value="" asp-for="conta_envios" name="conta_envios" id="conta_envios" class="form-control" />
+                        <input value="@Model.conta_envios" asp-for="conta_envios" name="conta_envios" id="conta_envios" class="form-control" />
                         <span asp-validation-for="conta_envios" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
@@ -353,12 +353,12 @@
                             <button class="btn btn-sm btn-outline-primary btn-dias_run" id="btn-dias_run6" type="button" value="Sexta">S</button>
                             <button class="btn btn-sm btn-outline-primary btn-dias_run" id="btn-dias_run7" type="button" value="Sábado">S</button>
                         </div>
-                        <input type="hidden" id="dias_run" name="dias_run" value="________" />
+                        <input type="hidden" id="dias_run" name="dias_run" value="@(Model.dias_run != null ? Model.dias_run : "________")" />
                         <span asp-validation-for="dias_run" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">inicio_turno</label>
-                            <input type="time" value="" asp-for="inicio_turno" name="inicio_turno" id="inicio_turno" class="form-control" />
+                            <input type="time" value="@Model.inicio_turno" asp-for="inicio_turno" name="inicio_turno" id="inicio_turno" class="form-control" />
                             <span asp-validation-for="inicio_turno" class="text-danger"></span>
                     </div>
                 </div>
@@ -366,22 +366,22 @@
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
                             <label class="control-label">fim_turno</label>
-                        <input type="time" value="" asp-for="fim_turno" name="fim_turno" id="fim_turno" class="form-control" />
+                        <input type="time" value="@Model.fim_turno" asp-for="fim_turno" name="fim_turno" id="fim_turno" class="form-control" />
                         <span asp-validation-for="fim_turno" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                             <label class="control-label">intervalo_analise</label>
-                            <input value="" asp-for="intervalo_analise" name="intervalo_analise" id="intervalo_analise" class="form-control" />
+                            <input value="@Model.intervalo_analise" asp-for="intervalo_analise" name="intervalo_analise" id="intervalo_analise" class="form-control" />
                             <span asp-validation-for="intervalo_analise" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                             <label class="control-label">intervalo_analise_alarme</label>
-                            <input value="" asp-for="intervalo_analise_alarme" name="intervalo_analise_alarme" id="intervalo_analise_alarme" class="form-control" />
+                            <input value="@Model.intervalo_analise_alarme" asp-for="intervalo_analise_alarme" name="intervalo_analise_alarme" id="intervalo_analise_alarme" class="form-control" />
                             <span asp-validation-for="intervalo_analise_alarme" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">quant_alarme</label>
-                            <input value="" asp-for="quant_alarme" name="quant_alarme" id="quant_alarme" class="form-control" />
+                            <input value="@Model.quant_alarme" asp-for="quant_alarme" name="quant_alarme" id="quant_alarme" class="form-control" />
                         <span asp-validation-for="quant_alarme" class="text-danger"></span>
                     </div>
                 </div>
@@ -389,7 +389,7 @@
                     <div class="row">
                         <div class="form-group col-md-3" style="display: grid;">
                             <label class="control-label">quant_horarios_cards</label>
-                            <input value="" asp-for="quant_horarios_cards" name="quant_horarios_cards" id="quant_horarios_cards" class="form-control" />
+                        <input value="@Model.quant_horarios_cards" asp-for="quant_horarios_cards" name="quant_horarios_cards" id="quant_horarios_cards" class="form-control" />
                             <span asp-validation-for="quant_horarios_cards" class="text-danger"></span>
                         </div>
                         <div class="form-group col-md-3" style="display: grid;">
@@ -403,12 +403,12 @@
                             <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="btn-dia_envio_relat6" type="button" value="Sexta">S</button>
                             <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="btn-dia_envio_relat7" type="button" value="Sábado">S</button>
                         </div>
-                        <input type="hidden" id="dia_envio_relat" name="dia_envio_relat" value="________" />
+                        <input type="hidden" id="dia_envio_relat" name="dia_envio_relat" value="@(Model.dia_envio_relat != null ? Model.dia_envio_relat : "________")" />
                             <span asp-validation-for="dia_envio_relat" class="text-danger"></span>
                         </div>
                         <div class="form-group col-md-3" style="display: grid;">
                             <label class="control-label">hora_envio_relat</label>
-                        <input type="time" value="" asp-for="hora_envio_relat" name="hora_envio_relat" id="hora_envio_relat" class="form-control" />
+                        <input type="time" value="@Model.hora_envio_relat" asp-for="hora_envio_relat" name="hora_envio_relat" id="hora_envio_relat" class="form-control" />
                             <span asp-validation-for="hora_envio_relat" class="text-danger"></span>
                         </div>
                     </div>
@@ -418,6 +418,23 @@
                             <div class="card-body">
                                 <h6 class="card-subtitle mb-2 text-muted">Horas</h6>
                                 <div class="row horas-row" >
+
+                                    @if (Model.DeviceConfigurationHorariosEnviosCard != null)
+                                {
+                                    int i = 0;
+                                    foreach (var hora in Model.DeviceConfigurationHorariosEnviosCard)
+                                    {
+                                        
+                                        <div class="form-group col-md-3">
+                                            <input type="time" value="@hora.Hora"
+                                                   asp-for="DeviceConfigurationHorariosEnviosCard[@i].Hora"
+                                                   name="DeviceConfigurationHorariosEnviosCard[@i].Hora"
+                                                   id="DeviceConfigurationHorariosEnviosCard[@i].Hora" class="form-control" />
+                                        </div>
+
+                                        i++;
+                                    }
+                                }
 
                                 </div>
                             </div>
