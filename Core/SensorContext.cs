@@ -30,6 +30,10 @@ namespace Core
         public virtual DbSet<CouplingType> CouplingType { get; set; }
         public virtual DbSet<Dados> Dados { get; set; }
         public virtual DbSet<Device> Device { get; set; }
+        public virtual DbSet<DeviceConfiguration> DeviceConfiguration { get; set; }
+        public virtual DbSet<DeviceConfigurationHorariosEnviosCard> DeviceConfigurationHorariosEnviosCard { get; set; }
+        public virtual DbSet<DeviceConfigurationLora> DeviceConfigurationLora { get; set; }
+        public virtual DbSet<DeviceConfigurationSpecialRead> DeviceConfigurationSpecialRead { get; set; }
         public virtual DbSet<DeviceMeasure> DeviceMeasure { get; set; }
         public virtual DbSet<DeviceMeasureHorariosEnviosCard> DeviceMeasureHorariosEnviosCard { get; set; }
         public virtual DbSet<ExhaustFan> ExhaustFan { get; set; }
@@ -645,6 +649,106 @@ namespace Core
                     .HasForeignKey(d => d.CompanyId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_device_company1");
+            });
+
+            modelBuilder.Entity<DeviceConfiguration>(entity =>
+            {
+                entity.ToTable("Device_Configuration");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+
+                entity.Property(e => e.DeviceId).HasColumnName("device_id");
+
+                entity.Property(e => e.MotorId).HasColumnName("motor_id");
+
+                entity.Property(e => e.acc_odr).HasColumnName("acc_odr");
+                entity.Property(e => e.acc_freq_cut).HasColumnName("acc_freq_cut");
+                entity.Property(e => e.acc_filtro).HasColumnName("acc_filtro");
+                entity.Property(e => e.acc_eixo).HasColumnName("acc_eixo");
+                entity.Property(e => e.acc_fs).HasColumnName("acc_fs");
+                entity.Property(e => e.acc_amostras).HasColumnName("acc_amostras");
+
+                entity.Property(e => e.spd_odr).HasColumnName("spd_odr");
+                entity.Property(e => e.spd_freq_cut).HasColumnName("spd_freq_cut");
+                entity.Property(e => e.spd_filtro).HasColumnName("spd_filtro");
+                entity.Property(e => e.spd_eixo).HasColumnName("spd_eixo");
+                entity.Property(e => e.spd_fs).HasColumnName("spd_fs");
+                entity.Property(e => e.spd_amostras).HasColumnName("spd_amostras");
+
+                entity.Property(e => e.modo_hora).HasColumnName("modo_hora");
+                entity.Property(e => e.conta_envios).HasColumnName("conta_envios");
+                entity.Property(e => e.dias_run).HasColumnName("dias_run").IsUnicode(false);
+                entity.Property(e => e.inicio_turno).HasColumnName("inicio_turno").IsUnicode(false);
+                entity.Property(e => e.fim_turno).HasColumnName("fim_turno").IsUnicode(false);
+                entity.Property(e => e.intervalo_analise).HasColumnName("intervalo_analise");
+                entity.Property(e => e.intervalo_analise_alarme).HasColumnName("intervalo_analise_alarme");
+                entity.Property(e => e.quant_alarme).HasColumnName("quant_alarme");
+                entity.Property(e => e.quant_horarios_cards).HasColumnName("quant_horarios_cards");
+                entity.Property(e => e.dia_envio_relat).HasColumnName("dia_envio_relat").IsUnicode(false);
+                entity.Property(e => e.hora_envio_relat).HasColumnName("hora_envio_relat").IsUnicode(false);
+
+                entity.Property(e => e.max_rms_red).HasColumnName("max_rms_red");
+                entity.Property(e => e.max_rms_yel).HasColumnName("max_rms_yel");
+                entity.Property(e => e.min_rms).HasColumnName("min_rms");
+                entity.Property(e => e.max_percent).HasColumnName("max_percent");
+            });
+
+            modelBuilder.Entity<DeviceConfigurationHorariosEnviosCard>(entity =>
+            {
+                entity.ToTable("Device_Configuration_horarios_envios_card");
+
+                //entity.HasIndex(e => e.DeviceMeasureId)
+                //    .HasName("fk_device_measure_horarios_envios_card1_idx");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.DeviceConfigurationId).HasColumnName("device_measure_id");
+
+                entity.Property(e => e.Hora).HasColumnName("hora");
+
+                entity.HasOne(d => d.DeviceConfiguration)
+                    .WithMany(p => p.DeviceConfigurationHorariosEnviosCard)
+                    .HasForeignKey(d => d.DeviceConfigurationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+                //    .HasConstraintName("fk_device_measure_horarios_envios_card1");
+            });
+
+            modelBuilder.Entity<DeviceConfigurationSpecialRead>(entity =>
+            {
+                entity.ToTable("Device_Configuration_Special_Read");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+
+                entity.Property(e => e.DeviceId).HasColumnName("device_id");
+
+                entity.Property(e => e.MotorId).HasColumnName("motor_id");
+
+                entity.Property(e => e.Sent).HasColumnName("sent");
+
+                entity.Property(e => e.SentDate).HasColumnName("sent_data");
+
+                entity.Property(e => e.usr_odr).HasColumnName("usr_odr");
+                entity.Property(e => e.usr_freq_cut).HasColumnName("usr_freq_cut");
+                entity.Property(e => e.usr_filtro).HasColumnName("usr_filtro");
+                entity.Property(e => e.usr_eixo).HasColumnName("usr_eixo");
+                entity.Property(e => e.usr_fs).HasColumnName("usr_fs");
+                entity.Property(e => e.usr_amostras).HasColumnName("usr_amostras");
+            });
+
+            modelBuilder.Entity<DeviceConfigurationLora>(entity =>
+            {
+                entity.ToTable("Device_Configuration_lora").HasNoKey();
+
+                entity.Property(e => e.canal).HasColumnName("canal");
+                entity.Property(e => e.sf).HasColumnName("sf");
+                entity.Property(e => e.bw).HasColumnName("bw");
+                entity.Property(e => e.end).HasColumnName("end");
+                entity.Property(e => e.gtw).HasColumnName("gtw");
+                entity.Property(e => e.syn).HasColumnName("syn");
             });
 
             modelBuilder.Entity<DeviceMeasure>(entity =>

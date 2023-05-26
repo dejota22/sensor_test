@@ -1,49 +1,57 @@
-﻿@model SensorWeb.Models.DeviceMeasureModel
+﻿@model Core.DTO.DeviceConfigurationModel
 
 @inject SensorWeb.Resources.CommonLocalizationService localizer
 
 @inject Core.Service.IDeviceMeasureService deviceMeasureService
 @inject Core.Service.IMotorService motorService
+@inject Core.Service.IDeviceService deviceService
 @inject Core.Service.ICompanyService companyService
 
 <h4 style="text-align:center">Configuração Sensor</h4>
 <hr />
 <div class="container">
 
-    <div>
-        <div class="form-group" style="margin-top:0px">
-            <input type="submit" value="Configurar Sensor" class="btn btn-primary" />
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="form-group col-md-4">
-            <label asp-for="CompanyId" class="control-label"></label>
-            @Html.DropDownListFor(model => model.CompanyId, new SelectList(companyService.GetQueryDropDownList(), "Key", "Value"),
-            @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
-            <span asp-validation-for="CompanyId" class="text-danger"></span>
-        </div>
-        <div class="form-group col-md-4">
-            <label asp-for="MotorId" class="control-label"></label>
-            @Html.DropDownListFor(model => model.MotorId, new SelectList(motorService.GetQueryDropDownListByTag(), "Key", "Value"),
-            @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "class", "form-control" } })
-            <span asp-validation-for="MotorId" class="text-danger"></span>
-        </div>
-    </div>
-
-    <nav>
-        <div class="nav nav-tabs" id="deviceTab" role="tablist">
-
-            <a class="nav-item nav-link active" id="config-tab" data-toggle="tab" href="#config" role="tab" aria-controls="config" aria-selected="true">Acelerômetro</a>
-            <a class="nav-item nav-link" id="tempo-tab" data-toggle="tab" href="#tempo" role="tab" aria-controls="tempo" aria-selected="false">Tempo</a>
-            <a class="nav-item nav-link" id="limites-tab" data-toggle="tab" href="#limites" role="tab" aria-controls="limites" aria-selected="false">Limites</a>
-            <a class="nav-item nav-link" id="lora-tab" data-toggle="tab" href="#lora" role="tab" aria-controls="lora" aria-selected="false">Lora</a>
-            <a class="nav-item nav-link" id="old-tab" data-toggle="tab" href="#old" role="tab" aria-controls="old" aria-selected="false">OLD</a>
-
-        </div>
-    </nav>
-
     <form asp-action="Create">
+
+        <div>
+            <div class="form-group" style="margin-top:0px">
+                <input type="submit" value="Configurar Sensor" class="btn btn-primary" />
+            </div>
+        </div>
+
+        <div class="row">
+            @*<div class="form-group col-md-4">
+                <label asp-for="CompanyId" class="control-label"></label>
+                @Html.DropDownListFor(model => model.CompanyId, new SelectList(companyService.GetQueryDropDownList(), "Key", "Value"),
+                @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
+                <span asp-validation-for="CompanyId" class="text-danger"></span>
+            </div>*@
+            <div class="form-group col-md-4">
+                <label asp-for="MotorId" class="control-label"></label>
+                @Html.DropDownListFor(model => model.MotorId, new SelectList(motorService.GetQueryDropDownListByTag(), "Key", "Value"),
+                @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "class", "form-control main-selects" } })
+                <span asp-validation-for="MotorId" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-4">
+                <label asp-for="DeviceId" class="control-label"></label>
+                @Html.DropDownListFor(model => model.DeviceId, new SelectList(deviceService.GetQueryDropDownList(), "Key", "Value"),
+                @localizer.Get("DeviceSelect"), new Dictionary<string, object> { { "class", "form-control main-selects" } })
+                <span asp-validation-for="DeviceId" class="text-danger"></span>
+            </div>
+        </div>
+
+        <nav>
+            <div class="nav nav-tabs" id="deviceTab" role="tablist">
+
+                <a class="nav-item nav-link active" id="config-tab" data-toggle="tab" href="#config" role="tab" aria-controls="config" aria-selected="true">Acelerômetro</a>
+                <a class="nav-item nav-link" id="tempo-tab" data-toggle="tab" href="#tempo" role="tab" aria-controls="tempo" aria-selected="false">Tempo</a>
+                <a class="nav-item nav-link" id="limites-tab" data-toggle="tab" href="#limites" role="tab" aria-controls="limites" aria-selected="false">Limites</a>
+                <a class="nav-item nav-link" id="lora-tab" data-toggle="tab" href="#lora" role="tab" aria-controls="lora" aria-selected="false">Lora</a>
+                <a class="nav-item nav-link" id="old-tab" data-toggle="tab" href="#old" role="tab" aria-controls="old" aria-selected="false">OLD</a>
+
+            </div>
+        </nav>
+
 
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -387,13 +395,13 @@
                         <div class="form-group col-md-3" style="display: grid;">
                             <label class="control-label">dia_envio_relat</label>
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="#btn-dia_envio_relat7" type="button" value="Domingo">D</button>
-                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="#btn-dia_envio_relat6" type="button" value="Segunda">S</button>
-                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="#btn-dia_envio_relat5" type="button" value="Terça">T</button>
-                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="#btn-dia_envio_relat4" type="button" value="Quarta">Q</button>
-                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="#btn-dia_envio_relat3" type="button" value="Quinta">Q</button>
-                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="#btn-dia_envio_relat2" type="button" value="Sexta">S</button>
-                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="#btn-dia_envio_relat1" type="button" value="Sábado">S</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="btn-dia_envio_relat1" type="button" value="Domingo">D</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="btn-dia_envio_relat2" type="button" value="Segunda">S</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="btn-dia_envio_relat3" type="button" value="Terça">T</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="btn-dia_envio_relat4" type="button" value="Quarta">Q</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="btn-dia_envio_relat5" type="button" value="Quinta">Q</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="btn-dia_envio_relat6" type="button" value="Sexta">S</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="btn-dia_envio_relat7" type="button" value="Sábado">S</button>
                         </div>
                         <input type="hidden" id="dia_envio_relat" name="dia_envio_relat" value="________" />
                             <span asp-validation-for="dia_envio_relat" class="text-danger"></span>
@@ -452,22 +460,22 @@
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">canal</label>
-                        <input type="number" min="0" value="" asp-for="canal" name="canal" id="canal" class="form-control" />
+                        <input type="number" min="0" value="@Model.canal" asp-for="canal" name="canal" id="canal" class="form-control" readonly="readonly" />
                         <span asp-validation-for="canal" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">sf</label>
-                        <input type="number" min="0" value="" asp-for="sf" name="sf" id="sf" class="form-control" />
+                        <input type="number" min="0" value="@Model.sf" asp-for="sf" name="sf" id="sf" class="form-control" readonly="readonly" />
                         <span asp-validation-for="sf" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">bw</label>
-                        <input type="number" min="0" value="" asp-for="bw" name="bw" id="bw" class="form-control" />
+                        <input type="number" min="0" value="@Model.bw" asp-for="bw" name="bw" id="bw" class="form-control" readonly="readonly" />
                         <span asp-validation-for="bw" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">end</label>
-                        <input type="number" min="0" value="" asp-for="end" name="end" id="end" class="form-control" />
+                        <input type="number" min="0" value="@Model.end" asp-for="end" name="end" id="end" class="form-control" readonly="readonly" />
                         <span asp-validation-for="end" class="text-danger"></span>
                     </div>
                 </div>
@@ -475,12 +483,12 @@
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">gtw</label>
-                        <input type="number" min="0" value="" asp-for="gtw" name="gtw" id="gtw" class="form-control" />
+                        <input type="number" min="0" value="@Model.gtw" asp-for="gtw" name="gtw" id="gtw" class="form-control" readonly="readonly" />
                         <span asp-validation-for="gtw" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">syn</label>
-                        <input type="number" min="0" value="" asp-for="syn" name="syn" id="syn" class="form-control" />
+                        <input type="number" min="0" value="@Model.syn" asp-for="syn" name="syn" id="syn" class="form-control" readonly="readonly" />
                         <span asp-validation-for="syn" class="text-danger"></span>
                     </div>
                 </div>
@@ -658,8 +666,8 @@
 
 <script>
     $('#deviceTab a').on('click', function (e) {
-        e.preventDefault()
-        $(this).tab('show')
+        e.preventDefault();
+        $(this).tab('show');
     });
 
     $('.btn-dias_run').on('click', function(){
@@ -684,12 +692,22 @@
         let quantVal = Number($('#quant_horarios_cards').val());
         let horasGroup = '';
         for (let i = 0; i < quantVal; i++) {
-            horasGroup += '<div class="form-group col-md-3">' +
-                '<input type="time" value="" asp-for="DeviceMeasureHorariosEnviosCard[' + i + '].Hora" name="DeviceMeasureHorariosEnviosCard[' + i + '].Hora" id="DeviceMeasureHorariosEnviosCard[' + i + '].Hora" class="form-control" />' +
+            let horaItem = '<div class="form-group col-md-3">' +
+                '<input type="time" value="" asp-for="DeviceConfigurationHorariosEnviosCard[' + i + '].Hora" name="DeviceConfigurationHorariosEnviosCard[' + i + '].Hora" id="DeviceConfigurationHorariosEnviosCard[' + i + '].Hora" class="form-control" />' +
                 '</div>';
+
+            horasGroup += horaItem;
         }
 
         $('.horas-row').html($(horasGroup));
+    });
+
+    $('.main-selects').on('change', function (e) {
+        let deviceId = $('#DeviceId').val();
+        let motorId = $('#MotorId').val();
+
+        if (deviceId != '' && motorId != '')
+            document.location.href = '@Url.Action("Index")' + '?DeviceId=' + deviceId + '&MotorId=' + motorId;
     });
 
     function setDaysField(idPart)

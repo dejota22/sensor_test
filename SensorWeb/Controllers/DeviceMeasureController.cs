@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core;
+using Core.DTO;
 using Core.Service;
 using Core.Utils;
 using Microsoft.AspNetCore.Authorization;
@@ -18,7 +19,7 @@ namespace SensorWeb.Controllers
     [Authorize]
     public class DeviceMeasureController : BaseController
     {
-        IDeviceMeasureService _deviceMeasureService;
+        IDeviceConfigurationService _deviceMeasureService;
         IMotorService _motorService;
         IUserService _userService;
         ICompanyService _companyService;
@@ -32,7 +33,7 @@ namespace SensorWeb.Controllers
         /// <param name="DeviceMeasureService"></param>
         /// <param name="mapper"></param>
         /// <param name="localizer"></param>
-        public DeviceMeasureController(IDeviceMeasureService DeviceMeasureService,
+        public DeviceMeasureController(IDeviceConfigurationService DeviceMeasureService,
                                    IMotorService MotorService,
                                    IUserService UserService,
                                    ICompanyService CompanyService,
@@ -49,7 +50,7 @@ namespace SensorWeb.Controllers
             _logger = logger;
         }
 
-        public ActionResult Index(string readDataType, int MotorId)
+        public ActionResult Index(int? DeviceId, int? MotorId)
         {
             try
             {
@@ -67,7 +68,14 @@ namespace SensorWeb.Controllers
                 //    listaMotorModel = listaMotorModel.Where(x => x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId)).ToList();
                 //}
 
-                return View();
+                var configModel = new DeviceConfigurationModel();
+
+                if (DeviceId != null && MotorId != null)
+                    configModel = _deviceMeasureService.GetLast(DeviceId.Value, MotorId.Value);
+                else
+                    configModel = _deviceMeasureService.GetLast(0, 0);
+
+                return View(configModel);
             }
             catch (Exception ex)
             {
@@ -79,14 +87,15 @@ namespace SensorWeb.Controllers
         // POST: DeviceMeasureController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(DeviceMeasureModel deviceMeasureModel)
+        public ActionResult Create(DeviceConfigurationModel deviceMeasureModel)
         {
             try
             {
                 //if (ModelState.IsValid)
                 //{
                     deviceMeasureModel.Id = _deviceMeasureService.GetlastCode();
-                    var deviceMeasure = _mapper.Map<DeviceMeasure>(deviceMeasureModel);
+                //var deviceMeasure = _mapper.Map<DeviceMeasure>(deviceMeasureModel);
+                var deviceMeasure = deviceMeasureModel.GetDeviceConfigurationFromModel();
                     _deviceMeasureService.Insert(deviceMeasure);
                 //}
 
