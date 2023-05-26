@@ -149,9 +149,19 @@ namespace SensorService
             return GetQueryDropDownList();
         }
 
+        
+        public DeviceConfigurationSpecialRead GetUsrSetup(int motorId, int deviceId)
+        {
+            IQueryable<DeviceConfigurationSpecialRead> tb_device_special_read = _context.DeviceConfigurationSpecialRead;
+            
+            return tb_device_special_read.Where(d => d.DeviceId == deviceId && d.MotorId == motorId).FirstOrDefault();
+        }
+
         public void Edit(DeviceConfiguration deviceConfiguration)
         {
-            throw new NotImplementedException();
+            _context.DeviceConfiguration.Update(deviceConfiguration);
+            _context.SaveChanges();
+
         }
 
         public void Remove(int idDeviceConfiguration)

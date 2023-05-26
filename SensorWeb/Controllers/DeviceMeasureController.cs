@@ -91,13 +91,25 @@ namespace SensorWeb.Controllers
         {
             try
             {
-                //if (ModelState.IsValid)
-                //{
+                if (deviceMeasureModel.DeviceId != null && deviceMeasureModel.MotorId != null)
+                {
+                    var configModel = _deviceMeasureService.GetLast(deviceMeasureModel.DeviceId.Value, deviceMeasureModel.MotorId.Value);
+                    if (configModel != null)
+                    {
+                        deviceMeasureModel.Id = configModel.Id;
+                        _deviceMeasureService.Edit(deviceMeasureModel.GetDeviceConfigurationFromModel());
+                    }
+                }
+                else
+                {
+                    //if (ModelState.IsValid)
+                    //{
                     deviceMeasureModel.Id = _deviceMeasureService.GetlastCode();
-                //var deviceMeasure = _mapper.Map<DeviceMeasure>(deviceMeasureModel);
-                var deviceMeasure = deviceMeasureModel.GetDeviceConfigurationFromModel();
+                    //var deviceMeasure = _mapper.Map<DeviceMeasure>(deviceMeasureModel);
+                    var deviceMeasure = deviceMeasureModel.GetDeviceConfigurationFromModel();
                     _deviceMeasureService.Insert(deviceMeasure);
-                //}
+                    //}
+                }
 
                 return RedirectToAction(nameof(Index));
             }

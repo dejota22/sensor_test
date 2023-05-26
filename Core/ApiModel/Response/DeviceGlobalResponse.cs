@@ -31,7 +31,7 @@ namespace Core.ApiModel.Response
         public int Config { get; set; }
 
         [JsonProperty("max_rms_red")]
-        public int MaxRmsRed { get; set; }
+        public double MaxRmsRed { get; set; }
 
         [JsonProperty("max_rms_yel")]
         public double MaxRmsYel { get; set; }

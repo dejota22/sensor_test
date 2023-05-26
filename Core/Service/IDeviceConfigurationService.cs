@@ -30,5 +30,7 @@ namespace Core.Service
         List<SelectListItemDTO> GetQueryDropDownList(int IdMotor);
 
         List<SelectListItemDTO> GetQueryDropDownListByDeviceId(int deviceId);
+
+        DeviceConfigurationSpecialRead GetUsrSetup(int motorId, int deviceId);
     }
 }
