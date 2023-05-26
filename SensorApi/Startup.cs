@@ -34,6 +34,7 @@ namespace SensorApi
             services.AddDbContext<SensorContext>(options => options.UseMySQL(Configuration.GetConnectionString("localdb")));
 
             //Injeção dependencia Services            
+            services.AddTransient<IDeviceConfigurationService, DeviceConfigurationService>();
             services.AddTransient<IDeviceMeasureService, DeviceMeasureService>();
             services.AddTransient<IMotorService, MotorService>();
             services.AddTransient<IDeviceService, DeviceService>();
