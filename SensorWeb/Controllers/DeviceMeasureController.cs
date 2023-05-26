@@ -99,16 +99,16 @@ namespace SensorWeb.Controllers
                         deviceMeasureModel.Id = configModel.Id;
                         _deviceMeasureService.Edit(deviceMeasureModel.GetDeviceConfigurationFromModel());
                     }
-                }
-                else
-                {
-                    //if (ModelState.IsValid)
-                    //{
-                    deviceMeasureModel.Id = _deviceMeasureService.GetlastCode();
-                    //var deviceMeasure = _mapper.Map<DeviceMeasure>(deviceMeasureModel);
-                    var deviceMeasure = deviceMeasureModel.GetDeviceConfigurationFromModel();
-                    _deviceMeasureService.Insert(deviceMeasure);
-                    //}
+                    else
+                    {
+                        //if (ModelState.IsValid)
+                        //{
+                        deviceMeasureModel.Id = _deviceMeasureService.GetlastCode();
+                        //var deviceMeasure = _mapper.Map<DeviceMeasure>(deviceMeasureModel);
+                        var deviceMeasure = deviceMeasureModel.GetDeviceConfigurationFromModel();
+                        _deviceMeasureService.Insert(deviceMeasure);
+                        //}
+                    }
                 }
 
                 return RedirectToAction(nameof(Index));
