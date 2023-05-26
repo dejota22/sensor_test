@@ -64,5 +64,21 @@ namespace SensorWeb.Models
         public int? quant_horarios_cards { get; set; }
         public string dia_envio_relat { get; set; }
         public string hora_envio_relat { get; set; }
+
+        #region Limites
+        public decimal? max_rms_red { get; set; }
+        public decimal? max_rms_yel { get; set; }
+        public decimal? min_rms { get; set; }
+        public int? max_percent { get; set; }
+        #endregion
+
+        #region Lora
+        public int? canal { get; set; }
+        public int? sf { get; set; }
+        public int? bw { get; set; }
+        public int? end { get; set; }
+        public int? gtw { get; set; }
+        public int? syn { get; set; }
+        #endregion
     }
 }

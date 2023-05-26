@@ -6,15 +6,38 @@
 @inject Core.Service.IMotorService motorService
 @inject Core.Service.ICompanyService companyService
 
-<h4 style="text-align:center">Configuração Leitura</h4>
+<h4 style="text-align:center">Configuração Sensor</h4>
 <hr />
 <div class="container">
+
+    <div>
+        <div class="form-group" style="margin-top:0px">
+            <input type="submit" value="Configurar Sensor" class="btn btn-primary" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label asp-for="CompanyId" class="control-label"></label>
+            @Html.DropDownListFor(model => model.CompanyId, new SelectList(companyService.GetQueryDropDownList(), "Key", "Value"),
+            @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
+            <span asp-validation-for="CompanyId" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="MotorId" class="control-label"></label>
+            @Html.DropDownListFor(model => model.MotorId, new SelectList(motorService.GetQueryDropDownListByTag(), "Key", "Value"),
+            @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "class", "form-control" } })
+            <span asp-validation-for="MotorId" class="text-danger"></span>
+        </div>
+    </div>
 
     <nav>
         <div class="nav nav-tabs" id="deviceTab" role="tablist">
 
-            <a class="nav-item nav-link active" id="config-tab" data-toggle="tab" href="#config" role="tab" aria-controls="config" aria-selected="true">Configuração</a>
+            <a class="nav-item nav-link active" id="config-tab" data-toggle="tab" href="#config" role="tab" aria-controls="config" aria-selected="true">Acelerômetro</a>
             <a class="nav-item nav-link" id="tempo-tab" data-toggle="tab" href="#tempo" role="tab" aria-controls="tempo" aria-selected="false">Tempo</a>
+            <a class="nav-item nav-link" id="limites-tab" data-toggle="tab" href="#limites" role="tab" aria-controls="limites" aria-selected="false">Limites</a>
+            <a class="nav-item nav-link" id="lora-tab" data-toggle="tab" href="#lora" role="tab" aria-controls="lora" aria-selected="false">Lora</a>
             <a class="nav-item nav-link" id="old-tab" data-toggle="tab" href="#old" role="tab" aria-controls="old" aria-selected="false">OLD</a>
 
         </div>
@@ -286,6 +309,10 @@
                                     </select>
                                     <span asp-validation-for="usr_amostras" class="text-danger"></span>
                                 </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                    <input type="button" value="Configuração Leitura Especial" class="btn btn-sm btn-primary" />
+                                </div>
                             </div>
 
                         </div>
@@ -373,7 +400,7 @@
                         </div>
                         <div class="form-group col-md-3" style="display: grid;">
                             <label class="control-label">hora_envio_relat</label>
-                            <input type="time" value="" asp-for="hora_envio_relat" name="hora_envio_relat" id="hora_envio_relat" class="form-control" />
+                        <input type="time" value="" asp-for="hora_envio_relat" name="hora_envio_relat" id="hora_envio_relat" class="form-control" />
                             <span asp-validation-for="hora_envio_relat" class="text-danger"></span>
                         </div>
                     </div>
@@ -391,24 +418,82 @@
 
             </div>
 
+            <div class="tab-pane fade" id="limites" role="tabpanel" aria-labelledby="limites-tab">
+
+                <div class="row">
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">max_rms_red</label>
+                        <input type="number" min="0" value="" asp-for="max_rms_red" name="max_rms_red" id="max_rms_red" class="form-control decimal-field" />
+                        <span asp-validation-for="max_rms_red" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">max_rms_yel</label>
+                        <input type="number" min="0" value="" asp-for="max_rms_yel" name="max_rms_yel" id="max_rms_yel" class="form-control decimal-field" />
+                        <span asp-validation-for="max_rms_yel" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">min_rms</label>
+                        <input type="number" min="0" value="" asp-for="min_rms" name="min_rms" id="min_rms" class="form-control decimal-field" />
+                        <span asp-validation-for="min_rms" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">max_percent</label>
+                        <input type="number" min="0" max="100" value="" asp-for="max_percent" name="max_percent" id="max_percent" class="form-control decimal-field" />
+                        <span asp-validation-for="max_percent" class="text-danger"></span>
+                    </div>
+                </div>
+
+                
+
+            </div>
+
+            <div class="tab-pane fade" id="lora" role="tabpanel" aria-labelledby="lora-tab">
+
+                <div class="row">
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">canal</label>
+                        <input type="number" min="0" value="" asp-for="canal" name="canal" id="canal" class="form-control" />
+                        <span asp-validation-for="canal" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">sf</label>
+                        <input type="number" min="0" value="" asp-for="sf" name="sf" id="sf" class="form-control" />
+                        <span asp-validation-for="sf" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">bw</label>
+                        <input type="number" min="0" value="" asp-for="bw" name="bw" id="bw" class="form-control" />
+                        <span asp-validation-for="bw" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">end</label>
+                        <input type="number" min="0" value="" asp-for="end" name="end" id="end" class="form-control" />
+                        <span asp-validation-for="end" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">gtw</label>
+                        <input type="number" min="0" value="" asp-for="gtw" name="gtw" id="gtw" class="form-control" />
+                        <span asp-validation-for="gtw" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">syn</label>
+                        <input type="number" min="0" value="" asp-for="syn" name="syn" id="syn" class="form-control" />
+                        <span asp-validation-for="syn" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+
             <div class="tab-pane fade" id="old" role="tabpanel" aria-labelledby="old-tab">
 
                 <div class="row">
                     <div class="col-md-12 pl-0 pr-0" style="display:flex">
                         <div class="col-md-12 pl-0 pr-0">
                             
-                                <div class="form-group col-md-4">
-                                    <label asp-for="CompanyId" class="control-label"></label>
-                                    @Html.DropDownListFor(model => model.CompanyId, new SelectList(companyService.GetQueryDropDownList(), "Key", "Value"),
-                                    @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
-                                    <span asp-validation-for="CompanyId" class="text-danger"></span>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label asp-for="MotorId" class="control-label"></label>
-                                    @Html.DropDownListFor(model => model.MotorId, new SelectList(motorService.GetQueryDropDownListByTag(), "Key", "Value"),
-                                    @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "class", "form-control" } })
-                                    <span asp-validation-for="MotorId" class="text-danger"></span>
-                                </div>
+                                
                                 <div class="row">
                                     <div class="form-group col-md-3" style="display: grid;">
                                         <label class="control-label">Frequencia</label>
@@ -562,12 +647,6 @@
 
             </div>
 
-        </div>
-
-        <div>
-            <div class="form-group" style="margin-top:20px">
-                <input type="submit" value="Salvar Leitura" class="btn btn-primary" />
-            </div>
         </div>
 
     </form>
