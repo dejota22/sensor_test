@@ -5,6 +5,7 @@ using Core;
 using Core.ApiModel.Request;
 using Core.DTO;
 using Core.Service;
+using Microsoft.EntityFrameworkCore;
 
 namespace SensorService
 {
@@ -112,7 +113,8 @@ namespace SensorService
         public DeviceConfigurationModel GetLast(int deviceId, int motorId)
         {
             var config = new DeviceConfigurationModel();
-            var configs = GetQuery().Where(c => c.MotorId == motorId && c.DeviceId == deviceId).ToList();
+            var configs = GetQuery().Where(c => c.MotorId == motorId && c.DeviceId == deviceId)
+                .AsNoTracking().ToList();
             if (configs.Any())
             {
                 config = config.GetModelFromEntity(configs.LastOrDefault());
