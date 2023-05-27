@@ -448,22 +448,22 @@
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">max_rms_red</label>
-                        <input type="number" min="0" value="" asp-for="max_rms_red" name="max_rms_red" id="max_rms_red" class="form-control decimal-field" />
+                        <input type="number" min="0" value="@Model.max_rms_red" asp-for="max_rms_red" name="max_rms_red" id="max_rms_red" class="form-control decimal-field" />
                         <span asp-validation-for="max_rms_red" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">max_rms_yel</label>
-                        <input type="number" min="0" value="" asp-for="max_rms_yel" name="max_rms_yel" id="max_rms_yel" class="form-control decimal-field" />
+                        <input type="number" min="0" value="@Model.max_rms_yel" asp-for="max_rms_yel" name="max_rms_yel" id="max_rms_yel" class="form-control decimal-field" />
                         <span asp-validation-for="max_rms_yel" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">min_rms</label>
-                        <input type="number" min="0" value="" asp-for="min_rms" name="min_rms" id="min_rms" class="form-control decimal-field" />
+                        <input type="number" min="0" value="@Model.min_rms" asp-for="min_rms" name="min_rms" id="min_rms" class="form-control decimal-field" />
                         <span asp-validation-for="min_rms" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">max_percent</label>
-                        <input type="number" min="0" max="100" value="" asp-for="max_percent" name="max_percent" id="max_percent" class="form-control decimal-field" />
+                        <input type="number" min="0" max="100" value="@Model.max_percent" asp-for="max_percent" name="max_percent" id="max_percent" class="form-control decimal-field" />
                         <span asp-validation-for="max_percent" class="text-danger"></span>
                     </div>
                 </div>

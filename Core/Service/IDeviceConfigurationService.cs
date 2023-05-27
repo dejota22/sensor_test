@@ -32,5 +32,7 @@ namespace Core.Service
         List<SelectListItemDTO> GetQueryDropDownListByDeviceId(int deviceId);
 
         DeviceConfigurationSpecialRead GetUsrSetup(int motorId, int deviceId);
+
+        List<DeviceConfigurationHorariosEnviosCard> GetHoras(int deviceConfigId);
     }
 }

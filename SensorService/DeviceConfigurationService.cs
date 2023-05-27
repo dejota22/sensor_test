@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core;
+using Core.ApiModel.Request;
 using Core.DTO;
 using Core.Service;
 
@@ -113,7 +114,11 @@ namespace SensorService
             var config = new DeviceConfigurationModel();
             var configs = GetQuery().Where(c => c.MotorId == motorId && c.DeviceId == deviceId).ToList();
             if (configs.Any())
+            {
                 config = config.GetModelFromEntity(configs.LastOrDefault());
+                config.DeviceConfigurationHorariosEnviosCard = GetHoras(config.Id);
+            }
+                
 
             IQueryable<DeviceConfigurationLora> tb_deviceConfigurationLora = _context.DeviceConfigurationLora;
             var lora = tb_deviceConfigurationLora.FirstOrDefault();
@@ -155,6 +160,13 @@ namespace SensorService
             IQueryable<DeviceConfigurationSpecialRead> tb_device_special_read = _context.DeviceConfigurationSpecialRead;
             
             return tb_device_special_read.Where(d => d.DeviceId == deviceId && d.MotorId == motorId).FirstOrDefault();
+        }
+
+        public List<DeviceConfigurationHorariosEnviosCard> GetHoras(int deviceConfigId)
+        {
+            IQueryable<DeviceConfigurationHorariosEnviosCard> tb_device_horas = _context.DeviceConfigurationHorariosEnviosCard;
+
+            return tb_device_horas.Where(d => d.DeviceConfigurationId == deviceConfigId).ToList();
         }
 
         public void Edit(DeviceConfiguration deviceConfiguration)

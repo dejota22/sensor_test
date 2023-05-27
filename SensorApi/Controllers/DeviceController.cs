@@ -306,6 +306,8 @@ namespace SensorApi.Controllers
 
                 foreach (var setup in deviceConfig)
                 {
+                    sensor.Config = 1;
+
                     sensor.SetupAcc.Add(new Setup()
                     {
                         Amostras = setup.acc_amostras.Value,
@@ -340,6 +342,7 @@ namespace SensorApi.Controllers
                         });
                     }
 
+                    horario.Config = 1;
                     horario.QuantHorariosCards = setup.quant_horarios_cards.Value;
                     horario.ModoHora = setup.modo_hora.Value;
                     horario.IntervaloAnalise = setup.intervalo_analise.Value;
@@ -352,6 +355,7 @@ namespace SensorApi.Controllers
                     horario.InicioTurno = setup.inicio_turno;
 
                     horario.HorariosEnviosCard = new List<HorariosEnviosCard>();
+                    setup.DeviceConfigurationHorariosEnviosCard = _DeviceConfigurationService.GetHoras(setup.Id);
                     foreach (var hora in setup.DeviceConfigurationHorariosEnviosCard)
                     {
                         horario.HorariosEnviosCard.Add(new HorariosEnviosCard()
@@ -360,10 +364,14 @@ namespace SensorApi.Controllers
                         });
                     }
 
-                    gatilho.MaxRmsRed = Decimal.ToDouble(setup.max_rms_red.Value);
-                    gatilho.MaxRmsYel = Decimal.ToDouble(setup.max_rms_yel.Value);
-                    gatilho.MinRms = Decimal.ToDouble(setup.min_rms.Value);
-                    gatilho.MaxPercent = setup.max_percent.Value;
+                    gatilho.Config = 1;
+                    gatilho.MaxRmsRed = setup.max_rms_red.HasValue ? 
+                        Decimal.ToDouble(setup.max_rms_red.Value) : 0;
+                    gatilho.MaxRmsYel = setup.max_rms_yel.HasValue ? 
+                        Decimal.ToDouble(setup.max_rms_yel.Value) : 0;
+                    gatilho.MinRms = setup.min_rms.HasValue ? 
+                        Decimal.ToDouble(setup.min_rms.Value) : 0;
+                    gatilho.MaxPercent = setup.max_percent.HasValue ? setup.max_percent.Value : 0;
 
                     var loraSetupData = _DeviceConfigurationService.GetLast(0,0);
                     lora.Canal = loraSetupData.canal.Value;
@@ -374,15 +382,16 @@ namespace SensorApi.Controllers
                     lora.Gtw = loraSetupData.gtw.Value;
                 }
 
-                response.Sensor.Add(sensor);
-                response.Horarios.Add(horario);
-                response.Gatilhos.Add(gatilho);
-                response.Lora.Add(lora);
-                response.Versao = "1.3.1";
-
                 var device = _DeviceService.Get(deviceConfig.Key.Value);
-                if (device != null)
+                if (device != null && deviceGlobal.Id == device.Code)
+                {
+                    response.Sensor.Add(sensor);
+                    response.Horarios.Add(horario);
+                    response.Gatilhos.Add(gatilho);
+                    response.Lora.Add(lora);
+                    response.Versao = "1.3.1";
                     response.Sn = device.Code;
+                }
             }
 
             respJson = JsonConvert.SerializeObject(response);
