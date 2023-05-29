@@ -93,19 +93,10 @@ namespace SensorService
         private IQueryable<Motor> GetQuery()
         {
             IQueryable<Motor> tb_Motor = _context.Motor;
-            IQueryable<Device> tb_Device = _context.Device;
+            var query = from Motor in tb_Motor
+                        select Motor;
 
-            var results = from Motor in tb_Motor
-                        join Device in tb_Device on Motor.DeviceId equals Device.Id
-                        select new { Motor, Device };
-
-            foreach(var result in results)
-            {
-                result.Motor.Device = result.Device;
-            }
-
-            return results.Select(x => x.Motor);
-
+            return query;
         }
 
         Motor IMotorService.Get(int idMotor)

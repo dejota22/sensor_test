@@ -7,8 +7,6 @@
 @inject Core.Service.ICardanShaftTypeService cardanShaftTypeService
 @inject Core.Service.IPumpTypeService pumpTypeService
 @inject Core.Service.ICompressorTypeService compressorTypeService
-@inject Core.Service.IDeviceService deviceService
-@inject Core.Service.ICompanyService companyService
 
 @*<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>*@
 <link href="@Url.Content("~/css/screenCustomMotor.css?p=3535")" rel="stylesheet" />
@@ -654,7 +652,7 @@
                 <div class="col-md-12 formclasscreate">
                     <div class="form-group col-md-4" style="display: grid;">
                         <label asp-for="DeviceId" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.DeviceId, new SelectList(deviceService.GetQueryDropDownList(), "Key", "Value"),
+                        @Html.DropDownListFor(model => model.DeviceId, new SelectList(Model.Devices, "Key", "Value"),
                         @localizer.Get("DeviceSelect"), new Dictionary<string, object> { { "class", "form-control" } })
                         <span asp-validation-for="DeviceId" class="text-danger"></span>
                     </div>

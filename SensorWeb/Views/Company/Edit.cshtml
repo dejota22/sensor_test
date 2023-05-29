@@ -25,7 +25,6 @@
                 <span asp-validation-for="TradeName" class="text-danger"></span>
             </div>
         </div>
-
         <div class="col-md-12 formclasscreate ">
             <div class="form-group col-md-2">
                 <label asp-for="Cnpj" class="control-label"></label>
@@ -42,8 +41,16 @@
                 <input asp-for="Country" class="form-control" />
                 <span asp-validation-for="Country" class="text-danger"></span>
             </div>
+            <div class="col-md-12 formclasscreate">
+                <div class="form-group col-md-6" style=" display: grid;">
+                    <label asp-for="CompanyTypeId" class="control-label"></label>
+                    @Html.DropDownListFor(model => model.CompanyTypeId,
+                    new SelectList(Model.CompanyType, "Key", "Value")
+                    , @localizer.Get("CompanyTypeSelect"), new Dictionary<string, object> { { "class", "form-control" } })
+                    <span asp-validation-for="CompanyTypeId" class="text-danger"></span>
+                </div>
+            </div>
         </div>
-
         <div class="form-group screenCreateControls">
             <a href="@Url.Action("Index", "Company")"><input asp-action="Index" type="button" value="@localizer.Get("BackToList")" class="btn btn-primary" /></a>
             <input type="submit" value="@localizer.Get("Save")" class="btn btn-primary" />
@@ -52,12 +59,8 @@
 </div>
 <hr />
 
-@*<div>
-        <a asp-action="Index">@localizer.Get("BackToList")</a>
-    </div>*@
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    }
+}

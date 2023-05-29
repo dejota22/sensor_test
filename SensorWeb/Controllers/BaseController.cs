@@ -1,19 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Core;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System;
 using System.Globalization;
+using System.Security.Claims;
 using System.Threading;
 
 namespace SensorWeb.Controllers
 {
     public class BaseController : Controller
     {
-        //public  IStringLocalizer<Resources.CommonResources> _localizer;
-
-        //public BaseController(IStringLocalizer<Resources.CommonResources> localizer)
-        //{
-        //    _localizer = localizer;
-        //}
-
         public override void OnActionExecuting(
            ActionExecutingContext filterContext)
         {
@@ -27,15 +23,14 @@ namespace SensorWeb.Controllers
             var cultureInfo = CultureInfo.GetCultureInfo(cookieValueFromReq);
             Thread.CurrentThread.CurrentCulture = cultureInfo;
             Thread.CurrentThread.CurrentUICulture = cultureInfo;
+        }
 
-            //if (cookieValueFromReq == "pt")
-            //    ViewData["selected-lang"] = "Potuguês";
-
-            //if (cookieValueFromReq == "en")
-            //    ViewData["selected-lang"] = "English";
-
-            //if (cookieValueFromReq == "es")
-            //    ViewData["selected-lang"] = "Spanish";
+        public string LoggedUserId
+        {
+            get
+            {
+                return User.FindFirstValue(ClaimTypes.NameIdentifier);
+            }
         }
     }
 }
