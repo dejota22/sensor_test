@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Core;
 using Core.ApiModel.Request;
 using Core.DTO;
@@ -168,11 +169,23 @@ namespace SensorService
         {
             IQueryable<DeviceConfigurationHorariosEnviosCard> tb_device_horas = _context.DeviceConfigurationHorariosEnviosCard;
 
-            return tb_device_horas.Where(d => d.DeviceConfigurationId == deviceConfigId).ToList();
+            return tb_device_horas.Where(d => d.DeviceConfigurationId == deviceConfigId).AsNoTracking().ToList();
         }
 
         public void Edit(DeviceConfiguration deviceConfiguration)
         {
+            var contextEntityHours = _context.DeviceConfigurationHorariosEnviosCard.Where(h => h.DeviceConfigurationId == deviceConfiguration.Id)
+                .AsNoTracking().ToList();
+
+            foreach(var hr in contextEntityHours)
+            {
+                if (deviceConfiguration.DeviceConfigurationHorariosEnviosCard.Any(h => h.Id == hr.Id) == false)
+                {
+                    _context.DeviceConfigurationHorariosEnviosCard.Remove(hr);
+                    _context.SaveChanges();
+                }
+            }
+
             _context.DeviceConfiguration.Update(deviceConfiguration);
             _context.SaveChanges();
 

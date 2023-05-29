@@ -358,7 +358,7 @@
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">inicio_turno</label>
-                            <input type="time" value="@Model.inicio_turno" asp-for="inicio_turno" name="inicio_turno" id="inicio_turno" class="form-control" />
+                        <input type="time" value="@Model.inicio_turno" step="0" asp-for="inicio_turno" name="inicio_turno" id="inicio_turno" class="form-control" />
                             <span asp-validation-for="inicio_turno" class="text-danger"></span>
                     </div>
                 </div>
@@ -366,7 +366,7 @@
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
                             <label class="control-label">fim_turno</label>
-                        <input type="time" value="@Model.fim_turno" asp-for="fim_turno" name="fim_turno" id="fim_turno" class="form-control" />
+                        <input type="time" value="@Model.fim_turno" step="0" asp-for="fim_turno" name="fim_turno" id="fim_turno" class="form-control" />
                         <span asp-validation-for="fim_turno" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
@@ -408,7 +408,7 @@
                         </div>
                         <div class="form-group col-md-3" style="display: grid;">
                             <label class="control-label">hora_envio_relat</label>
-                        <input type="time" value="@Model.hora_envio_relat" asp-for="hora_envio_relat" name="hora_envio_relat" id="hora_envio_relat" class="form-control" />
+                        <input type="time" value="@Model.hora_envio_relat" step="0" asp-for="hora_envio_relat" name="hora_envio_relat" id="hora_envio_relat" class="form-control" />
                             <span asp-validation-for="hora_envio_relat" class="text-danger"></span>
                         </div>
                     </div>
@@ -424,12 +424,15 @@
                                     int i = 0;
                                     foreach (var hora in Model.DeviceConfigurationHorariosEnviosCard)
                                     {
-                                        
-                                        <div class="form-group col-md-3">
-                                            <input type="time" value="@hora.Hora"
+
+                                        <div class="form-group col-md-3 form-hora-item">
+                                            <input type="time" value="@hora.Hora" step="0"
                                                    asp-for="DeviceConfigurationHorariosEnviosCard[@i].Hora"
                                                    name="DeviceConfigurationHorariosEnviosCard[@i].Hora"
                                                    id="DeviceConfigurationHorariosEnviosCard[@i].Hora" class="form-control" />
+                                            <input type="hidden" value="@hora.Id" asp-for="DeviceConfigurationHorariosEnviosCard[@i].Id"
+                                                   name="DeviceConfigurationHorariosEnviosCard[@i].Id" 
+                                                   id="DeviceConfigurationHorariosEnviosCard[@i].Id" />
                                         </div>
 
                                         i++;
@@ -705,18 +708,31 @@
         $('#dia_envio_relat').val(setDaysField('#btn-dia_envio_relat'));
     });
 
+    setDaysControl('#btn-dias_run', $('#dias_run').val());
+    setDaysControl('#btn-dia_envio_relat', $('#dia_envio_relat').val());
+
     $('#quant_horarios_cards').blur(function(){
         let quantVal = Number($('#quant_horarios_cards').val());
-        let horasGroup = '';
-        for (let i = 0; i < quantVal; i++) {
-            let horaItem = '<div class="form-group col-md-3">' +
-                '<input type="time" value="" asp-for="DeviceConfigurationHorariosEnviosCard[' + i + '].Hora" name="DeviceConfigurationHorariosEnviosCard[' + i + '].Hora" id="DeviceConfigurationHorariosEnviosCard[' + i + '].Hora" class="form-control" />' +
-                '</div>';
+        let quantAtual = $('.form-hora-item').length;
 
-            horasGroup += horaItem;
+        if (quantAtual < quantVal)
+        {
+            let horasGroup = '';
+            for (let i = quantAtual; i < quantVal; i++) {
+                let horaItem = '<div class="form-group col-md-3 form-hora-item">' +
+                    '<input type="time" value="" step="0" asp-for="DeviceConfigurationHorariosEnviosCard[' + i + '].Hora" name="DeviceConfigurationHorariosEnviosCard[' + i + '].Hora" id="DeviceConfigurationHorariosEnviosCard[' + i + '].Hora" class="form-control" />' +
+                    '</div>';
+
+                horasGroup += horaItem;
+            }
+
+            $('.horas-row').append($(horasGroup));
         }
-
-        $('.horas-row').html($(horasGroup));
+        else
+        {
+            $(".form-hora-item:nth-last-child(-n+" + (quantAtual - quantVal) + ")").remove();
+        }
+        
     });
 
     $('.main-selects').on('change', function (e) {
@@ -767,5 +783,17 @@
             diasRunString += '_';
 
         return diasRunString;
+    }
+
+    function setDaysControl(controlIdPart, fieldString)
+    {
+        let revFieldString = fieldString.split("").reverse().join("");
+        for (var i = 0; i < revFieldString.length; i++) {
+            let currChar = revFieldString.charAt(i);
+            if (['D','S','T','Q'].includes(currChar))
+            {
+                $(controlIdPart + (i+1)).addClass('active');
+            }
+        }
     }
 </script>
