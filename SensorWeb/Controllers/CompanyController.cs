@@ -89,7 +89,7 @@ namespace SensorWeb.Controllers
             try
             {
                 if (ModelState.IsValid)
-                {                 
+                {
                     var user = _userService.Get(Convert.ToInt32(LoggedUserId));
 
                     companyModel.Id = _companyService.GetlastCode();
@@ -113,7 +113,9 @@ namespace SensorWeb.Controllers
         {
             Company Company = _companyService.Get(id);
             CompanyModel CompanyModel = _mapper.Map<CompanyModel>(Company);
-            CompanyModel.CompanyType = GetCompanyType();
+
+            if (CompanyModel != null)
+                CompanyModel.CompanyType = GetCompanyType();
 
             return View(CompanyModel);
         }

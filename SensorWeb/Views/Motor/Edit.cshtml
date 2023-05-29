@@ -7,8 +7,6 @@
 @inject Core.Service.ICardanShaftTypeService cardanShaftTypeService
 @inject Core.Service.IPumpTypeService pumpTypeService
 @inject Core.Service.ICompressorTypeService compressorTypeService
-@inject Core.Service.IDeviceService deviceService
-@inject Core.Service.ICompanyService companyService
 
 <link href="@Url.Content("~/css/screenCustomMotor.css?p=4")" rel="stylesheet" />
 
@@ -27,11 +25,9 @@
         getDeviceData($("#DeviceId").val());
     });
 
-    function getDeviceData(deviceId)
-    {
+    function getDeviceData(deviceId) {
         $.get('@Url.Content("~/Device/GetDeviceData")?id=' + deviceId, function (data) {
-            if (data != null && data.id != null)
-            {
+            if (data != null && data.id != null) {
                 $("#DFrequency").val(data.frequency);
                 $("#DBdr").val(data.bdr);
                 $("#DCutoff").val(data.cutoff);
@@ -88,7 +84,7 @@
         $(".compressorgroup").hide();
     }
 
-    function aFunc(typeId) {        
+    function aFunc(typeId) {
         hideGroups();
 
         if (typeId == 1) {
@@ -141,28 +137,28 @@
 
             @*Equipamento*@
             @*<label for="input1" class="col-sm-2 labelbox">
-                    <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">Equipamento</span>
-                </label>*@
-        <div class="col-md-12 formclasscreate ">
+            <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">Equipamento</span>
+            </label>*@
+            <div class="col-md-12 formclasscreate ">
 
-            <div class="form-group" style="display:none">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" readonly />
-            </div>
+                <div class="form-group" style="display:none">
+                    <label asp-for="Id" class="control-label"></label>
+                    <input asp-for="Id" class="form-control" readonly />
+                </div>
 
-            <div class="form-group col-md-4">
-                <label asp-for="CompanyId" class="control-label"></label>
-                @Html.DropDownListFor(model => model.CompanyId, new SelectList(companyService.GetQueryDropDownList(), "Key", "Value"),
-                                      @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
-                <span asp-validation-for="CompanyId" class="text-danger"></span>
-            </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="CompanyId" class="control-label"></label>
+                    @Html.DropDownListFor(model => model.CompanyId, new SelectList(Model.Companies, "Key", "Value"),
+                    @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
+                    <span asp-validation-for="CompanyId" class="text-danger"></span>
+                </div>
 
-            <div class="form-group col-md-8">
-                <label asp-for="SectorDesc" class="control-label"></label>
-                <input asp-for="SectorDesc" class="form-control" />
-                <span asp-validation-for="SectorDesc" class="text-danger"></span>
+                <div class="form-group col-md-8">
+                    <label asp-for="SectorDesc" class="control-label"></label>
+                    <input asp-for="SectorDesc" class="form-control" />
+                    <span asp-validation-for="SectorDesc" class="text-danger"></span>
+                </div>
             </div>
-        </div>
 
             <div class="mt-n3" id="input1">
 
@@ -192,8 +188,8 @@
 
             @*Motor Eletrico*@
             @*<label for="input1" class="col-sm-2 labelbox motorgroup">
-                    <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("EletricMotor")</span>
-                </label>*@
+            <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("EletricMotor")</span>
+            </label>*@
             <div class="mt-n3 motorgroup" id="input1" style="padding-top: 10px; ">
 
                 @*Motor Eletrico*@
@@ -202,7 +198,7 @@
                     <div class="form-group col-md-3" style="display: grid;">
                         <label asp-for="MachineId" class="control-label"></label>
                         @Html.DropDownListFor(model => model.MachineId, new SelectList(machineService.GetQueryDropDownList(), "Key", "Value"),
-                                              @localizer.Get("MachineSelect"), new Dictionary<string, object> { { "class", "form-control" } })
+                        @localizer.Get("MachineSelect"), new Dictionary<string, object> { { "class", "form-control" } })
                         <span asp-validation-for="MachineId" class="text-danger"></span>
                     </div>
 
@@ -335,15 +331,15 @@
 
             @*Acoplamento*@
             @*<label for="input2" class="col-sm-2 labelbox acopladorgroup">
-                    <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("Coupling")</span>
-                </label>*@
+            <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("Coupling")</span>
+            </label>*@
             <div class="mt-n3 acopladorgroup" id="input2">
                 <div class="col-md-12 formclasscreate">
                     <div class="form-group col-md-4" style=" display: grid;">
                         <label asp-for="CouplingTypeId" class="control-label"></label>
                         @Html.DropDownListFor(model => model.CouplingTypeId,
-                         new SelectList(couplingService.GetQueryDropDownList(), "Key", "Value")
-                             , @localizer.Get("CouplingTypeSelect"), new Dictionary<string, object> { { "class", "form-control" } })
+                        new SelectList(couplingService.GetQueryDropDownList(), "Key", "Value")
+                        , @localizer.Get("CouplingTypeSelect"), new Dictionary<string, object> { { "class", "form-control" } })
                         <span asp-validation-for="CouplingTypeId" class="text-danger"></span>
                     </div>
 
@@ -367,8 +363,8 @@
 
             @*Eixo Cardan*@
             @*<label for="input3" class="col-sm-2 labelbox cardangroup">
-                    <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("CardanShaft")</span>
-                </label>*@
+            <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("CardanShaft")</span>
+            </label>*@
             <div class="mt-n3 cardangroup" id="input3">
                 <div class="col-md-6 formclasscreate">
                     <div class="form-group col-md-7" style="display: grid;">
@@ -382,8 +378,8 @@
 
             @*Polia/Correntes*@
             @*<label for="input4" class="col-sm-2 labelbox poliagroup">
-                    <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("PulleyBox")</span>
-                </label>*@
+            <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("PulleyBox")</span>
+            </label>*@
             <div class="mt-n3 poliagroup" id="input4">
 
                 @*Polias/Correntes*@
@@ -421,8 +417,8 @@
 
             @*Coroa/Correntes*@
             @*<label for="input5" class="col-sm-2 labelbox coroagroup">
-                    <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("CoroaBox")</span>
-                </label>*@
+            <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("CoroaBox")</span>
+            </label>*@
             <div class="mt-n3 coroagroup" id="input5">
                 @*Coroa/Corrente*@
                 <div class="col-md-12 formclasscreate">
@@ -454,8 +450,8 @@
 
             @*Redutor*@
             @*<label for="input6" class="col-sm-2 labelbox redutorgroup ">
-                    <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("Reducer")</span>
-                </label>*@
+            <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("Reducer")</span>
+            </label>*@
             <div class="mt-n3 redutorgroup " id="input6">
 
                 @*Redutor*@
@@ -506,8 +502,8 @@
 
             @*Pump*@
             @*<label for="input7" class="col-sm-2 labelbox bombagroup">
-                    <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("Pump")</span>
-                </label>*@
+            <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("Pump")</span>
+            </label>*@
             <div class="mt-n3 bombagroup" id="input7">
                 @*Bomba*@
                 <div class="col-md-12 formclasscreate">
@@ -546,8 +542,8 @@
 
             @*ExaustFan*@
             @*<label for="input8" class="col-sm-2 labelbox ventiladorgroup">
-                    <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("ExaustFan")</span>
-                </label>*@
+            <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("ExaustFan")</span>
+            </label>*@
             <div class="mt-n3 ventiladorgroup" id="input8">
                 @*Ventilador/Exaustor*@
                 <div class="col-md-12 formclasscreate">
@@ -591,18 +587,18 @@
 
             @*Compressor*@
             @*<label for="input9" class="col-sm-2 labelbox compressorgroup">
-                    <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("Compressor")</span>
-                </label>*@
+            <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("Compressor")</span>
+            </label>*@
             <div class="mt-n3 compressorgroup" id="input9">
                 @*Compressor*@
                 <div class="col-md-12 formclasscreate">
 
                     @*<div class="form-group col-md-3" style="display: grid;">
-                            <label asp-for="CompressorTypeId" class="control-label"></label>
-                            @Html.DropDownListFor(model => model.CompressorTypeId, new SelectList(compressorTypeService.GetQueryDropDownList(), "Key", "Value"),
-                            @localizer.Get("CompressorTypeSelect"), new Dictionary<string, object> { { "class", "form-control fake-sel" } })
-                            <span asp-validation-for="CompressorTypeId" class="text-danger"></span>
-                        </div>*@
+                    <label asp-for="CompressorTypeId" class="control-label"></label>
+                    @Html.DropDownListFor(model => model.CompressorTypeId, new SelectList(compressorTypeService.GetQueryDropDownList(), "Key", "Value"),
+                    @localizer.Get("CompressorTypeSelect"), new Dictionary<string, object> { { "class", "form-control fake-sel" } })
+                    <span asp-validation-for="CompressorTypeId" class="text-danger"></span>
+                    </div>*@
 
                     <div class="form-group col-md-3" style="display: grid;">
                         <label asp-for="CompressorTypeId" class="control-label"></label>
@@ -641,15 +637,15 @@
 
             @*Sensor*@
             @*<label for="input9" class="col-sm-2 labelbox">
-                    <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">Configurações de Leitura do sensor</span>
-                </label>*@
+            <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">Configurações de Leitura do sensor</span>
+            </label>*@
             <div class="mt-n3" id="input9">
 
                 @*SensorSelect*@
                 <div class="col-md-12 formclasscreate">
                     <div class="form-group col-md-4" style="display: grid;">
                         <label asp-for="DeviceId" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.DeviceId, new SelectList(deviceService.GetQueryDropDownList(), "Key", "Value"),
+                        @Html.DropDownListFor(model => model.DeviceId, new SelectList(Model.Devices, "Key", "Value"),
                         @localizer.Get("DeviceSelect"), new Dictionary<string, object> { { "class", "form-control" } })
                         <span asp-validation-for="DeviceId" class="text-danger"></span>
                     </div>
@@ -761,27 +757,27 @@
                </div>-->
             <!--<div class="col-md-12 formclasscreate">-->
             @*<div class="form-group col-md-6">
-                <label asp-for="IsActive" class="control-label"></label>
-                <c asp-for="IsActive" class="form-control" />
-                <span asp-validation-for="IsActive" class="text-danger"></span>
+            <label asp-for="IsActive" class="control-label"></label>
+            <c asp-for="IsActive" class="form-control" />
+            <span asp-validation-for="IsActive" class="text-danger"></span>
 
-                </div>*@
+            </div>*@
             @*<div class="form-group col-md-6">
-                    <label asp-for="Contact.Department" class="control-label"></label>
-                    <input asp-for="Contact.Department" class="form-control" />
-                    <span asp-validation-for="Contact.Department" class="text-danger"></span>
-                </div>*@
+            <label asp-for="Contact.Department" class="control-label"></label>
+            <input asp-for="Contact.Department" class="form-control" />
+            <span asp-validation-for="Contact.Department" class="text-danger"></span>
+            </div>*@
 
             @*<div class="form-group">
-                    <label asp-for="CreatedAt" class="control-label"></label>
-                    <input asp-for="CreatedAt" class="form-control" />
-                    <span asp-validation-for="CreatedAt" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="UpdatedAt" class="control-label"></label>
-                    <input asp-for="UpdatedAt" class="form-control" />
-                    <span asp-validation-for="UpdatedAt" class="text-danger"></span>
-                </div>*@
+            <label asp-for="CreatedAt" class="control-label"></label>
+            <input asp-for="CreatedAt" class="form-control" />
+            <span asp-validation-for="CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+            <label asp-for="UpdatedAt" class="control-label"></label>
+            <input asp-for="UpdatedAt" class="form-control" />
+            <span asp-validation-for="UpdatedAt" class="text-danger"></span>
+            </div>*@
 
             <!--</div>-->
 
@@ -801,8 +797,7 @@
     </div>*@
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
-
-
