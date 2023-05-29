@@ -94,6 +94,8 @@ namespace Core.DTO
         public int? syn { get; set; }
         #endregion
 
+        public bool isEdit { get; set; }
+
         public IList<DeviceConfigurationHorariosEnviosCard> DeviceConfigurationHorariosEnviosCard { get; set; }
 
         public DeviceConfiguration GetDeviceConfigurationFromModel()

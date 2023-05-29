@@ -93,11 +93,14 @@ namespace SensorWeb.Controllers
             {
                 if (deviceMeasureModel.DeviceId != null && deviceMeasureModel.MotorId != null)
                 {
-                    var configModel = _deviceMeasureService.GetLast(deviceMeasureModel.DeviceId.Value, deviceMeasureModel.MotorId.Value);
-                    if (configModel != null)
+                    if (deviceMeasureModel.isEdit == true)
                     {
-                        deviceMeasureModel.Id = configModel.Id;
-                        _deviceMeasureService.Edit(deviceMeasureModel.GetDeviceConfigurationFromModel());
+                        var configModel = _deviceMeasureService.GetLast(deviceMeasureModel.DeviceId.Value, deviceMeasureModel.MotorId.Value);
+                        if (configModel != null)
+                        {
+                            deviceMeasureModel.Id = configModel.Id;
+                            _deviceMeasureService.Edit(deviceMeasureModel.GetDeviceConfigurationFromModel());
+                        }
                     }
                     else
                     {

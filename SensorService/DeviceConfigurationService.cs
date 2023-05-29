@@ -119,6 +119,7 @@ namespace SensorService
             if (configs.Any())
             {
                 config = config.GetModelFromEntity(configs.LastOrDefault());
+                config.isEdit = true;
                 config.DeviceConfigurationHorariosEnviosCard = GetHoras(config.Id);
             }
                 
