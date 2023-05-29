@@ -4,7 +4,6 @@ using Core.DTO;
 using Core.Service;
 using Core.Utils;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
@@ -73,28 +72,13 @@ namespace SensorWeb.Controllers
         // GET: CompanyController/Create
         public ActionResult Create()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user = _userService.Get(Convert.ToInt32(userId));
-
-            var list = new List<SelectListItemDTO>();
-
-            if (user.UserType.Name == Constants.Roles.Administrator)
-            {
-                list.Add(new SelectListItemDTO() { Key = 2, Value = "Distribuidor" });
-                list.Add(new SelectListItemDTO() { Key = 3, Value = "Consumidor Final" });
-            }
-            else if (user.UserType.Name == Constants.Roles.Supervisor)
-            {
-                list.Add(new SelectListItemDTO() { Key = 3, Value = "Consumidor Final" });
-            }
-
-            CompanyModel company = new CompanyModel()
+            CompanyModel companyModel = new CompanyModel()
             {
                 Id = _companyService.GetlastCode(),
-                CompanyType = list,          
+                CompanyType = GetCompanyType(),
             };
 
-            return View(company);
+            return View(companyModel);
         }
 
         // POST: CompanyController/Create
@@ -105,14 +89,14 @@ namespace SensorWeb.Controllers
             try
             {
                 if (ModelState.IsValid)
-                {
+                {                 
+                    var user = _userService.Get(Convert.ToInt32(LoggedUserId));
+
                     companyModel.Id = _companyService.GetlastCode();
+
                     var company = _mapper.Map<Company>(companyModel);
-
-                    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    var user = _userService.Get(Convert.ToInt32(userId));
-
                     company.ParentCompanyId = user.Contact.CompanyId;
+
                     _companyService.Insert(company);
                 }
 
@@ -129,6 +113,8 @@ namespace SensorWeb.Controllers
         {
             Company Company = _companyService.Get(id);
             CompanyModel CompanyModel = _mapper.Map<CompanyModel>(Company);
+            CompanyModel.CompanyType = GetCompanyType();
+
             return View(CompanyModel);
         }
 
@@ -141,9 +127,12 @@ namespace SensorWeb.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var Company = _mapper.Map<Company>(CompanyModel);
-                    _companyService.Edit(Company);
+                    var user = _userService.Get(Convert.ToInt32(LoggedUserId));
 
+                    var company = _mapper.Map<Company>(CompanyModel);
+                    company.ParentCompanyId = user.Contact.CompanyId;
+
+                    _companyService.Edit(company);
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -176,6 +165,25 @@ namespace SensorWeb.Controllers
             {
                 return View();
             }
+        }
+
+        private List<SelectListItemDTO> GetCompanyType()
+        {
+            var user = _userService.Get(Convert.ToInt32(LoggedUserId));
+
+            var list = new List<SelectListItemDTO>();
+
+            if (user.UserType.Name == Constants.Roles.Administrator)
+            {
+                list.Add(new SelectListItemDTO() { Key = 2, Value = "Distribuidor" });
+                list.Add(new SelectListItemDTO() { Key = 3, Value = "Consumidor Final" });
+            }
+            else if (user.UserType.Name == Constants.Roles.Supervisor)
+            {
+                list.Add(new SelectListItemDTO() { Key = 3, Value = "Consumidor Final" });
+            }
+
+            return list;
         }
     }
 }
