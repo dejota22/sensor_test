@@ -427,7 +427,7 @@
                                     {
 
                                         <div class="form-group col-md-3 form-hora-item">
-                                            <input type="time" value="@hora.Hora" step="0"
+                                            <input type="time" value="@(hora.Hora != null ? hora.Hora.Substring(0,5) : "")" step="0"
                                                    asp-for="DeviceConfigurationHorariosEnviosCard[@i].Hora"
                                                    name="DeviceConfigurationHorariosEnviosCard[@i].Hora"
                                                    id="DeviceConfigurationHorariosEnviosCard[@i].Hora" class="form-control" />
