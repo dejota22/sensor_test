@@ -360,7 +360,7 @@ namespace SensorApi.Controllers
                     {
                         horario.HorariosEnviosCard.Add(new HorariosEnviosCard()
                         {
-                            Hora = hora.Hora
+                            Hora = hora.Hora != null ? hora.Hora.Substring(0, 5) : ""
                         });
                     }
 
