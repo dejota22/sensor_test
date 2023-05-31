@@ -48,6 +48,9 @@ namespace Core
         public int? max_percent { get; set; }
         #endregion
 
+        public bool? config { get; set; }
+        public DateTime? sent_date { get; set; }
+
         public virtual ICollection<DeviceConfigurationHorariosEnviosCard> DeviceConfigurationHorariosEnviosCard { get; set; }
     }
 }

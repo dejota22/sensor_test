@@ -99,6 +99,8 @@ namespace SensorWeb.Controllers
                         if (configModel != null)
                         {
                             deviceMeasureModel.Id = configModel.Id;
+                            deviceMeasureModel.config = true;
+
                             _deviceMeasureService.Edit(deviceMeasureModel.GetDeviceConfigurationFromModel());
                         }
                     }

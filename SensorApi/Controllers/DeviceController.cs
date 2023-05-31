@@ -136,6 +136,7 @@ namespace SensorApi.Controllers
             return contRes;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("deviceGlobal")]
         public ContentResult AddDeviceGlobal([FromBody] DeviceGlobalRequest deviceGlobal)
@@ -160,129 +161,11 @@ namespace SensorApi.Controllers
 
             System.IO.File.AppendAllText(path, text + Environment.NewLine);
 
-            #region Dados antigos chumbados
-            var response_old = new DeviceGlobalResponse
-            {
-                Sensor = new List<Sensor>()
-                {
-                    new Sensor
-                    {
-                        Config = 0,
-                        SetupAcc = new List<Setup>()
-                        {   
-                            new Setup
-                            {
-                                Odr = 1,
-                                FreqCut = 2,
-                                Eixo = 7,
-                                Fs = 4,
-                                Filtro = 0,
-                                Amostras = 2
-                            }
-                        },
-                        SetupSpd = new List<Setup>()
-                        {
-                            new Setup
-                            {
-                                Odr = 0,
-                                FreqCut = 0,
-                                Eixo = 7,
-                                Fs = 2,
-                                Filtro = 0,
-                                Amostras = 4
-                            }
-                        },
-                        SetupUsr = new List<Setup>()
-                        {
-                            new Setup
-                            {
-                                Odr = 0,
-                                FreqCut = 6,
-                                Eixo = 2,
-                                Fs = 0,
-                                Filtro = 0,
-                                Amostras = 1
-                            }
-                        }
-                    }
-                },
-                Horarios = new List<Horario>()
-                {
-                    new Horario
-                    {
-                        Config = 0,
-                        ModoHora = 1,
-                        ContaEnvios = 6,
-                        DiasRun = "_SSQQTSD",
-                        InicioTurno = "07:00",
-                        FimTurno = "18:00",
-                        IntervaloAnalise = 60,
-                        IntervaloAnaliseAlarme = 20,
-                        QuantAlarme = 6,
-                        QuantHorariosCards = 6,
-                        HorariosEnviosCard = new List<HorariosEnviosCard>()
-                        {
-                            new HorariosEnviosCard
-                            {
-                                Hora = "08:15"
-                            },
-                            new HorariosEnviosCard
-                            {
-                                Hora = "11:15"
-                            },
-                            new HorariosEnviosCard
-                            {
-                                Hora = "13:15"
-                            },
-                            new HorariosEnviosCard
-                            {
-                                Hora = "15:15"
-                            },
-                            new HorariosEnviosCard
-                            {
-                                Hora = "17:15"
-                            },
-                            new HorariosEnviosCard
-                            {
-                                Hora = "17:48"
-                            }
-                        },
-                        DiaEnvioRelat = "_SSQQTSD",
-                        HoraEnvioRelat = "15:00"
-                    }
-                },
-                Gatilhos = new List<Gatilho>()
-                {
-                    new Gatilho
-                    {
-                        Config = 0,
-                        MaxRmsRed = 16,
-                        MaxRmsYel = 12.5,
-                        MinRms = 5.230000019,
-                        MaxPercent = 20
-                    }
-                },
-                Lora = new List<Lora>()
-                {
-                    new Lora
-                    {
-                        Config = 0,
-                        Canal = 4,
-                        End = 69,
-                        Gtw = 61,
-                        Syn = 70,
-                        Sf = 7,
-                        Bw = 7
-                    }
-                },
-                Versao = "1.3.1",
-                Sn = "0102030405060708"
-            };
-            #endregion
-
+            var deviceConfigEnviados = new List<int>();
             var response = new DeviceGlobalResponse() { };
 
             var deviceConfigList = _DeviceConfigurationService.GetAll()
+                .Where(s => s.config == true)
                 .GroupBy(s => s.DeviceId);
 
             response.Sensor = new List<Sensor>();
@@ -292,6 +175,7 @@ namespace SensorApi.Controllers
 
             foreach (var deviceConfig in deviceConfigList)
             {
+                var deviceConfigId = 0;
                 var sensor = new Sensor();
                 sensor.SetupAcc = new List<Setup>();
                 sensor.SetupSpd = new List<Setup>();
@@ -301,12 +185,13 @@ namespace SensorApi.Controllers
                 horario.HorariosEnviosCard = new List<HorariosEnviosCard>();
 
                 var gatilho = new Gatilho();
-
                 var lora = new Lora();
 
                 foreach (var setup in deviceConfig)
                 {
-                    sensor.Config = 1;
+                    deviceConfigId = setup.Id;
+
+                    sensor.Config = Convert.ToInt32(setup.config);
 
                     sensor.SetupAcc.Add(new Setup()
                     {
@@ -342,7 +227,7 @@ namespace SensorApi.Controllers
                         });
                     }
 
-                    horario.Config = 1;
+                    horario.Config = Convert.ToInt32(setup.config);
                     horario.QuantHorariosCards = setup.quant_horarios_cards.Value;
                     horario.ModoHora = setup.modo_hora.Value;
                     horario.IntervaloAnalise = setup.intervalo_analise.Value;
@@ -364,7 +249,7 @@ namespace SensorApi.Controllers
                         });
                     }
 
-                    gatilho.Config = 1;
+                    gatilho.Config = Convert.ToInt32(setup.config);
                     gatilho.MaxRmsRed = setup.max_rms_red.HasValue ? 
                         Decimal.ToDouble(setup.max_rms_red.Value) : 0;
                     gatilho.MaxRmsYel = setup.max_rms_yel.HasValue ? 
@@ -391,6 +276,8 @@ namespace SensorApi.Controllers
                     response.Lora.Add(lora);
                     response.Versao = "1.3.1";
                     response.Sn = device.Code;
+
+                    deviceConfigEnviados.Add(deviceConfigId);
                 }
             }
 
@@ -398,6 +285,17 @@ namespace SensorApi.Controllers
 
             ContentResult contRes = Content(Newtonsoft.Json.Linq.JObject.Parse(respJson).ToString(), "application/json");
             contRes.StatusCode = (int)HttpStatusCode.OK;
+
+            foreach (var dcId in deviceConfigEnviados)
+            {
+                var dc = _DeviceConfigurationService.Get(dcId);
+                if (dc != null)
+                {
+                    dc.config = false;
+                    _DeviceConfigurationService.Edit(dc);
+                }
+            }
+
             return contRes;
         }
 

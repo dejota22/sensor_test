@@ -95,6 +95,7 @@ namespace Core.DTO
         #endregion
 
         public bool isEdit { get; set; }
+        public bool? config { get; set; }
 
         public IList<DeviceConfigurationHorariosEnviosCard> DeviceConfigurationHorariosEnviosCard { get; set; }
 
@@ -132,7 +133,8 @@ namespace Core.DTO
                 max_rms_red = max_rms_red,
                 max_rms_yel = max_rms_yel,
                 min_rms = min_rms,
-                max_percent = max_percent
+                max_percent = max_percent,
+                config = config
             };
 
             foreach (var hora in DeviceConfigurationHorariosEnviosCard)
@@ -181,7 +183,8 @@ namespace Core.DTO
                 max_rms_red = entity.max_rms_red,
                 max_rms_yel = entity.max_rms_yel,
                 min_rms = entity.min_rms,
-                max_percent = entity.max_percent
+                max_percent = entity.max_percent,
+                config = entity.config
             };
 
             foreach (var hora in entity.DeviceConfigurationHorariosEnviosCard)

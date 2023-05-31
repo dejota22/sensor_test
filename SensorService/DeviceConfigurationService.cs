@@ -146,6 +146,7 @@ namespace SensorService
         public int Insert(DeviceConfiguration deviceConfiguration)
         {
             deviceConfiguration.CreatedAt = DateTime.Now;
+            deviceConfiguration.config = true;
 
             _context.DeviceConfiguration.Add(deviceConfiguration);
             _context.SaveChanges();
