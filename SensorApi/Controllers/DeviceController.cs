@@ -165,7 +165,6 @@ namespace SensorApi.Controllers
             var response = new DeviceGlobalResponse() { };
 
             var deviceConfigList = _DeviceConfigurationService.GetAll()
-                .Where(s => s.config == true)
                 .GroupBy(s => s.DeviceId);
 
             response.Sensor = new List<Sensor>();
@@ -292,7 +291,7 @@ namespace SensorApi.Controllers
                 if (dc != null)
                 {
                     dc.config = false;
-                    _DeviceConfigurationService.Edit(dc);
+                    _DeviceConfigurationService.Edit(dc, null);
                 }
             }
 

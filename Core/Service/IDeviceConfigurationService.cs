@@ -5,9 +5,9 @@ namespace Core.Service
 {
     public interface IDeviceConfigurationService
     {
-        void Edit(DeviceConfiguration deviceConfiguration);
+        void Edit(DeviceConfiguration deviceConfiguration, DeviceConfigurationSpecialRead usrSetup);
 
-        int Insert(DeviceConfiguration deviceConfiguration);
+        int Insert(DeviceConfiguration deviceConfiguration, DeviceConfigurationSpecialRead usrSetup);
 
         DeviceConfiguration Get(int id);
 

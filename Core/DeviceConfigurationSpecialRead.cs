@@ -9,8 +9,6 @@ namespace Core
         public DateTime CreatedAt { get; set; }
         public int? MotorId { get; set; }
         public int? DeviceId { get; set; }
-        public bool Sent { get; set; }
-        public DateTime SentDate { get; set; }
 
         public int? usr_odr { get; set; }
         public int? usr_freq_cut { get; set; }

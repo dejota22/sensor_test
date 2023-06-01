@@ -122,7 +122,18 @@ namespace SensorService
                 config.isEdit = true;
                 config.DeviceConfigurationHorariosEnviosCard = GetHoras(config.Id);
             }
-                
+
+            IQueryable<DeviceConfigurationSpecialRead> tb_deviceConfigurationSpecialRead = _context.DeviceConfigurationSpecialRead;
+            var usrSetup = tb_deviceConfigurationSpecialRead.Where(c => c.MotorId == motorId && c.DeviceId == deviceId).FirstOrDefault();
+            if (usrSetup != null)
+            {
+                config.usr_amostras = usrSetup.usr_amostras;
+                config.usr_eixo = usrSetup.usr_eixo;
+                config.usr_filtro = usrSetup.usr_filtro;
+                config.usr_freq_cut = usrSetup.usr_freq_cut;
+                config.usr_fs = usrSetup.usr_fs;
+                config.usr_odr = usrSetup.usr_odr;
+            }
 
             IQueryable<DeviceConfigurationLora> tb_deviceConfigurationLora = _context.DeviceConfigurationLora;
             var lora = tb_deviceConfigurationLora.FirstOrDefault();
@@ -143,12 +154,24 @@ namespace SensorService
         {
             return GetQueryDTO(motorId);
         }
-        public int Insert(DeviceConfiguration deviceConfiguration)
+        public int Insert(DeviceConfiguration deviceConfiguration, DeviceConfigurationSpecialRead usrSetup)
         {
+            if (usrSetup != null)
+            {
+                deviceConfiguration = new DeviceConfiguration()
+                {
+                    DeviceId = usrSetup.DeviceId,
+                    MotorId = usrSetup.MotorId,
+                };
+
+                _context.DeviceConfigurationSpecialRead.Add(usrSetup);
+            }
+
             deviceConfiguration.CreatedAt = DateTime.Now;
             deviceConfiguration.config = true;
 
             _context.DeviceConfiguration.Add(deviceConfiguration);
+
             _context.SaveChanges();
 
             return deviceConfiguration.Id;
@@ -174,23 +197,30 @@ namespace SensorService
             return tb_device_horas.Where(d => d.DeviceConfigurationId == deviceConfigId).AsNoTracking().ToList();
         }
 
-        public void Edit(DeviceConfiguration deviceConfiguration)
+        public void Edit(DeviceConfiguration deviceConfiguration, DeviceConfigurationSpecialRead usrSetup)
         {
-            var contextEntityHours = _context.DeviceConfigurationHorariosEnviosCard.Where(h => h.DeviceConfigurationId == deviceConfiguration.Id)
+            if (usrSetup == null)
+            {
+                var contextEntityHours = _context.DeviceConfigurationHorariosEnviosCard.Where(h => h.DeviceConfigurationId == deviceConfiguration.Id)
                 .AsNoTracking().ToList();
 
-            foreach(var hr in contextEntityHours)
-            {
-                if (deviceConfiguration.DeviceConfigurationHorariosEnviosCard.Any(h => h.Id == hr.Id) == false)
+                foreach (var hr in contextEntityHours)
                 {
-                    _context.DeviceConfigurationHorariosEnviosCard.Remove(hr);
-                    _context.SaveChanges();
+                    if (deviceConfiguration.DeviceConfigurationHorariosEnviosCard.Any(h => h.Id == hr.Id) == false)
+                    {
+                        _context.DeviceConfigurationHorariosEnviosCard.Remove(hr);
+                        _context.SaveChanges();
+                    }
                 }
+
+                _context.DeviceConfiguration.Update(deviceConfiguration);
+            }
+            else
+            {
+                _context.DeviceConfigurationSpecialRead.Update(usrSetup);
             }
 
-            _context.DeviceConfiguration.Update(deviceConfiguration);
             _context.SaveChanges();
-
         }
 
         public void Remove(int idDeviceConfiguration)

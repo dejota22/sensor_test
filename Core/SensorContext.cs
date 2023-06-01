@@ -693,6 +693,9 @@ namespace Core
                 entity.Property(e => e.max_rms_yel).HasColumnName("max_rms_yel");
                 entity.Property(e => e.min_rms).HasColumnName("min_rms");
                 entity.Property(e => e.max_percent).HasColumnName("max_percent");
+
+                entity.Property(e => e.config).HasColumnName("config");
+                entity.Property(e => e.sent_date).HasColumnName("sent_date");
             });
 
             modelBuilder.Entity<DeviceConfigurationHorariosEnviosCard>(entity =>
@@ -727,9 +730,6 @@ namespace Core
 
                 entity.Property(e => e.MotorId).HasColumnName("motor_id");
 
-                entity.Property(e => e.Sent).HasColumnName("sent");
-
-                entity.Property(e => e.SentDate).HasColumnName("sent_data");
 
                 entity.Property(e => e.usr_odr).HasColumnName("usr_odr");
                 entity.Property(e => e.usr_freq_cut).HasColumnName("usr_freq_cut");

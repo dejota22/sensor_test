@@ -95,6 +95,7 @@ namespace Core.DTO
         #endregion
 
         public bool isEdit { get; set; }
+        public bool isEditUserSetup { get; set; }
         public bool? config { get; set; }
 
         public IList<DeviceConfigurationHorariosEnviosCard> DeviceConfigurationHorariosEnviosCard { get; set; }
@@ -106,7 +107,6 @@ namespace Core.DTO
                 Id = Id,
                 MotorId = MotorId,
                 DeviceId = DeviceId,
-                CreatedAt = CreatedAt,
                 acc_amostras = acc_amostras,
                 acc_eixo = acc_eixo,
                 acc_filtro = acc_filtro,
@@ -203,18 +203,14 @@ namespace Core.DTO
         {
             return new DeviceConfigurationSpecialRead()
             {
-                Id = Id,
                 MotorId = MotorId,
                 DeviceId = DeviceId,
-                CreatedAt = CreatedAt,
                 usr_amostras = usr_amostras,
                 usr_eixo = usr_eixo,
                 usr_filtro = usr_filtro,
                 usr_freq_cut = usr_freq_cut,
                 usr_fs = usr_fs,
-                usr_odr = usr_odr,
-                Sent = Sent,
-                SentDate = SentDate
+                usr_odr = usr_odr
             };
         }
     }

@@ -240,6 +240,7 @@
                     <div class="card" style="">
                         <div class="card-body">
                             <h6 class="card-subtitle mb-2 text-muted">Configuração Usuário</h6>
+                            <input type="hidden" id="isEditUserSetup" name="isEditUserSetup" value="False" />
                             <div class="row">
                                 <div class="form-group col-md-3" style="display: grid;">
                                     <label class="control-label">usr_odr</label>
@@ -320,7 +321,7 @@
                                 </div>
                                 <div class="form-group col-md-3" style="display: grid;">
                                     <label class="control-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                    <input type="button" value="Configuração Leitura Especial" class="btn btn-sm btn-primary" />
+                                    <input id="btnEditUserSetup" type="button" value="Configuração Leitura Especial" class="btn btn-sm btn-primary" />
                                 </div>
                             </div>
 
@@ -742,6 +743,11 @@
 
         if (deviceId != '' && motorId != '')
             document.location.href = '@Url.Action("Index")' + '?DeviceId=' + deviceId + '&MotorId=' + motorId;
+    });
+
+    $('#btnEditUserSetup').on('click', function(){
+        $('#isEditUserSetup').val('True');
+        $('form').submit();
     });
 
     function setDaysField(idPart)
