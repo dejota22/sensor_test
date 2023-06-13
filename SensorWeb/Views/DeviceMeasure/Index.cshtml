@@ -453,22 +453,22 @@
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">max_rms_red</label>
-                        <input type="number" min="0" value="@(Model.max_rms_red.HasValue ? Model.max_rms_red.Value.ToString("0.00") : "")" asp-for="max_rms_red" name="max_rms_red" id="max_rms_red" class="form-control decimal-field" />
+                        <input type="text" value="@(Model.max_rms_red.HasValue ? Model.max_rms_red.Value.ToString("0.00") : "")" asp-for="max_rms_red" name="max_rms_red" id="max_rms_red" class="form-control decimal-field" />
                         <span asp-validation-for="max_rms_red" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">max_rms_yel</label>
-                        <input type="number" min="0" value="@(Model.max_rms_yel.HasValue ? Model.max_rms_yel.Value.ToString("0.00") : "")" asp-for="max_rms_yel" name="max_rms_yel" id="max_rms_yel" class="form-control decimal-field" />
+                        <input type="text" value="@(Model.max_rms_yel.HasValue ? Model.max_rms_yel.Value.ToString("0.00") : "")" asp-for="max_rms_yel" name="max_rms_yel" id="max_rms_yel" class="form-control decimal-field" />
                         <span asp-validation-for="max_rms_yel" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">min_rms</label>
-                        <input type="number" min="0" value="@(Model.min_rms.HasValue ? Model.min_rms.Value.ToString("0.00") : "")" asp-for="min_rms" name="min_rms" id="min_rms" class="form-control decimal-field" />
+                        <input type="text" min="0" value="@(Model.min_rms.HasValue ? Model.min_rms.Value.ToString("0.00") : "")" asp-for="min_rms" name="min_rms" id="min_rms" class="form-control decimal-field" />
                         <span asp-validation-for="min_rms" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">max_percent</label>
-                        <input type="number" min="0" max="100" value="@Model.max_percent" asp-for="max_percent" name="max_percent" id="max_percent" class="form-control decimal-field" />
+                        <input type="number" min="0" max="100" value="@Model.max_percent" asp-for="max_percent" name="max_percent" id="max_percent" class="form-control" />
                         <span asp-validation-for="max_percent" class="text-danger"></span>
                     </div>
                 </div>
@@ -686,172 +686,125 @@
 </div>
 
 
-<script>
-    $('#deviceTab a').on('click', function (e) {
-        e.preventDefault();
-        $(this).tab('show');
-    });
-
-    $('.btn-dias_run').on('click', function(){
-        if ($(this).hasClass('active') == false)
-            $(this).addClass('active');
-        else
-            $(this).removeClass('active');
-
-        $('#dias_run').val(setDaysField('#btn-dias_run'));
-    });
-
-    $('.btn-dia_envio_relat').on('click', function () {
-        if ($(this).hasClass('active') == false)
-            $(this).addClass('active');
-        else
-            $(this).removeClass('active');
-
-        $('#dia_envio_relat').val(setDaysField('#btn-dia_envio_relat'));
-    });
-
-    setDaysControl('#btn-dias_run', $('#dias_run').val());
-    setDaysControl('#btn-dia_envio_relat', $('#dia_envio_relat').val());
-
-    $('#quant_horarios_cards').blur(function(){
-        let quantVal = Number($('#quant_horarios_cards').val());
-        let quantAtual = $('.form-hora-item').length;
-
-        if (quantAtual < quantVal)
-        {
-            let horasGroup = '';
-            for (let i = quantAtual; i < quantVal; i++) {
-                let horaItem = '<div class="form-group col-md-3 form-hora-item">' +
-                    '<input type="time" value="" step="0" asp-for="DeviceConfigurationHorariosEnviosCard[' + i + '].Hora" name="DeviceConfigurationHorariosEnviosCard[' + i + '].Hora" id="DeviceConfigurationHorariosEnviosCard[' + i + '].Hora" class="form-control" />' +
-                    '</div>';
-
-                horasGroup += horaItem;
-            }
-
-            $('.horas-row').append($(horasGroup));
-        }
-        else
-        {
-            $(".form-hora-item:nth-last-child(-n+" + (quantAtual - quantVal) + ")").remove();
-        }
-        
-    });
-
-    $('.main-selects').on('change', function (e) {
-        let deviceId = $('#DeviceId').val();
-        let motorId = $('#MotorId').val();
-
-        if (deviceId != '' && motorId != '')
-            document.location.href = '@Url.Action("Index")' + '?DeviceId=' + deviceId + '&MotorId=' + motorId;
-    });
-
-    $('#btnEditUserSetup').on('click', function(){
-        $('#isEditUserSetup').val('True');
-        $('form').submit();
-    });
-
-    function setDaysField(idPart)
-    {
-        let diasRunString = '_';
-
-        if ($(idPart + '7').hasClass('active'))
-            diasRunString += 'S';
-        else
-            diasRunString += '_';
-
-        if ($(idPart + '6').hasClass('active'))
-            diasRunString += 'S';
-        else
-            diasRunString += '_';
-
-        if ($(idPart + '5').hasClass('active'))
-            diasRunString += 'Q';
-        else
-            diasRunString += '_';
-
-        if ($(idPart + '4').hasClass('active'))
-            diasRunString += 'Q';
-        else
-            diasRunString += '_';
-
-        if ($(idPart + '3').hasClass('active'))
-            diasRunString += 'T';
-        else
-            diasRunString += '_';
-
-        if ($(idPart + '2').hasClass('active'))
-            diasRunString += 'S';
-        else
-            diasRunString += '_';
-
-        if ($(idPart + '1').hasClass('active'))
-            diasRunString += 'D';
-        else
-            diasRunString += '_';
-
-        return diasRunString;
-    }
-
-    function setDaysControl(controlIdPart, fieldString)
-    {
-        let revFieldString = fieldString.split("").reverse().join("");
-        for (var i = 0; i < revFieldString.length; i++) {
-            let currChar = revFieldString.charAt(i);
-            if (['D','S','T','Q'].includes(currChar))
-            {
-                $(controlIdPart + (i+1)).addClass('active');
-            }
-        }
-    }
-
-    $('.decimal-field').attr('type', 'text');
-    $('.decimal-field')
-    //.on('keyup', function (e) {
-
-    //    var code = e.keyCode || e.which;
-    //    let floatedStringVal = "";
-
-    //    if ($(this).val().includes(".") || $(this).val().includes(","))
-    //    {
-    //        let secondPartVal = "";
-    //        if ($(this).val().includes("."))
-    //            secondPartVal = $(this).val().split(".");
-    //        else
-    //            secondPartVal = $(this).val().split(",");
-
-    //        if (secondPartVal.length > 2)
-    //        {
-    //            let floatedVal = parseFloat(this.value).toFixed(2);
-    //            if (floatedVal != NaN && floatedVal != null && floatedVal != undefined && floatedVal.toString().includes(".")) {
-    //                floatedStringVal = floatedVal.toString().replace(".", ",");
-    //            }
-    //        }
-    //    }
-    //    else if (code == "9")
-    //    {
-    //        let floatedVal = parseFloat(this.value).toFixed(2);
-    //        if (floatedVal != NaN && floatedVal != null && floatedVal != undefined) {
-    //            floatedStringVal = floatedVal.toString().replace(".", ",");
-    //        }
-    //    }
-
-    //    $(this).val(floatedStringVal);
-    //})
-        .on('blur', function (e) {
-            this.setAttribute('type', 'text');
-
-            let floatedStringVal = "";
-            let floatedVal = parseFloat(this.value).toFixed(2);
-            if (floatedVal != NaN && floatedVal != null && floatedVal != undefined) {
-                floatedStringVal = floatedVal.toString().replace(".", ",");
-                $(this).val(floatedStringVal);
-            }
-            else{
-                $(this).val(floatedStringVal);
-            }
-        })
-        .on('focusin', function(){
-            this.setAttribute('type', 'number');
+@section Scripts
+{
+    <script type="text/javascript">
+        $('#deviceTab a').on('click', function (e) {
+            e.preventDefault();
+            $(this).tab('show');
         });
-        
-</script>
+
+        $('.btn-dias_run').on('click', function () {
+            if ($(this).hasClass('active') == false)
+                $(this).addClass('active');
+            else
+                $(this).removeClass('active');
+
+            $('#dias_run').val(setDaysField('#btn-dias_run'));
+        });
+
+        $('.btn-dia_envio_relat').on('click', function () {
+            if ($(this).hasClass('active') == false)
+                $(this).addClass('active');
+            else
+                $(this).removeClass('active');
+
+            $('#dia_envio_relat').val(setDaysField('#btn-dia_envio_relat'));
+        });
+
+        setDaysControl('#btn-dias_run', $('#dias_run').val());
+        setDaysControl('#btn-dia_envio_relat', $('#dia_envio_relat').val());
+
+        $('#quant_horarios_cards').blur(function () {
+            let quantVal = Number($('#quant_horarios_cards').val());
+            let quantAtual = $('.form-hora-item').length;
+
+            if (quantAtual < quantVal) {
+                let horasGroup = '';
+                for (let i = quantAtual; i < quantVal; i++) {
+                    let horaItem = '<div class="form-group col-md-3 form-hora-item">' +
+                        '<input type="time" value="" step="0" asp-for="DeviceConfigurationHorariosEnviosCard[' + i + '].Hora" name="DeviceConfigurationHorariosEnviosCard[' + i + '].Hora" id="DeviceConfigurationHorariosEnviosCard[' + i + '].Hora" class="form-control" />' +
+                        '</div>';
+
+                    horasGroup += horaItem;
+                }
+
+                $('.horas-row').append($(horasGroup));
+            }
+            else {
+                $(".form-hora-item:nth-last-child(-n+" + (quantAtual - quantVal) + ")").remove();
+            }
+
+        });
+
+        $('.main-selects').on('change', function (e) {
+            let deviceId = $('#DeviceId').val();
+            let motorId = $('#MotorId').val();
+
+            if (deviceId != '' && motorId != '')
+                document.location.href = '@Url.Action("Index")' + '?DeviceId=' + deviceId + '&MotorId=' + motorId;
+        });
+
+        $('#btnEditUserSetup').on('click', function () {
+            $('#isEditUserSetup').val('True');
+            $('form').submit();
+        });
+
+        function setDaysField(idPart) {
+            let diasRunString = '_';
+
+            if ($(idPart + '7').hasClass('active'))
+                diasRunString += 'S';
+            else
+                diasRunString += '_';
+
+            if ($(idPart + '6').hasClass('active'))
+                diasRunString += 'S';
+            else
+                diasRunString += '_';
+
+            if ($(idPart + '5').hasClass('active'))
+                diasRunString += 'Q';
+            else
+                diasRunString += '_';
+
+            if ($(idPart + '4').hasClass('active'))
+                diasRunString += 'Q';
+            else
+                diasRunString += '_';
+
+            if ($(idPart + '3').hasClass('active'))
+                diasRunString += 'T';
+            else
+                diasRunString += '_';
+
+            if ($(idPart + '2').hasClass('active'))
+                diasRunString += 'S';
+            else
+                diasRunString += '_';
+
+            if ($(idPart + '1').hasClass('active'))
+                diasRunString += 'D';
+            else
+                diasRunString += '_';
+
+            return diasRunString;
+        }
+
+        function setDaysControl(controlIdPart, fieldString) {
+            let revFieldString = fieldString.split("").reverse().join("");
+            for (var i = 0; i < revFieldString.length; i++) {
+                let currChar = revFieldString.charAt(i);
+                if (['D', 'S', 'T', 'Q'].includes(currChar)) {
+                    $(controlIdPart + (i + 1)).addClass('active');
+                }
+            }
+        }
+
+        $(document).ready(function ($) {
+            $('.decimal-field').mask("000000,00", { reverse: true });
+        });
+
+    </script>
+}
+
