@@ -14,6 +14,8 @@ using SensorApi.Interfaces;
 using Newtonsoft.Json;
 using Core.ApiModel.Response;
 using SensorService;
+using Org.BouncyCastle.Crypto.Agreement;
+using Autofac.Core;
 
 namespace SensorApi.Controllers
 {
@@ -278,6 +280,10 @@ namespace SensorApi.Controllers
 
                     deviceConfigEnviados.Add(deviceConfigId);
                 }
+                else
+                {
+                    AddEmptySensorToResponse(response, lora, deviceGlobal.Id);
+                }
             }
 
             respJson = JsonConvert.SerializeObject(response);
@@ -296,6 +302,46 @@ namespace SensorApi.Controllers
             }
 
             return contRes;
+        }
+
+        private void AddEmptySensorToResponse(DeviceGlobalResponse response, Lora lora, string deviceGlobalId)
+        {
+            Sensor sensor = new Sensor()
+            {
+                Config = 0,
+                SetupAcc = new List<Setup>()
+                {
+                    new Setup()
+                    {
+                        Amostras = 0, Eixo = 0, Filtro = 0, FreqCut = 0, Fs = 0, Odr = 0
+                    }
+                },
+                SetupSpd = new List<Setup>()
+                {
+                    new Setup()
+                    {
+                        Amostras = 0, Eixo = 0, Filtro = 0, FreqCut = 0, Fs = 0, Odr = 0
+                    }
+                }
+            };
+
+            Horario horario = new Horario()
+            {
+                Config = 0, ContaEnvios = 0, DiaEnvioRelat = "________", DiasRun = "________", FimTurno = "00:00", HoraEnvioRelat = "00:00",
+                InicioTurno = "00:00", IntervaloAnalise = 0, IntervaloAnaliseAlarme = 0, ModoHora = 0, QuantAlarme = 0, QuantHorariosCards = 0
+            };
+
+            Gatilho gatilho = new Gatilho()
+            {
+                Config = 0, MaxPercent = 0, MaxRmsRed = 0, MaxRmsYel = 0, MinRms = 0
+            };
+
+            response.Sensor.Add(sensor);
+            response.Horarios.Add(horario);
+            response.Gatilhos.Add(gatilho);
+            response.Lora.Add(lora);
+            response.Versao = "1.3.1";
+            response.Sn = deviceGlobalId;
         }
 
         [HttpPost]
