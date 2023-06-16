@@ -165,6 +165,7 @@ namespace SensorApi.Controllers
 
             var deviceConfigEnviados = new List<int>();
             var response = new DeviceGlobalResponse() { };
+            var defaultLora = _DeviceConfigurationService.GetLast(0, 0);
 
             var deviceConfigList = _DeviceConfigurationService.GetAll()
                 .GroupBy(s => s.DeviceId);
@@ -259,7 +260,7 @@ namespace SensorApi.Controllers
                         Decimal.ToDouble(setup.min_rms.Value) : 0;
                     gatilho.MaxPercent = setup.max_percent.HasValue ? setup.max_percent.Value : 0;
 
-                    var loraSetupData = _DeviceConfigurationService.GetLast(0,0);
+                    var loraSetupData = defaultLora;
                     lora.Canal = loraSetupData.canal.Value;
                     lora.End = loraSetupData.end.Value;
                     lora.Syn = loraSetupData.syn.Value;
@@ -280,10 +281,19 @@ namespace SensorApi.Controllers
 
                     deviceConfigEnviados.Add(deviceConfigId);
                 }
-                else
-                {
-                    AddEmptySensorToResponse(response, lora, deviceGlobal.Id);
-                }
+            }
+
+            if (deviceConfigEnviados.Any() == false)
+            {
+                Lora lora = new Lora();
+                lora.Canal = defaultLora.canal.Value;
+                lora.End = defaultLora.end.Value;
+                lora.Syn = defaultLora.syn.Value;
+                lora.Sf = defaultLora.sf.Value;
+                lora.Bw = defaultLora.bw.Value;
+                lora.Gtw = defaultLora.gtw.Value;
+
+                AddEmptySensorToResponse(response, lora, deviceGlobal.Id);
             }
 
             respJson = JsonConvert.SerializeObject(response);
@@ -322,13 +332,15 @@ namespace SensorApi.Controllers
                     {
                         Amostras = 0, Eixo = 0, Filtro = 0, FreqCut = 0, Fs = 0, Odr = 0
                     }
-                }
+                },
+                SetupUsr = new List<Setup>()
             };
 
             Horario horario = new Horario()
             {
                 Config = 0, ContaEnvios = 0, DiaEnvioRelat = "________", DiasRun = "________", FimTurno = "00:00", HoraEnvioRelat = "00:00",
-                InicioTurno = "00:00", IntervaloAnalise = 0, IntervaloAnaliseAlarme = 0, ModoHora = 0, QuantAlarme = 0, QuantHorariosCards = 0
+                InicioTurno = "00:00", IntervaloAnalise = 0, IntervaloAnaliseAlarme = 0, ModoHora = 0, QuantAlarme = 0, QuantHorariosCards = 0,
+                HorariosEnviosCard = new List<HorariosEnviosCard>()
             };
 
             Gatilho gatilho = new Gatilho()
