@@ -138,7 +138,6 @@ namespace SensorApi.Controllers
             return contRes;
         }
 
-        [AllowAnonymous]
         [HttpPost]
         [Route("deviceGlobal")]
         public ContentResult AddDeviceGlobal([FromBody] DeviceGlobalRequest deviceGlobal)
@@ -294,6 +293,163 @@ namespace SensorApi.Controllers
                 lora.Gtw = defaultLora.gtw.Value;
 
                 AddEmptySensorToResponse(response, lora, deviceGlobal.Id);
+            }
+
+            respJson = JsonConvert.SerializeObject(response);
+
+            ContentResult contRes = Content(Newtonsoft.Json.Linq.JObject.Parse(respJson).ToString(), "application/json");
+            contRes.StatusCode = (int)HttpStatusCode.OK;
+
+            foreach (var dcId in deviceConfigEnviados)
+            {
+                var dc = _DeviceConfigurationService.Get(dcId);
+                if (dc != null)
+                {
+                    dc.config = false;
+                    _DeviceConfigurationService.Edit(dc, null);
+                }
+            }
+
+            return contRes;
+        }
+
+        [HttpGet]
+        [Route("EnviaConfigSensor")]
+        public ContentResult EnviaConfigSensor(string id)
+        {
+            string respJson;
+
+            var deviceConfigEnviados = new List<int>();
+            var response = new DeviceGlobalResponse() { };
+            var defaultLora = _DeviceConfigurationService.GetLast(0, 0);
+
+            var deviceConfigList = _DeviceConfigurationService.GetAll()
+                .GroupBy(s => s.DeviceId);
+
+            response.Sensor = new List<Sensor>();
+            response.Horarios = new List<Horario>();
+            response.Gatilhos = new List<Gatilho>();
+            response.Lora = new List<Lora>();
+
+            foreach (var deviceConfig in deviceConfigList)
+            {
+                var deviceConfigId = 0;
+                var sensor = new Sensor();
+                sensor.SetupAcc = new List<Setup>();
+                sensor.SetupSpd = new List<Setup>();
+                sensor.SetupUsr = new List<Setup>();
+
+                var horario = new Horario();
+                horario.HorariosEnviosCard = new List<HorariosEnviosCard>();
+
+                var gatilho = new Gatilho();
+                var lora = new Lora();
+
+                foreach (var setup in deviceConfig)
+                {
+                    deviceConfigId = setup.Id;
+
+                    sensor.Config = Convert.ToInt32(setup.config);
+
+                    sensor.SetupAcc.Add(new Setup()
+                    {
+                        Amostras = setup.acc_amostras.Value,
+                        Eixo = setup.acc_eixo.Value,
+                        Filtro = setup.acc_filtro.Value,
+                        FreqCut = setup.acc_freq_cut.Value,
+                        Fs = setup.acc_fs.Value,
+                        Odr = setup.acc_odr.Value
+                    });
+
+                    sensor.SetupSpd.Add(new Setup()
+                    {
+                        Amostras = setup.spd_amostras.Value,
+                        Eixo = setup.spd_eixo.Value,
+                        Filtro = setup.spd_filtro.Value,
+                        FreqCut = setup.spd_freq_cut.Value,
+                        Fs = setup.spd_fs.Value,
+                        Odr = setup.spd_odr.Value
+                    });
+
+                    var usrSetupData = _DeviceConfigurationService.GetUsrSetup(setup.MotorId.Value, setup.DeviceId.Value);
+                    if (usrSetupData != null)
+                    {
+                        sensor.SetupUsr.Add(new Setup()
+                        {
+                            Amostras = usrSetupData.usr_amostras.Value,
+                            Eixo = usrSetupData.usr_eixo.Value,
+                            Filtro = usrSetupData.usr_filtro.Value,
+                            FreqCut = usrSetupData.usr_freq_cut.Value,
+                            Fs = usrSetupData.usr_fs.Value,
+                            Odr = usrSetupData.usr_odr.Value
+                        });
+                    }
+
+                    horario.Config = Convert.ToInt32(setup.config);
+                    horario.QuantHorariosCards = setup.quant_horarios_cards.Value;
+                    horario.ModoHora = setup.modo_hora.Value;
+                    horario.IntervaloAnalise = setup.intervalo_analise.Value;
+                    horario.IntervaloAnaliseAlarme = setup.intervalo_analise_alarme.Value;
+                    horario.ContaEnvios = setup.conta_envios.Value;
+                    horario.DiaEnvioRelat = setup.dia_envio_relat;
+                    horario.HoraEnvioRelat = setup.hora_envio_relat;
+                    horario.DiasRun = setup.dias_run;
+                    horario.FimTurno = setup.fim_turno;
+                    horario.InicioTurno = setup.inicio_turno;
+
+                    horario.HorariosEnviosCard = new List<HorariosEnviosCard>();
+                    setup.DeviceConfigurationHorariosEnviosCard = _DeviceConfigurationService.GetHoras(setup.Id);
+                    foreach (var hora in setup.DeviceConfigurationHorariosEnviosCard)
+                    {
+                        horario.HorariosEnviosCard.Add(new HorariosEnviosCard()
+                        {
+                            Hora = hora.Hora != null ? hora.Hora.Substring(0, 5) : ""
+                        });
+                    }
+
+                    gatilho.Config = Convert.ToInt32(setup.config);
+                    gatilho.MaxRmsRed = setup.max_rms_red.HasValue ?
+                        Decimal.ToDouble(setup.max_rms_red.Value) : 0;
+                    gatilho.MaxRmsYel = setup.max_rms_yel.HasValue ?
+                        Decimal.ToDouble(setup.max_rms_yel.Value) : 0;
+                    gatilho.MinRms = setup.min_rms.HasValue ?
+                        Decimal.ToDouble(setup.min_rms.Value) : 0;
+                    gatilho.MaxPercent = setup.max_percent.HasValue ? setup.max_percent.Value : 0;
+
+                    var loraSetupData = defaultLora;
+                    lora.Canal = loraSetupData.canal.Value;
+                    lora.End = loraSetupData.end.Value;
+                    lora.Syn = loraSetupData.syn.Value;
+                    lora.Sf = loraSetupData.sf.Value;
+                    lora.Bw = loraSetupData.bw.Value;
+                    lora.Gtw = loraSetupData.gtw.Value;
+                }
+
+                var device = _DeviceService.Get(deviceConfig.Key.Value);
+                if (device != null && id == device.Code)
+                {
+                    response.Sensor.Add(sensor);
+                    response.Horarios.Add(horario);
+                    response.Gatilhos.Add(gatilho);
+                    response.Lora.Add(lora);
+                    response.Versao = "1.3.1";
+                    response.Sn = device.Code;
+
+                    deviceConfigEnviados.Add(deviceConfigId);
+                }
+            }
+
+            if (deviceConfigEnviados.Any() == false)
+            {
+                Lora lora = new Lora();
+                lora.Canal = defaultLora.canal.Value;
+                lora.End = defaultLora.end.Value;
+                lora.Syn = defaultLora.syn.Value;
+                lora.Sf = defaultLora.sf.Value;
+                lora.Bw = defaultLora.bw.Value;
+                lora.Gtw = defaultLora.gtw.Value;
+
+                AddEmptySensorToResponse(response, lora, id);
             }
 
             respJson = JsonConvert.SerializeObject(response);
