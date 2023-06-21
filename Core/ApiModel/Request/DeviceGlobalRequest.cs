@@ -81,7 +81,7 @@ namespace Core.ApiModel.Request
         public double RmsAfSpdY { get; set; }
 
         [JsonProperty("rms_af_spd_Z")]
-        public int RmsAfSpdZ { get; set; }
+        public double RmsAfSpdZ { get; set; }
     }
 
     public class SetupAf

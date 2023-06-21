@@ -38,6 +38,7 @@ namespace SensorApi
             services.AddTransient<IDeviceMeasureService, DeviceMeasureService>();
             services.AddTransient<IMotorService, MotorService>();
             services.AddTransient<IDeviceService, DeviceService>();
+            services.AddTransient<IReceiveService, ReceiveService>();
             services.AddTransient<IUserService, UserService>();
 
             services.AddTransient<IFixationTypeService, FixationTypeService>();

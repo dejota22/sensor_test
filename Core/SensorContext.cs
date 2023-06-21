@@ -44,6 +44,8 @@ namespace Core
         public virtual DbSet<PulleyType> PulleyType { get; set; }
         public virtual DbSet<Pump> Pump { get; set; }
         public virtual DbSet<PumpType> PumpType { get; set; }
+        public virtual DbSet<ReceiveData> ReceiveData { get; set; }
+        public virtual DbSet<ReceiveGlobal> ReceiveGlobal { get; set; }
         public virtual DbSet<Reducer> Reducer { get; set; }
         public virtual DbSet<Ring> Ring { get; set; }
         public virtual DbSet<RingType> RingType { get; set; }
@@ -1505,6 +1507,81 @@ namespace Core
                     .IsUnicode(false);
 
                 entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
+            });
+
+            modelBuilder.Entity<ReceiveData>(entity =>
+            {
+                entity.ToTable("Receive_Data");
+
+                entity.Property(e => e.IdReceiveData).HasColumnName("IdReceive_Data");
+
+                entity.Property(e => e.DataReceive).HasColumnName("DataReceive");
+                entity.Property(e => e.IdDeviceConfiguration).HasColumnName("IdDeviceConfiguration");
+
+                entity.Property(e => e.id).HasColumnName("id");
+                entity.Property(e => e.gtw).HasColumnName("gtw");
+                entity.Property(e => e.seq).HasColumnName("seq");
+                entity.Property(e => e.temp).HasColumnName("temp");
+                entity.Property(e => e.dec).HasColumnName("dec");
+                entity.Property(e => e.tipo).HasColumnName("tipo");
+                entity.Property(e => e.rms_acc).HasColumnName("rms_acc");
+                entity.Property(e => e.rms_spd).HasColumnName("rms_spd");
+                entity.Property(e => e.ftr_crista).HasColumnName("ftr_crista");
+                entity.Property(e => e.alarme).HasColumnName("alarme");
+                entity.Property(e => e.setup_odr).HasColumnName("setup_odr");
+                entity.Property(e => e.setup_freq_cut).HasColumnName("setup_freq_cut");
+                entity.Property(e => e.setup_filtro).HasColumnName("setup_filtro");
+                entity.Property(e => e.setup_eixo).HasColumnName("setup_eixo");
+                entity.Property(e => e.setup_fs).HasColumnName("setup_fs");
+                entity.Property(e => e.setup_amostras).HasColumnName("setup_amostras");
+                entity.Property(e => e.dado).HasColumnName("dado");
+            });
+
+            modelBuilder.Entity<ReceiveGlobal>(entity =>
+            {
+                entity.ToTable("Receive_Global");
+
+                entity.Property(e => e.IdReceiveGlobal).HasColumnName("IdReceive_Global");
+
+                entity.Property(e => e.DataReceive).HasColumnName("DataReceive");
+                entity.Property(e => e.IdDeviceConfiguration).HasColumnName("IdDeviceConfiguration");
+
+                entity.Property(e => e.id).HasColumnName("id");
+                entity.Property(e => e.gtw).HasColumnName("gtw");
+                entity.Property(e => e.ver).HasColumnName("ver");
+                entity.Property(e => e.seq).HasColumnName("seq");
+                entity.Property(e => e.resets).HasColumnName("resets");
+                entity.Property(e => e.card_lidos).HasColumnName("card_lidos");
+                entity.Property(e => e.card_send).HasColumnName("card_send");
+                entity.Property(e => e.relat_send).HasColumnName("relat_send");
+                entity.Property(e => e.relat_erros).HasColumnName("relat_erros");
+                entity.Property(e => e.freq).HasColumnName("freq");
+                entity.Property(e => e.temp).HasColumnName("temp");
+                entity.Property(e => e.alrm).HasColumnName("alrm");
+
+                entity.Property(e => e.rms_bf_acc_X).HasColumnName("rms_bf_acc_X");
+                entity.Property(e => e.rms_bf_acc_Y).HasColumnName("rms_bf_acc_Y");
+                entity.Property(e => e.rms_bf_acc_Z).HasColumnName("rms_bf_acc_Z");
+                entity.Property(e => e.rms_bf_spd_X).HasColumnName("rms_bf_spd_X");
+                entity.Property(e => e.rms_bf_spd_Y).HasColumnName("rms_bf_spd_Y");
+                entity.Property(e => e.rms_bf_spd_Z).HasColumnName("rms_bf_spd_Z");
+                entity.Property(e => e.rms_af_acc_X).HasColumnName("rms_af_acc_X");
+                entity.Property(e => e.rms_af_acc_Y).HasColumnName("rms_af_acc_Y");
+                entity.Property(e => e.rms_af_acc_Z).HasColumnName("rms_af_acc_Z");
+                entity.Property(e => e.rms_af_spd_X).HasColumnName("rms_af_spd_X");
+                entity.Property(e => e.rms_af_spd_Y).HasColumnName("rms_af_spd_Y");
+                entity.Property(e => e.rms_af_spd_Z).HasColumnName("rms_af_spd_Z");
+
+                entity.Property(e => e.setup_bf_odr).HasColumnName("setup_bf_odr");
+                entity.Property(e => e.setup_bf_freq_cut).HasColumnName("setup_bf_freq_cut");
+                entity.Property(e => e.setup_bf_filtro).HasColumnName("setup_bf_filtro");
+                entity.Property(e => e.setup_bf_fs).HasColumnName("setup_bf_fs");
+                entity.Property(e => e.setup_bf_amostras).HasColumnName("setup_bf_amostras");
+                entity.Property(e => e.setup_af_odr).HasColumnName("setup_af_odr");
+                entity.Property(e => e.setup_af_freq_cut).HasColumnName("setup_af_freq_cut");
+                entity.Property(e => e.setup_af_filtro).HasColumnName("setup_af_filtro");
+                entity.Property(e => e.setup_af_fs).HasColumnName("setup_af_fs");
+                entity.Property(e => e.setup_af_amostras).HasColumnName("setup_af_amostras");
             });
 
             modelBuilder.Entity<Reducer>(entity =>

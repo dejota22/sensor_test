@@ -28,6 +28,7 @@ namespace SensorApi.Controllers
         private readonly IDeviceMeasureService _DeviceMeasureService;
         private readonly IMotorService _MotorService;
         private readonly IDeviceService _DeviceService;
+        private readonly IReceiveService _ReceiveService;
         private readonly IJwtAuth _jwtAuth;
         private readonly IMapper _mapper;
 
@@ -43,7 +44,7 @@ namespace SensorApi.Controllers
         /// <summary>
         /// Construtor
         /// </summary>        
-        public DeviceController(IDeviceConfigurationService DeviceConfigurationService, IDeviceMeasureService DeviceMeasureService, IMotorService MotorService, IDeviceService DeviceService, IJwtAuth jwtAuth, IMapper mapper,
+        public DeviceController(IDeviceConfigurationService DeviceConfigurationService, IDeviceMeasureService DeviceMeasureService, IMotorService MotorService, IDeviceService DeviceService, IReceiveService ReceiveService, IJwtAuth jwtAuth, IMapper mapper,
             IMachineService MachineService, IFixationTypeService FixationService, ICouplingTypeService CouplingService,
             ICardanShaftTypeService CardanShaftTypeService, IPumpTypeService PumpTypeService, ICompressorTypeService CompressorTypeService)
         {
@@ -51,6 +52,7 @@ namespace SensorApi.Controllers
             _DeviceMeasureService = DeviceMeasureService;
             _MotorService = MotorService;
             _DeviceService = DeviceService;
+            _ReceiveService = ReceiveService;
             _jwtAuth = jwtAuth;
             _mapper = mapper;
             _MachineService = MachineService;
@@ -151,16 +153,22 @@ namespace SensorApi.Controllers
                 return contRes1;
             }
 
-            var path = "C:\\Log\\global.txt";
-            var text = String.Format("{0}: {1}", DateTime.Now, JsonConvert.SerializeObject(deviceGlobal));
-
-            if (!System.IO.File.Exists(path))
+            try
             {
-                var createFile = System.IO.File.Create(path);
-                createFile.Close();
-            }
+                var path = "C:\\Log\\global.txt";
+                var text = String.Format("{0}: {1}", DateTime.Now, JsonConvert.SerializeObject(deviceGlobal));
+                if (!System.IO.File.Exists(path))
+                {
+                    var createFile = System.IO.File.Create(path);
+                    createFile.Close();
+                }
 
-            System.IO.File.AppendAllText(path, text + Environment.NewLine);
+                System.IO.File.AppendAllText(path, text + Environment.NewLine);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
 
             var deviceConfigEnviados = new List<int>();
             var response = new DeviceGlobalResponse() { };
@@ -251,11 +259,11 @@ namespace SensorApi.Controllers
                     }
 
                     gatilho.Config = Convert.ToInt32(setup.config);
-                    gatilho.MaxRmsRed = setup.max_rms_red.HasValue ? 
+                    gatilho.MaxRmsRed = setup.max_rms_red.HasValue ?
                         Decimal.ToDouble(setup.max_rms_red.Value) : 0;
-                    gatilho.MaxRmsYel = setup.max_rms_yel.HasValue ? 
+                    gatilho.MaxRmsYel = setup.max_rms_yel.HasValue ?
                         Decimal.ToDouble(setup.max_rms_yel.Value) : 0;
-                    gatilho.MinRms = setup.min_rms.HasValue ? 
+                    gatilho.MinRms = setup.min_rms.HasValue ?
                         Decimal.ToDouble(setup.min_rms.Value) : 0;
                     gatilho.MaxPercent = setup.max_percent.HasValue ? setup.max_percent.Value : 0;
 
@@ -279,6 +287,9 @@ namespace SensorApi.Controllers
                     response.Sn = device.Code;
 
                     deviceConfigEnviados.Add(deviceConfigId);
+
+                    var receiveGlobal = GenerateEntityFromDeviceGlobalRequest(deviceGlobal, deviceConfigId);
+                    _ReceiveService.InsertGlobal(receiveGlobal);
                 }
             }
 
@@ -311,6 +322,58 @@ namespace SensorApi.Controllers
             }
 
             return contRes;
+        }
+
+        private ReceiveGlobal GenerateEntityFromDeviceGlobalRequest(DeviceGlobalRequest deviceGlobal, int idDeviceConfiguration)
+        {
+            return new ReceiveGlobal()
+            {
+                id = deviceGlobal.Id,
+                IdDeviceConfiguration = idDeviceConfiguration,
+                gtw = deviceGlobal.Gtw,
+                ver = deviceGlobal.Ver,
+                seq = deviceGlobal.Seq,
+                resets = deviceGlobal.Resets,
+                card_lidos = deviceGlobal.CardLidos,
+                card_send = deviceGlobal.CardSend,
+                relat_send = deviceGlobal.RelatSend,
+                relat_erros = deviceGlobal.RelatErros,
+                freq = deviceGlobal.Freq,
+                temp = deviceGlobal.Temp,
+                alrm = deviceGlobal.Alrm,
+                rms_af_acc_X = deviceGlobal.RmsAfAccX,
+                rms_af_acc_Y = deviceGlobal.RmsAfAccY,
+                rms_af_acc_Z = deviceGlobal.RmsAfAccZ,
+                rms_af_spd_X = deviceGlobal.RmsAfSpdX,
+                rms_af_spd_Y = deviceGlobal.RmsAfSpdY,
+                rms_af_spd_Z = deviceGlobal.RmsAfSpdZ,
+                rms_bf_acc_X = deviceGlobal.RmsBfAccX,
+                rms_bf_acc_Y = deviceGlobal.RmsBfAccY,
+                rms_bf_acc_Z = deviceGlobal.RmsBfAccZ,
+                rms_bf_spd_X = deviceGlobal.RmsBfSpdX,
+                rms_bf_spd_Y = deviceGlobal.RmsBfSpdY,
+                rms_bf_spd_Z = deviceGlobal.RmsBfSpdZ,
+                setup_af_amostras = deviceGlobal.SetupAf != null && deviceGlobal.SetupAf.Any() ?
+                    deviceGlobal.SetupAf.First().Amostras : 0,
+                setup_af_filtro = deviceGlobal.SetupAf != null && deviceGlobal.SetupAf.Any() ?
+                    deviceGlobal.SetupAf.First().Filtro : 0,
+                setup_af_freq_cut = deviceGlobal.SetupAf != null && deviceGlobal.SetupAf.Any() ?
+                    deviceGlobal.SetupAf.First().FreqCut : 0,
+                setup_af_fs = deviceGlobal.SetupAf != null && deviceGlobal.SetupAf.Any() ?
+                    deviceGlobal.SetupAf.First().Fs : 0,
+                setup_af_odr = deviceGlobal.SetupAf != null && deviceGlobal.SetupAf.Any() ?
+                    deviceGlobal.SetupAf.First().Odr : 0,
+                setup_bf_amostras = deviceGlobal.SetupBf != null && deviceGlobal.SetupBf.Any() ?
+                    deviceGlobal.SetupBf.First().Amostras : 0,
+                setup_bf_filtro = deviceGlobal.SetupBf != null && deviceGlobal.SetupBf.Any() ?
+                    deviceGlobal.SetupBf.First().Filtro : 0,
+                setup_bf_freq_cut = deviceGlobal.SetupBf != null && deviceGlobal.SetupBf.Any() ?
+                    deviceGlobal.SetupBf.First().FreqCut : 0,
+                setup_bf_fs = deviceGlobal.SetupBf != null && deviceGlobal.SetupBf.Any() ?
+                    deviceGlobal.SetupBf.First().Fs : 0,
+                setup_bf_odr = deviceGlobal.SetupBf != null && deviceGlobal.SetupBf.Any() ?
+                    deviceGlobal.SetupBf.First().Odr : 0
+            };
         }
 
         [HttpGet]
@@ -525,21 +588,208 @@ namespace SensorApi.Controllers
                 return contRes1;
             }
 
-            var path = "C:\\Log\\data.txt";
-            var text = String.Format("{0}: {1}", DateTime.Now, JsonConvert.SerializeObject(deviceData));
-
-            if (!System.IO.File.Exists(path))
+            try
             {
-                var createFile = System.IO.File.Create(path);
-                createFile.Close();
+                var path = "C:\\Log\\data.txt";
+                var text = String.Format("{0}: {1}", DateTime.Now, JsonConvert.SerializeObject(deviceData));
+
+                if (!System.IO.File.Exists(path))
+                {
+                    var createFile = System.IO.File.Create(path);
+                    createFile.Close();
+                }
+
+                System.IO.File.AppendAllText(path, text + Environment.NewLine);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
             }
 
-            System.IO.File.AppendAllText(path, text + Environment.NewLine);
 
-            respJson = "{\"Message\":\"Dados recebidos com sucesso!\"}";
+            var deviceConfigEnviados = new List<int>();
+            var response = new DeviceGlobalResponse() { };
+            var defaultLora = _DeviceConfigurationService.GetLast(0, 0);
+
+            var deviceConfigList = _DeviceConfigurationService.GetAll()
+                .GroupBy(s => s.DeviceId);
+
+            response.Sensor = new List<Sensor>();
+            response.Horarios = new List<Horario>();
+            response.Gatilhos = new List<Gatilho>();
+            response.Lora = new List<Lora>();
+
+            foreach (var deviceConfig in deviceConfigList)
+            {
+                var deviceConfigId = 0;
+                var sensor = new Sensor();
+                sensor.SetupAcc = new List<Setup>();
+                sensor.SetupSpd = new List<Setup>();
+                sensor.SetupUsr = new List<Setup>();
+
+                var horario = new Horario();
+                horario.HorariosEnviosCard = new List<HorariosEnviosCard>();
+
+                var gatilho = new Gatilho();
+                var lora = new Lora();
+
+                foreach (var setup in deviceConfig)
+                {
+                    deviceConfigId = setup.Id;
+
+                    sensor.Config = Convert.ToInt32(setup.config);
+
+                    sensor.SetupAcc.Add(new Setup()
+                    {
+                        Amostras = setup.acc_amostras.Value,
+                        Eixo = setup.acc_eixo.Value,
+                        Filtro = setup.acc_filtro.Value,
+                        FreqCut = setup.acc_freq_cut.Value,
+                        Fs = setup.acc_fs.Value,
+                        Odr = setup.acc_odr.Value
+                    });
+
+                    sensor.SetupSpd.Add(new Setup()
+                    {
+                        Amostras = setup.spd_amostras.Value,
+                        Eixo = setup.spd_eixo.Value,
+                        Filtro = setup.spd_filtro.Value,
+                        FreqCut = setup.spd_freq_cut.Value,
+                        Fs = setup.spd_fs.Value,
+                        Odr = setup.spd_odr.Value
+                    });
+
+                    var usrSetupData = _DeviceConfigurationService.GetUsrSetup(setup.MotorId.Value, setup.DeviceId.Value);
+                    if (usrSetupData != null)
+                    {
+                        sensor.SetupUsr.Add(new Setup()
+                        {
+                            Amostras = usrSetupData.usr_amostras.Value,
+                            Eixo = usrSetupData.usr_eixo.Value,
+                            Filtro = usrSetupData.usr_filtro.Value,
+                            FreqCut = usrSetupData.usr_freq_cut.Value,
+                            Fs = usrSetupData.usr_fs.Value,
+                            Odr = usrSetupData.usr_odr.Value
+                        });
+                    }
+
+                    horario.Config = Convert.ToInt32(setup.config);
+                    horario.QuantHorariosCards = setup.quant_horarios_cards.Value;
+                    horario.ModoHora = setup.modo_hora.Value;
+                    horario.IntervaloAnalise = setup.intervalo_analise.Value;
+                    horario.IntervaloAnaliseAlarme = setup.intervalo_analise_alarme.Value;
+                    horario.ContaEnvios = setup.conta_envios.Value;
+                    horario.DiaEnvioRelat = setup.dia_envio_relat;
+                    horario.HoraEnvioRelat = setup.hora_envio_relat;
+                    horario.DiasRun = setup.dias_run;
+                    horario.FimTurno = setup.fim_turno;
+                    horario.InicioTurno = setup.inicio_turno;
+
+                    horario.HorariosEnviosCard = new List<HorariosEnviosCard>();
+                    setup.DeviceConfigurationHorariosEnviosCard = _DeviceConfigurationService.GetHoras(setup.Id);
+                    foreach (var hora in setup.DeviceConfigurationHorariosEnviosCard)
+                    {
+                        horario.HorariosEnviosCard.Add(new HorariosEnviosCard()
+                        {
+                            Hora = hora.Hora != null ? hora.Hora.Substring(0, 5) : ""
+                        });
+                    }
+
+                    gatilho.Config = Convert.ToInt32(setup.config);
+                    gatilho.MaxRmsRed = setup.max_rms_red.HasValue ?
+                        Decimal.ToDouble(setup.max_rms_red.Value) : 0;
+                    gatilho.MaxRmsYel = setup.max_rms_yel.HasValue ?
+                        Decimal.ToDouble(setup.max_rms_yel.Value) : 0;
+                    gatilho.MinRms = setup.min_rms.HasValue ?
+                        Decimal.ToDouble(setup.min_rms.Value) : 0;
+                    gatilho.MaxPercent = setup.max_percent.HasValue ? setup.max_percent.Value : 0;
+
+                    var loraSetupData = defaultLora;
+                    lora.Canal = loraSetupData.canal.Value;
+                    lora.End = loraSetupData.end.Value;
+                    lora.Syn = loraSetupData.syn.Value;
+                    lora.Sf = loraSetupData.sf.Value;
+                    lora.Bw = loraSetupData.bw.Value;
+                    lora.Gtw = loraSetupData.gtw.Value;
+                }
+
+                var device = _DeviceService.Get(deviceConfig.Key.Value);
+                if (device != null && deviceData.Id == device.Code)
+                {
+                    response.Sensor.Add(sensor);
+                    response.Horarios.Add(horario);
+                    response.Gatilhos.Add(gatilho);
+                    response.Lora.Add(lora);
+                    response.Versao = "1.3.1";
+                    response.Sn = device.Code;
+
+                    deviceConfigEnviados.Add(deviceConfigId);
+
+                    var receiveData = GenerateEntityFromDeviceDataRequest(deviceData, deviceConfigId);
+                    _ReceiveService.InsertData(receiveData);
+                }
+            }
+
+            if (deviceConfigEnviados.Any() == false)
+            {
+                Lora lora = new Lora();
+                lora.Canal = defaultLora.canal.Value;
+                lora.End = defaultLora.end.Value;
+                lora.Syn = defaultLora.syn.Value;
+                lora.Sf = defaultLora.sf.Value;
+                lora.Bw = defaultLora.bw.Value;
+                lora.Gtw = defaultLora.gtw.Value;
+
+                AddEmptySensorToResponse(response, lora, deviceData.Id);
+            }
+
+            respJson = JsonConvert.SerializeObject(response);
+
             ContentResult contRes = Content(Newtonsoft.Json.Linq.JObject.Parse(respJson).ToString(), "application/json");
             contRes.StatusCode = (int)HttpStatusCode.OK;
+
+            foreach (var dcId in deviceConfigEnviados)
+            {
+                var dc = _DeviceConfigurationService.Get(dcId);
+                if (dc != null)
+                {
+                    dc.config = false;
+                    _DeviceConfigurationService.Edit(dc, null);
+                }
+            }
+
             return contRes;
+        }
+
+        private ReceiveData GenerateEntityFromDeviceDataRequest(DeviceDataRequest deviceData, int idDeviceConfiguration)
+        {
+            return new ReceiveData()
+            {
+                id = deviceData.Id,
+                IdDeviceConfiguration = idDeviceConfiguration,
+                gtw = deviceData.Gtw,
+                seq = deviceData.Seq,
+                alarme = deviceData.Alarme,
+                dec = deviceData.Dec,
+                ftr_crista = deviceData.FtrCrista,
+                rms_acc = deviceData.RmsAcc,
+                rms_spd = deviceData.RmsSpd,
+                setup_amostras = deviceData.Setup != null && deviceData.Setup.Any() ?
+                    deviceData.Setup.First().Amostras : 0,
+                setup_eixo = deviceData.Setup != null && deviceData.Setup.Any() ?
+                    deviceData.Setup.First().Eixo : 0,
+                setup_filtro = deviceData.Setup != null && deviceData.Setup.Any() ?
+                    deviceData.Setup.First().Filtro : 0,
+                setup_freq_cut = deviceData.Setup != null && deviceData.Setup.Any() ?
+                    deviceData.Setup.First().FreqCut : 0,
+                setup_fs = deviceData.Setup != null && deviceData.Setup.Any() ?
+                    deviceData.Setup.First().Fs : 0,
+                setup_odr = deviceData.Setup != null && deviceData.Setup.Any() ?
+                    deviceData.Setup.First().Odr : 0,
+                temp = deviceData.Temp,
+                tipo = deviceData.Tipo,
+                dado = deviceData.Dado
+            };
         }
 
         #region abc
