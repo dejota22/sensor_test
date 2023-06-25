@@ -167,7 +167,7 @@ namespace SensorService
                 _context.DeviceConfigurationSpecialRead.Add(usrSetup);
             }
 
-            deviceConfiguration.CreatedAt = DateTime.Now;
+            deviceConfiguration.CreatedAt = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
             deviceConfiguration.config = true;
 
             _context.DeviceConfiguration.Add(deviceConfiguration);

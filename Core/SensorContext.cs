@@ -45,6 +45,7 @@ namespace Core
         public virtual DbSet<Pump> Pump { get; set; }
         public virtual DbSet<PumpType> PumpType { get; set; }
         public virtual DbSet<ReceiveData> ReceiveData { get; set; }
+        public virtual DbSet<ReceiveDataDado> ReceiveDataDado { get; set; }
         public virtual DbSet<ReceiveGlobal> ReceiveGlobal { get; set; }
         public virtual DbSet<Reducer> Reducer { get; set; }
         public virtual DbSet<Ring> Ring { get; set; }
@@ -1535,6 +1536,24 @@ namespace Core
                 entity.Property(e => e.setup_fs).HasColumnName("setup_fs");
                 entity.Property(e => e.setup_amostras).HasColumnName("setup_amostras");
                 entity.Property(e => e.dado).HasColumnName("dado");
+            });
+
+            modelBuilder.Entity<ReceiveDataDado>(entity =>
+            {
+                entity.ToTable("Receive_Data_Dado");
+
+                entity.Property(e => e.IdReceiveDataDado).HasColumnName("IdReceive_Data_Dado");
+
+                entity.Property(e => e.IdReceiveData).HasColumnName("IdReceive_Data");
+
+                entity.Property(e => e.seq).HasColumnName("seq");
+                entity.Property(e => e.valor).HasColumnName("valor");
+                entity.Property(e => e.tempo).HasColumnName("tempo");
+
+                entity.HasOne(d => d.ReceiveData)
+                    .WithMany(p => p.ReceiveDataDados)
+                    .HasForeignKey(d => d.IdReceiveData)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
             modelBuilder.Entity<ReceiveGlobal>(entity =>

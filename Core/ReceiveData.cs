@@ -2,11 +2,18 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Core
 {
     public partial class ReceiveData
     {
+        public ReceiveData()
+        {
+            ReceiveDataDados = new HashSet<ReceiveDataDado>();
+        }
+
+        [Key]
         public int IdReceiveData { get; set; }
         public DateTime DataReceive { get; set; }
         public int? IdDeviceConfiguration { get; set; }
@@ -27,5 +34,7 @@ namespace Core
         public double ftr_crista { get; set; }
         public int alarme { get; set; }
         public string dado { get; set; }
+
+        public virtual ICollection<ReceiveDataDado> ReceiveDataDados { get; set; }
     }
 }
