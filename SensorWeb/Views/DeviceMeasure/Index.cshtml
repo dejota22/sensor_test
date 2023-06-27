@@ -452,24 +452,37 @@
 
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">max_rms_red</label>
-                        <input type="text" value="@(Model.max_rms_red.HasValue ? Model.max_rms_red.Value.ToString("0.00") : "")" asp-for="max_rms_red" name="max_rms_red" id="max_rms_red" class="form-control decimal-field" />
-                        <span asp-validation-for="max_rms_red" class="text-danger"></span>
+                        <label class="control-label">rms_acc_red</label>
+                        <input type="text" value="@(Model.rms_acc_red.HasValue ? Model.rms_acc_red.Value.ToString("0.00") : "")" asp-for="rms_acc_red" name="rms_acc_red" id="rms_acc_red" class="form-control decimal-field" />
+                        <span asp-validation-for="rms_acc_red" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">max_rms_yel</label>
-                        <input type="text" value="@(Model.max_rms_yel.HasValue ? Model.max_rms_yel.Value.ToString("0.00") : "")" asp-for="max_rms_yel" name="max_rms_yel" id="max_rms_yel" class="form-control decimal-field" />
-                        <span asp-validation-for="max_rms_yel" class="text-danger"></span>
+                        <label class="control-label">rms_acc_yel</label>
+                        <input type="text" value="@(Model.rms_acc_yel.HasValue ? Model.rms_acc_yel.Value.ToString("0.00") : "")" asp-for="rms_acc_yel" name="rms_acc_yel" id="rms_acc_yel" class="form-control decimal-field" />
+                        <span asp-validation-for="rms_acc_yel" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">min_rms</label>
-                        <input type="text" min="0" value="@(Model.min_rms.HasValue ? Model.min_rms.Value.ToString("0.00") : "")" asp-for="min_rms" name="min_rms" id="min_rms" class="form-control decimal-field" />
-                        <span asp-validation-for="min_rms" class="text-danger"></span>
+                        <label class="control-label">min_rms_acc</label>
+                        <input type="text" min="0" value="@(Model.min_rms_acc.HasValue ? Model.min_rms_acc.Value.ToString("0.00") : "")" asp-for="min_rms_acc" name="min_rms_acc" id="min_rms_acc" class="form-control decimal-field" />
+                        <span asp-validation-for="min_rms_acc" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">max_percent</label>
-                        <input type="number" min="0" max="100" value="@Model.max_percent" asp-for="max_percent" name="max_percent" id="max_percent" class="form-control" />
-                        <span asp-validation-for="max_percent" class="text-danger"></span>
+                        <label class="control-label">max_var</label>
+                        <input type="number" min="0" max="100" value="@Model.max_var" asp-for="max_var" name="max_var" id="max_var" class="form-control" />
+                        <span asp-validation-for="max_var" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">rms_spd_red</label>
+                        <input type="text" value="@(Model.rms_spd_red.HasValue ? Model.rms_spd_red.Value.ToString("0.00") : "")" asp-for="rms_spd_red" name="rms_spd_red" id="rms_spd_red" class="form-control decimal-field" />
+                        <span asp-validation-for="rms_spd_red" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">rms_spd_yel</label>
+                        <input type="text" value="@(Model.rms_spd_yel.HasValue ? Model.rms_spd_yel.Value.ToString("0.00") : "")" asp-for="rms_spd_yel" name="rms_spd_yel" id="rms_spd_yel" class="form-control decimal-field" />
+                        <span asp-validation-for="rms_spd_yel" class="text-danger"></span>
                     </div>
                 </div>
 

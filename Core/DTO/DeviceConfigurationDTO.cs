@@ -79,10 +79,12 @@ namespace Core.DTO
         public string hora_envio_relat { get; set; }
 
         #region Limites
-        public decimal? max_rms_red { get; set; }
-        public decimal? max_rms_yel { get; set; }
-        public decimal? min_rms { get; set; }
-        public int? max_percent { get; set; }
+        public decimal? rms_acc_red { get; set; }
+        public decimal? rms_acc_yel { get; set; }
+        public decimal? min_rms_acc { get; set; }
+        public decimal? rms_spd_red { get; set; }
+        public decimal? rms_spd_yel { get; set; }
+        public int? max_var { get; set; }
         #endregion
 
         #region Lora
@@ -130,10 +132,12 @@ namespace Core.DTO
                 quant_horarios_cards = quant_horarios_cards,
                 dia_envio_relat = dia_envio_relat,
                 hora_envio_relat = hora_envio_relat,
-                max_rms_red = max_rms_red,
-                max_rms_yel = max_rms_yel,
-                min_rms = min_rms,
-                max_percent = max_percent,
+                rms_acc_red = rms_acc_red,
+                rms_acc_yel = rms_acc_yel,
+                min_rms_acc = min_rms_acc,
+                rms_spd_red = rms_spd_red,
+                rms_spd_yel = rms_spd_yel,
+                max_var = max_var,
                 config = config
             };
 
@@ -180,10 +184,12 @@ namespace Core.DTO
                 quant_horarios_cards = entity.quant_horarios_cards,
                 dia_envio_relat = entity.dia_envio_relat,
                 hora_envio_relat = entity.hora_envio_relat,
-                max_rms_red = entity.max_rms_red,
-                max_rms_yel = entity.max_rms_yel,
-                min_rms = entity.min_rms,
-                max_percent = entity.max_percent,
+                rms_acc_red = entity.rms_acc_red,
+                rms_acc_yel = entity.rms_acc_yel,
+                min_rms_acc = entity.min_rms_acc,
+                rms_spd_red = entity.rms_spd_red,
+                rms_spd_yel = entity.rms_spd_yel,
+                max_var = entity.max_var,
                 config = entity.config
             };
 

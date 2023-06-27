@@ -42,10 +42,12 @@ namespace Core
         public string hora_envio_relat { get; set; }
 
         #region Limites
-        public decimal? max_rms_red { get; set; }
-        public decimal? max_rms_yel { get; set; }
-        public decimal? min_rms { get; set; }
-        public int? max_percent { get; set; }
+        public decimal? rms_acc_red { get; set; }
+        public decimal? rms_acc_yel { get; set; }
+        public decimal? min_rms_acc { get; set; }
+        public decimal? rms_spd_red { get; set; }
+        public decimal? rms_spd_yel { get; set; }
+        public int? max_var { get; set; }
         #endregion
 
         public bool? config { get; set; }

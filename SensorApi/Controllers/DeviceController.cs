@@ -259,13 +259,13 @@ namespace SensorApi.Controllers
                     }
 
                     gatilho.Config = Convert.ToInt32(setup.config);
-                    gatilho.MaxRmsRed = setup.max_rms_red.HasValue ?
-                        Decimal.ToDouble(setup.max_rms_red.Value) : 0;
-                    gatilho.MaxRmsYel = setup.max_rms_yel.HasValue ?
-                        Decimal.ToDouble(setup.max_rms_yel.Value) : 0;
-                    gatilho.MinRms = setup.min_rms.HasValue ?
-                        Decimal.ToDouble(setup.min_rms.Value) : 0;
-                    gatilho.MaxPercent = setup.max_percent.HasValue ? setup.max_percent.Value : 0;
+                    gatilho.RmsAccRed = setup.rms_acc_red.HasValue ?
+                        Decimal.ToDouble(setup.rms_acc_red.Value) : 0;
+                    gatilho.RmsAccYel = setup.rms_acc_yel.HasValue ?
+                        Decimal.ToDouble(setup.rms_acc_yel.Value) : 0;
+                    gatilho.MinRmsAcc = setup.min_rms_acc.HasValue ?
+                        Decimal.ToDouble(setup.min_rms_acc.Value) : 0;
+                    gatilho.MaxVar = setup.max_var.HasValue ? setup.max_var.Value : 0;
 
                     var loraSetupData = defaultLora;
                     lora.Canal = loraSetupData.canal.Value;
@@ -471,13 +471,13 @@ namespace SensorApi.Controllers
                     }
 
                     gatilho.Config = Convert.ToInt32(setup.config);
-                    gatilho.MaxRmsRed = setup.max_rms_red.HasValue ?
-                        Decimal.ToDouble(setup.max_rms_red.Value) : 0;
-                    gatilho.MaxRmsYel = setup.max_rms_yel.HasValue ?
-                        Decimal.ToDouble(setup.max_rms_yel.Value) : 0;
-                    gatilho.MinRms = setup.min_rms.HasValue ?
-                        Decimal.ToDouble(setup.min_rms.Value) : 0;
-                    gatilho.MaxPercent = setup.max_percent.HasValue ? setup.max_percent.Value : 0;
+                    gatilho.RmsAccRed = setup.rms_acc_red.HasValue ?
+                        Decimal.ToDouble(setup.rms_acc_red.Value) : 0;
+                    gatilho.RmsAccYel = setup.rms_acc_yel.HasValue ?
+                        Decimal.ToDouble(setup.rms_acc_yel.Value) : 0;
+                    gatilho.MinRmsAcc = setup.min_rms_acc.HasValue ?
+                        Decimal.ToDouble(setup.min_rms_acc.Value) : 0;
+                    gatilho.MaxVar = setup.max_var.HasValue ? setup.max_var.Value : 0;
 
                     var loraSetupData = defaultLora;
                     lora.Canal = loraSetupData.canal.Value;
@@ -564,7 +564,7 @@ namespace SensorApi.Controllers
 
             Gatilho gatilho = new Gatilho()
             {
-                Config = 0, MaxPercent = 0, MaxRmsRed = 0, MaxRmsYel = 0, MinRms = 0
+                Config = 0, MaxVar = 0, RmsAccRed = 0, RmsAccYel = 0, MinRmsAcc = 0
             };
 
             response.Sensor.Add(sensor);
@@ -696,13 +696,17 @@ namespace SensorApi.Controllers
                     }
 
                     gatilho.Config = Convert.ToInt32(setup.config);
-                    gatilho.MaxRmsRed = setup.max_rms_red.HasValue ?
-                        Decimal.ToDouble(setup.max_rms_red.Value) : 0;
-                    gatilho.MaxRmsYel = setup.max_rms_yel.HasValue ?
-                        Decimal.ToDouble(setup.max_rms_yel.Value) : 0;
-                    gatilho.MinRms = setup.min_rms.HasValue ?
-                        Decimal.ToDouble(setup.min_rms.Value) : 0;
-                    gatilho.MaxPercent = setup.max_percent.HasValue ? setup.max_percent.Value : 0;
+                    gatilho.RmsAccRed = setup.rms_acc_red.HasValue ?
+                        Decimal.ToDouble(setup.rms_acc_red.Value) : 0;
+                    gatilho.RmsAccYel = setup.rms_acc_yel.HasValue ?
+                        Decimal.ToDouble(setup.rms_acc_yel.Value) : 0;
+                    gatilho.MinRmsAcc = setup.min_rms_acc.HasValue ?
+                        Decimal.ToDouble(setup.min_rms_acc.Value) : 0;
+                    gatilho.RmsSpdRed = setup.rms_spd_red.HasValue ?
+                        Decimal.ToDouble(setup.rms_spd_red.Value) : 0;
+                    gatilho.RmsSpdYel = setup.rms_spd_yel.HasValue ?
+                        Decimal.ToDouble(setup.rms_spd_yel.Value) : 0;
+                    gatilho.MaxVar = setup.max_var.HasValue ? setup.max_var.Value : 0;
 
                     var loraSetupData = defaultLora;
                     lora.Canal = loraSetupData.canal.Value;

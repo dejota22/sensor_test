@@ -692,10 +692,12 @@ namespace Core
                 entity.Property(e => e.dia_envio_relat).HasColumnName("dia_envio_relat").IsUnicode(false);
                 entity.Property(e => e.hora_envio_relat).HasColumnName("hora_envio_relat").IsUnicode(false);
 
-                entity.Property(e => e.max_rms_red).HasColumnName("max_rms_red");
-                entity.Property(e => e.max_rms_yel).HasColumnName("max_rms_yel");
-                entity.Property(e => e.min_rms).HasColumnName("min_rms");
-                entity.Property(e => e.max_percent).HasColumnName("max_percent");
+                entity.Property(e => e.rms_acc_red).HasColumnName("rms_acc_red");
+                entity.Property(e => e.rms_acc_yel).HasColumnName("rms_acc_yel");
+                entity.Property(e => e.min_rms_acc).HasColumnName("min_rms_acc");
+                entity.Property(e => e.rms_spd_red).HasColumnName("rms_spd_red");
+                entity.Property(e => e.rms_spd_yel).HasColumnName("rms_spd_yel");
+                entity.Property(e => e.max_var).HasColumnName("max_var");
 
                 entity.Property(e => e.config).HasColumnName("config");
                 entity.Property(e => e.sent_date).HasColumnName("sent_date");

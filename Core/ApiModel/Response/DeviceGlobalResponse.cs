@@ -30,17 +30,23 @@ namespace Core.ApiModel.Response
         [JsonProperty("config")]
         public int Config { get; set; }
 
-        [JsonProperty("max_rms_red")]
-        public double MaxRmsRed { get; set; }
+        [JsonProperty("rms_acc_red")]
+        public double RmsAccRed { get; set; }
 
-        [JsonProperty("max_rms_yel")]
-        public double MaxRmsYel { get; set; }
+        [JsonProperty("rms_acc_yel")]
+        public double RmsAccYel { get; set; }
 
-        [JsonProperty("min_rms")]
-        public double MinRms { get; set; }
+        [JsonProperty("min_rms_acc")]
+        public double MinRmsAcc { get; set; }
 
-        [JsonProperty("max_percent")]
-        public int MaxPercent { get; set; }
+        [JsonProperty("rms_spd_red")]
+        public double RmsSpdRed { get; set; }
+
+        [JsonProperty("rms_spd_yel")]
+        public double RmsSpdYel { get; set; }
+
+        [JsonProperty("max_var")]
+        public int MaxVar { get; set; }
     }
 
     public class Horario
