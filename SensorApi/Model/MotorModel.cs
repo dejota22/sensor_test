@@ -228,4 +228,9 @@ namespace SensorApi.Models
         //public virtual Ring Ring { get; set; }
         //public virtual ICollection<DeviceMeasure> DeviceMeasure { get; set; }
     }
+
+    public class SensorData
+    {
+        public string id { get; set; }
+    }
 }

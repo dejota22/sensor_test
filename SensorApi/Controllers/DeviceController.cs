@@ -383,8 +383,9 @@ namespace SensorApi.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("EnviaConfigSensor")]
-        public ContentResult EnviaConfigSensor(string id)
+        public ContentResult EnviaConfigSensor([FromBody] SensorData sdata)
         {
+            string id = sdata.id;
             string respJson;
 
             var deviceConfigEnviados = new List<int>();
