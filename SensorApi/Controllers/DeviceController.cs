@@ -265,6 +265,10 @@ namespace SensorApi.Controllers
                         Decimal.ToDouble(setup.rms_acc_yel.Value) : 0;
                     gatilho.MinRmsAcc = setup.min_rms_acc.HasValue ?
                         Decimal.ToDouble(setup.min_rms_acc.Value) : 0;
+                    gatilho.RmsSpdRed = setup.rms_spd_red.HasValue ?
+                        Decimal.ToDouble(setup.rms_spd_red.Value) : 0;
+                    gatilho.RmsSpdYel = setup.rms_spd_yel.HasValue ?
+                        Decimal.ToDouble(setup.rms_spd_yel.Value) : 0;
                     gatilho.MaxVar = setup.max_var.HasValue ? setup.max_var.Value : 0;
 
                     var loraSetupData = defaultLora;
@@ -376,6 +380,7 @@ namespace SensorApi.Controllers
             };
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("EnviaConfigSensor")]
         public ContentResult EnviaConfigSensor(string id)
@@ -477,6 +482,10 @@ namespace SensorApi.Controllers
                         Decimal.ToDouble(setup.rms_acc_yel.Value) : 0;
                     gatilho.MinRmsAcc = setup.min_rms_acc.HasValue ?
                         Decimal.ToDouble(setup.min_rms_acc.Value) : 0;
+                    gatilho.RmsSpdRed = setup.rms_spd_red.HasValue ?
+                        Decimal.ToDouble(setup.rms_spd_red.Value) : 0;
+                    gatilho.RmsSpdYel = setup.rms_spd_yel.HasValue ?
+                        Decimal.ToDouble(setup.rms_spd_yel.Value) : 0;
                     gatilho.MaxVar = setup.max_var.HasValue ? setup.max_var.Value : 0;
 
                     var loraSetupData = defaultLora;
