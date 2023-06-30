@@ -110,11 +110,11 @@ namespace SensorService
             {
                 double Valor_em_G;
 
-                int numero = int.Parse(item.ToString(), System.Globalization.NumberStyles.HexNumber);
+                Int16 numero = Int16.Parse(item.ToString(), System.Globalization.NumberStyles.HexNumber);
 
                 if (numero >= 32768)
                 {
-                    int numeroNegativo = (int)~numero;
+                    short numeroNegativo = (Int16)~numero;
                 }
 
                 int FS = dadoSensor.setup_fs;

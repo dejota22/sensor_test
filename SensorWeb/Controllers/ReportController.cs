@@ -62,8 +62,13 @@ namespace SensorWeb.Controllers
             return fileResult;
         }
 
-        public ActionResult ReportDeviceData()
+        public ActionResult ReportDeviceData(int? DeviceId, int? MotorId)
         {
+            if (DeviceId != null && MotorId != null)
+            {
+
+            }
+                
             return View();
         }
     }
