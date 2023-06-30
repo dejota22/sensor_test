@@ -61,5 +61,10 @@ namespace SensorWeb.Controllers
 
             return fileResult;
         }
+
+        public ActionResult ReportDeviceData()
+        {
+            return View();
+        }
     }
 }

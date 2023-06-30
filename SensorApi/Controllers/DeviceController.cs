@@ -383,6 +383,15 @@ namespace SensorApi.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("EnviaConfigSensor")]
+        public ContentResult EnviaConfigSensor(string id)
+        {
+            SensorData sdata = new SensorData() { id = id };
+            return EnviaConfigSensor(sdata);
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("EnviaConfigSensorJson")]
         public ContentResult EnviaConfigSensor([FromBody] SensorData sdata)
         {
             string id = sdata.id;
