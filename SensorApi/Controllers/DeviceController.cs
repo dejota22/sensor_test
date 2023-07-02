@@ -380,7 +380,6 @@ namespace SensorApi.Controllers
             };
         }
 
-        [AllowAnonymous]
         [HttpGet]
         [Route("EnviaConfigSensor")]
         public ContentResult EnviaConfigSensor(string id)
@@ -389,7 +388,6 @@ namespace SensorApi.Controllers
             return EnviaConfigSensor(sdata);
         }
 
-        [AllowAnonymous]
         [HttpGet]
         [Route("EnviaConfigSensorJson")]
         public ContentResult EnviaConfigSensor([FromBody] SensorData sdata)

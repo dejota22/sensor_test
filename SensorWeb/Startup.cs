@@ -44,6 +44,7 @@ namespace SensorWeb
             services.AddTransient<IContactService, ContactService>();
             services.AddTransient<IDeviceConfigurationService, DeviceConfigurationService>();
             services.AddTransient<IDeviceMeasureService, DeviceMeasureService>();
+            services.AddTransient<IReceiveService, ReceiveService>();
 
             services.AddTransient<IFixationTypeService, FixationTypeService>();
             services.AddTransient<ICouplingTypeService, CouplingTypeService>();

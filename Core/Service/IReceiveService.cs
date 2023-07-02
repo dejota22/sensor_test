@@ -16,5 +16,9 @@ namespace Core.Service
         IEnumerable<ReceiveGlobal> GetAllGlobal();
 
         IEnumerable<ReceiveData> GetAllData();
+
+        IEnumerable<ReceiveData> GetDataByDeviceMotor(int? deviceId, int? motorId);
+
+        IEnumerable<ReceiveDataDado> GetDataDadoByDataReceiveId(int dataId);
     }
 }

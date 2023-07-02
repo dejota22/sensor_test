@@ -37,6 +37,15 @@ namespace SensorService
             return query;
         }
 
+        private IQueryable<ReceiveDataDado> GetQueryDataDados()
+        {
+            IQueryable<ReceiveDataDado> tb_receivedatadado = _context.ReceiveDataDado;
+            var query = from receiveDataDado in tb_receivedatadado
+                        select receiveDataDado;
+
+            return query;
+        }
+
         public ReceiveGlobal GetGlobal(int id)
         {
             return GetQueryGlobal().Where(x => x.IdReceiveGlobal.Equals(id)).FirstOrDefault();
@@ -61,7 +70,7 @@ namespace SensorService
             receiveData.DataReceive = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
 
             var rawDados = MontaListaDado(receiveData.dado);
-            var dados = ListaDadoConvertido(rawDados, receiveData);
+            var dados = ListaDadoFiltrado(rawDados, receiveData);
 
             foreach (var dado in dados)
             {
@@ -84,6 +93,16 @@ namespace SensorService
             return GetQueryData();
         }
 
+        public IEnumerable<ReceiveData> GetDataByDeviceMotor(int? deviceId, int? motorId)
+        {
+            return GetQueryData().Where(d => d.DeviceConfiguration.DeviceId == deviceId && d.DeviceConfiguration.MotorId == motorId && d.ReceiveDataDados.Any() == true);
+        }
+
+        public IEnumerable<ReceiveDataDado> GetDataDadoByDataReceiveId(int dataId)
+        {
+            return GetQueryDataDados().Where(d => d.IdReceiveData == dataId).OrderBy(d => d.seq);
+        }
+
         private List<String> MontaListaDado(string dados)
         {
             var x = dados.Split(4).ToList();
@@ -100,8 +119,79 @@ namespace SensorService
 
             return novaLista;
         }
+        private List<ReceiveDataDado> ListaDadoFiltrado(List<string> dadosRaw, ReceiveData dadoSensor)
+        {
+            List<ReceiveDataDado> dadosTransitorios =  ListaDadoTransitorio(dadosRaw, dadoSensor);
+            int tipo = dadoSensor.tipo;
 
-        private List<ReceiveDataDado> ListaDadoConvertido(List<string> dadosRaw, ReceiveData dadoSensor)
+            const double alpha = 0.98;
+            const double delta_t = 1/3333.375;
+            const double filtro_2 = 0.985;
+
+            double[] vals_F = new double[dadosTransitorios.Count];
+            double[] vals_H = new double[dadosTransitorios.Count];
+            double[] vals_K = new double[tipo == 2 ? dadosTransitorios.Count : 0];
+            double[] vals_L = new double[tipo == 2 ? dadosTransitorios.Count : 0];
+            double[] vals_M = new double[tipo == 2 ? dadosTransitorios.Count : 0];
+
+            foreach (var dadoT in dadosTransitorios.OrderBy(d => d.seq))
+            {
+                int currentIndex = dadosTransitorios.FindIndex(d => d == dadoT);
+
+                if (currentIndex > 0)
+                {
+                    //Conversão para K
+                    double val_F_prev = vals_F[currentIndex - 1];
+                    double val_F = dadoT.valor;
+
+                    double val_H_prev = vals_H[currentIndex - 1];
+                    double val_H = (val_F - val_F_prev) + alpha * val_H_prev;
+
+                    vals_F[currentIndex] = val_F;
+                    vals_H[currentIndex] = val_H;
+
+                    if (tipo == 2)
+                    {
+                        double val_K_prev = vals_K[currentIndex - 1];
+                        double val_K = val_K_prev + (val_H + val_H_prev) * delta_t / 2;
+
+                        double val_L_prev = vals_L[currentIndex - 1];
+                        double val_L = (val_K - val_K_prev) + filtro_2 * val_L_prev;
+
+                        double val_M_prev = vals_M[currentIndex - 1];
+                        double val_M = val_L * 1000;
+
+                        vals_K[currentIndex] = val_K;
+                        vals_L[currentIndex] = val_L;
+                        vals_M[currentIndex] = val_M;
+
+                        dadoT.valor = val_M;
+                    }
+                    else
+                    {
+                        dadoT.valor = val_H;
+                    }
+                }
+                else
+                {
+                    vals_F[0] = dadoT.valor;
+                    vals_H[0] = 0;
+
+                    if (tipo == 2)
+                    {
+                        vals_K[0] = 0;
+                        vals_L[0] = 0;
+                        vals_M[0] = 0;
+                    }
+
+                    dadoT.valor = 0;
+                }
+            }
+
+            return dadosTransitorios;
+        }
+
+        private List<ReceiveDataDado> ListaDadoTransitorio(List<string> dadosRaw, ReceiveData dadoSensor)
         {
             List<ReceiveDataDado> dados = new List<ReceiveDataDado>();
             int posicao = 1;
@@ -138,7 +228,7 @@ namespace SensorService
             }
 
             return dados;
-        } 
+        }
     }
 
     public static class Extensions

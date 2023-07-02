@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core
 {
@@ -34,6 +35,9 @@ namespace Core
         public double ftr_crista { get; set; }
         public int alarme { get; set; }
         public string dado { get; set; }
+
+        [ForeignKey("IdDeviceConfiguration")]
+        public DeviceConfiguration DeviceConfiguration { get; set; }
 
         public virtual ICollection<ReceiveDataDado> ReceiveDataDados { get; set; }
     }

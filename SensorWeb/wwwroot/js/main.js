@@ -319,7 +319,7 @@ $(document).ready(function () {
     plugins_init();
 
   var siteSticky = function() {
-		$(".js-sticky-header").sticky({topSpacing:0});
+		//$(".js-sticky-header").sticky({topSpacing:0});
 	};
 	siteSticky();
 
