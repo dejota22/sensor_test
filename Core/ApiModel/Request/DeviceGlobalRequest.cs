@@ -47,41 +47,41 @@ namespace Core.ApiModel.Request
         [JsonProperty("alrm")]
         public int Alrm { get; set; }
 
-        [JsonProperty("rms_bf_acc_X")]
-        public double RmsBfAccX { get; set; }
+        //[JsonProperty("rms_bf_acc_X")]
+        //public double RmsBfAccX { get; set; }
 
-        [JsonProperty("rms_bf_acc_Y")]
-        public double RmsBfAccY { get; set; }
+        //[JsonProperty("rms_bf_acc_Y")]
+        //public double RmsBfAccY { get; set; }
 
-        [JsonProperty("rms_bf_acc_Z")]
-        public double RmsBfAccZ { get; set; }
+        //[JsonProperty("rms_bf_acc_Z")]
+        //public double RmsBfAccZ { get; set; }
 
-        [JsonProperty("rms_bf_spd_X")]
-        public double RmsBfSpdX { get; set; }
+        //[JsonProperty("rms_bf_spd_X")]
+        //public double RmsBfSpdX { get; set; }
 
-        [JsonProperty("rms_bf_spd_Y")]
-        public double RmsBfSpdY { get; set; }
+        //[JsonProperty("rms_bf_spd_Y")]
+        //public double RmsBfSpdY { get; set; }
 
-        [JsonProperty("rms_bf_spd_Z")]
-        public double RmsBfSpdZ { get; set; }
+        //[JsonProperty("rms_bf_spd_Z")]
+        //public double RmsBfSpdZ { get; set; }
 
-        [JsonProperty("rms_af_acc_X")]
-        public double RmsAfAccX { get; set; }
+        [JsonProperty("rms_acc_X")]
+        public double RmsAccX { get; set; }
 
-        [JsonProperty("rms_af_acc_Y")]
-        public double RmsAfAccY { get; set; }
+        [JsonProperty("rms_acc_Y")]
+        public double RmsAccY { get; set; }
 
-        [JsonProperty("rms_af_acc_Z")]
-        public double RmsAfAccZ { get; set; }
+        [JsonProperty("rms_acc_Z")]
+        public double RmsAccZ { get; set; }
 
-        [JsonProperty("rms_af_spd_X")]
-        public double RmsAfSpdX { get; set; }
+        [JsonProperty("rms_spd_X")]
+        public double RmsSpdX { get; set; }
 
-        [JsonProperty("rms_af_spd_Y")]
-        public double RmsAfSpdY { get; set; }
+        [JsonProperty("rms_spd_Y")]
+        public double RmsSpdY { get; set; }
 
-        [JsonProperty("rms_af_spd_Z")]
-        public double RmsAfSpdZ { get; set; }
+        [JsonProperty("rms_spd_Z")]
+        public double RmsSpdZ { get; set; }
     }
 
     public class SetupAf
