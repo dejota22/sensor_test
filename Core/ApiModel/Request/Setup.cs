@@ -8,18 +8,18 @@ namespace Core.ApiModel.Request
         public int Odr { get; set; }
 
         [JsonProperty("freq_cut")]
-        public int FreqCut { get; set; }
+        public int freq_cut { get; set; }
 
         [JsonProperty("filtro")]
-        public int Filtro { get; set; }
+        public int filtro { get; set; }
 
         [JsonProperty("eixo")]
-        public int Eixo { get; set; }
+        public int eixo { get; set; }
 
         [JsonProperty("fs")]
-        public int Fs { get; set; }
+        public int fs { get; set; }
 
         [JsonProperty("amostras")]
-        public int Amostras { get; set; }
+        public int amostras { get; set; }
     }
 }
