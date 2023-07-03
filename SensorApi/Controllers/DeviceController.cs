@@ -592,7 +592,6 @@ namespace SensorApi.Controllers
             response.Sn = deviceGlobalId;
         }
 
-        [AllowAnonymous]
         [HttpPost]
         [Route("deviceData")]
         public ContentResult AddDeviceData([FromBody] DeviceDataRequest deviceData)
@@ -790,7 +789,7 @@ namespace SensorApi.Controllers
                 id = deviceData.Id,
                 IdDeviceConfiguration = idDeviceConfiguration,
                 gtw = deviceData.gtw,
-                seq = deviceData.Seq,
+                seq = deviceData.seq,
                 alarme = deviceData.alarme,
                 dec = deviceData.dec,
                 ftr_crista = deviceData.ftr_crista,

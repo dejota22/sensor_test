@@ -127,6 +127,7 @@
                 if (dataId != '')
                 {
                     $.get('@Url.Action("ReportDeviceDataUpdate")?idDataReceive=' + dataId, function (data) {
+                        valor_data = [];
                         $('#grafico-wrapper').show();
 
                         $.each(data, function (index, value) {
@@ -161,7 +162,7 @@
                     show: true,
                     content: 'Tempo: %x.6 | Valor: %y.6'
                 },
-                colors: ["rgb(175,216,248)"]
+                colors: ["rgb(51,102,204)"]
             };
 
             var plot = $.plot($('#chartdiv'), [{ data: valor_data }], options);
@@ -195,7 +196,7 @@
                 selection: {
                     mode: "x"
                 },
-                colors: ["rgb(175,216,248)"]
+                colors: ["rgb(51,102,204)"]
             });
 
             $("#overview").bind("plotselected", function (event, ranges) {

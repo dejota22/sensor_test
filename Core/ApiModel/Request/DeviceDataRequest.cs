@@ -12,7 +12,7 @@ namespace Core.ApiModel.Request
         public string Id { get; set; }
 
         [JsonProperty("seq")]
-        public int Seq { get; set; }
+        public int seq { get; set; }
 
         [JsonProperty("temp")]
         public double temp { get; set; }
