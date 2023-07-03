@@ -6,7 +6,7 @@ namespace Core.ApiModel.Request
     public class DeviceDataRequest
     {
         [JsonProperty("gtw")]
-        public string Gtw { get; set; }
+        public string gtw { get; set; }
 
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -15,30 +15,30 @@ namespace Core.ApiModel.Request
         public int Seq { get; set; }
 
         [JsonProperty("temp")]
-        public double Temp { get; set; }
+        public double temp { get; set; }
 
         [JsonProperty("dec")]
-        public double Dec { get; set; }
+        public double dec { get; set; }
 
         [JsonProperty("setup")]
-        public List<Setup> Setup { get; set; }
+        public List<Setup> setup { get; set; }
 
         [JsonProperty("tipo")]
-        public int Tipo { get; set; }
+        public int tipo { get; set; }
 
         [JsonProperty("rms_acc")]
-        public double RmsAcc { get; set; }
+        public double rms_acc { get; set; }
 
         [JsonProperty("rms_spd")]
-        public double RmsSpd { get; set; }
+        public double rms_spd { get; set; }
 
         [JsonProperty("ftr_crista")]
-        public double FtrCrista { get; set; }
+        public double ftr_crista { get; set; }
 
         [JsonProperty("alarme")]
-        public int Alarme { get; set; }
+        public int alarme { get; set; }
 
         [JsonProperty("dado")]
-        public string Dado { get; set; }
+        public string dado { get; set; }
     }
 }

@@ -6,46 +6,46 @@ namespace Core.ApiModel.Request
     public class DeviceGlobalRequest
     {
         [JsonProperty("gtw")]
-        public string Gtw { get; set; }
+        public string gtw { get; set; }
 
         [JsonProperty("id")]
         public string Id { get; set; }
 
         [JsonProperty("ver")]
-        public string Ver { get; set; }
+        public string ver { get; set; }
 
         [JsonProperty("seq")]
-        public int Seq { get; set; }
+        public int seq { get; set; }
 
         [JsonProperty("resets")]
-        public int Resets { get; set; }
+        public int resets { get; set; }
 
         [JsonProperty("card_lidos")]
-        public int CardLidos { get; set; }
+        public int card_lidos { get; set; }
 
         [JsonProperty("card_send")]
-        public int CardSend { get; set; }
+        public int card_send { get; set; }
 
         [JsonProperty("relat_send")]
         public int RelatSend { get; set; }
 
         [JsonProperty("relat_erros")]
-        public int RelatErros { get; set; }
+        public int relat_erros { get; set; }
 
         [JsonProperty("setup_bf")]
-        public List<SetupBf> SetupBf { get; set; }
+        public List<SetupBf> setup_bf { get; set; }
 
         [JsonProperty("setup_af")]
-        public List<SetupAf> SetupAf { get; set; }
+        public List<SetupAf> setup_af { get; set; }
 
         [JsonProperty("freq")]
-        public double Freq { get; set; }
+        public double freq { get; set; }
 
         [JsonProperty("temp")]
-        public double Temp { get; set; }
+        public double temp { get; set; }
 
         [JsonProperty("alrm")]
-        public int Alrm { get; set; }
+        public int alrm { get; set; }
 
         //[JsonProperty("rms_bf_acc_X")]
         //public double RmsBfAccX { get; set; }
@@ -66,57 +66,57 @@ namespace Core.ApiModel.Request
         //public double RmsBfSpdZ { get; set; }
 
         [JsonProperty("rms_acc_X")]
-        public double RmsAccX { get; set; }
+        public double rms_acc_X { get; set; }
 
         [JsonProperty("rms_acc_Y")]
-        public double RmsAccY { get; set; }
+        public double rms_acc_Y { get; set; }
 
         [JsonProperty("rms_acc_Z")]
-        public double RmsAccZ { get; set; }
+        public double rms_acc_Z { get; set; }
 
         [JsonProperty("rms_spd_X")]
-        public double RmsSpdX { get; set; }
+        public double rms_spd_X { get; set; }
 
         [JsonProperty("rms_spd_Y")]
-        public double RmsSpdY { get; set; }
+        public double rms_spd_Y { get; set; }
 
         [JsonProperty("rms_spd_Z")]
-        public double RmsSpdZ { get; set; }
+        public double rms_spd_Z { get; set; }
     }
 
     public class SetupAf
     {
         [JsonProperty("odr")]
-        public int Odr { get; set; }
+        public int odr { get; set; }
 
         [JsonProperty("freq_cut")]
-        public int FreqCut { get; set; }
+        public int freq_cut { get; set; }
 
         [JsonProperty("filtro")]
-        public int Filtro { get; set; }
+        public int filtro { get; set; }
 
         [JsonProperty("fs")]
-        public int Fs { get; set; }
+        public int fs { get; set; }
 
         [JsonProperty("amostras")]
-        public int Amostras { get; set; }
+        public int amostras { get; set; }
     }
 
     public class SetupBf
     {
         [JsonProperty("odr")]
-        public int Odr { get; set; }
+        public int odr { get; set; }
 
         [JsonProperty("freq_cut")]
-        public int FreqCut { get; set; }
+        public int freq_cut { get; set; }
 
         [JsonProperty("filtro")]
-        public int Filtro { get; set; }
+        public int filtro { get; set; }
 
         [JsonProperty("fs")]
-        public int Fs { get; set; }
+        public int fs { get; set; }
 
         [JsonProperty("amostras")]
-        public int Amostras { get; set; }
+        public int amostras { get; set; }
     }
 }

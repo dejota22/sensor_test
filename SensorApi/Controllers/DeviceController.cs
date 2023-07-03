@@ -334,49 +334,49 @@ namespace SensorApi.Controllers
             {
                 id = deviceGlobal.Id,
                 IdDeviceConfiguration = idDeviceConfiguration,
-                gtw = deviceGlobal.Gtw,
-                ver = deviceGlobal.Ver,
-                seq = deviceGlobal.Seq,
-                resets = deviceGlobal.Resets,
-                card_lidos = deviceGlobal.CardLidos,
-                card_send = deviceGlobal.CardSend,
+                gtw = deviceGlobal.gtw,
+                ver = deviceGlobal.ver,
+                seq = deviceGlobal.seq,
+                resets = deviceGlobal.resets,
+                card_lidos = deviceGlobal.card_lidos,
+                card_send = deviceGlobal.card_send,
                 relat_send = deviceGlobal.RelatSend,
-                relat_erros = deviceGlobal.RelatErros,
-                freq = deviceGlobal.Freq,
-                temp = deviceGlobal.Temp,
-                alrm = deviceGlobal.Alrm,
-                rms_af_acc_X = deviceGlobal.RmsAccX,
-                rms_af_acc_Y = deviceGlobal.RmsAccY,
-                rms_af_acc_Z = deviceGlobal.RmsAccZ,
-                rms_af_spd_X = deviceGlobal.RmsSpdX,
-                rms_af_spd_Y = deviceGlobal.RmsSpdY,
-                rms_af_spd_Z = deviceGlobal.RmsSpdZ,
+                relat_erros = deviceGlobal.relat_erros,
+                freq = deviceGlobal.freq,
+                temp = deviceGlobal.temp,
+                alrm = deviceGlobal.alrm,
+                rms_af_acc_X = deviceGlobal.rms_acc_X,
+                rms_af_acc_Y = deviceGlobal.rms_acc_Y,
+                rms_af_acc_Z = deviceGlobal.rms_acc_Z,
+                rms_af_spd_X = deviceGlobal.rms_spd_X,
+                rms_af_spd_Y = deviceGlobal.rms_spd_Y,
+                rms_af_spd_Z = deviceGlobal.rms_spd_Z,
                 //rms_bf_acc_X = deviceGlobal.RmsBfAccX,
                 //rms_bf_acc_Y = deviceGlobal.RmsBfAccY,
                 //rms_bf_acc_Z = deviceGlobal.RmsBfAccZ,
                 //rms_bf_spd_X = deviceGlobal.RmsBfSpdX,
                 //rms_bf_spd_Y = deviceGlobal.RmsBfSpdY,
                 //rms_bf_spd_Z = deviceGlobal.RmsBfSpdZ,
-                setup_af_amostras = deviceGlobal.SetupAf != null && deviceGlobal.SetupAf.Any() ?
-                    deviceGlobal.SetupAf.First().Amostras : 0,
-                setup_af_filtro = deviceGlobal.SetupAf != null && deviceGlobal.SetupAf.Any() ?
-                    deviceGlobal.SetupAf.First().Filtro : 0,
-                setup_af_freq_cut = deviceGlobal.SetupAf != null && deviceGlobal.SetupAf.Any() ?
-                    deviceGlobal.SetupAf.First().FreqCut : 0,
-                setup_af_fs = deviceGlobal.SetupAf != null && deviceGlobal.SetupAf.Any() ?
-                    deviceGlobal.SetupAf.First().Fs : 0,
-                setup_af_odr = deviceGlobal.SetupAf != null && deviceGlobal.SetupAf.Any() ?
-                    deviceGlobal.SetupAf.First().Odr : 0,
-                setup_bf_amostras = deviceGlobal.SetupBf != null && deviceGlobal.SetupBf.Any() ?
-                    deviceGlobal.SetupBf.First().Amostras : 0,
-                setup_bf_filtro = deviceGlobal.SetupBf != null && deviceGlobal.SetupBf.Any() ?
-                    deviceGlobal.SetupBf.First().Filtro : 0,
-                setup_bf_freq_cut = deviceGlobal.SetupBf != null && deviceGlobal.SetupBf.Any() ?
-                    deviceGlobal.SetupBf.First().FreqCut : 0,
-                setup_bf_fs = deviceGlobal.SetupBf != null && deviceGlobal.SetupBf.Any() ?
-                    deviceGlobal.SetupBf.First().Fs : 0,
-                setup_bf_odr = deviceGlobal.SetupBf != null && deviceGlobal.SetupBf.Any() ?
-                    deviceGlobal.SetupBf.First().Odr : 0
+                setup_af_amostras = deviceGlobal.setup_af != null && deviceGlobal.setup_af.Any() ?
+                    deviceGlobal.setup_af.First().amostras : 0,
+                setup_af_filtro = deviceGlobal.setup_af != null && deviceGlobal.setup_af.Any() ?
+                    deviceGlobal.setup_af.First().filtro : 0,
+                setup_af_freq_cut = deviceGlobal.setup_af != null && deviceGlobal.setup_af.Any() ?
+                    deviceGlobal.setup_af.First().freq_cut : 0,
+                setup_af_fs = deviceGlobal.setup_af != null && deviceGlobal.setup_af.Any() ?
+                    deviceGlobal.setup_af.First().fs : 0,
+                setup_af_odr = deviceGlobal.setup_af != null && deviceGlobal.setup_af.Any() ?
+                    deviceGlobal.setup_af.First().odr : 0,
+                setup_bf_amostras = deviceGlobal.setup_bf != null && deviceGlobal.setup_bf.Any() ?
+                    deviceGlobal.setup_bf.First().amostras : 0,
+                setup_bf_filtro = deviceGlobal.setup_bf != null && deviceGlobal.setup_bf.Any() ?
+                    deviceGlobal.setup_bf.First().filtro : 0,
+                setup_bf_freq_cut = deviceGlobal.setup_bf != null && deviceGlobal.setup_bf.Any() ?
+                    deviceGlobal.setup_bf.First().freq_cut : 0,
+                setup_bf_fs = deviceGlobal.setup_bf != null && deviceGlobal.setup_bf.Any() ?
+                    deviceGlobal.setup_bf.First().fs : 0,
+                setup_bf_odr = deviceGlobal.setup_bf != null && deviceGlobal.setup_bf.Any() ?
+                    deviceGlobal.setup_bf.First().odr : 0
             };
         }
 
@@ -592,6 +592,7 @@ namespace SensorApi.Controllers
             response.Sn = deviceGlobalId;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("deviceData")]
         public ContentResult AddDeviceData([FromBody] DeviceDataRequest deviceData)
@@ -788,28 +789,28 @@ namespace SensorApi.Controllers
             {
                 id = deviceData.Id,
                 IdDeviceConfiguration = idDeviceConfiguration,
-                gtw = deviceData.Gtw,
+                gtw = deviceData.gtw,
                 seq = deviceData.Seq,
-                alarme = deviceData.Alarme,
-                dec = deviceData.Dec,
-                ftr_crista = deviceData.FtrCrista,
-                rms_acc = deviceData.RmsAcc,
-                rms_spd = deviceData.RmsSpd,
-                setup_amostras = deviceData.Setup != null && deviceData.Setup.Any() ?
-                    deviceData.Setup.First().Amostras : 0,
-                setup_eixo = deviceData.Setup != null && deviceData.Setup.Any() ?
-                    deviceData.Setup.First().Eixo : 0,
-                setup_filtro = deviceData.Setup != null && deviceData.Setup.Any() ?
-                    deviceData.Setup.First().Filtro : 0,
-                setup_freq_cut = deviceData.Setup != null && deviceData.Setup.Any() ?
-                    deviceData.Setup.First().FreqCut : 0,
-                setup_fs = deviceData.Setup != null && deviceData.Setup.Any() ?
-                    deviceData.Setup.First().Fs : 0,
-                setup_odr = deviceData.Setup != null && deviceData.Setup.Any() ?
-                    deviceData.Setup.First().Odr : 0,
-                temp = deviceData.Temp,
-                tipo = deviceData.Tipo,
-                dado = deviceData.Dado
+                alarme = deviceData.alarme,
+                dec = deviceData.dec,
+                ftr_crista = deviceData.ftr_crista,
+                rms_acc = deviceData.rms_acc,
+                rms_spd = deviceData.rms_spd,
+                setup_amostras = deviceData.setup != null && deviceData.setup.Any() ?
+                    deviceData.setup.First().Amostras : 0,
+                setup_eixo = deviceData.setup != null && deviceData.setup.Any() ?
+                    deviceData.setup.First().Eixo : 0,
+                setup_filtro = deviceData.setup != null && deviceData.setup.Any() ?
+                    deviceData.setup.First().Filtro : 0,
+                setup_freq_cut = deviceData.setup != null && deviceData.setup.Any() ?
+                    deviceData.setup.First().FreqCut : 0,
+                setup_fs = deviceData.setup != null && deviceData.setup.Any() ?
+                    deviceData.setup.First().Fs : 0,
+                setup_odr = deviceData.setup != null && deviceData.setup.Any() ?
+                    deviceData.setup.First().Odr : 0,
+                temp = deviceData.temp,
+                tipo = deviceData.tipo,
+                dado = deviceData.dado
             };
         }
 
