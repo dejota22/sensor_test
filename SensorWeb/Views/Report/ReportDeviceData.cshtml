@@ -41,7 +41,7 @@
     }
 </style>
 
-<h4 style="text-align:center">Relatório Dados Sensor</h4>
+<h4 style="text-align:center">Sinal no Tempo</h4>
 <hr />
 <div class="container">
 
@@ -77,6 +77,26 @@
             </div>
         </div>
 
+        <div class="row head-row" style="display:none;">
+            <div class="card-header pb-0">
+                <div class="row">
+                    <div class="col-3">
+                        <div>Data / hora: <b id="head-data"></b></div>
+                    </div>
+                    <div class="col-3">
+                        <div>Tipo: <b id="head-tipo"></b></div>
+                    </div>
+                    <div class="col-3">
+                        <div>Eixo: <b id ="head-eixo"></b></div>
+                    </div>
+                    <div class="col-3">
+                        <div>Freq.: <b id="head-freq"></b></div>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+ 
         <div id="grafico-wrapper" style="display:none;">
 
             <div id="overview"></div>
@@ -129,12 +149,14 @@
                     $.get('@Url.Action("ReportDeviceDataUpdate")?idDataReceive=' + dataId, function (data) {
                         valor_data = [];
                         $('#grafico-wrapper').show();
+                        $('.head-row').show();
 
                         $.each(data, function (index, value) {
                             valor_data.push([value.tempo, value.valor]);
                         });
 
                         drawGraficos();
+                        updateHeader();
                     });
                 }
             });
@@ -202,6 +224,22 @@
             $("#overview").bind("plotselected", function (event, ranges) {
                 plot.setSelection(ranges);
             });
+        }
+
+        function updateHeader() {
+            let dataText = $('#DataDeviceId option:selected').text();
+            let dataTextParts = dataText.split(' - ');
+
+            let headData = dataTextParts[0];
+            let headTipo = dataTextParts[1].substring(6);
+            let headEixo = dataTextParts[2].substring(6);
+            let headFreq = dataTextParts[3].substring(6);
+
+            $('#head-row').show();
+            $('#head-data').text(headData);
+            $('#head-tipo').text(headTipo);
+            $('#head-eixo').text(headEixo);
+            $('#head-freq').text(headFreq);
         }
 
     </script>

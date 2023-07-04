@@ -10,6 +10,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using Core;
+using Google.Protobuf.WellKnownTypes;
 
 namespace SensorWeb.Controllers
 {
@@ -79,7 +80,9 @@ namespace SensorWeb.Controllers
                 {
                     ViewBag.DeviceData = dataList.Select(d => new SelectListItem
                     {
-                        Text = string.Format("{0} - {1}", d.DataReceive.ToString("dd/MM/yyyy HH:mm:ss"), d.id),
+                        Text = string.Format("{0} - Tipo: {1} - Eixo: {2} - Freq: {3}", d.DataReceive.ToString("dd/MM/yyyy HH:mm:ss"), 
+                            (d.tipo == 1 ? "ACC" : "SPD"), (d.tipo == 1 ?  GetSetupInfo("eixo", d.DeviceConfiguration.acc_eixo.Value) : GetSetupInfo("eixo", d.DeviceConfiguration.spd_eixo.Value)),
+                            (d.tipo == 1 ? GetSetupInfo("freq", d.DeviceConfiguration.acc_freq_cut.Value) : GetSetupInfo("freq", d.DeviceConfiguration.spd_freq_cut.Value))),
                         Value = d.IdReceiveData.ToString(),
                     });
                 }
@@ -93,6 +96,50 @@ namespace SensorWeb.Controllers
             var dadosDataReceive = _receiveService.GetDataDadoByDataReceiveId(idDataReceive);
 
             return Json(dadosDataReceive);
+        }
+
+        private string GetSetupInfo(string attr, int index)
+        {
+            if (attr == "eixo")
+            {
+                switch(index)
+                {
+                    case 1:
+                        return "X";
+                    case 2:
+                        return "Y";
+                    case 3:
+                        return "Z";
+                    case 4:
+                        return "XY";
+                    case 5:
+                        return "XZ";
+                    case 6:
+                        return "YZ";
+                    case 7:
+                        return "XYZ";
+                }
+            }
+            else if (attr == "freq")
+            {
+                switch (index)
+                {
+                    case 1:
+                        return "2K6";
+                    case 2:
+                        return "1K3";
+                    case 3:
+                        return "0K5";
+                    case 4:
+                        return "0K2";
+                    case 5:
+                        return "0K1";
+                    case 6:
+                        return "K67";
+                }
+            }
+
+            return "";
         }
     }
 }

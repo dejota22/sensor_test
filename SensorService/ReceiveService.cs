@@ -95,7 +95,15 @@ namespace SensorService
 
         public IEnumerable<ReceiveData> GetDataByDeviceMotor(int? deviceId, int? motorId)
         {
-            return GetQueryData().Where(d => d.DeviceConfiguration.DeviceId == deviceId && d.DeviceConfiguration.MotorId == motorId && d.ReceiveDataDados.Any() == true);
+            return GetQueryData().Where(d => d.DeviceConfiguration.DeviceId == deviceId && d.DeviceConfiguration.MotorId == motorId && d.ReceiveDataDados.Any() == true)
+                .Select(d => new ReceiveData()
+                {
+                    IdReceiveData = d.IdReceiveData,
+                    IdDeviceConfiguration = d.IdDeviceConfiguration,
+                    DataReceive = d.DataReceive,
+                    tipo = d.tipo,
+                    DeviceConfiguration = d.DeviceConfiguration
+                });
         }
 
         public IEnumerable<ReceiveDataDado> GetDataDadoByDataReceiveId(int dataId)
@@ -119,14 +127,15 @@ namespace SensorService
 
             return novaLista;
         }
+
         private List<ReceiveDataDado> ListaDadoFiltrado(List<string> dadosRaw, ReceiveData dadoSensor)
         {
             List<ReceiveDataDado> dadosTransitorios =  ListaDadoTransitorio(dadosRaw, dadoSensor);
             int tipo = dadoSensor.tipo;
 
-            const double alpha = 0.98;
+            const double alpha = 0.998;
             const double delta_t = 1/3333.375;
-            const double filtro_2 = 0.985;
+            const double filtro_2 = 0.95;
 
             double[] vals_F = new double[dadosTransitorios.Count];
             double[] vals_H = new double[dadosTransitorios.Count];
