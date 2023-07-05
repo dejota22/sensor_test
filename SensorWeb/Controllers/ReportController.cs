@@ -118,6 +118,8 @@ namespace SensorWeb.Controllers
             {
                 switch (index)
                 {
+                    case 0:
+                        return "6K6";
                     case 1:
                         return "2K6";
                     case 2:
