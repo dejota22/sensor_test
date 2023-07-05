@@ -95,15 +95,7 @@ namespace SensorService
 
         public IEnumerable<ReceiveData> GetDataByDeviceMotor(int? deviceId, int? motorId)
         {
-            return GetQueryData().Where(d => d.DeviceConfiguration.DeviceId == deviceId && d.DeviceConfiguration.MotorId == motorId && d.ReceiveDataDados.Any() == true)
-                .Select(d => new ReceiveData()
-                {
-                    IdReceiveData = d.IdReceiveData,
-                    IdDeviceConfiguration = d.IdDeviceConfiguration,
-                    DataReceive = d.DataReceive,
-                    tipo = d.tipo,
-                    DeviceConfiguration = d.DeviceConfiguration
-                });
+            return GetQueryData().Where(d => d.DeviceConfiguration.DeviceId == deviceId && d.DeviceConfiguration.MotorId == motorId && d.ReceiveDataDados.Any() == true);
         }
 
         public IEnumerable<ReceiveDataDado> GetDataDadoByDataReceiveId(int dataId)

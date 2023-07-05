@@ -71,20 +71,14 @@ namespace SensorWeb.Controllers
 
         public ActionResult ReportDeviceData(int? DeviceId, int? MotorId)
         {
-            ViewBag.DeviceData = new List<SelectListItem>();
+            ViewBag.DeviceData = new List<ReceiveData>();
 
             if (DeviceId != null && MotorId != null)
             {
                 var dataList = _receiveService.GetDataByDeviceMotor(DeviceId, MotorId);
                 if (dataList != null)
                 {
-                    ViewBag.DeviceData = dataList.Select(d => new SelectListItem
-                    {
-                        Text = string.Format("{0} - Tipo: {1} - Eixo: {2} - Freq: {3}", d.DataReceive.ToString("dd/MM/yyyy HH:mm:ss"), 
-                            (d.tipo == 1 ? "ACC" : "SPD"), (d.tipo == 1 ?  GetSetupInfo("eixo", d.DeviceConfiguration.acc_eixo.Value) : GetSetupInfo("eixo", d.DeviceConfiguration.spd_eixo.Value)),
-                            (d.tipo == 1 ? GetSetupInfo("freq", d.DeviceConfiguration.acc_freq_cut.Value) : GetSetupInfo("freq", d.DeviceConfiguration.spd_freq_cut.Value))),
-                        Value = d.IdReceiveData.ToString(),
-                    });
+                    ViewBag.DeviceData = dataList;
                 }
             }
                 
@@ -98,7 +92,7 @@ namespace SensorWeb.Controllers
             return Json(dadosDataReceive);
         }
 
-        private string GetSetupInfo(string attr, int index)
+        public static string GetSetupInfo(string attr, int index)
         {
             if (attr == "eixo")
             {

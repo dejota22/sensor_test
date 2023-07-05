@@ -39,6 +39,24 @@
         stroke: rgba(0, 0, 0, 0.85);
         stroke-width: 1;
     }
+
+    .x2Label {
+        fill: #224499;
+        font-weight: bold;
+        font-size: 18px;
+        font-family: Tahoma, sans-serif;
+    }
+
+    .y2Label {
+        fill: #224499;
+        font-weight: bold;
+        font-size: 18px;
+        font-family: Tahoma, sans-serif;
+    }
+
+    .red-alarm-option {
+        color: darkred;
+    }
 </style>
 
 <h4 style="text-align:center">Sinal no Tempo</h4>
@@ -64,9 +82,13 @@
                 <label class="control-label">Dados</label>
                 <select id="DataDeviceId" name="DataDeviceId" class="form-control">
                     <option value="">-- Selecione os Dados --</option>
-                    @foreach (var item in (IEnumerable<SelectListItem>)ViewBag.DeviceData)
+                    @foreach (var d in (IEnumerable<Core.ReceiveData>)ViewBag.DeviceData)
                     {
-                        <option value="@item.Value">@item.Text</option>
+                        string itemText = string.Format("{0} - Tipo: {1} - Eixo: {2} - Freq: {3}", d.DataReceive.ToString("dd/MM/yyyy HH:mm:ss"),
+                            (d.tipo == 1 ? "ACC" : "SPD"), SensorWeb.Controllers.ReportController.GetSetupInfo("eixo", d.setup_eixo), 
+                            SensorWeb.Controllers.ReportController.GetSetupInfo("freq", d.setup_freq_cut));
+
+                        <option class="@(d.alarme == 1 ? "red-alarm-option" : "")" value="@d.IdReceiveData">@itemText</option>
                     }
                 </select>
                 <span id="validation-DataDeviceId" class="text-danger"></span>
@@ -127,6 +149,7 @@
     <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.selection.js")"></script>
     <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.legend.js")"></script>
     <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.tooltip.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.axislabels.js")"></script>
 
     <script type="text/javascript">
         var valor_data = [];
@@ -177,6 +200,14 @@
                     },
                     sampling: 'average'
                 },
+                yaxes: [
+                    { position: 'left', show: true, showTicks: true, },
+                    { position: 'left', show: true, axisLabel: 'G', showTickLabels: 'none', gridLines: false, showTicks: false }
+                ],
+                xaxes: [
+                    { position: 'bottom', show: true, showTicks: true, },
+                    { position: 'bottom', show: true, axisLabel: 'Segundos', showTickLabels: 'none', gridLines: false, showTicks: false }
+                ],
                 grid: {
                     hoverable: true
                 },
