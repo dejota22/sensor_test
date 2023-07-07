@@ -1580,18 +1580,15 @@ namespace Core
                 entity.Property(e => e.temp).HasColumnName("temp");
                 entity.Property(e => e.alrm).HasColumnName("alrm");
 
-                entity.Property(e => e.rms_bf_acc_X).HasColumnName("rms_bf_acc_X");
-                entity.Property(e => e.rms_bf_acc_Y).HasColumnName("rms_bf_acc_Y");
-                entity.Property(e => e.rms_bf_acc_Z).HasColumnName("rms_bf_acc_Z");
-                entity.Property(e => e.rms_bf_spd_X).HasColumnName("rms_bf_spd_X");
-                entity.Property(e => e.rms_bf_spd_Y).HasColumnName("rms_bf_spd_Y");
-                entity.Property(e => e.rms_bf_spd_Z).HasColumnName("rms_bf_spd_Z");
-                entity.Property(e => e.rms_af_acc_X).HasColumnName("rms_af_acc_X");
-                entity.Property(e => e.rms_af_acc_Y).HasColumnName("rms_af_acc_Y");
-                entity.Property(e => e.rms_af_acc_Z).HasColumnName("rms_af_acc_Z");
-                entity.Property(e => e.rms_af_spd_X).HasColumnName("rms_af_spd_X");
-                entity.Property(e => e.rms_af_spd_Y).HasColumnName("rms_af_spd_Y");
-                entity.Property(e => e.rms_af_spd_Z).HasColumnName("rms_af_spd_Z");
+                entity.Property(e => e.rms_acc_X).HasColumnName("rms_acc_X");
+                entity.Property(e => e.rms_acc_Y).HasColumnName("rms_acc_Y");
+                entity.Property(e => e.rms_acc_Z).HasColumnName("rms_acc_Z");
+                entity.Property(e => e.rms_spd_X).HasColumnName("rms_spd_X");
+                entity.Property(e => e.rms_spd_Y).HasColumnName("rms_spd_Y");
+                entity.Property(e => e.rms_spd_Z).HasColumnName("rms_spd_Z");
+                entity.Property(e => e.ftr_crista_X).HasColumnName("ftr_crista_X");
+                entity.Property(e => e.ftr_crista_Y).HasColumnName("ftr_crista_Y");
+                entity.Property(e => e.ftr_crista_Z).HasColumnName("ftr_crista_Z");
 
                 entity.Property(e => e.setup_bf_odr).HasColumnName("setup_bf_odr");
                 entity.Property(e => e.setup_bf_freq_cut).HasColumnName("setup_bf_freq_cut");

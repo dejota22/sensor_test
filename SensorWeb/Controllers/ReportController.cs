@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using Core;
 using Google.Protobuf.WellKnownTypes;
+using System;
 
 namespace SensorWeb.Controllers
 {
@@ -88,6 +89,18 @@ namespace SensorWeb.Controllers
         public JsonResult ReportDeviceDataUpdate(int idDataReceive)
         {
             var dadosDataReceive = _receiveService.GetDataDadoByDataReceiveId(idDataReceive);
+
+            return Json(dadosDataReceive);
+        }
+
+        public ActionResult ReportRMSCrista()
+        {
+            return View();
+        }
+
+        public JsonResult ReportRMSCristaUpdate(int deviceId, int motorId, DateTime startDate, DateTime endDate, int reportType, int eixo)
+        {
+            var dadosDataReceive = _receiveService.GetDataUnionGlobalByDateType(deviceId, motorId, startDate, endDate, reportType, eixo);
 
             return Json(dadosDataReceive);
         }

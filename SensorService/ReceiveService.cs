@@ -4,8 +4,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Core;
 using Core.ApiModel.Request;
+using Core.ApiModel.Response;
 using Core.DTO;
 using Core.Service;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.EntityFrameworkCore;
 
 namespace SensorService
@@ -101,6 +103,17 @@ namespace SensorService
         public IEnumerable<ReceiveDataDado> GetDataDadoByDataReceiveId(int dataId)
         {
             return GetQueryDataDados().Where(d => d.IdReceiveData == dataId).OrderBy(d => d.seq);
+        }
+
+        public IEnumerable<RMSCristaModelResponse> GetDataUnionGlobalByDateType(int deviceId, int motorId, DateTime startDate, DateTime endDate, int reportType, int eixo)
+        {
+            var listaData = GetQueryData().Where(d => d.DeviceConfiguration.DeviceId == deviceId && d.DeviceConfiguration.MotorId == motorId && 
+                d.DataReceive >= startDate && d.DataReceive <= endDate && d.tipo == reportType && d.setup_eixo == eixo).ToList();
+
+            var listaGlobal = GetQueryGlobal().Where(d => d.DeviceConfiguration.DeviceId == deviceId && d.DeviceConfiguration.MotorId == motorId &&
+                d.DataReceive >= startDate && d.DataReceive <= endDate).ToList();
+
+            return MontaListaReportRMSCrista(listaData, listaGlobal, reportType, eixo);
         }
 
         private List<String> MontaListaDado(string dados)
@@ -229,6 +242,48 @@ namespace SensorService
             }
 
             return dados;
+        }
+
+        private IEnumerable<RMSCristaModelResponse> MontaListaReportRMSCrista(IList<ReceiveData> listData, IList<ReceiveGlobal> listGlobal, int reportType, int eixo)
+        {
+            var listaReport = new List<RMSCristaModelResponse>();
+
+            var listDataMod = listData.Select(d => new RMSCristaModelResponse()
+            {
+                DataReceive = (d.DataReceive.Ticks / TimeSpan.TicksPerMillisecond),
+                Value = reportType == 1 ? d.rms_acc : reportType == 2 ? d.rms_spd : reportType == 3 ? d.ftr_crista : 0
+            });
+
+            var listGlobalMod = new List<RMSCristaModelResponse>();
+            foreach (var data in listGlobal)
+            {
+                var globalMod = new RMSCristaModelResponse();
+                globalMod.DataReceive = (data.DataReceive.Ticks / TimeSpan.TicksPerMillisecond);
+
+                if (reportType == 1 && eixo == 1)
+                    globalMod.Value = data.rms_acc_X;
+                if (reportType == 1 && eixo == 2)
+                    globalMod.Value = data.rms_acc_Y;
+                if (reportType == 1 && eixo == 3)
+                    globalMod.Value = data.rms_acc_Z;
+                if (reportType == 2 && eixo == 1)
+                    globalMod.Value = data.rms_spd_X;
+                if (reportType == 2 && eixo == 2)
+                    globalMod.Value = data.rms_spd_Y;
+                if (reportType == 2 && eixo == 3)
+                    globalMod.Value = data.rms_spd_Z;
+                if (reportType == 3 && eixo == 1)
+                    globalMod.Value = data.ftr_crista_X;
+                if (reportType == 3 && eixo == 2)
+                    globalMod.Value = data.ftr_crista_Y;
+                if (reportType == 3 && eixo == 3)
+                    globalMod.Value = data.ftr_crista_Z;
+
+            }
+
+            listaReport = listDataMod.Union(listGlobalMod).ToList();
+
+            return listaReport;
         }
     }
 

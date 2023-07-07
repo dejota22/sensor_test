@@ -1,4 +1,6 @@
-﻿using Core.DTO;
+﻿using Core.ApiModel.Response;
+using Core.DTO;
+using System;
 using System.Collections.Generic;
 
 namespace Core.Service
@@ -20,5 +22,7 @@ namespace Core.Service
         IEnumerable<ReceiveData> GetDataByDeviceMotor(int? deviceId, int? motorId);
 
         IEnumerable<ReceiveDataDado> GetDataDadoByDataReceiveId(int dataId);
+
+        IEnumerable<RMSCristaModelResponse> GetDataUnionGlobalByDateType(int deviceId, int motorId, DateTime startDate, DateTime endDate, int reportType, int eixo);
     }
 }

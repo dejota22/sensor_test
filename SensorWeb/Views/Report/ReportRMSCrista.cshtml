@@ -1,0 +1,298 @@
+﻿@model Core.DTO.DeviceConfigurationModel
+
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+
+@inject Core.Service.IDeviceMeasureService deviceMeasureService
+@inject Core.Service.IMotorService motorService
+@inject Core.Service.IDeviceService deviceService
+@inject Core.Service.ICompanyService companyService
+
+@{
+    Layout = "~/Views/Shared/_Layout_Graficos.cshtml";
+
+}
+
+<style>
+    #chartdiv {
+        width: 100%;
+        max-width: 100%;
+        height: 500px;
+        margin-bottom: 20px;
+    }
+
+    #overview {
+        margin: 20px 0;
+        width: 100%;
+        max-width: 100%;
+        height: 75px;
+    }
+
+    #legenddiv {
+        margin: 0 20px 10px 20px;
+        width: 100%;
+        max-width: 100%;
+        height: 5px;
+    }
+
+    .legendLayer .background {
+        fill: rgba(255, 255, 255, 0.85);
+        stroke: rgba(0, 0, 0, 0.85);
+        stroke-width: 1;
+    }
+
+    .x2Label {
+        fill: #224499;
+        font-weight: bold;
+        font-size: 18px;
+        font-family: Tahoma, sans-serif;
+    }
+
+    .y2Label {
+        fill: #224499;
+        font-weight: bold;
+        font-size: 18px;
+        font-family: Tahoma, sans-serif;
+    }
+
+    .red-alarm-option {
+        color: darkred;
+    }
+</style>
+
+<h4 style="text-align:center">Relatório RMS / Fator de Crista</h4>
+<hr />
+<div class="container">
+
+        <div class="row">
+
+            <div class="form-group col-md-3">
+                <label class="control-label">Equipamento</label>
+                @Html.DropDownList("MotorId", new SelectList(motorService.GetQueryDropDownListByTag(), "Key", "Value"),
+                @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "class", "form-control main-selects" } })
+                <span id="validation-MotorId" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label class="control-label">Sensor</label>
+                @Html.DropDownList("DeviceId", new SelectList(deviceService.GetQueryDropDownList(), "Key", "Value"),
+                @localizer.Get("DeviceSelect"), new Dictionary<string, object> { { "class", "form-control main-selects" } })
+                <span id="validation-DeviceId" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label class="control-label">Data Inicial</label>
+                <input type="date" id="StartDate" name="StartDate" class="form-control" />
+                <span id="validation-StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label class="control-label">Data Final</label>
+                <input type="date" id="EndDate" name="EndDate" class="form-control" />
+                <span id="validation-EndDate" class="text-danger"></span>
+            </div>
+
+        </div>
+
+        <div class="row">
+            
+            <div class="form-group col-md-3">
+                <label class="control-label">Tipo Relatório</label>
+                <select id="TipoRelatorio" name="TipoRelatorio" class="form-control">
+                    <option value="">-- Selecione o Tipo --</option>
+                    <option value="1">RMS em Aceleração</option>
+                    <option value="2">RMS Velocidade</option>
+                    <option value="3">Fator de Crista</option>
+                </select>
+                <span id="validation-TipoRelatorio" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label class="control-label">Eixo</label>
+                <select id="Eixo" name="Eixo" class="form-control">
+                    <option value="">-- Selecione o Eixo --</option>
+                    <option value="1">X</option>
+                    <option value="2">Y</option>
+                    <option value="3">Z</option>
+                </select>
+                <span id="validation-TipoRelatorio" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label class="control-label">&nbsp;</label>
+                <input id="btn-visualizar" type="button" value="Visualizar" class="btn btn-primary" style="width:100%;" />
+            </div>
+
+        </div>
+
+        @*<div class="row head-row" style="display:none;">
+            <div class="card-header pb-0">
+                <div class="row">
+                    <div class="col-3">
+                        <div>Data / hora: <b id="head-data"></b></div>
+                    </div>
+                    <div class="col-3">
+                        <div>Tipo: <b id="head-tipo"></b></div>
+                    </div>
+                    <div class="col-3">
+                        <div>Eixo: <b id ="head-eixo"></b></div>
+                    </div>
+                    <div class="col-3">
+                        <div>Freq.: <b id="head-freq"></b></div>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>*@
+ 
+        <div id="grafico-wrapper" style="display:none;">
+
+            <div id="overview"></div>
+            <div id="legenddiv"></div>
+            <div id="chartdiv"></div>
+
+        </div>
+
+</div>
+
+
+@section Scripts
+    {
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.event.drag.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.mousewheel.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.canvaswrapper.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.colorhelpers.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.saturated.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.browser.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.drawSeries.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.uiConstants.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.navigate.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.touchNavigate.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.hover.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.touch.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.time.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.selection.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.legend.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.tooltip.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.axislabels.js")"></script>
+
+    <script type="text/javascript">
+        var valor_data = [];
+        var color_grafico = '';
+        var yaxis_label = '';
+
+        $(document).ready(function () {
+
+            $('#btn-visualizar').bind('click', function (e) {
+                let deviceId = $('#DeviceId').val();
+                let motorId = $('#MotorId').val();
+                let startDate = $('#StartDate').val();
+                let endDate = $('#EndDate').val();
+                let reportType = $('#TipoRelatorio').val();
+                let eixo = $('#Eixo').val();
+
+                if (deviceId != '' && motorId != '' && startDate != '' && endDate != '' && reportType != '' && eixo != '')
+                {
+                    switch(reportType)
+                    {
+                        case '1':
+                            color_grafico = 'rgb(51,102,204)';
+                            yaxis_label = 'RMS em Aceleração';
+                            break;
+                        case '2':
+                            color_grafico = 'rgb(50,185,109)';
+                            yaxis_label = 'RMS Velocidade';
+                            break;
+                        case '3':
+                            color_grafico = 'rgb(205,61,93)';
+                            yaxis_label = 'Fator de Crista';
+                            break;
+                    }
+
+                    $.get('@Url.Action("ReportRMSCristaUpdate")?deviceId=' + deviceId + '&motorId=' + motorId + '&startDate=' + startDate +
+                        '&endDate=' + endDate + '&reportType=' + reportType + '&eixo=' + eixo, function (data) {
+                        valor_data = [];
+                        $('#grafico-wrapper').show();
+                        $('.head-row').show();
+
+                        $.each(data, function (index, value) {
+                                valor_data.push([value.dataReceive, value.value]);
+                        });
+
+                        drawGraficos();
+                    });
+                }
+            });
+
+            
+        });
+
+
+        function drawGraficos() {
+            var options = {
+                series: {
+                    lines: {
+                        show: true,
+                        lineWidth: 2
+                    },
+                    points: {
+                        show: false
+                    },
+                    sampling: 'average'
+                },
+                yaxes: [
+                    { position: 'left', show: true, showTicks: true }
+                    //{ position: 'left', show: true, axisLabel: yaxis_label, showTickLabels: 'none', gridLines: false, showTicks: false }
+                ],
+                xaxes: [
+                    { position: 'bottom', show: true, showTicks: true, mode: "time", timeBase: "milliseconds", timeformat: "%d/%m %H:%M" }
+                    //{ position: 'bottom', show: true, axisLabel: 'Data', showTickLabels: 'none', gridLines: false, showTicks: false }
+                ],
+                grid: {
+                    hoverable: true
+                },
+                tooltip: {
+                    show: true,
+                    content: '%y.4'
+                },
+                colors: [color_grafico]
+            };
+
+            var plot = $.plot($('#chartdiv'), [{ data: valor_data }], options);
+
+            $("#chartdiv").bind("plotselected", function (event, ranges) {
+                $.each(plot.getXAxes(), function (_, axis) {
+                    var opts = axis.options;
+                    opts.min = ranges.xaxis.from;
+                    opts.max = ranges.xaxis.to;
+                });
+                plot.setupGrid();
+                plot.draw();
+                plot.clearSelection();
+
+                // don't fire event on the overview to prevent eternal loop
+                overview.setSelection(ranges, true);
+            });
+
+
+            var overview = $.plot("#overview", [{ data: valor_data }], {
+                series: {
+                    lines: {
+                        show: true,
+                        lineWidth: 1
+                    },
+                    shadowSize: 0
+                },
+                xaxis: {
+                    position: "top",
+                    mode: "time", timeBase: "milliseconds", timeformat: "%d/%m %H:%M"
+                },
+                selection: {
+                    mode: "x"
+                },
+                colors: [color_grafico]
+            });
+
+            $("#overview").bind("plotselected", function (event, ranges) {
+                plot.setSelection(ranges);
+            });
+        }
+
+    </script>
+}
+

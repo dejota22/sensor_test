@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core
 {
@@ -33,17 +34,17 @@ namespace Core
         public double freq { get; set; }
         public double temp { get; set; }
         public int alrm { get; set; }
-        public double rms_bf_acc_X { get; set; }
-        public double rms_bf_acc_Y { get; set; }
-        public double rms_bf_acc_Z { get; set; }
-        public double rms_bf_spd_X { get; set; }
-        public double rms_bf_spd_Y { get; set; }
-        public double rms_bf_spd_Z { get; set; }
-        public double rms_af_acc_X { get; set; }
-        public double rms_af_acc_Y { get; set; }
-        public double rms_af_acc_Z { get; set; }
-        public double rms_af_spd_X { get; set; }
-        public double rms_af_spd_Y { get; set; }
-        public double rms_af_spd_Z { get; set; }
+        public double rms_acc_X { get; set; }
+        public double rms_acc_Y { get; set; }
+        public double rms_acc_Z { get; set; }
+        public double rms_spd_X { get; set; }
+        public double rms_spd_Y { get; set; }
+        public double rms_spd_Z { get; set; }
+        public double ftr_crista_X { get; set; }
+        public double ftr_crista_Y { get; set; }
+        public double ftr_crista_Z { get; set; }
+
+        [ForeignKey("IdDeviceConfiguration")]
+        public DeviceConfiguration DeviceConfiguration { get; set; }
     }
 }
