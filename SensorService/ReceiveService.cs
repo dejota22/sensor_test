@@ -107,11 +107,12 @@ namespace SensorService
 
         public IEnumerable<RMSCristaModelResponse> GetDataUnionGlobalByDateType(int deviceId, int motorId, DateTime startDate, DateTime endDate, int reportType, int eixo)
         {
+            int qReportType = reportType;
             if (reportType == 3)
-                reportType = 1;
+                qReportType = 1;
 
             var listaData = GetQueryData().Where(d => d.DeviceConfiguration.DeviceId == deviceId && d.DeviceConfiguration.MotorId == motorId && 
-                d.DataReceive >= startDate && d.DataReceive <= endDate && d.tipo == reportType && d.setup_eixo == eixo).ToList();
+                d.DataReceive >= startDate && d.DataReceive <= endDate && d.tipo == qReportType && d.setup_eixo == eixo).ToList();
 
             var listaGlobal = GetQueryGlobal().Where(d => d.DeviceConfiguration.DeviceId == deviceId && d.DeviceConfiguration.MotorId == motorId &&
                 d.DataReceive >= startDate && d.DataReceive <= endDate).ToList();
