@@ -691,6 +691,7 @@ namespace Core
                 entity.Property(e => e.quant_horarios_cards).HasColumnName("quant_horarios_cards");
                 entity.Property(e => e.dia_envio_relat).HasColumnName("dia_envio_relat").IsUnicode(false);
                 entity.Property(e => e.hora_envio_relat).HasColumnName("hora_envio_relat").IsUnicode(false);
+                entity.Property(e => e.t_card_normal).HasColumnName("t_card_normal");
 
                 entity.Property(e => e.rms_acc_red).HasColumnName("rms_acc_red");
                 entity.Property(e => e.rms_acc_yel).HasColumnName("rms_acc_yel");

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -77,6 +78,7 @@ namespace Core.DTO
         public int? quant_horarios_cards { get; set; }
         public string dia_envio_relat { get; set; }
         public string hora_envio_relat { get; set; }
+        public int? t_card_normal { get; set; }
 
         #region Limites
         public decimal? rms_acc_red { get; set; }
@@ -132,6 +134,7 @@ namespace Core.DTO
                 quant_horarios_cards = quant_horarios_cards,
                 dia_envio_relat = dia_envio_relat,
                 hora_envio_relat = hora_envio_relat,
+                t_card_normal = t_card_normal,
                 rms_acc_red = rms_acc_red,
                 rms_acc_yel = rms_acc_yel,
                 min_rms_acc = min_rms_acc,
@@ -184,6 +187,7 @@ namespace Core.DTO
                 quant_horarios_cards = entity.quant_horarios_cards,
                 dia_envio_relat = entity.dia_envio_relat,
                 hora_envio_relat = entity.hora_envio_relat,
+                t_card_normal = entity.t_card_normal,
                 rms_acc_red = entity.rms_acc_red,
                 rms_acc_yel = entity.rms_acc_yel,
                 min_rms_acc = entity.min_rms_acc,

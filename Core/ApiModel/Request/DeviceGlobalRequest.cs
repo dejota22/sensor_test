@@ -11,8 +11,8 @@ namespace Core.ApiModel.Request
         [JsonProperty("id")]
         public string Id { get; set; }
 
-        [JsonProperty("ver")]
-        public string ver { get; set; }
+        [JsonProperty("versao")]
+        public string versao { get; set; }
 
         [JsonProperty("seq")]
         public int seq { get; set; }
@@ -20,50 +20,32 @@ namespace Core.ApiModel.Request
         [JsonProperty("resets")]
         public int resets { get; set; }
 
-        [JsonProperty("card_lidos")]
-        public int card_lidos { get; set; }
+        [JsonProperty("leituras_efetuadas")]
+        public int leituras_efetuadas { get; set; }
 
-        [JsonProperty("card_send")]
-        public int card_send { get; set; }
+        [JsonProperty("q_cards_enviados")]
+        public int q_cards_enviados { get; set; }
 
-        [JsonProperty("relat_send")]
-        public int RelatSend { get; set; }
+        [JsonProperty("q_relats_enviados")]
+        public int q_relats_enviados { get; set; }
 
         [JsonProperty("relat_erros")]
         public int relat_erros { get; set; }
 
-        [JsonProperty("setup_bf")]
-        public List<SetupBf> setup_bf { get; set; }
+        [JsonProperty("setup_acc")]
+        public List<SetupAcc> setup_acc { get; set; }
 
-        [JsonProperty("setup_af")]
-        public List<SetupAf> setup_af { get; set; }
+        [JsonProperty("setup_spd")]
+        public List<SetupSpd> setup_spd { get; set; }
 
-        [JsonProperty("freq")]
-        public double freq { get; set; }
+        [JsonProperty("FreqFine")]
+        public double FreqFine { get; set; }
 
         [JsonProperty("temp")]
         public double temp { get; set; }
 
-        [JsonProperty("alrm")]
-        public int alrm { get; set; }
-
-        //[JsonProperty("rms_bf_acc_X")]
-        //public double RmsBfAccX { get; set; }
-
-        //[JsonProperty("rms_bf_acc_Y")]
-        //public double RmsBfAccY { get; set; }
-
-        //[JsonProperty("rms_bf_acc_Z")]
-        //public double RmsBfAccZ { get; set; }
-
-        //[JsonProperty("rms_bf_spd_X")]
-        //public double RmsBfSpdX { get; set; }
-
-        //[JsonProperty("rms_bf_spd_Y")]
-        //public double RmsBfSpdY { get; set; }
-
-        //[JsonProperty("rms_bf_spd_Z")]
-        //public double RmsBfSpdZ { get; set; }
+        [JsonProperty("alarme")]
+        public int alarme { get; set; }
 
         [JsonProperty("rms_acc_X")]
         public double rms_acc_X { get; set; }
@@ -84,7 +66,7 @@ namespace Core.ApiModel.Request
         public double rms_spd_Z { get; set; }
     }
 
-    public class SetupAf
+    public class SetupSpd
     {
         [JsonProperty("odr")]
         public int odr { get; set; }
@@ -102,7 +84,7 @@ namespace Core.ApiModel.Request
         public int amostras { get; set; }
     }
 
-    public class SetupBf
+    public class SetupAcc
     {
         [JsonProperty("odr")]
         public int odr { get; set; }

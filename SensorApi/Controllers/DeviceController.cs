@@ -140,6 +140,7 @@ namespace SensorApi.Controllers
             return contRes;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("deviceGlobal")]
         public ContentResult AddDeviceGlobal([FromBody] DeviceGlobalRequest deviceGlobal)
@@ -247,6 +248,7 @@ namespace SensorApi.Controllers
                     horario.DiasRun = setup.dias_run;
                     horario.FimTurno = setup.fim_turno;
                     horario.InicioTurno = setup.inicio_turno;
+                    horario.t_card_normal = setup.t_card_normal.Value;
 
                     horario.HorariosEnviosCard = new List<HorariosEnviosCard>();
                     setup.DeviceConfigurationHorariosEnviosCard = _DeviceConfigurationService.GetHoras(setup.Id);
@@ -335,48 +337,42 @@ namespace SensorApi.Controllers
                 id = deviceGlobal.Id,
                 IdDeviceConfiguration = idDeviceConfiguration,
                 gtw = deviceGlobal.gtw,
-                ver = deviceGlobal.ver,
+                ver = deviceGlobal.versao,
                 seq = deviceGlobal.seq,
                 resets = deviceGlobal.resets,
-                card_lidos = deviceGlobal.card_lidos,
-                card_send = deviceGlobal.card_send,
-                relat_send = deviceGlobal.RelatSend,
+                card_lidos = deviceGlobal.leituras_efetuadas,
+                card_send = deviceGlobal.q_cards_enviados,
+                relat_send = deviceGlobal.q_relats_enviados,
                 relat_erros = deviceGlobal.relat_erros,
-                freq = deviceGlobal.freq,
+                freq = deviceGlobal.FreqFine,
                 temp = deviceGlobal.temp,
-                alrm = deviceGlobal.alrm,
+                alrm = deviceGlobal.alarme,
                 rms_acc_X = deviceGlobal.rms_acc_X,
                 rms_acc_Y = deviceGlobal.rms_acc_Y,
                 rms_acc_Z = deviceGlobal.rms_acc_Z,
                 rms_spd_X = deviceGlobal.rms_spd_X,
                 rms_spd_Y = deviceGlobal.rms_spd_Y,
                 rms_spd_Z = deviceGlobal.rms_spd_Z,
-                //rms_bf_acc_X = deviceGlobal.RmsBfAccX,
-                //rms_bf_acc_Y = deviceGlobal.RmsBfAccY,
-                //rms_bf_acc_Z = deviceGlobal.RmsBfAccZ,
-                //rms_bf_spd_X = deviceGlobal.RmsBfSpdX,
-                //rms_bf_spd_Y = deviceGlobal.RmsBfSpdY,
-                //rms_bf_spd_Z = deviceGlobal.RmsBfSpdZ,
-                setup_af_amostras = deviceGlobal.setup_af != null && deviceGlobal.setup_af.Any() ?
-                    deviceGlobal.setup_af.First().amostras : 0,
-                setup_af_filtro = deviceGlobal.setup_af != null && deviceGlobal.setup_af.Any() ?
-                    deviceGlobal.setup_af.First().filtro : 0,
-                setup_af_freq_cut = deviceGlobal.setup_af != null && deviceGlobal.setup_af.Any() ?
-                    deviceGlobal.setup_af.First().freq_cut : 0,
-                setup_af_fs = deviceGlobal.setup_af != null && deviceGlobal.setup_af.Any() ?
-                    deviceGlobal.setup_af.First().fs : 0,
-                setup_af_odr = deviceGlobal.setup_af != null && deviceGlobal.setup_af.Any() ?
-                    deviceGlobal.setup_af.First().odr : 0,
-                setup_bf_amostras = deviceGlobal.setup_bf != null && deviceGlobal.setup_bf.Any() ?
-                    deviceGlobal.setup_bf.First().amostras : 0,
-                setup_bf_filtro = deviceGlobal.setup_bf != null && deviceGlobal.setup_bf.Any() ?
-                    deviceGlobal.setup_bf.First().filtro : 0,
-                setup_bf_freq_cut = deviceGlobal.setup_bf != null && deviceGlobal.setup_bf.Any() ?
-                    deviceGlobal.setup_bf.First().freq_cut : 0,
-                setup_bf_fs = deviceGlobal.setup_bf != null && deviceGlobal.setup_bf.Any() ?
-                    deviceGlobal.setup_bf.First().fs : 0,
-                setup_bf_odr = deviceGlobal.setup_bf != null && deviceGlobal.setup_bf.Any() ?
-                    deviceGlobal.setup_bf.First().odr : 0
+                setup_af_amostras = deviceGlobal.setup_spd != null && deviceGlobal.setup_spd.Any() ?
+                    deviceGlobal.setup_spd.First().amostras : 0,
+                setup_af_filtro = deviceGlobal.setup_spd != null && deviceGlobal.setup_spd.Any() ?
+                    deviceGlobal.setup_spd.First().filtro : 0,
+                setup_af_freq_cut = deviceGlobal.setup_spd != null && deviceGlobal.setup_spd.Any() ?
+                    deviceGlobal.setup_spd.First().freq_cut : 0,
+                setup_af_fs = deviceGlobal.setup_spd != null && deviceGlobal.setup_spd.Any() ?
+                    deviceGlobal.setup_spd.First().fs : 0,
+                setup_af_odr = deviceGlobal.setup_spd != null && deviceGlobal.setup_spd.Any() ?
+                    deviceGlobal.setup_spd.First().odr : 0,
+                setup_bf_amostras = deviceGlobal.setup_acc != null && deviceGlobal.setup_acc.Any() ?
+                    deviceGlobal.setup_acc.First().amostras : 0,
+                setup_bf_filtro = deviceGlobal.setup_acc != null && deviceGlobal.setup_acc.Any() ?
+                    deviceGlobal.setup_acc.First().filtro : 0,
+                setup_bf_freq_cut = deviceGlobal.setup_acc != null && deviceGlobal.setup_acc.Any() ?
+                    deviceGlobal.setup_acc.First().freq_cut : 0,
+                setup_bf_fs = deviceGlobal.setup_acc != null && deviceGlobal.setup_acc.Any() ?
+                    deviceGlobal.setup_acc.First().fs : 0,
+                setup_bf_odr = deviceGlobal.setup_acc != null && deviceGlobal.setup_acc.Any() ?
+                    deviceGlobal.setup_acc.First().odr : 0
             };
         }
 
@@ -472,6 +468,7 @@ namespace SensorApi.Controllers
                     horario.DiasRun = setup.dias_run;
                     horario.FimTurno = setup.fim_turno;
                     horario.InicioTurno = setup.inicio_turno;
+                    horario.t_card_normal = setup.t_card_normal.Value;
 
                     horario.HorariosEnviosCard = new List<HorariosEnviosCard>();
                     setup.DeviceConfigurationHorariosEnviosCard = _DeviceConfigurationService.GetHoras(setup.Id);
@@ -701,6 +698,7 @@ namespace SensorApi.Controllers
                     horario.DiasRun = setup.dias_run;
                     horario.FimTurno = setup.fim_turno;
                     horario.InicioTurno = setup.inicio_turno;
+                    horario.t_card_normal = setup.t_card_normal.Value;
 
                     horario.HorariosEnviosCard = new List<HorariosEnviosCard>();
                     setup.DeviceConfigurationHorariosEnviosCard = _DeviceConfigurationService.GetHoras(setup.Id);

@@ -40,6 +40,7 @@ namespace Core
         public int? quant_horarios_cards { get; set; }
         public string dia_envio_relat { get; set; }
         public string hora_envio_relat { get; set; }
+        public int? t_card_normal { get; set; }
 
         #region Limites
         public decimal? rms_acc_red { get; set; }

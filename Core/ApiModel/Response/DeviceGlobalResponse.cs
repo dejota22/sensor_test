@@ -89,6 +89,9 @@ namespace Core.ApiModel.Response
 
         [JsonProperty("hora_envio_relat")]
         public string HoraEnvioRelat { get; set; }
+
+        [JsonProperty("t_card_normal")]
+        public int t_card_normal { get; set; }
     }
 
     public class HorariosEnviosCard
