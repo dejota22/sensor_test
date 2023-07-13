@@ -28,7 +28,7 @@
                 <span asp-validation-for="CompanyId" class="text-danger"></span>
             </div>*@
             <div class="form-group col-md-4">
-                <label asp-for="MotorId" class="control-label"></label>
+                <label class="control-label">Descrição do Ativo Monitorado</label>
                 @Html.DropDownListFor(model => model.MotorId, new SelectList(motorService.GetQueryDropDownListByTag(), "Key", "Value"),
                 @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "class", "form-control main-selects" } })
                 <span asp-validation-for="MotorId" class="text-danger"></span>
@@ -44,9 +44,9 @@
         <nav>
             <div class="nav nav-tabs" id="deviceTab" role="tablist">
 
-                <a class="nav-item nav-link active" id="config-tab" data-toggle="tab" href="#config" role="tab" aria-controls="config" aria-selected="true">Acelerômetro</a>
-                <a class="nav-item nav-link" id="tempo-tab" data-toggle="tab" href="#tempo" role="tab" aria-controls="tempo" aria-selected="false">Tempo</a>
-                <a class="nav-item nav-link" id="limites-tab" data-toggle="tab" href="#limites" role="tab" aria-controls="limites" aria-selected="false">Limites</a>
+                <a class="nav-item nav-link active" id="config-tab" data-toggle="tab" href="#config" role="tab" aria-controls="config" aria-selected="true">Medições</a>
+                <a class="nav-item nav-link" id="tempo-tab" data-toggle="tab" href="#tempo" role="tab" aria-controls="tempo" aria-selected="false">Temporização</a>
+                <a class="nav-item nav-link" id="limites-tab" data-toggle="tab" href="#limites" role="tab" aria-controls="limites" aria-selected="false">Alarmes</a>
                 <a class="nav-item nav-link" id="lora-tab" data-toggle="tab" href="#lora" role="tab" aria-controls="lora" aria-selected="false">Lora</a>
                 <a class="nav-item nav-link" id="old-tab" data-toggle="tab" href="#old" role="tab" aria-controls="old" aria-selected="false">OLD</a>
 
@@ -66,7 +66,7 @@
                             <h6 class="card-subtitle mb-2 text-muted">Configuração Aceleração</h6>
                             <div class="row">
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">acc_odr</label>
+                                    <label class="control-label">Taxa de Aquisição (Fa)</label>
                                     <select name="acc_odr" id="acc_odr" style="width:100%" asp-for="acc_odr" class="form-control">
                                         <option value="" selected disabled hidden>Selecionar</option>
                                         <option value="0">26K</option>
@@ -78,7 +78,7 @@
                                     <span asp-validation-for="acc_odr" class="text-danger"></span>
                                 </div>
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">acc_freq_cut</label>
+                                    <label class="control-label">Frequência Máxima (Fmax)</label>
                                     <select name="acc_freq_cut" id="acc_freq_cut" style="width:100%" asp-for="acc_freq_cut" class="form-control">
                                         <option value="" selected disabled hidden>Selecionar</option>
                                         <option value="0">6K6</option>
@@ -92,16 +92,16 @@
                                     <span asp-validation-for="acc_freq_cut" class="text-danger"></span>
                                 </div>
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">acc_filtro</label>
+                                    <label class="control-label">Tipo de Filtro</label>
                                     <select name="acc_filtro" id="acc_filtro" style="width:100%" asp-for="acc_filtro" class="form-control">
                                         <option value="" selected disabled hidden>Selecionar</option>
-                                        <option value="0">FPB</option>
-                                        <option value="1">FPA</option>
+                                        <option value="0">Filtro Passa Baixas (FPB)</option>
+                                        <option value="1">Filtro Passa Altas (FPA)</option>
                                     </select>
                                     <span asp-validation-for="acc_filtro" class="text-danger"></span>
                                 </div>
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">acc_eixo</label>
+                                    <label class="control-label">Direção de Medição</label>
                                     <select name="acc_eixo" id="acc_eixo" style="width:100%" asp-for="acc_eixo" class="form-control">
                                         <option value="" selected disabled hidden>Selecionar</option>
                                         <option value="1">X</option>
@@ -118,7 +118,7 @@
 
                             <div class="row">
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">acc_fs</label>
+                                    <label class="control-label">Fundo de Escala [g]</label>
                                     <select name="acc_fs" id="acc_fs" style="width:100%" asp-for="acc_fs" class="form-control">
                                         <option value="" selected disabled hidden>Selecionar</option>
                                         <option value="0">02G</option>
@@ -130,7 +130,7 @@
                                     <span asp-validation-for="acc_fs" class="text-danger"></span>
                                 </div>
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">acc_amostras</label>
+                                    <label class="control-label">Quantidade de Amostras (N)</label>
                                     <select name="acc_amostras" id="acc_amostras" style="width:100%" asp-for="acc_amostras" class="form-control">
                                         <option value="" selected disabled hidden>Selecionar</option>
                                         <option value="1">1024</option>
@@ -156,7 +156,7 @@
                             <h6 class="card-subtitle mb-2 text-muted">Configuração Velocidade</h6>
                             <div class="row">
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">spd_odr</label>
+                                    <label class="control-label">Taxa de Aquisição (Fa)</label>
                                     <select name="spd_odr" id="spd_odr" style="width:100%" asp-for="spd_odr" class="form-control">
                                         <option value="" selected disabled hidden>Selecionar</option>
                                         <option value="0">26K</option>
@@ -168,7 +168,7 @@
                                     <span asp-validation-for="spd_odr" class="text-danger"></span>
                                 </div>
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">spd_freq_cut</label>
+                                    <label class="control-label">Frequência Máxima (Fmax)</label>
                                     <select name="spd_freq_cut" id="spd_freq_cut" style="width:100%" asp-for="spd_freq_cut" class="form-control">
                                         <option value="" selected disabled hidden>Selecionar</option>
                                         <option value="0">6K6</option>
@@ -182,16 +182,16 @@
                                     <span asp-validation-for="spd_freq_cut" class="text-danger"></span>
                                 </div>
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">spd_filtro</label>
+                                    <label class="control-label">Tipo de Filtro</label>
                                     <select name="spd_filtro" id="spd_filtro" style="width:100%" asp-for="spd_filtro" class="form-control">
                                         <option value="" selected disabled hidden>Selecionar</option>
-                                        <option value="0">FPB</option>
-                                        <option value="1">FPA</option>
+                                        <option value="0">Filtro Passa Baixas (FPB)</option>
+                                        <option value="1">Filtro Passa Altas (FPA)</option>
                                     </select>
                                     <span asp-validation-for="spd_filtro" class="text-danger"></span>
                                 </div>
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">spd_eixo</label>
+                                    <label class="control-label">Direção de Medição</label>
                                     <select name="spd_eixo" id="spd_eixo" style="width:100%" asp-for="spd_eixo" class="form-control">
                                         <option value="" selected disabled hidden>Selecionar</option>
                                         <option value="1">X</option>
@@ -208,7 +208,7 @@
 
                             <div class="row">
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">spd_fs</label>
+                                    <label class="control-label">Fundo de Escala [g]</label>
                                     <select name="spd_fs" id="spd_fs" style="width:100%" asp-for="spd_fs" class="form-control">
                                         <option value="" selected disabled hidden>Selecionar</option>
                                         <option value="0">02G</option>
@@ -220,7 +220,7 @@
                                     <span asp-validation-for="spd_fs" class="text-danger"></span>
                                 </div>
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">spd_amostras</label>
+                                    <label class="control-label">Quantidade de Amostras (N)</label>
                                     <select name="spd_amostras" id="spd_amostras" style="width:100%" asp-for="spd_amostras" class="form-control">
                                         <option value="" selected disabled hidden>Selecionar</option>
                                         <option value="1">1024</option>
@@ -247,7 +247,7 @@
                             <input type="hidden" id="isEditUserSetup" name="isEditUserSetup" value="False" />
                             <div class="row">
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">usr_odr</label>
+                                    <label class="control-label">Taxa de Aquisição (Fa)</label>
                                     <select name="usr_odr" id="usr_odr" style="width:100%" asp-for="usr_odr" class="form-control">
                                         <option value="" selected disabled hidden>Selecionar</option>
                                         <option value="0">26K</option>
@@ -259,7 +259,7 @@
                                     <span asp-validation-for="usr_odr" class="text-danger"></span>
                                 </div>
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">usr_freq_cut</label>
+                                    <label class="control-label">Frequência Máxima (Fmax)</label>
                                     <select name="usr_freq_cut" id="usr_freq_cut" style="width:100%" asp-for="usr_freq_cut" class="form-control">
                                         <option value="" selected disabled hidden>Selecionar</option>
                                         <option value="0">6K6</option>
@@ -273,7 +273,7 @@
                                     <span asp-validation-for="usr_freq_cut" class="text-danger"></span>
                                 </div>
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">usr_filtro</label>
+                                    <label class="control-label">Tipo de Filtro</label>
                                     <select name="usr_filtro" id="usr_filtro" style="width:100%" asp-for="usr_filtro" class="form-control">
                                         <option value="" selected disabled hidden>Selecionar</option>
                                         <option value="0">FPB</option>
@@ -282,7 +282,7 @@
                                     <span asp-validation-for="usr_filtro" class="text-danger"></span>
                                 </div>
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">usr_eixo</label>
+                                    <label class="control-label">Direção de Medição</label>
                                     <select name="usr_eixo" id="usr_eixo" style="width:100%" asp-for="usr_eixo" class="form-control">
                                         <option value="" selected disabled hidden>Selecionar</option>
                                         <option value="1">X</option>
@@ -299,7 +299,7 @@
 
                             <div class="row">
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">usr_fs</label>
+                                    <label class="control-label">Fundo de Escala [g]</label>
                                     <select name="usr_fs" id="usr_fs" style="width:100%" asp-for="usr_fs" class="form-control">
                                         <option value="" selected disabled hidden>Selecionar</option>
                                         <option value="0">02G</option>
@@ -311,7 +311,7 @@
                                     <span asp-validation-for="usr_fs" class="text-danger"></span>
                                 </div>
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">usr_amostras</label>
+                                    <label class="control-label">Quantidade de Amostras (N)</label>
                                     <select name="usr_amostras" id="usr_amostras" style="width:100%" asp-for="usr_amostras" class="form-control">
                                         <option value="" selected disabled hidden>Selecionar</option>
                                         <option value="1">1024</option>
