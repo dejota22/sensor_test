@@ -152,6 +152,8 @@ namespace SensorService
             double[] vals_L = new double[tipo == 2 ? dadosTransitorios.Count : 0];
             double[] vals_M = new double[tipo == 2 ? dadosTransitorios.Count : 0];
 
+            double maxDataDadoValor = 0;
+
             foreach (var dadoT in dadosTransitorios.OrderBy(d => d.seq))
             {
                 int currentIndex = dadosTransitorios.FindIndex(d => d == dadoT);
@@ -204,7 +206,14 @@ namespace SensorService
 
                     dadoT.valor = 0;
                 }
+
+                if (Math.Abs(dadoT.valor) > maxDataDadoValor)
+                {
+                    maxDataDadoValor = Math.Abs(dadoT.valor);
+                }
             }
+
+            dadoSensor.ftr_crista = maxDataDadoValor / dadoSensor.rms_acc;
 
             return dadosTransitorios;
         }
