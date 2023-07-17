@@ -229,6 +229,8 @@ namespace SensorWeb.Models
         [Display(Name = "Observation")]
         public string Observation { get; set; }
 
+        public int Alarm { get; set; }
+
         //public virtual ActuationType ActuationType { get; set; }
         //public virtual CardanShaftType CardanShaftType { get; set; }
         //public virtual Coupling Coupling { get; set; }

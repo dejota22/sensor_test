@@ -29,7 +29,10 @@
                                         Sensor
                                     </th>
                                     <th>
-                                        Device Id
+                                        Id
+                                    </th>
+                                    <th>
+                                        Alarme
                                     </th>
                                 </tr>
                             </thead>
@@ -39,13 +42,16 @@
                                 {
                                     <tr>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Name)
+                                            @item.Name
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Device.Code)
+                                            @item.Device.Tag
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Device.Tag)
+                                            @item.Device.Code
+                                        </td>
+                                        <td>
+                                            @item.Alarm
                                         </td>
                                     </tr>
                                 }

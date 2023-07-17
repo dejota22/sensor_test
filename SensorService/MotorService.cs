@@ -4,6 +4,7 @@ using System.Linq;
 using Core;
 using Core.DTO;
 using Core.Service;
+using Microsoft.EntityFrameworkCore;
 
 namespace SensorService
 {
@@ -93,8 +94,7 @@ namespace SensorService
         private IQueryable<Motor> GetQuery()
         {
             IQueryable<Motor> tb_Motor = _context.Motor;
-            var query = from Motor in tb_Motor
-                        select Motor;
+            var query = tb_Motor.Include(d => d.Device);
 
             return query;
         }

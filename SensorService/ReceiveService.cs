@@ -213,7 +213,7 @@ namespace SensorService
                 }
             }
 
-            dadoSensor.ftr_crista = maxDataDadoValor / dadoSensor.rms_acc;
+            dadoSensor.ftr_crista = tipo == 2 ? (maxDataDadoValor / dadoSensor.rms_spd) : (maxDataDadoValor / dadoSensor.rms_acc);
 
             return dadosTransitorios;
         }
