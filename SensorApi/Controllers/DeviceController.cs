@@ -205,22 +205,22 @@ namespace SensorApi.Controllers
 
                     sensor.SetupAcc.Add(new Setup()
                     {
-                        amostras = setup.acc_amostras.Value,
-                        eixo = setup.acc_eixo.Value,
-                        filtro = setup.acc_filtro.Value,
-                        freq_cut = setup.acc_freq_cut.Value,
-                        fs = setup.acc_fs.Value,
-                        Odr = setup.acc_odr.Value
+                        amostras = setup.acc_amostras.HasValue ? setup.acc_amostras.Value : 0,
+                        eixo = setup.acc_eixo.HasValue ? setup.acc_eixo.Value : 0,
+                        filtro = setup.acc_filtro.HasValue ? setup.acc_filtro.Value : 0,
+                        freq_cut = setup.acc_freq_cut.HasValue ? setup.acc_freq_cut.Value : 0,
+                        fs = setup.acc_fs.HasValue ? setup.acc_fs.Value : 0,
+                        Odr = setup.acc_odr.HasValue ? setup.acc_odr.Value : 0
                     });
 
                     sensor.SetupSpd.Add(new Setup()
                     {
-                        amostras = setup.spd_amostras.Value,
-                        eixo = setup.spd_eixo.Value,
-                        filtro = setup.spd_filtro.Value,
-                        freq_cut = setup.spd_freq_cut.Value,
-                        fs = setup.spd_fs.Value,
-                        Odr = setup.spd_odr.Value
+                        amostras = setup.spd_amostras.HasValue ? setup.spd_amostras.Value : 0,
+                        eixo = setup.spd_eixo.HasValue ? setup.spd_eixo.Value : 0,
+                        filtro = setup.spd_filtro.HasValue ? setup.spd_filtro.Value : 0,
+                        freq_cut = setup.spd_freq_cut.HasValue ? setup.spd_freq_cut.Value : 0,
+                        fs = setup.spd_fs.HasValue ? setup.spd_fs.Value : 0,
+                        Odr = setup.spd_odr.HasValue ? setup.spd_odr.Value : 0
                     });
 
                     var usrSetupData = _DeviceConfigurationService.GetUsrSetup(setup.MotorId.Value, setup.DeviceId.Value);
@@ -228,12 +228,12 @@ namespace SensorApi.Controllers
                     {
                         sensor.SetupUsr.Add(new Setup()
                         {
-                            amostras = usrSetupData.usr_amostras.Value,
-                            eixo = usrSetupData.usr_eixo.Value,
-                            filtro = usrSetupData.usr_filtro.Value,
-                            freq_cut = usrSetupData.usr_freq_cut.Value,
-                            fs = usrSetupData.usr_fs.Value,
-                            Odr = usrSetupData.usr_odr.Value
+                            amostras = usrSetupData.usr_amostras.HasValue ? usrSetupData.usr_amostras.Value : 0,
+                            eixo = usrSetupData.usr_eixo.HasValue ? usrSetupData.usr_eixo.Value : 0,
+                            filtro = usrSetupData.usr_filtro.HasValue ? usrSetupData.usr_filtro.Value : 0,
+                            freq_cut = usrSetupData.usr_freq_cut.HasValue ? usrSetupData.usr_freq_cut.Value : 0,
+                            fs = usrSetupData.usr_fs.HasValue ? usrSetupData.usr_fs.Value : 0,
+                            Odr = usrSetupData.usr_odr.HasValue ? usrSetupData.usr_odr.Value : 0
                         });
                     }
 
@@ -425,22 +425,22 @@ namespace SensorApi.Controllers
 
                     sensor.SetupAcc.Add(new Setup()
                     {
-                        amostras = setup.acc_amostras.Value,
-                        eixo = setup.acc_eixo.Value,
-                        filtro = setup.acc_filtro.Value,
-                        freq_cut = setup.acc_freq_cut.Value,
-                        fs = setup.acc_fs.Value,
-                        Odr = setup.acc_odr.Value
+                        amostras = setup.acc_amostras.HasValue ? setup.acc_amostras.Value : 0,
+                        eixo = setup.acc_eixo.HasValue ? setup.acc_eixo.Value : 0,
+                        filtro = setup.acc_filtro.HasValue ? setup.acc_filtro.Value : 0,
+                        freq_cut = setup.acc_freq_cut.HasValue ? setup.acc_freq_cut.Value : 0,
+                        fs = setup.acc_fs.HasValue ? setup.acc_fs.Value : 0,
+                        Odr = setup.acc_odr.HasValue ? setup.acc_odr.Value : 0
                     });
 
                     sensor.SetupSpd.Add(new Setup()
                     {
-                        amostras = setup.spd_amostras.Value,
-                        eixo = setup.spd_eixo.Value,
-                        filtro = setup.spd_filtro.Value,
-                        freq_cut = setup.spd_freq_cut.Value,
-                        fs = setup.spd_fs.Value,
-                        Odr = setup.spd_odr.Value
+                        amostras = setup.spd_amostras.HasValue ? setup.spd_amostras.Value : 0,
+                        eixo = setup.spd_eixo.HasValue ? setup.spd_eixo.Value : 0,
+                        filtro = setup.spd_filtro.HasValue ? setup.spd_filtro.Value : 0,
+                        freq_cut = setup.spd_freq_cut.HasValue ? setup.spd_freq_cut.Value : 0,
+                        fs = setup.spd_fs.HasValue ? setup.spd_fs.Value : 0,
+                        Odr = setup.spd_odr.HasValue ? setup.spd_odr.Value : 0
                     });
 
                     var usrSetupData = _DeviceConfigurationService.GetUsrSetup(setup.MotorId.Value, setup.DeviceId.Value);
@@ -448,12 +448,12 @@ namespace SensorApi.Controllers
                     {
                         sensor.SetupUsr.Add(new Setup()
                         {
-                            amostras = usrSetupData.usr_amostras.Value,
-                            eixo = usrSetupData.usr_eixo.Value,
-                            filtro = usrSetupData.usr_filtro.Value,
-                            freq_cut = usrSetupData.usr_freq_cut.Value,
-                            fs = usrSetupData.usr_fs.Value,
-                            Odr = usrSetupData.usr_odr.Value
+                            amostras = usrSetupData.usr_amostras.HasValue ? usrSetupData.usr_amostras.Value : 0,
+                            eixo = usrSetupData.usr_eixo.HasValue ? usrSetupData.usr_eixo.Value : 0,
+                            filtro = usrSetupData.usr_filtro.HasValue ? usrSetupData.usr_filtro.Value : 0,
+                            freq_cut = usrSetupData.usr_freq_cut.HasValue ? usrSetupData.usr_freq_cut.Value : 0,
+                            fs = usrSetupData.usr_fs.HasValue ? usrSetupData.usr_fs.Value : 0,
+                            Odr = usrSetupData.usr_odr.HasValue ? usrSetupData.usr_odr.Value : 0
                         });
                     }
 
@@ -655,22 +655,22 @@ namespace SensorApi.Controllers
 
                     sensor.SetupAcc.Add(new Setup()
                     {
-                        amostras = setup.acc_amostras.Value,
-                        eixo = setup.acc_eixo.Value,
-                        filtro = setup.acc_filtro.Value,
-                        freq_cut = setup.acc_freq_cut.Value,
-                        fs = setup.acc_fs.Value,
-                        Odr = setup.acc_odr.Value
+                        amostras = setup.acc_amostras.HasValue ? setup.acc_amostras.Value : 0,
+                        eixo = setup.acc_eixo.HasValue ? setup.acc_eixo.Value : 0,
+                        filtro = setup.acc_filtro.HasValue ? setup.acc_filtro.Value : 0,
+                        freq_cut = setup.acc_freq_cut.HasValue ? setup.acc_freq_cut.Value : 0,
+                        fs = setup.acc_fs.HasValue ? setup.acc_fs.Value : 0,
+                        Odr = setup.acc_odr.HasValue ? setup.acc_odr.Value : 0
                     });
 
                     sensor.SetupSpd.Add(new Setup()
                     {
-                        amostras = setup.spd_amostras.Value,
-                        eixo = setup.spd_eixo.Value,
-                        filtro = setup.spd_filtro.Value,
-                        freq_cut = setup.spd_freq_cut.Value,
-                        fs = setup.spd_fs.Value,
-                        Odr = setup.spd_odr.Value
+                        amostras = setup.spd_amostras.HasValue ? setup.spd_amostras.Value : 0,
+                        eixo = setup.spd_eixo.HasValue ? setup.spd_eixo.Value : 0,
+                        filtro = setup.spd_filtro.HasValue ? setup.spd_filtro.Value : 0,
+                        freq_cut = setup.spd_freq_cut.HasValue ? setup.spd_freq_cut.Value : 0,
+                        fs = setup.spd_fs.HasValue ? setup.spd_fs.Value : 0,
+                        Odr = setup.spd_odr.HasValue ? setup.spd_odr.Value : 0
                     });
 
                     var usrSetupData = _DeviceConfigurationService.GetUsrSetup(setup.MotorId.Value, setup.DeviceId.Value);
@@ -678,12 +678,12 @@ namespace SensorApi.Controllers
                     {
                         sensor.SetupUsr.Add(new Setup()
                         {
-                            amostras = usrSetupData.usr_amostras.Value,
-                            eixo = usrSetupData.usr_eixo.Value,
-                            filtro = usrSetupData.usr_filtro.Value,
-                            freq_cut = usrSetupData.usr_freq_cut.Value,
-                            fs = usrSetupData.usr_fs.Value,
-                            Odr = usrSetupData.usr_odr.Value
+                            amostras = usrSetupData.usr_amostras.HasValue ? usrSetupData.usr_amostras.Value : 0,
+                            eixo = usrSetupData.usr_eixo.HasValue ? usrSetupData.usr_eixo.Value : 0,
+                            filtro = usrSetupData.usr_filtro.HasValue ? usrSetupData.usr_filtro.Value : 0,
+                            freq_cut = usrSetupData.usr_freq_cut.HasValue ? usrSetupData.usr_freq_cut.Value : 0,
+                            fs = usrSetupData.usr_fs.HasValue ? usrSetupData.usr_fs.Value : 0,
+                            Odr = usrSetupData.usr_odr.HasValue ? usrSetupData.usr_odr.Value : 0
                         });
                     }
 
