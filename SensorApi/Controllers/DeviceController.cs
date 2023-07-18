@@ -238,17 +238,17 @@ namespace SensorApi.Controllers
                     }
 
                     horario.Config = Convert.ToInt32(setup.config);
-                    horario.QuantHorariosCards = setup.quant_horarios_cards.Value;
-                    horario.ModoHora = setup.modo_hora.Value;
-                    horario.IntervaloAnalise = setup.intervalo_analise.Value;
-                    horario.IntervaloAnaliseAlarme = setup.intervalo_analise_alarme.Value;
-                    horario.ContaEnvios = setup.conta_envios.Value;
+                    horario.QuantHorariosCards = setup.quant_horarios_cards.HasValue ? setup.quant_horarios_cards.Value : 0;
+                    horario.ModoHora = setup.modo_hora.HasValue ? setup.modo_hora.Value : 0;
+                    horario.IntervaloAnalise = setup.intervalo_analise.HasValue ? setup.intervalo_analise.Value : 0;
+                    horario.IntervaloAnaliseAlarme = setup.intervalo_analise_alarme.HasValue ? setup.intervalo_analise_alarme.Value : 0;
+                    horario.ContaEnvios = setup.conta_envios.HasValue ? setup.conta_envios.Value : 0;
                     horario.DiaEnvioRelat = setup.dia_envio_relat;
                     horario.HoraEnvioRelat = setup.hora_envio_relat;
                     horario.DiasRun = setup.dias_run;
                     horario.FimTurno = setup.fim_turno;
                     horario.InicioTurno = setup.inicio_turno;
-                    horario.t_card_normal = setup.t_card_normal.Value;
+                    horario.t_card_normal = setup.t_card_normal.HasValue ? setup.t_card_normal.Value : 0;
 
                     horario.HorariosEnviosCard = new List<HorariosEnviosCard>();
                     setup.DeviceConfigurationHorariosEnviosCard = _DeviceConfigurationService.GetHoras(setup.Id);
@@ -458,17 +458,17 @@ namespace SensorApi.Controllers
                     }
 
                     horario.Config = Convert.ToInt32(setup.config);
-                    horario.QuantHorariosCards = setup.quant_horarios_cards.Value;
-                    horario.ModoHora = setup.modo_hora.Value;
-                    horario.IntervaloAnalise = setup.intervalo_analise.Value;
-                    horario.IntervaloAnaliseAlarme = setup.intervalo_analise_alarme.Value;
-                    horario.ContaEnvios = setup.conta_envios.Value;
+                    horario.QuantHorariosCards = setup.quant_horarios_cards.HasValue ? setup.quant_horarios_cards.Value : 0;
+                    horario.ModoHora = setup.modo_hora.HasValue ? setup.modo_hora.Value : 0;
+                    horario.IntervaloAnalise = setup.intervalo_analise.HasValue ? setup.intervalo_analise.Value : 0;
+                    horario.IntervaloAnaliseAlarme = setup.intervalo_analise_alarme.HasValue ? setup.intervalo_analise_alarme.Value : 0;
+                    horario.ContaEnvios = setup.conta_envios.HasValue ? setup.conta_envios.Value : 0;
                     horario.DiaEnvioRelat = setup.dia_envio_relat;
                     horario.HoraEnvioRelat = setup.hora_envio_relat;
                     horario.DiasRun = setup.dias_run;
                     horario.FimTurno = setup.fim_turno;
                     horario.InicioTurno = setup.inicio_turno;
-                    horario.t_card_normal = setup.t_card_normal.Value;
+                    horario.t_card_normal = setup.t_card_normal.HasValue ? setup.t_card_normal.Value : 0;
 
                     horario.HorariosEnviosCard = new List<HorariosEnviosCard>();
                     setup.DeviceConfigurationHorariosEnviosCard = _DeviceConfigurationService.GetHoras(setup.Id);
@@ -688,17 +688,17 @@ namespace SensorApi.Controllers
                     }
 
                     horario.Config = Convert.ToInt32(setup.config);
-                    horario.QuantHorariosCards = setup.quant_horarios_cards.Value;
-                    horario.ModoHora = setup.modo_hora.Value;
-                    horario.IntervaloAnalise = setup.intervalo_analise.Value;
-                    horario.IntervaloAnaliseAlarme = setup.intervalo_analise_alarme.Value;
-                    horario.ContaEnvios = setup.conta_envios.Value;
+                    horario.QuantHorariosCards = setup.quant_horarios_cards.HasValue ? setup.quant_horarios_cards.Value : 0;
+                    horario.ModoHora = setup.modo_hora.HasValue ? setup.modo_hora.Value : 0;
+                    horario.IntervaloAnalise = setup.intervalo_analise.HasValue ? setup.intervalo_analise.Value : 0;
+                    horario.IntervaloAnaliseAlarme = setup.intervalo_analise_alarme.HasValue ? setup.intervalo_analise_alarme.Value : 0;
+                    horario.ContaEnvios = setup.conta_envios.HasValue ? setup.conta_envios.Value : 0;
                     horario.DiaEnvioRelat = setup.dia_envio_relat;
                     horario.HoraEnvioRelat = setup.hora_envio_relat;
                     horario.DiasRun = setup.dias_run;
                     horario.FimTurno = setup.fim_turno;
                     horario.InicioTurno = setup.inicio_turno;
-                    horario.t_card_normal = setup.t_card_normal.Value;
+                    horario.t_card_normal = setup.t_card_normal.HasValue ? setup.t_card_normal.Value : 0;
 
                     horario.HorariosEnviosCard = new List<HorariosEnviosCard>();
                     setup.DeviceConfigurationHorariosEnviosCard = _DeviceConfigurationService.GetHoras(setup.Id);
