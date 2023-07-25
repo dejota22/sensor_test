@@ -200,11 +200,11 @@
                             yaxis_label = 'm/s²';
                             break;
                         case '2':
-                            color_grafico = 'rgb(50,185,109)';
+                            color_grafico = 'rgb(51,102,204)';//'rgb(50,185,109)';
                             yaxis_label = 'mm/s';
                             break;
                         case '3':
-                            color_grafico = 'rgb(205,61,93)';
+                            color_grafico = 'rgb(51,102,204)';//'rgb(205,61,93)';
                             yaxis_label = 'FC';
                             break;
                     }
@@ -262,8 +262,14 @@
                 },
                 colors: [color_grafico]
             };
-            //
-            var plot = $.plot($('#chartdiv'), [{ data: valor_data }, { data: valor_limite_red, color: 'red' }, { data: valor_limite_yel, color: 'gold' }], options);
+
+            var dataData = [{ data: valor_data }, { data: valor_limite_red, color: 'red' }, { data: valor_limite_yel, color: 'gold' }];
+            if (yaxis_label == 'FC')
+            {
+                dataData = [{ data: valor_data }];
+            }
+
+            var plot = $.plot($('#chartdiv'), dataData, options);
 
             $("#chartdiv").bind("plotselected", function (event, ranges) {
                 $.each(plot.getXAxes(), function (_, axis) {
