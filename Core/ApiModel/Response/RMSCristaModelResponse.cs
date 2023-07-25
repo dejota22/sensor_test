@@ -8,5 +8,6 @@ namespace Core.ApiModel.Response
     {
         public long DataReceive { get; set; }
         public double Value { get; set; }
+        public string Origem { get; set; }
     }
 }

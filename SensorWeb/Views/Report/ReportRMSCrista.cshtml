@@ -197,15 +197,15 @@
                     {
                         case '1':
                             color_grafico = 'rgb(51,102,204)';
-                            yaxis_label = 'RMS em Aceleração';
+                            yaxis_label = 'm/s²';
                             break;
                         case '2':
                             color_grafico = 'rgb(50,185,109)';
-                            yaxis_label = 'RMS Velocidade';
+                            yaxis_label = 'mm/s';
                             break;
                         case '3':
                             color_grafico = 'rgb(205,61,93)';
-                            yaxis_label = 'Fator de Crista';
+                            yaxis_label = 'FC';
                             break;
                     }
 
@@ -219,9 +219,9 @@
                             let limiteYel = $('#limiteYel').val();
 
                         $.each(data.dgraf, function (index, value) {
-                                valor_data.push([value.dataReceive, value.value]);
-                                valor_limite_red.push([value.dataReceive, data.limitered]);
-                                valor_limite_yel.push([value.dataReceive, data.limiteyel]);
+                                valor_data.push([value.dataReceive, value.value, value.origem]);
+                                valor_limite_red.push([value.dataReceive, data.limitered, "Limite"]);
+                                valor_limite_yel.push([value.dataReceive, data.limiteyel, "Limite"]);
                         });
 
                         drawGraficos();
@@ -247,7 +247,7 @@
                 },
                 yaxes: [
                     { position: 'left', show: true, showTicks: true },
-                    { position: 'left', show: true, axisLabel: 'm/s²', showTickLabels: 'none', gridLines: false, showTicks: false }
+                    { position: 'left', show: true, axisLabel: yaxis_label, showTickLabels: 'none', gridLines: false, showTicks: false }
                 ],
                 xaxes: [
                     { position: 'bottom', show: true, showTicks: true, mode: "time", timeBase: "milliseconds", timeformat: "%d/%m %H:%M" },
@@ -258,7 +258,7 @@
                 },
                 tooltip: {
                     show: true,
-                    content: 'Data: %x <br> m/s²: %y.4'
+                    content: 'Data: %x <br> '+ yaxis_label +': %y.4 <br> Origem: %ct' 
                 },
                 colors: [color_grafico]
             };

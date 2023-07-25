@@ -264,7 +264,8 @@ namespace SensorService
             var listDataMod = listData.Select(d => new RMSCristaModelResponse()
             {
                 DataReceive = (d.DataReceive.Ticks / TimeSpan.TicksPerMillisecond),
-                Value = reportType == 1 ? d.rms_acc : reportType == 2 ? d.rms_spd : reportType == 3 ? d.ftr_crista : 0
+                Value = reportType == 1 ? d.rms_acc : reportType == 2 ? d.rms_spd : reportType == 3 ? d.ftr_crista : 0,
+                Origem = "Completo"
             });
 
             var listGlobalMod = new List<RMSCristaModelResponse>();
@@ -272,6 +273,7 @@ namespace SensorService
             {
                 var globalMod = new RMSCristaModelResponse();
                 globalMod.DataReceive = (data.DataReceive.Ticks / TimeSpan.TicksPerMillisecond);
+                globalMod.Origem = "Global";
 
                 if (reportType == 1 && eixo == 1)
                     globalMod.Value = data.rms_acc_X;

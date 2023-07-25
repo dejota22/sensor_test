@@ -105,8 +105,8 @@ namespace SensorWeb.Controllers
             var dadosDataReceive = _receiveService.GetDataUnionGlobalByDateType(deviceId, motorId, startDate, endDate, reportType, eixo);
             var limites = _deviceConfigService.GetLimitesAccSpd(deviceId, motorId, reportType);
 
-            var limiteRed = limites["red"].Value;
-            var limiteYel = limites["yel"].Value;
+            var limiteRed = limites != null ? limites["red"].Value : 0;
+            var limiteYel = limites != null ? limites["yel"].Value : 0;
 
             return Json(new { dgraf = dadosDataReceive, limitered = limiteRed, limiteyel = limiteYel });
         }
