@@ -212,6 +212,8 @@
                     $.get('@Url.Action("ReportRMSCristaUpdate")?deviceId=' + deviceId + '&motorId=' + motorId + '&startDate=' + startDate +
                         '&endDate=' + endDate + '&reportType=' + reportType + '&eixo=' + eixo, function (data) {
                             valor_data = [];
+                            valor_limite_red = [];
+                            valor_limite_yel = [];
                             $('#grafico-wrapper').show();
                             $('.head-row').show();
 
@@ -281,7 +283,6 @@
                 plot.draw();
                 plot.clearSelection();
 
-                // don't fire event on the overview to prevent eternal loop
                 overview.setSelection(ranges, true);
             });
 
