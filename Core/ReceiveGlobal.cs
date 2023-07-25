@@ -2,12 +2,14 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core
 {
     public partial class ReceiveGlobal
     {
+        [Key]
         public int IdReceiveGlobal { get; set; }
         public DateTime DataReceive { get; set; }
         public int? IdDeviceConfiguration { get; set; }
