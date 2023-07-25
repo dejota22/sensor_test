@@ -21,17 +21,19 @@ namespace SensorWeb.Controllers
         IMapper _mapper;
         private readonly IStringLocalizer<Resources.CommonResources> _localizer;
         IReceiveService _receiveService;
+        IDeviceConfigurationService _deviceConfigService;
 
         /// <summary>
         /// Construtor
         /// </summary>
         /// <param name="mapper"></param>
         /// <param name="localizer"></param>
-        public ReportController(IMapper mapper, IStringLocalizer<Resources.CommonResources> localizer, IReceiveService ReceiveService)
+        public ReportController(IMapper mapper, IStringLocalizer<Resources.CommonResources> localizer, IReceiveService ReceiveService, IDeviceConfigurationService DeviceConfigurationService)
         {
             _mapper = mapper;
             _localizer = localizer;
             _receiveService = ReceiveService;
+            _deviceConfigService = DeviceConfigurationService;
         }
 
         // GET: ReportController
@@ -101,8 +103,12 @@ namespace SensorWeb.Controllers
         public JsonResult ReportRMSCristaUpdate(int deviceId, int motorId, DateTime startDate, DateTime endDate, int reportType, int eixo)
         {
             var dadosDataReceive = _receiveService.GetDataUnionGlobalByDateType(deviceId, motorId, startDate, endDate, reportType, eixo);
+            var limites = _deviceConfigService.GetLimitesAccSpd(deviceId, motorId, reportType);
 
-            return Json(dadosDataReceive);
+            var limiteRed = limites["red"].Value;
+            var limiteYel = limites["yel"].Value;
+
+            return Json(new { dgraf = dadosDataReceive, limitered = limiteRed, limiteyel = limiteYel });
         }
 
         public static string GetSetupInfo(string attr, int index)

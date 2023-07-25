@@ -147,6 +147,9 @@
 
         </div>
 
+        <input id="limiteRed" type="hidden" value="@ViewBag.LimiteRed" />
+        <input id="limiteYel" type="hidden" value="@ViewBag.LimiteYel" />
+
 </div>
 
 
@@ -173,6 +176,8 @@
 
     <script type="text/javascript">
         var valor_data = [];
+        var valor_limite_red = [];
+        var valor_limite_yel = [];
         var color_grafico = '';
         var yaxis_label = '';
 
@@ -206,12 +211,17 @@
 
                     $.get('@Url.Action("ReportRMSCristaUpdate")?deviceId=' + deviceId + '&motorId=' + motorId + '&startDate=' + startDate +
                         '&endDate=' + endDate + '&reportType=' + reportType + '&eixo=' + eixo, function (data) {
-                        valor_data = [];
-                        $('#grafico-wrapper').show();
-                        $('.head-row').show();
+                            valor_data = [];
+                            $('#grafico-wrapper').show();
+                            $('.head-row').show();
 
-                        $.each(data, function (index, value) {
+                            let limiteRed = $('#limiteRed').val();
+                            let limiteYel = $('#limiteYel').val();
+
+                        $.each(data.dgraf, function (index, value) {
                                 valor_data.push([value.dataReceive, value.value]);
+                                valor_limite_red.push([value.dataReceive, data.limitered]);
+                                valor_limite_yel.push([value.dataReceive, data.limiteyel]);
                         });
 
                         drawGraficos();
@@ -236,24 +246,24 @@
                     sampling: 'average'
                 },
                 yaxes: [
-                    { position: 'left', show: true, showTicks: true }
-                    //{ position: 'left', show: true, axisLabel: yaxis_label, showTickLabels: 'none', gridLines: false, showTicks: false }
+                    { position: 'left', show: true, showTicks: true },
+                    { position: 'left', show: true, axisLabel: 'm/s²', showTickLabels: 'none', gridLines: false, showTicks: false }
                 ],
                 xaxes: [
-                    { position: 'bottom', show: true, showTicks: true, mode: "time", timeBase: "milliseconds", timeformat: "%d/%m %H:%M" }
-                    //{ position: 'bottom', show: true, axisLabel: 'Data', showTickLabels: 'none', gridLines: false, showTicks: false }
+                    { position: 'bottom', show: true, showTicks: true, mode: "time", timeBase: "milliseconds", timeformat: "%d/%m %H:%M" },
+                    { position: 'bottom', show: true, axisLabel: 'Data', showTickLabels: 'none', gridLines: false, showTicks: false }
                 ],
                 grid: {
                     hoverable: true
                 },
                 tooltip: {
                     show: true,
-                    content: '%y.4'
+                    content: 'Data: %x <br> m/s²: %y.4'
                 },
                 colors: [color_grafico]
             };
-
-            var plot = $.plot($('#chartdiv'), [{ data: valor_data }], options);
+            //
+            var plot = $.plot($('#chartdiv'), [{ data: valor_data }, { data: valor_limite_red, color: 'red' }, { data: valor_limite_yel, color: 'gold' }], options);
 
             $("#chartdiv").bind("plotselected", function (event, ranges) {
                 $.each(plot.getXAxes(), function (_, axis) {

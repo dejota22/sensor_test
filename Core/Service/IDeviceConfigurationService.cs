@@ -34,5 +34,7 @@ namespace Core.Service
         DeviceConfigurationSpecialRead GetUsrSetup(int motorId, int deviceId);
 
         List<DeviceConfigurationHorariosEnviosCard> GetHoras(int deviceConfigId);
+
+        IDictionary<string, decimal?> GetLimitesAccSpd(int deviceId, int motorId, int reportType);
     }
 }

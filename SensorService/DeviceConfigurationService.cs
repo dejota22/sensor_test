@@ -259,6 +259,30 @@ namespace SensorService
             }
         }
 
+        public IDictionary<string, decimal?> GetLimitesAccSpd(int deviceId, int motorId, int reportType)
+        {
+            var result = GetQuery().Where(d => d.MotorId == motorId && d.DeviceId == deviceId).FirstOrDefault();
+            if (result != null && reportType != 3)
+            {
+                Dictionary<string, decimal?> results = new Dictionary<string, decimal?>();
+                if (reportType == 1)
+                {
+                    results.Add("red", result.rms_acc_red);
+                    results.Add("yel", result.rms_acc_yel);
+                }
+                else if (reportType == 2)
+                {
+                    results.Add("red", result.rms_spd_red);
+                    results.Add("yel", result.rms_spd_yel);
+                }
+
+                return results;
+            }
+            
+
+            return null;
+        }
+
         List<SelectListItemDTO> IDeviceConfigurationService.GetQueryDropDownList(int IdMotor)
         {
             return GetQueryDropDownList(IdMotor);
