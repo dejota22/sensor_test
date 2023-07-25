@@ -266,7 +266,7 @@ namespace SensorService
                 DataReceive = (d.DataReceive.Ticks / TimeSpan.TicksPerMillisecond),
                 Value = reportType == 1 ? d.rms_acc : reportType == 2 ? d.rms_spd : reportType == 3 ? d.ftr_crista : 0,
                 Origem = "Completo"
-            });
+            }).ToList();
 
             var listGlobalMod = new List<RMSCristaModelResponse>();
             foreach (var data in listGlobal)
@@ -287,6 +287,8 @@ namespace SensorService
                     globalMod.Value = data.rms_spd_Y;
                 if (reportType == 2 && eixo == 3)
                     globalMod.Value = data.rms_spd_Z;
+
+                listGlobalMod.Add(globalMod);
             }
 
             listaReport = listDataMod.Union(listGlobalMod).ToList();
