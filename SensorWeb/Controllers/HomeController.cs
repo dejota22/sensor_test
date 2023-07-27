@@ -110,15 +110,13 @@ namespace SensorWeb.Controllers
             var allData = _receiveService.GetAllData().ToList();
             if (allData != null && allData.Any())
             {
-                var maxDataReceiveData = allData.Max(d => d.DataReceive);
-                receiveData = allData.Where(d => d.DataReceive == maxDataReceiveData).FirstOrDefault();
+                receiveData = allData.OrderByDescending(d => d.DataReceive).FirstOrDefault();
             }
 
             var allGlobal = _receiveService.GetAllGlobal().ToList();
             if (allGlobal != null && allGlobal.Any())
             {
-                var maxDataReceiveGlobal = allGlobal.Max(d => d.DataReceive);
-                receiveGlobal = allGlobal.Where(d => d.DataReceive == maxDataReceiveGlobal).FirstOrDefault();
+                receiveGlobal = allGlobal.OrderByDescending(d => d.DataReceive).FirstOrDefault();
             }
 
             var deviceCode = string.Empty;

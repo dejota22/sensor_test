@@ -40,7 +40,9 @@
                             <tbody>
                                 @foreach (var item in Model)
                                 {
-                                    <tr>
+                                    string lineColor = item.Alarm != 0 ? "background-color:#crimson;" : "";
+
+                                    <tr style="@lineColor">
                                         <td>
                                             @item.Name
                                         </td>
@@ -51,7 +53,7 @@
                                             @item.Device.Code
                                         </td>
                                         <td>
-                                            @item.Alarm
+                                            @(item.Alarm == 0 ? "Sem Alarme" : item.Alarm == 1 ? "Alarme Eixo X" : item.Alarm == 2 ? "Alarme Eixo Y" : item.Alarm == 3 ? "Alarme Eixo Z" : "")
                                         </td>
                                     </tr>
                                 }
