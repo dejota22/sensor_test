@@ -269,26 +269,29 @@ namespace SensorService
             }).ToList();
 
             var listGlobalMod = new List<RMSCristaModelResponse>();
-            foreach (var data in listGlobal)
+            if (reportType != 3)
             {
-                var globalMod = new RMSCristaModelResponse();
-                globalMod.DataReceive = (long)(data.DataReceive.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds);
-                globalMod.Origem = "Global";
+                foreach (var data in listGlobal)
+                {
+                    var globalMod = new RMSCristaModelResponse();
+                    globalMod.DataReceive = (long)(data.DataReceive.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds);
+                    globalMod.Origem = "Global";
 
-                if (reportType == 1 && eixo == 1)
-                    globalMod.Value = data.rms_acc_X;
-                if (reportType == 1 && eixo == 2)
-                    globalMod.Value = data.rms_acc_Y;
-                if (reportType == 1 && eixo == 3)
-                    globalMod.Value = data.rms_acc_Z;
-                if (reportType == 2 && eixo == 1)
-                    globalMod.Value = data.rms_spd_X;
-                if (reportType == 2 && eixo == 2)
-                    globalMod.Value = data.rms_spd_Y;
-                if (reportType == 2 && eixo == 3)
-                    globalMod.Value = data.rms_spd_Z;
+                    if (reportType == 1 && eixo == 1)
+                        globalMod.Value = data.rms_acc_X;
+                    if (reportType == 1 && eixo == 2)
+                        globalMod.Value = data.rms_acc_Y;
+                    if (reportType == 1 && eixo == 3)
+                        globalMod.Value = data.rms_acc_Z;
+                    if (reportType == 2 && eixo == 1)
+                        globalMod.Value = data.rms_spd_X;
+                    if (reportType == 2 && eixo == 2)
+                        globalMod.Value = data.rms_spd_Y;
+                    if (reportType == 2 && eixo == 3)
+                        globalMod.Value = data.rms_spd_Z;
 
-                listGlobalMod.Add(globalMod);
+                    listGlobalMod.Add(globalMod);
+                }
             }
 
             listaReport = listDataMod.Union(listGlobalMod).OrderBy(u => u.DataReceive).ToList();
