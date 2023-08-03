@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Core.Utils;
 
 namespace SensorWeb.Controllers
 {
@@ -80,6 +81,38 @@ namespace SensorWeb.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             return RedirectToAction("Login", "Login");
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult EsqueciSenha(string email)
+        {
+            User user = _userService.GetByEmail(email);
+
+            if (user != null)
+            {
+                string senha = MD5Hash.GerarSenhaAleatoria();
+                user.Password = MD5Hash.CalculaHash(senha);
+                user.Contact = null;
+                user.UserType = null;
+                _userService.Edit(user);
+
+                try
+                {
+                    var mailMsg = string.Format("<p>Olá {0}</p> <p>Segue abaixo as credenciais para acesso à plataforma:</p> <p>E-mail: <strong>{1}</strong><br>Senha: <strong>{2}</strong></p>",
+                        user.Contact.FirstName, user.Email, senha);
+                    SendMail.Send(user.Email, "Esqueci minha senha - IOT NEST/VIBRAÇÃO", mailMsg);
+
+                    ViewData["Error"] = "E-mail enviado";
+                }
+                catch (Exception) { ViewData["Error"] = "Erro ao enviar e-mail"; }
+            }
+            else
+            {
+                ViewData["Error"] = _localizer.Get("UserLoginInvalid");
+            }
+
+            return View("Login");
         }
     }
 }

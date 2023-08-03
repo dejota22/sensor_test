@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core;
 using Core.Service;
+using Core.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -81,6 +82,14 @@ namespace SensorWeb.Controllers
                     var user = _mapper.Map<User>(userModel);
 
                     _userService.Insert(user);
+
+                    try
+                    {
+                        var mailMsg = string.Format("<p>Bem vindo {0}</p> <p>Segue abaixo as credenciais para acesso à plataforma:</p> <p>E-mail: <strong>{1}</strong><br>Senha: <strong>{2}</strong></p>", 
+                            userModel.Contact.FirstName, user.Email, userModel.PasswordConfirm);
+                        SendMail.Send(userModel.Email, "Novo Cadastro - IOT NEST/VIBRAÇÃO", mailMsg);
+                    }
+                    catch (Exception) { }
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -166,6 +175,30 @@ namespace SensorWeb.Controllers
             {
                 return View();
             }
+        }
+
+        [HttpGet]
+        public ActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ChangePassword(string Password)
+        {
+            var user = _userService.Get(int.Parse(LoggedUserId));
+
+            if (user != null)
+            {
+                user.Password = MD5Hash.CalculaHash(Password);
+                user.Contact = null;
+                user.UserType = null;
+                _userService.Edit(user);
+
+                ViewData["Error"] = _localizer.Get("Password Changed");
+            }
+
+            return View();
         }
     }
 }

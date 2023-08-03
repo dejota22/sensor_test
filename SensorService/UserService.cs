@@ -171,6 +171,11 @@ namespace SensorService
             return GetQuery().Where(x => x.Contact.FirstName.Equals(name));
         }
 
+        User IUserService.GetByEmail(string email)
+        {
+            return GetQuery().Where(x => x.Email.Equals(email)).FirstOrDefault();
+        }
+
         int IUserService.Insert(User user)
         {
             user.Contact = new Contact

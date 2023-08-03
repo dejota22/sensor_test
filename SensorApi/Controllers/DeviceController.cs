@@ -589,6 +589,7 @@ namespace SensorApi.Controllers
             response.Sn = deviceGlobalId;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("deviceData")]
         public ContentResult AddDeviceData([FromBody] DeviceDataRequest deviceData)

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 
 /* 
  * Criptografia de senha em MD5 Hash.
@@ -37,6 +40,17 @@ namespace Core
             {
                 return null; // Caso encontre erro retorna nulo
             }
+        }
+
+        private static Random random = new Random();
+        public static string GerarSenhaAleatoria()
+        {
+            const string chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+            var senha = new string(Enumerable.Repeat(chars, 6)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            return senha;
         }
     }
 

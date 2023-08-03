@@ -153,6 +153,9 @@
   <data name="Category" xml:space="preserve">
     <value>Categoria</value>
   </data>
+  <data name="Change Password" xml:space="preserve">
+    <value>Trocar Minha Senha</value>
+  </data>
   <data name="Cnpj" xml:space="preserve">
     <value>CNPJ</value>
   </data>
@@ -404,6 +407,9 @@
   </data>
   <data name="Password" xml:space="preserve">
     <value>Senha</value>
+  </data>
+  <data name="Password Changed" xml:space="preserve">
+    <value>Senha atualizada com sucesso</value>
   </data>
   <data name="Password Confirm" xml:space="preserve">
     <value>Confirmação de Senha</value>

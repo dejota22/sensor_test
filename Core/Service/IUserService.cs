@@ -16,6 +16,9 @@ namespace Core.Service
         void Remove(int iduser);
 
         IEnumerable<User> GetByName(string name);
+
+        User GetByEmail(string email);
+
         IEnumerable<User> GetAll();
 
         IEnumerable<UserDTO> GetAllDTO();
