@@ -102,46 +102,48 @@ namespace SensorWeb.Controllers
             return Redirect(returnUrl);
         }
 
-        public KeyValuePair<string,int> GetLastDeviceCodeAlarme()
+        public Dictionary<string,int> GetLastDeviceCodeAlarme()
         {
-            ReceiveData receiveData = null;
-            ReceiveGlobal receiveGlobal = null;
+            var returnDictionary = new Dictionary<string, int>();
+            var receiveDataAndGlobal = new List<DataAndGlobalModel>();
 
-            var allData = _receiveService.GetAllData().ToList();
+            var allData = _receiveService.GetAllData().OrderByDescending(d => d.DataReceive).ToList();
+            var allGlobal = _receiveService.GetAllGlobal().OrderByDescending(d => d.DataReceive).ToList();
+            
             if (allData != null && allData.Any())
             {
-                receiveData = allData.OrderByDescending(d => d.DataReceive).FirstOrDefault();
+                foreach (var data in allData)
+                {
+                    if (receiveDataAndGlobal.Any(rdg => rdg.id == data.id) == false)
+                    {
+                        receiveDataAndGlobal.Add(new DataAndGlobalModel() { id = data.id, alarm = data.alarme, dataReceive = data.DataReceive });
+                    }
+                }
             }
-
-            var allGlobal = _receiveService.GetAllGlobal().ToList();
             if (allGlobal != null && allGlobal.Any())
             {
-                receiveGlobal = allGlobal.OrderByDescending(d => d.DataReceive).FirstOrDefault();
+                foreach (var global in allGlobal)
+                {
+                    if (receiveDataAndGlobal.Any(rdg => rdg.id == global.id) == false)
+                    {
+                        receiveDataAndGlobal.Add(new DataAndGlobalModel() { id = global.id, alarm = global.alrm, dataReceive = global.DataReceive });
+                    }
+                }
             }
 
-            var deviceCode = string.Empty;
-            var alarm = 0;
-            if (receiveData != null && receiveGlobal != null)
+            receiveDataAndGlobal = receiveDataAndGlobal.OrderByDescending(rdg => rdg.dataReceive).ToList();
+            foreach (var dataAndGlobal in receiveDataAndGlobal)
             {
-                deviceCode = receiveData.DataReceive > receiveGlobal.DataReceive ? receiveData.id : receiveGlobal.id;
-                alarm = receiveData.DataReceive > receiveGlobal.DataReceive ? receiveData.alarme : receiveGlobal.alrm;
-            }
-            else if (receiveData != null)
-            {
-                deviceCode = receiveData.id;
-                alarm = receiveData.alarme;
+                if (returnDictionary.Any(rd => rd.Key == dataAndGlobal.id) == false)
+                {
+                    returnDictionary.Add(dataAndGlobal.id, dataAndGlobal.alarm);
+                }
             }
                 
-            else if (receiveGlobal != null)
-            {
-                deviceCode = receiveGlobal.id;
-                alarm = receiveGlobal.alrm;
-            }
-                
-            return new KeyValuePair<string,int>(deviceCode,alarm);
+            return returnDictionary;
         }
 
-        private List<MotorModel> GetMotorModels(List<Motor> listaMotores, KeyValuePair<string, int> deviceCodeAndAlarm)
+        private List<MotorModel> GetMotorModels(List<Motor> listaMotores, Dictionary<string, int> deviceCodeAndAlarm)
         {
             List<MotorModel> list = new List<MotorModel>();
 
@@ -153,9 +155,9 @@ namespace SensorWeb.Controllers
                 model.DeviceId = m.DeviceId;
                 model.Device = m.Device;
 
-                if (m.Device.Code == deviceCodeAndAlarm.Key)
+                if (deviceCodeAndAlarm.Any(dca => dca.Key == m.Device.Code))
                 {
-                    model.Alarm = deviceCodeAndAlarm.Value;
+                    model.Alarm = deviceCodeAndAlarm[m.Device.Code];
                 }
 
                 list.Add(model);
@@ -163,5 +165,12 @@ namespace SensorWeb.Controllers
 
             return list;
         }
+    }
+
+    public class DataAndGlobalModel
+    {
+        public string id;
+        public int alarm;
+        public DateTime dataReceive;
     }
 }

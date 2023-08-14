@@ -40,7 +40,9 @@
                             <tbody>
                                 @foreach (var item in Model)
                                 {
-                                    string lineColor = item.Alarm != 0 ? "background-color:#crimson;" : "";
+                                    string lineColor = item.Alarm >= 7 ? "background-color:crimson;" : item.Alarm >= 1 ? "background-color:gold;" : "";
+                                    string alarmName = item.Alarm == 0 ? "Sem Alarme" : new int[] { 1, 4, 7, 10 }.Contains(item.Alarm) ? "Alarme Eixo X" :
+                                        new int[] { 2, 5, 8, 11 }.Contains(item.Alarm) ? "Alarme Eixo Y" : new int[] { 3, 6, 9, 12 }.Contains(item.Alarm) ? "Alarme Eixo Z" : "";
 
                                     <tr style="@lineColor">
                                         <td>
@@ -53,7 +55,7 @@
                                             @item.Device.Code
                                         </td>
                                         <td>
-                                            @(item.Alarm == 0 ? "Sem Alarme" : item.Alarm == 1 ? "Alarme Eixo X" : item.Alarm == 2 ? "Alarme Eixo Y" : item.Alarm == 3 ? "Alarme Eixo Z" : "")
+                                            @alarmName
                                         </td>
                                     </tr>
                                 }
