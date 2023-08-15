@@ -236,6 +236,18 @@ namespace SensorApi.Controllers
                             Odr = usrSetupData.usr_odr.HasValue ? usrSetupData.usr_odr.Value : 0
                         });
                     }
+                    else
+                    {
+                        sensor.SetupUsr.Add(new Setup()
+                        {
+                            amostras = 0,
+                            eixo = 0,
+                            filtro = 0,
+                            freq_cut = 0,
+                            fs = 0,
+                            Odr = 0
+                        });
+                    }
 
                     horario.Config = Convert.ToInt32(setup.config);
                     horario.QuantHorariosCards = setup.quant_horarios_cards.HasValue ? setup.quant_horarios_cards.Value : 0;
@@ -456,6 +468,18 @@ namespace SensorApi.Controllers
                             Odr = usrSetupData.usr_odr.HasValue ? usrSetupData.usr_odr.Value : 0
                         });
                     }
+                    else
+                    {
+                        sensor.SetupUsr.Add(new Setup()
+                        {
+                            amostras = 0,
+                            eixo = 0,
+                            filtro = 0,
+                            freq_cut = 0,
+                            fs = 0,
+                            Odr = 0
+                        });
+                    }
 
                     horario.Config = Convert.ToInt32(setup.config);
                     horario.QuantHorariosCards = setup.quant_horarios_cards.HasValue ? setup.quant_horarios_cards.Value : 0;
@@ -567,6 +591,12 @@ namespace SensorApi.Controllers
                     }
                 },
                 SetupUsr = new List<Setup>()
+                {
+                    new Setup()
+                    {
+                        amostras = 0, eixo = 0, filtro = 0, freq_cut = 0, fs = 0, Odr = 0
+                    }
+                }
             };
 
             Horario horario = new Horario()
@@ -685,6 +715,18 @@ namespace SensorApi.Controllers
                             freq_cut = usrSetupData.usr_freq_cut.HasValue ? usrSetupData.usr_freq_cut.Value : 0,
                             fs = usrSetupData.usr_fs.HasValue ? usrSetupData.usr_fs.Value : 0,
                             Odr = usrSetupData.usr_odr.HasValue ? usrSetupData.usr_odr.Value : 0
+                        });
+                    }
+                    else
+                    {
+                        sensor.SetupUsr.Add(new Setup()
+                        {
+                            amostras = 0,
+                            eixo = 0,
+                            filtro = 0,
+                            freq_cut = 0,
+                            fs = 0,
+                            Odr = 0
                         });
                     }
 
