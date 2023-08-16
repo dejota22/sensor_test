@@ -261,6 +261,7 @@ namespace SensorApi.Controllers
                     horario.FimTurno = setup.fim_turno;
                     horario.InicioTurno = setup.inicio_turno;
                     horario.t_card_normal = setup.t_card_normal.HasValue ? setup.t_card_normal.Value : 0;
+                    horario.QuantAlarme = setup.quant_alarme ?? 0;
 
                     horario.HorariosEnviosCard = new List<HorariosEnviosCard>();
                     setup.DeviceConfigurationHorariosEnviosCard = _DeviceConfigurationService.GetHoras(setup.Id);
@@ -493,6 +494,7 @@ namespace SensorApi.Controllers
                     horario.FimTurno = setup.fim_turno;
                     horario.InicioTurno = setup.inicio_turno;
                     horario.t_card_normal = setup.t_card_normal.HasValue ? setup.t_card_normal.Value : 0;
+                    horario.QuantAlarme = setup.quant_alarme ?? 0;
 
                     horario.HorariosEnviosCard = new List<HorariosEnviosCard>();
                     setup.DeviceConfigurationHorariosEnviosCard = _DeviceConfigurationService.GetHoras(setup.Id);
@@ -742,6 +744,7 @@ namespace SensorApi.Controllers
                     horario.FimTurno = setup.fim_turno;
                     horario.InicioTurno = setup.inicio_turno;
                     horario.t_card_normal = setup.t_card_normal.HasValue ? setup.t_card_normal.Value : 0;
+                    horario.QuantAlarme = setup.quant_alarme ?? 0;
 
                     horario.HorariosEnviosCard = new List<HorariosEnviosCard>();
                     setup.DeviceConfigurationHorariosEnviosCard = _DeviceConfigurationService.GetHoras(setup.Id);
