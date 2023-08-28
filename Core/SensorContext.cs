@@ -26,6 +26,7 @@ namespace Core
         public virtual DbSet<Compressor> Compressor { get; set; }
         public virtual DbSet<CompressorType> CompressorType { get; set; }
         public virtual DbSet<Contact> Contact { get; set; }
+        public virtual DbSet<CompanyAlertContact> CompanyAlertContact { get; set; }
         public virtual DbSet<Coupling> Coupling { get; set; }
         public virtual DbSet<CouplingType> CouplingType { get; set; }
         public virtual DbSet<Dados> Dados { get; set; }
@@ -482,6 +483,36 @@ namespace Core
                     .WithMany(p => p.InverseManagedByNavigation)
                     .HasForeignKey(d => d.ManagedBy)
                     .HasConstraintName("fk_contact_contact1");
+            });
+
+            modelBuilder.Entity<CompanyAlertContact>(entity =>
+            {
+                entity.ToTable("company_alert_contact");
+
+                entity.HasIndex(e => e.CompanyId)
+                    .HasName("fk_contact_company1_idx");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CompanyId).HasColumnName("company_id");
+
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasColumnName("email")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Company)
+                    .WithMany(p => p.CompanyAlertContact)
+                    .HasForeignKey(d => d.CompanyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_cac_companyid_company_id");
             });
 
             modelBuilder.Entity<Coupling>(entity =>

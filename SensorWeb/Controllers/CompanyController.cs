@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using static QRCoder.PayloadGenerator.SwissQrCode;
 
 namespace SensorWeb.Controllers
 {
@@ -21,6 +22,7 @@ namespace SensorWeb.Controllers
         ICompanyService _companyService;
         ICompanyTypeService _companyTypeService;
         IUserService _userService;
+        ICompanyAlertContactService _companyAlertContactService;
         IMapper _mapper;
         private readonly IStringLocalizer<Resources.CommonResources> _localizer;
 
@@ -33,11 +35,13 @@ namespace SensorWeb.Controllers
         public CompanyController(ICompanyService companyService,
                                   ICompanyTypeService companyTypeService,
                                   IUserService userService,
+                                  ICompanyAlertContactService companyAlertContactService,
                                   IMapper mapper,
                                   IStringLocalizer<Resources.CommonResources> localizer)
         {
             _companyService = companyService;
             _companyTypeService = companyTypeService;
+            _companyAlertContactService = companyAlertContactService;
             _userService = userService;
             _mapper = mapper;
             _localizer = localizer;
@@ -117,6 +121,8 @@ namespace SensorWeb.Controllers
             if (CompanyModel != null)
                 CompanyModel.CompanyType = GetCompanyType();
 
+            ViewBag.Contacts = _companyAlertContactService.GetByCompany(id).ToList();
+
             return View(CompanyModel);
         }
 
@@ -186,6 +192,27 @@ namespace SensorWeb.Controllers
             }
 
             return list;
+        }
+
+        [HttpPost]
+        public JsonResult InsertCompanyContact(int cId, string name, string email)
+        {
+            var contact = new CompanyAlertContact()
+            {
+                CompanyId = cId, Name = name, Email = email
+            };
+
+            _companyAlertContactService.Insert(contact);
+
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public JsonResult DeleteCompanyContact(int id)
+        {
+            _companyAlertContactService.Remove(id);
+
+            return Json(new { success = true });
         }
     }
 }

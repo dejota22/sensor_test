@@ -3,6 +3,16 @@
 @inject Core.Service.ICompanyTypeService companyTypeService
 @inject Core.Service.ICompanyService companyService
 
+<style>
+    .cont-row {
+        background: #ddd;
+    }
+
+        .cont-row:nth-child(2n) {
+            background: #fff;
+        }
+</style>
+
 <h4 class="screenTitle">@localizer.Get("CompanyTitle") </h4>
 <hr />
 <div class="row screenCreate">
@@ -50,6 +60,38 @@
                     <span asp-validation-for="CompanyTypeId" class="text-danger"></span>
                 </div>
             </div>
+            <div class="form-group col-md-12 ">
+                <div class="card" style="padding:15px;">
+                    <label style="">Contatos da Empresa - <span style="font-size:small;">(Alerta de e-mails)</span></label>
+                    <div class="row">
+                        <div class="col-md-5"><b>NOME</b></div>
+                        <div class="col-md-6"><b>E-MAIL</b></div>
+                        <div class="col-md-1"></div>
+                    </div>
+                    @{
+                        var listContact = (List<Core.CompanyAlertContact>)ViewBag.Contacts;
+                    }
+
+                    @foreach(var contato in listContact)
+                    {
+                        <div class="row cont-row">
+                            <div class="col-md-5 pt-1"> @contato.Name </div>
+                            <div class="col-md-6 pt-1"> @contato.Email </div>
+                            <div class="col-md-1">
+                                <button type="button" title="Excluir" class="btn btn-danger" onclick="javascript:excluirContato('@contato.Id');" style="padding: 2px 8px;margin: 5px;"><i class="far fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="row mt-2">
+                        <div class="col-md-12" style="text-align:right;">
+                        <button id="btnAbrirContatoModal" type="button" class="btn btn-sm btn-info"
+                            onclick="javascript:abrirContatoModal();" style="text-transform:none;">Incluir
+                            Contato</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="form-group screenCreateControls">
             <a href="@Url.Action("Index", "Company")"><input asp-action="Index" type="button" value="@localizer.Get("BackToList")" class="btn btn-primary" /></a>
@@ -59,7 +101,75 @@
 </div>
 <hr />
 
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="form-modal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Novo Contato</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="contato-form">
+                    <div class="form-group">
+                        <div class="form-floating">
+                            <input id="ContatoNome" type="text" placeholder="" class="form-control" maxlength="40" required />
+                            <label>Nome</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-floating">
+                            <input id="ContatoEmail" type="email" placeholder="" class="form-control" maxlength="40" required />
+                            <label>E-mail</label>
+                        </div>
+                    </div>
+
+                    <div class="invalid-feedback"></div>
+
+                    <button type="button" class="btn btn-primary" onclick="javascript:salvarContato();">Incluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 @section Scripts {
+
+    <script type="text/javascript">
+
+        function salvarContato() {
+            var idEmpresa = document.getElementById("Id").value;
+            var contatoNome = document.getElementById("ContatoNome").value;
+            var contatoEmail = document.getElementById("ContatoEmail").value;
+
+            $.post('@Url.Content("~/Company/InsertCompanyContact")', { cId: idEmpresa, name: contatoNome, email: contatoEmail }, function (data) {
+                if (data.success) {
+                    alert('Contato cadastrado com sucesso');
+                    document.location.reload();
+                }
+            });
+        }
+
+        function excluirContato(id) {
+
+            if (confirm("Tem certeza que deseja excluir este contato?") == true) {
+                $.post('@Url.Content("~/Company/DeleteCompanyContact")', { id: id }, function (data) {
+                    if (data.success) {
+                        alert('Contato excluído com sucesso');
+                        document.location.reload();
+                    }
+                });
+            }
+        }
+
+        function abrirContatoModal() {
+            $('#form-modal').modal('show');
+        }
+
+    </script>
+
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

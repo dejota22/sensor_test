@@ -10,6 +10,7 @@ namespace Core
             CompanyUnit = new HashSet<CompanyUnit>();
             Contact = new HashSet<Contact>();
             Device = new HashSet<Device>();
+            CompanyAlertContact = new HashSet<CompanyAlertContact>();
         }
         public int Id { get; set; }
         public string TradeName { get; set; }
@@ -28,5 +29,6 @@ namespace Core
         public virtual ICollection<CompanyUnit> CompanyUnit { get; set; }
         public virtual ICollection<Contact> Contact { get; set; }
         public virtual ICollection<Device> Device { get; set; }
+        public virtual ICollection<CompanyAlertContact> CompanyAlertContact { get; set; }
     }
 }

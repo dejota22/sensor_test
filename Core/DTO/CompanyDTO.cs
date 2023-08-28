@@ -19,5 +19,6 @@ namespace Core.DTO
         public virtual ICollection<CompanyUnit> CompanyUnit { get; set; }
         public virtual ICollection<Contact> Contact { get; set; }
         public virtual ICollection<Device> Device { get; set; }
+        public virtual ICollection<CompanyAlertContact> CompanyAlertContact { get; set; }
     }
 }
