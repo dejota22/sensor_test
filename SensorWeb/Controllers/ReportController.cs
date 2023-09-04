@@ -102,7 +102,9 @@ namespace SensorWeb.Controllers
 
         public JsonResult ReportRMSCristaUpdate(int deviceId, int motorId, DateTime startDate, DateTime endDate, int reportType, int eixo)
         {
-            var dadosDataReceive = _receiveService.GetDataUnionGlobalByDateType(deviceId, motorId, startDate, endDate, reportType, eixo);
+            var newEndDate = endDate.Date.Add(new TimeSpan(23, 59, 59));
+
+            var dadosDataReceive = _receiveService.GetDataUnionGlobalByDateType(deviceId, motorId, startDate, newEndDate, reportType, eixo);
             var limites = _deviceConfigService.GetLimitesAccSpd(deviceId, motorId, reportType);
 
             var limiteRed = limites != null ? limites["red"].Value : 0;
