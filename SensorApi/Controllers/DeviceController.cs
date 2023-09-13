@@ -16,6 +16,8 @@ using Core.ApiModel.Response;
 using SensorService;
 using Org.BouncyCastle.Crypto.Agreement;
 using Autofac.Core;
+using System.Text;
+using System.Drawing;
 
 namespace SensorApi.Controllers
 {
@@ -309,6 +311,11 @@ namespace SensorApi.Controllers
 
                     var receiveGlobal = GenerateEntityFromDeviceGlobalRequest(deviceGlobal, deviceConfigId);
                     _ReceiveService.InsertGlobal(receiveGlobal);
+
+                    if (receiveGlobal.alrm >= 1)
+                    {
+                        SendAlarmEmail(receiveGlobal.alrm, device);
+                    } 
                 }
             }
 
@@ -792,6 +799,11 @@ namespace SensorApi.Controllers
 
                     var receiveData = GenerateEntityFromDeviceDataRequest(deviceData, deviceConfigId);
                     _ReceiveService.InsertData(receiveData);
+
+                    if (receiveData.alarme >= 1)
+                    {
+                        SendAlarmEmail(receiveData.alarme, device);
+                    }
                 }
             }
 
@@ -855,6 +867,58 @@ namespace SensorApi.Controllers
                 tipo = deviceData.tipo,
                 dado = deviceData.dado
             };
+        }
+
+        private void SendAlarmEmail(int itemAlarm, Device device)
+        {
+            try
+            {
+                string contactEmails = "";
+                if (device.Company != null && device.Company.CompanyAlertContact != null
+                    && device.Company.CompanyAlertContact.Any())
+                {
+                    contactEmails = string.Join(',', device.Company.CompanyAlertContact.Select(c => c.Email));
+
+                    SendMail _emailSender = new SendMail();
+
+                    string motorName = "";
+                    Motor motor = _MotorService.GetAll().OrderByDescending(m => m.Id).FirstOrDefault(m => m.DeviceId == device.Id);
+                    if (motor != null)
+                    {
+                        motorName = motor.Name;
+                    }
+
+                    string alarmName = new int[] { 1, 4, 7, 10 }.Contains(itemAlarm) ? "Alarme Eixo X" :
+                        new int[] { 2, 5, 8, 11 }.Contains(itemAlarm) ? "Alarme Eixo Y" : new int[] { 3, 6, 9, 12 }.Contains(itemAlarm) ? "Alarme Eixo Z" : "";
+
+                    string emailMsgLine1 = string.Empty;
+                    if (itemAlarm >= 7)
+                    {
+                        emailMsgLine1 = "<p>Alerta Enviado pelo serviço de monitoramento: <strong style='background-color:crimson;'>Alarme Vermelho</strong></p>";
+                    }
+                    else if (itemAlarm >= 1)
+                    {
+                        emailMsgLine1 = "<p>Alerta Enviado pelo serviço de monitoramento: <strong style='background-color:gold;'>Alarme Amarelo</strong></p>";
+                    }
+
+
+
+                    StringBuilder msgBuilder = new StringBuilder();
+                    msgBuilder.Append("<p>");
+                    msgBuilder.Append(emailMsgLine1);
+                    msgBuilder.Append(string.Format("Empresa: <strong>{0}</strong> <br />", device.Company.TradeName));
+                    msgBuilder.Append(string.Format("Equipamento: <strong>{0}</strong> <br />", motorName));
+                    msgBuilder.Append(string.Format("Sensor: <strong>{0}</strong> <br />", device.Tag));
+                    msgBuilder.Append(string.Format("Alarme: <strong>{0}</strong> <br /><br />", alarmName));
+                    msgBuilder.Append(TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).ToString("dd/MM/yyyy HH:mm"));
+                    msgBuilder.Append("<br />");
+                    msgBuilder.Append("</p>");
+
+                    _emailSender.Send(contactEmails, "Alerta Monitoramento - IOT NEST/VIBRAÇÃO", msgBuilder.ToString());
+                }
+            }
+            catch { }
+            
         }
 
         #region abc

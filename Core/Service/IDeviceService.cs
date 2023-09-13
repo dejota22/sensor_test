@@ -11,6 +11,8 @@ namespace Core.Service
 
         Device Get(int idDevice);
 
+        Device GetByCode(string code);
+
         void Remove(int idDevice);
 
         IEnumerable<Device> GetByName(string name);

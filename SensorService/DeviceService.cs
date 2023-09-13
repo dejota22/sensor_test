@@ -31,7 +31,7 @@ namespace SensorService
             IQueryable<Device> tb_Device = _context.Device;
 
             var query = from Device in tb_Device
-                        orderby Device.Id ascending
+                        orderby Device.Id descending
 
                         select new DeviceDTO
                         {
@@ -168,6 +168,11 @@ namespace SensorService
         Device IDeviceService.Get(int idDevice)
         {
             return GetQuery().Where(x => x.Id.Equals(idDevice)).FirstOrDefault();
+        }
+
+        Device IDeviceService.GetByCode(string code)
+        {
+            return GetQuery().Where(x => x.Code.Equals(code)).FirstOrDefault();
         }
 
         IEnumerable<Device> IDeviceService.GetAll()
