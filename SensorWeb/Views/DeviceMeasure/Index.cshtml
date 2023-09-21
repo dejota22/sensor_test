@@ -45,7 +45,7 @@
             <div class="nav nav-tabs" id="deviceTab" role="tablist">
 
                 <a class="nav-item nav-link active" id="config-tab" data-toggle="tab" href="#config" role="tab" aria-controls="config" aria-selected="true">Medições</a>
-                <a class="nav-item nav-link" id="tempo-tab" data-toggle="tab" href="#tempo" role="tab" aria-controls="tempo" aria-selected="false">Temporização</a>
+                <a class="nav-item nav-link" id="tempo-tab" data-toggle="tab" href="#tempo" role="tab" aria-controls="tempo" aria-selected="false">Configuração Análises</a>
                 <a class="nav-item nav-link" id="limites-tab" data-toggle="tab" href="#limites" role="tab" aria-controls="limites" aria-selected="false">Alarmes</a>
                 <a class="nav-item nav-link" id="lora-tab" data-toggle="tab" href="#lora" role="tab" aria-controls="lora" aria-selected="false">Lora</a>
                 <a class="nav-item nav-link" id="old-tab" data-toggle="tab" href="#old" role="tab" aria-controls="old" aria-selected="false">OLD</a>
@@ -341,17 +341,19 @@
 
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">modo_hora</label>
+                        <label class="control-label">
+                            Modo de Atuação <i class="fa fa-info-circle" title="Se o funcionamento do Sensor será Contínuo: Atuação por contagem de minutos ou Modo Hora: Horários Agendados"></i>
+                        </label>
                             <input type="number" max="1" min="0" value="@Model.modo_hora" asp-for="modo_hora" name="modo_hora" id="modo_hora" class="form-control" />
                         <span asp-validation-for="modo_hora" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">conta_envios</label>
+                        <label class="control-label">Qtde Análises Para Envio <i class="fa fa-info-circle" title="Contador de análises efetuadas para envio de relatório de Globais"></i></label>
                         <input value="@Model.conta_envios" asp-for="conta_envios" name="conta_envios" id="conta_envios" class="form-control" />
                         <span asp-validation-for="conta_envios" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">dias_run</label>
+                        <label class="control-label">Dias de Operação <i class="fa fa-info-circle" title="Dias em que o Sensor funcionará"></i></label>
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                             <button class="btn btn-sm btn-outline-primary btn-dias_run" id="btn-dias_run1" type="button" value="Domingo">D</button>
                             <button class="btn btn-sm btn-outline-primary btn-dias_run" id="btn-dias_run2" type="button" value="Segunda">S</button>
@@ -365,7 +367,7 @@
                         <span asp-validation-for="dias_run" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">inicio_turno</label>
+                        <label class="control-label">Início de Turno <i class="fa fa-info-circle" title="Horário de inicio da operação do Sensor"></i></label>
                         <input type="time" value="@Model.inicio_turno" step="0" asp-for="inicio_turno" name="inicio_turno" id="inicio_turno" class="form-control" />
                             <span asp-validation-for="inicio_turno" class="text-danger"></span>
                     </div>
@@ -373,22 +375,22 @@
 
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">fim_turno</label>
+                        <label class="control-label">Fim de Turno <i class="fa fa-info-circle" title="Horário de fim da operação do Sensor"></i></label>
                         <input type="time" value="@Model.fim_turno" step="0" asp-for="fim_turno" name="fim_turno" id="fim_turno" class="form-control" />
                         <span asp-validation-for="fim_turno" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">intervalo_analise</label>
+                        <label class="control-label">Intervalo de Análise (Minutos) <i class="fa fa-info-circle" title="Intervalo de análise em minutos para ocorrência de uma análise de valores globais"></i></label>
                             <input value="@Model.intervalo_analise" asp-for="intervalo_analise" name="intervalo_analise" id="intervalo_analise" class="form-control" />
                             <span asp-validation-for="intervalo_analise" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">intervalo_analise_alarme</label>
+                        <label class="control-label">Intervalo de Análise em Alarme (Minutos) <i class="fa fa-info-circle" title="Intervalo de análise em minutos na condição de alarme para ocorrência de uma análise de valores globais"></i></label>
                             <input value="@Model.intervalo_analise_alarme" asp-for="intervalo_analise_alarme" name="intervalo_analise_alarme" id="intervalo_analise_alarme" class="form-control" />
                             <span asp-validation-for="intervalo_analise_alarme" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">quant_alarme</label>
+                        <label class="control-label">Quantidade Leituras Alarme <i class="fa fa-info-circle" title="Quantidade de ocorrências em alarme para confirmar a condição de alarme"></i></label>
                             <input value="@Model.quant_alarme" asp-for="quant_alarme" name="quant_alarme" id="quant_alarme" class="form-control" />
                         <span asp-validation-for="quant_alarme" class="text-danger"></span>
                     </div>
@@ -396,12 +398,12 @@
 
                     <div class="row">
                         <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">quant_horarios_cards</label>
+                        <label class="control-label">Quantidade Horários de Análise (Máx 12) <i class="fa fa-info-circle" title="Quantidade de Horários em que devem ocorrer as análises para valores Globais"></i></label>
                             <input value="@Model.quant_horarios_cards" asp-for="quant_horarios_cards" name="quant_horarios_cards" id="quant_horarios_cards" class="form-control" />
                             <span asp-validation-for="quant_horarios_cards" class="text-danger"></span>
                         </div>
                         <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">dia_envio_relat</label>
+                        <label class="control-label">Dias Envio Relatório Completo <i class="fa fa-info-circle" title="Dias de envio de Relatório Completo (Sinal no Tempo)"></i></label>
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                 <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="btn-dia_envio_relat1" type="button" value="Domingo">D</button>
                                 <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="btn-dia_envio_relat2" type="button" value="Segunda">S</button>
@@ -415,21 +417,21 @@
                             <span asp-validation-for="dia_envio_relat" class="text-danger"></span>
                         </div>
                         <div class="form-group col-md-3" style="display: grid;">
-                            <label class="control-label">hora_envio_relat</label>
+                        <label class="control-label">Horário Envio Relatório Completo <i class="fa fa-info-circle" title="Horário de envio de Relatório Completo(Sinal no Tempo)"></i></label>
                             <input type="time" value="@Model.hora_envio_relat" step="0" asp-for="hora_envio_relat" name="hora_envio_relat" id="hora_envio_relat" class="form-control" />
                             <span asp-validation-for="hora_envio_relat" class="text-danger"></span>
                         </div>
-                        <div class="form-group col-md-3" style="display: grid;">
+                        @*<div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">t_card_normal</label>
                         <input value="@Model.t_card_normal" asp-for="t_card_normal" name="t_card_normal" id="t_card_normal" class="form-control" />
                         <span asp-validation-for="t_card_normal" class="text-danger"></span>
-                        </div>
+                        </div>*@
                     </div>
 
                     <div class="row">
                         <div class="card" style="">
                             <div class="card-body">
-                                <h6 class="card-subtitle mb-2 text-muted">Horas</h6>
+                                <h6 class="card-subtitle mb-2 text-muted">Horários Leituras <i class="fa fa-info-circle" title="Horários em que devem ocorrer as análises para valores Globais"></i></h6>
                                 <div class="row horas-row" >
 
                                     @if (Model.DeviceConfigurationHorariosEnviosCard != null)
@@ -463,22 +465,22 @@
 
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">rms_acc_red</label>
+                        <label class="control-label">RMS Aceleração - Alerta <i class="fa fa-info-circle" title="Limite inferior da zona de severidade vermelha"></i></label>
                         <input type="text" value="@(Model.rms_acc_red.HasValue ? Model.rms_acc_red.Value.ToString("0.00") : "")" asp-for="rms_acc_red" name="rms_acc_red" id="rms_acc_red" class="form-control decimal-field" />
                         <span asp-validation-for="rms_acc_red" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">rms_acc_yel</label>
+                        <label class="control-label">RMS Aceleração - Atenção <i class="fa fa-info-circle" title="Limite inferior da zona de severidade amarela"></i></label>
                         <input type="text" value="@(Model.rms_acc_yel.HasValue ? Model.rms_acc_yel.Value.ToString("0.00") : "")" asp-for="rms_acc_yel" name="rms_acc_yel" id="rms_acc_yel" class="form-control decimal-field" />
                         <span asp-validation-for="rms_acc_yel" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">min_rms_acc</label>
+                        <label class="control-label">Valor Mínimo Máquina Operante <i class="fa fa-info-circle" title="Menor valor considerado para identificação de máquina em funcionamento"></i></label>
                         <input type="text" min="0" value="@(Model.min_rms_acc.HasValue ? Model.min_rms_acc.Value.ToString("0.00") : "")" asp-for="min_rms_acc" name="min_rms_acc" id="min_rms_acc" class="form-control decimal-field" />
                         <span asp-validation-for="min_rms_acc" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">max_var</label>
+                        <label class="control-label">Máximo Variação para Alarme (%) <i class="fa fa-info-circle" title="Definição do alarme critico em função da variação brusca em porcentagem"></i></label>
                         <input type="number" min="0" max="100" value="@Model.max_var" asp-for="max_var" name="max_var" id="max_var" class="form-control" />
                         <span asp-validation-for="max_var" class="text-danger"></span>
                     </div>
@@ -486,12 +488,12 @@
 
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">rms_spd_red</label>
+                        <label class="control-label">RMS Velocidade - Alerta <i class="fa fa-info-circle" title="Limite inferior da zona de severidade vermelha"></i></label>
                         <input type="text" value="@(Model.rms_spd_red.HasValue ? Model.rms_spd_red.Value.ToString("0.00") : "")" asp-for="rms_spd_red" name="rms_spd_red" id="rms_spd_red" class="form-control decimal-field" />
                         <span asp-validation-for="rms_spd_red" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">rms_spd_yel</label>
+                        <label class="control-label">RMS Velocidade - Atenção <i class="fa fa-info-circle" title="Limite inferior da zona de severidade amarela"></i></label>
                         <input type="text" value="@(Model.rms_spd_yel.HasValue ? Model.rms_spd_yel.Value.ToString("0.00") : "")" asp-for="rms_spd_yel" name="rms_spd_yel" id="rms_spd_yel" class="form-control decimal-field" />
                         <span asp-validation-for="rms_spd_yel" class="text-danger"></span>
                     </div>
@@ -505,22 +507,22 @@
 
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">canal</label>
+                        <label class="control-label">Canal </label>
                         <input type="number" min="0" value="@Model.canal" asp-for="canal" name="canal" id="canal" class="form-control" readonly="readonly" />
                         <span asp-validation-for="canal" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">sf</label>
+                        <label class="control-label">Spread Factor</label>
                         <input type="number" min="0" value="@Model.sf" asp-for="sf" name="sf" id="sf" class="form-control" readonly="readonly" />
                         <span asp-validation-for="sf" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">bw</label>
+                        <label class="control-label">Band Width</label>
                         <input type="number" min="0" value="@Model.bw" asp-for="bw" name="bw" id="bw" class="form-control" readonly="readonly" />
                         <span asp-validation-for="bw" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">end</label>
+                        <label class="control-label">Endereço</label>
                         <input type="number" min="0" value="@Model.end" asp-for="end" name="end" id="end" class="form-control" readonly="readonly" />
                         <span asp-validation-for="end" class="text-danger"></span>
                     </div>
@@ -528,12 +530,12 @@
 
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">gtw</label>
+                        <label class="control-label">Gateway</label>
                         <input type="number" min="0" value="@Model.gtw" asp-for="gtw" name="gtw" id="gtw" class="form-control" readonly="readonly" />
                         <span asp-validation-for="gtw" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">syn</label>
+                        <label class="control-label">Sincronismo</label>
                         <input type="number" min="0" value="@Model.syn" asp-for="syn" name="syn" id="syn" class="form-control" readonly="readonly" />
                         <span asp-validation-for="syn" class="text-danger"></span>
                     </div>
