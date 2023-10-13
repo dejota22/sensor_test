@@ -12,6 +12,9 @@ using System.Collections.Generic;
 using Core;
 using Google.Protobuf.WellKnownTypes;
 using System;
+using SensorWeb.Resources;
+using Org.BouncyCastle.Asn1.X509;
+using System.IO;
 
 namespace SensorWeb.Controllers
 {
@@ -37,40 +40,65 @@ namespace SensorWeb.Controllers
         }
 
         // GET: ReportController
-        public ActionResult Index()
+        public ActionResult Index(int? DeviceId, int? MotorId)
         {
-            return View();
+            ReportModel model = new ReportModel();
+
+            ViewBag.DeviceData = new List<ReceiveData>();
+
+            if (DeviceId != null && MotorId != null)
+            {
+                model.DeviceId = DeviceId.Value;
+                model.MotorId = MotorId.Value;
+
+                var dataList = _receiveService.GetDataByDeviceMotor(DeviceId, MotorId);
+                if (dataList != null)
+                {
+                    ViewBag.DeviceData = dataList;
+                }
+            }
+
+            return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(ReportModel report)
+        public ActionResult Create(ReportModel report)
         {
-            var reportView = await this.RenderViewToStringAsync("DownloadPDF", report);
+            if (report.TipoRelatorio == 4)
+                return View("DownloadStPDF", report);
 
-            // instantiate a html to pdf converter object
-            HtmlToPdf converter = new HtmlToPdf();
-
-
-            converter.Options.CssMediaType = HtmlToPdfCssMediaType.Print;
-            //converter.Options.ViewerPreferences.FitWindow = true;
-            converter.Options.ViewerPreferences.CenterWindow = true;
-            converter.Options.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-            converter.Options.AutoFitWidth = HtmlToPdfPageFitMode.AutoFit;
-            converter.Options.PdfPageSize = PdfPageSize.A4;
-            converter.Options.PdfPageOrientation = PdfPageOrientation.Portrait;
-
-            PdfDocument doc = converter.ConvertHtmlString(reportView);
-
-            byte[] pdf = doc.Save();
-            doc.Close();
-
-            FileResult fileResult = new FileContentResult(pdf, "application/pdf")
-            {
-                FileDownloadName = $"{report.NomeArquivo}.pdf"
-            };
-
-            return fileResult;
+            return View("DownloadPDF", report);
         }
+
+        //[HttpPost]
+        //public async Task<IActionResult> Create(ReportModel report)
+        //{
+        //    var reportView = await this.RenderViewToStringAsync("DownloadPDF", report);
+
+        //    // instantiate a html to pdf converter object
+        //    HtmlToPdf converter = new HtmlToPdf();
+
+
+        //    converter.Options.CssMediaType = HtmlToPdfCssMediaType.Screen;
+        //    converter.Options.ViewerPreferences.CenterWindow = true;
+        //    converter.Options.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
+        //    converter.Options.AutoFitWidth = HtmlToPdfPageFitMode.AutoFit;
+        //    converter.Options.PdfPageSize = PdfPageSize.A4;
+        //    converter.Options.PdfPageOrientation = PdfPageOrientation.Portrait;
+        //    converter.Options.InternalLinksEnabled = true;
+
+        //    PdfDocument doc = converter.ConvertHtmlString(reportView);
+
+        //    byte[] pdf = doc.Save();
+        //    doc.Close();
+
+        //    FileResult fileResult = new FileContentResult(pdf, "application/pdf")
+        //    {
+        //        FileDownloadName = $"{report.NomeArquivo}.pdf"
+        //    };
+
+        //    return fileResult;
+        //}
 
         public ActionResult ReportDeviceData(int? DeviceId, int? MotorId)
         {
@@ -93,6 +121,20 @@ namespace SensorWeb.Controllers
             var dadosDataReceive = _receiveService.GetDataDadoByDataReceiveId(idDataReceive);
 
             return Json(dadosDataReceive);
+        }
+
+        public ActionResult ReportDeviceDataRedict(int DeviceId, int MotorId, int DeviceDataId)
+        {
+            ViewBag.DeviceData = new List<ReceiveData>();
+
+            var deviceData = _receiveService.GetData(DeviceDataId);
+            if (deviceData != null)
+            {
+                ViewBag.DeviceData.Add(deviceData);
+                ViewBag.DeviceDataId = deviceData.IdReceiveData;
+            }
+
+            return View("ReportDeviceData");
         }
 
         public ActionResult ReportRMSCrista()

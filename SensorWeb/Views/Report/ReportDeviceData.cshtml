@@ -184,7 +184,17 @@
                 }
             });
 
-            
+
+            @if (ViewBag.DeviceDataId != null)
+            {
+                <text>
+                    setTimeout(function(){
+                        $('#DataDeviceId').val($("#DataDeviceId option:eq(1)").val());
+                        $('#btn-visualizar').click();
+                    }, 200);
+                </text>
+            }
+
         });
 
 

@@ -228,28 +228,36 @@
                 <div class="text-center"><b>@Html.DisplayNameFor(m => m.Grafico)</b></div>
             </div>
             <div class="row ">
-                <div class="col-sm border-right">
+                <div class="col-sm border-right border-bottom">
                     <b>@Html.DisplayNameFor(m => m.TipoRelatorio): </b>
                     @Html.DisplayTextFor(m => m.TipoRelatorioName)
                     <input type="hidden" id="TipoRelatorio" name="TipoRelatorio" value="@Model.TipoRelatorio" />
+
+                    <input type="hidden" id="DataDeviceId" name="DataDeviceId" value="@Model.DataDeviceId" />
+                    <input type="hidden" id="DataDeviceIdName" name="DataDeviceIdName" value="@Model.DataDeviceIdName" />
                 </div>
-                <div class="col-sm border-right">
-                    <b>@Html.DisplayNameFor(m => m.StartDate): </b>@Model.StartDate.ToString("dd/MM/yyyy")
-                    <input type="hidden" id="StartDate" name="StartDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" />
-                </div>
-                <div class="col-sm border-right">
-                    <b>@Html.DisplayNameFor(m => m.EndDate): </b>@Model.EndDate.ToString("dd/MM/yyyy")
-                    <input type="hidden" id="EndDate" name="EndDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" />
-                </div>
-                <div class="col-sm">
-                    <b>@Html.DisplayNameFor(m => m.Eixo): </b>
-                    @Html.DisplayTextFor(m => m.EixoName)
-                    <input type="hidden" id="Eixo" name="Eixo" value="@Model.Eixo" />
-                </div>
+
             </div>
         </div>
     </div>
+    <div class="row head-row" style="display:none;">
+        <div class="col-sm border-right">
+            <b>Data / hora:</b> <br /> <label id="head-data"></label>
+        </div>
+        <div class="col-sm border-right">
+            <b>Tipo:</b> <br /> <label id="head-tipo"></label>
+        </div>
+        <div class="col-sm border-right">
+            <b>Eixo:</b> <br /> <label id="head-eixo"></label>
+        </div>
+        <div class="col-sm border-right">
+            <b>Freq.:</b> <br /> <label id="head-freq"></label>
+        </div>
+
+    </div>
 </div>
+
+
 
 <div id="grafico-wrapper" style="display:none;">
 
@@ -286,63 +294,25 @@
 
     <script type="text/javascript">
         var valor_data = [];
-        var valor_limite_red = [];
-        var valor_limite_yel = [];
-        var ddIds = [];
-        var color_grafico = '';
-        var yaxis_label = '';
 
         $(document).ready(function () {
 
+            let dataId = $('#DataDeviceId').val();
 
-                let deviceId = $('#DeviceId').val();
-                let motorId = $('#MotorId').val();
-                let startDate = $('#StartDate').val();
-                let endDate = $('#EndDate').val();
-                let reportType = $('#TipoRelatorio').val();
-                let eixo = $('#Eixo').val();
+            if (dataId != '') {
+                $.get('@Url.Action("ReportDeviceDataUpdate")?idDataReceive=' + dataId, function (data) {
+                    valor_data = [];
+                    $('#grafico-wrapper').show();
+                    $('.head-row').show();
 
+                    $.each(data, function (index, value) {
+                        valor_data.push([value.tempo, value.valor]);
+                    });
 
-                if (deviceId != '' && motorId != '' && startDate != '' && endDate != '' && reportType != '' && eixo != '') {
-                    switch (reportType) {
-                        case '1':
-                            color_grafico = 'rgb(51,102,204)';
-                            yaxis_label = 'm/s²';
-                            break;
-                        case '2':
-                            color_grafico = 'rgb(51,102,204)';//'rgb(50,185,109)';
-                            yaxis_label = 'mm/s';
-                            break;
-                        case '3':
-                            color_grafico = 'rgb(51,102,204)';//'rgb(205,61,93)';
-                            yaxis_label = 'FC';
-                            break;
-                    }
-
-                    $.get('@Url.Action("ReportRMSCristaUpdate")?deviceId=' + deviceId + '&motorId=' + motorId + '&startDate=' + startDate +
-                        '&endDate=' + endDate + '&reportType=' + reportType + '&eixo=' + eixo, function (data) {
-                            valor_data = [];
-                            valor_limite_red = [];
-                            valor_limite_yel = [];
-                            ddIds = [];
-                            $('#grafico-wrapper').show();
-                            $('.head-row').show();
-
-                            let limiteRed = $('#limiteRed').val();
-                            let limiteYel = $('#limiteYel').val();
-
-                            $.each(data.dgraf, function (index, value) {
-                                valor_data.push([value.dataReceive, value.value, value.origem]);
-                                valor_limite_red.push([value.dataReceive, data.limitered, "Limite"]);
-                                valor_limite_yel.push([value.dataReceive, data.limiteyel, "Limite"]);
-                                ddIds.push(value.dataDevice);
-                            });
-
-                            drawGraficos();
-                        });
-                }
-
-
+                    drawGraficos();
+                    updateHeader();
+                });
+            }
 
         });
 
@@ -360,30 +330,24 @@
                     sampling: 'average'
                 },
                 yaxes: [
-                    { position: 'left', show: true, showTicks: true },
-                    { position: 'left', show: true, axisLabel: yaxis_label, showTickLabels: 'none', gridLines: false, showTicks: false }
+                    { position: 'left', show: true, showTicks: true, },
+                    { position: 'left', show: true, axisLabel: 'm/s²', showTickLabels: 'none', gridLines: false, showTicks: false }
                 ],
                 xaxes: [
-                    { position: 'bottom', show: true, showTicks: true, mode: "time", timeBase: "milliseconds", timeformat: "%d/%m %H:%M" },
-                    { position: 'bottom', show: true, axisLabel: 'Data', showTickLabels: 'none', gridLines: false, showTicks: false }
+                    { position: 'bottom', show: true, showTicks: true, },
+                    { position: 'bottom', show: true, axisLabel: 'Segundos', showTickLabels: 'none', gridLines: false, showTicks: false }
                 ],
                 grid: {
-                    hoverable: true,
-                    clickable: true
+                    hoverable: true
                 },
                 tooltip: {
                     show: true,
-                    content: 'Data: %x <br> ' + yaxis_label + ': %y.4 <br> Origem: %ct'
+                    content: 'Tempo: %x.6 | Valor: %y.6'
                 },
-                colors: [color_grafico]
+                colors: ["rgb(51,102,204)"]
             };
 
-            var dataData = [{ data: valor_data }, { data: valor_limite_red, color: 'red' }, { data: valor_limite_yel, color: 'gold' }];
-            if (yaxis_label == 'FC') {
-                dataData = [{ data: valor_data }];
-            }
-
-            var plot = $.plot($('#chartdiv'), dataData, options);
+            var plot = $.plot($('#chartdiv'), [{ data: valor_data }], options);
 
             $("#chartdiv").bind("plotselected", function (event, ranges) {
                 $.each(plot.getXAxes(), function (_, axis) {
@@ -395,17 +359,8 @@
                 plot.draw();
                 plot.clearSelection();
 
+                // don't fire event on the overview to prevent eternal loop
                 overview.setSelection(ranges, true);
-            });
-
-            $("#chartdiv").bind("plotclick", function (event, pos, item) {
-                if (item) {
-                    let motorId = $('#MotorId').val();
-                    let deviceId = $('#DeviceId').val();
-                    let deviceDataId = ddIds[item.dataIndex];
-
-                    window.open('@Url.Action("ReportDeviceDataRedict", "Report")?DeviceId=' + deviceId + '&MotorId=' + motorId + '&DeviceDataId=' + deviceDataId, "_blank");
-                }
             });
 
 
@@ -418,18 +373,33 @@
                     shadowSize: 0
                 },
                 xaxis: {
-                    position: "top",
-                    mode: "time", timeBase: "milliseconds", timeformat: "%d/%m %H:%M"
+                    position: "top"
                 },
                 selection: {
                     mode: "x"
                 },
-                colors: [color_grafico]
+                colors: ["rgb(51,102,204)"]
             });
 
             $("#overview").bind("plotselected", function (event, ranges) {
                 plot.setSelection(ranges);
             });
+        }
+
+        function updateHeader() {
+            let dataText = $('#DataDeviceIdName').val();
+            let dataTextParts = dataText.split(' - ');
+
+            let headData = dataTextParts[0];
+            let headTipo = dataTextParts[1].substring(6);
+            let headEixo = dataTextParts[2].substring(6);
+            let headFreq = dataTextParts[3].substring(6);
+
+            $('#head-row').show();
+            $('#head-data').text(headData);
+            $('#head-tipo').text(headTipo);
+            $('#head-eixo').text(headEixo);
+            $('#head-freq').text(headFreq);
         }
 
     </script>

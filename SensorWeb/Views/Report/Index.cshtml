@@ -1,16 +1,87 @@
 ﻿@model ReportModel
 
 @inject SensorWeb.Resources.CommonLocalizationService localizer
+@inject Core.Service.IDeviceService deviceService
+@inject Core.Service.IMotorService motorService
+
+@{
+    Layout = "~/Views/Shared/_Layout_Graficos.cshtml";
+}
+
+<style>
+    #chartdiv {
+        width: 100%;
+        max-width: 100%;
+        height: 500px;
+        margin-bottom: 20px;
+    }
+
+    #overview {
+        margin: 20px 0;
+        width: 100%;
+        max-width: 100%;
+        height: 75px;
+    }
+
+    #legenddiv {
+        margin: 0 20px 10px 20px;
+        width: 100%;
+        max-width: 100%;
+        height: 5px;
+    }
+
+    .legendLayer .background {
+        fill: rgba(255, 255, 255, 0.85);
+        stroke: rgba(0, 0, 0, 0.85);
+        stroke-width: 1;
+    }
+
+    .x2Label {
+        fill: #224499;
+        font-weight: bold;
+        font-size: 18px;
+        font-family: Tahoma, sans-serif;
+    }
+
+    .y2Label {
+        fill: #224499;
+        font-weight: bold;
+        font-size: 18px;
+        font-family: Tahoma, sans-serif;
+    }
+
+    .red-alarm-option {
+        color: darkred;
+    }
+</style>
 
 <div class="page-title">
     <h3 class="breadcrumb-header">Relatório</h3>
 </div>
 
-<form asp-action="Create">
+<form asp-action="Create" target="pvModalFrame" onsubmit="openPvModal();">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="row form-group">
         <div class="row">
             <div class="col-sm-8">
+                <div class="row">
+                    <div class="col-sm border">
+                        <b>EQUIPAMENTO</b>
+                    </div>
+                    <div class="col-sm border">
+                        @Html.DropDownList("MotorId", new SelectList(motorService.GetQueryDropDownListByTag(), "Key", "Value"),
+                        @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "style", "width:200px;" } })
+                        <input id="MotorIdName" name="MotorIdName" type="hidden" />
+                    </div>
+                    <div class="col-sm border">
+                        <b>SENSOR</b>
+                    </div>
+                    <div class="col-sm border">
+                        @Html.DropDownList("DeviceId", new SelectList(deviceService.GetQueryDropDownList(), "Key", "Value"),
+                        @localizer.Get("DeviceSelect"), new Dictionary<string, object> { { "style", "width:200px;" } })
+                        <input id="DeviceIdName" name="DeviceIdName" type="hidden" />
+                    </div>
+                </div>
                 <div class="row text-center">
                     <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Acionamento)</b></div>
                     <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Acionado)</b></div>
@@ -21,39 +92,53 @@
                 </div>
                 <div class="row">
                     <div class="col-sm border">
-                        <b>@Html.DisplayNameFor(m => m.AlarmeAcionamento): </b>@Html.DropDownListFor(m => m.AlarmeAcionamento, new SelectList(Enum.GetValues(typeof(Alarme))))
+                        <b>@Html.DisplayNameFor(m => m.AlarmeAcionamento) </b>
                     </div>
                     <div class="col-sm border">
-                        <b>@Html.DisplayNameFor(m => m.AlarmeAcionado): </b>@Html.DropDownListFor(m => m.AlarmeAcionado, new SelectList(Enum.GetValues(typeof(Alarme))))
+                        @Html.DropDownListFor(m => m.AlarmeAcionamento, new SelectList(Enum.GetValues(typeof(Alarme))), new Dictionary<string, object> { { "style", "width:200px;" } })
+                    </div>
+                    <div class="col-sm border">
+                        <b>@Html.DisplayNameFor(m => m.AlarmeAcionado) </b>
+                    </div>
+                    <div class="col-sm border">
+                        @Html.DropDownListFor(m => m.AlarmeAcionado, new SelectList(Enum.GetValues(typeof(Alarme))), new Dictionary<string, object> { { "style", "width:200px;" } })
                     </div>
                 </div>
                 <div class="row">
                     <div class="border text-center"><b>@Html.DisplayNameFor(m => m.Velocidade)</b></div>
                 </div>
                 <div class="row">
-                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.PontoMaxVel1) </b><input asp-for="PontoMaxVel1"></div>
-                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.PontoMaxVel2) </b><input asp-for="PontoMaxVel2"></div>
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.PontoMaxVel1) </b></div>
+                    <div class="col-sm border"><input asp-for="PontoMaxVel1" style="width:175px;"></div>
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.PontoMaxVel2) </b></div>
+                    <div class="col-sm border"><input asp-for="PontoMaxVel2" style="width:175px;"></div>
                 </div>
                 <div class="row">
-                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Vel1) </b><input asp-for="Vel1"></div>
-                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Vel2) </b><input asp-for="Vel2"></div>
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Vel1) </b></div>
+                    <div class="col-sm border"><input asp-for="Vel1" style="width:175px;"></div>
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Vel2) </b></div>
+                    <div class="col-sm border"><input asp-for="Vel2" style="width:175px;"></div>
                 </div>
                 <div class="row">
                     <div class="border text-center"><b>@Html.DisplayNameFor(m => m.Aceleracao)</b></div>
                 </div>
                 <div class="row">
-                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.PontoMaxAce1) </b><input asp-for="PontoMaxAce1"></div>
-                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.PontoMaxAce2) </b><input asp-for="PontoMaxAce2"></div>
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.PontoMaxAce1) </b></div>
+                    <div class="col-sm border"><input asp-for="PontoMaxAce1" style="width:175px;"></div>
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.PontoMaxAce2) </b></div>
+                    <div class="col-sm border"><input asp-for="PontoMaxAce2" style="width:175px;"></div>
                 </div>
                 <div class="row">
-                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Acel1) </b><input asp-for="Acel1"></div>
-                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Acel2) </b><input asp-for="Acel2"></div>
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Acel1) </b></div>
+                    <div class="col-sm border"><input asp-for="Acel1" style="width:175px;"></div>
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Acel2) </b></div>
+                    <div class="col-sm border"><input asp-for="Acel2" style="width:175px;"></div>
                 </div>
                 <div class="row">
                     <div class="border text-center"><b>@Html.DisplayNameFor(m => m.ObservacoesRelevantes)</b></div>
                 </div>
                 <div class="row">
-                    <textarea asp-for="ObservacoesRelevantes" rows="10" class="border"></textarea>
+                    <textarea asp-for="ObservacoesRelevantes" rows="7" class="border"></textarea>
                 </div>
             </div>
             <div class="col-sm-4">
@@ -67,7 +152,7 @@
                     <div class="border"><b>@Html.DisplayNameFor(m => m.AcaoRecomendada)</b></div>
                 </div>
                 <div class="row">
-                    <textarea asp-for="AcaoRecomendada" rows="15" class="border"></textarea>
+                    <textarea asp-for="AcaoRecomendada" rows="10" class="border"></textarea>
                 </div>
             </div>
         </div>
@@ -76,25 +161,208 @@
                 <div class="row">
                     <div class="border text-center"><b>@Html.DisplayNameFor(m => m.Grafico)</b></div>
                 </div>
-                <div class="row">
+                @*<div class="row">
                     <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Equipamento): </b><input asp-for="Equipamento"></div>
                     <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Ponto): </b><input asp-for="Ponto"></div>
                     <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Tipo): </b><input asp-for="Tipo"></div>
                     <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.Unidade): </b><input asp-for="Unidade"></div>
+                </div>*@
+                <div class="row">
+                    <div class="col-sm border"><b>@Html.DisplayNameFor(m => m.TipoRelatorio) </b></div>
+                    <div class="col-sm border">
+                        <select id="TipoRelatorio" name="TipoRelatorio" style="width:200px;">
+                            <option value="">-- Selecione o Tipo --</option>
+                            <option value="1">RMS em Aceleração</option>
+                            <option value="2">RMS Velocidade</option>
+                            <option value="3">Fator de Crista</option>
+                            <option value="4">Sinal no Tempo</option>
+                        </select>
+                        <input id="TipoRelatorioName" name="TipoRelatorioName" type="hidden" />
+                    </div>
+
+                    @if (true)
+                    {
+                        <div class="col-sm border rel-rms"><b>DATA INICIAL </b></div>
+                        <div class="col-sm border rel-rms">
+                            <input type="date" id="StartDate" name="StartDate" style="width:175px;" />
+                        </div>
+                        <div class="col-sm border rel-rms"><b>DATA FINAL </b></div>
+                        <div class="col-sm border rel-rms">
+                            <input type="date" id="EndDate" name="EndDate" style="width:175px;" />
+                        </div>
+                    }
+
+                    @if (true)
+                    {
+                        <div class="col-sm border rel-sinal" style="display:none;"><b>DADOS </b></div>
+                        <div class="col-sm border rel-sinal" style="display:none;">
+                            <select id="DataDeviceId" name="DataDeviceId" class="form-control">
+                                <option value="">-- Selecione os Dados --</option>
+                                @foreach (var d in (IEnumerable<Core.ReceiveData>)ViewBag.DeviceData)
+                                {
+                                    string itemText = string.Format("{0} - Tipo: {1} - Eixo: {2} - Freq: {3}", d.DataReceive.ToString("dd/MM/yyyy HH:mm:ss"),
+                                    (d.tipo == 1 ? "ACC" : "SPD"), SensorWeb.Controllers.ReportController.GetSetupInfo("eixo", d.setup_eixo),
+                                    SensorWeb.Controllers.ReportController.GetSetupInfo("freq", d.setup_freq_cut));
+
+                                    <option class="@(d.alarme == 1 ? "red-alarm-option" : "")" value="@d.IdReceiveData">@itemText</option>
+                                }
+                            </select>
+                            <input id="DataDeviceIdName" name="DataDeviceIdName" type="hidden" />
+                        </div>
+                    }
+                    
+                </div>
+
+                <div class="row">
+                    <div class="col-sm border rel-rms"><b>EIXO </b></div>
+                    <div class="col-sm border rel-rms">
+                        <select id="Eixo" name="Eixo" style="width:200px;">
+                            <option value="">-- Selecione o Eixo --</option>
+                            <option value="1">X</option>
+                            <option value="2">Y</option>
+                            <option value="3">Z</option>
+                        </select>
+                        <input id="EixoName" name="EixoName" type="hidden" />
+                    </div>
+                    <div class="col-sm border">
+                        <input type="submit" value="Pré-Visualizar" class="btn btn-primary" />
+                    </div>
+                    <div class="col-sm border">
+                        @*<input id="btn-visualizar" type="button" value="Atualizar Gráfico" class="btn btn-primary" style="" />*@
+                    </div>
+                    <div class="col-sm border">
+                        
+                    </div>
+                    <div class="col-sm border">
+                        
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="row form-group">
-        <div>
+        @*<div>
             <b>@Html.DisplayNameFor(m => m.NomeArquivo): </b><input asp-for="NomeArquivo">
             <input type="submit" value="@localizer.Get("Create")" class="btn btn-primary" />
-        </div>
+        </div>*@
 
     </div>
 </form>
+
+<div id="grafico-wrapper" style="display:none;">
+
+    <div id="overview"></div>
+    <div id="legenddiv"></div>
+    <div id="chartdiv"></div>
+
+</div>
+
+<input id="limiteRed" type="hidden" value="@ViewBag.LimiteRed" />
+<input id="limiteYel" type="hidden" value="@ViewBag.LimiteYel" />
 
 <!-- end page main wrapper -->
 <div class="page-footer">
     <p>Iot Nest/Vibração &copy; <span class="current-year"></span>. Conteúdo de uso exclusivo.</p>
 </div>
+
+<div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="frame-modal">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pré-Visualizar Impressão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                
+                <iframe id="pvModalFrame" src="" name="pvModalFrame" frameborder="0" style="width:100%;height:400px;"></iframe>
+
+            </div>
+            <div class="modal-footer">
+                <button id="confirm-print" type="button" class="btn btn-primary" onclick="confirmPrint();">Confirmar Impressão</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+    {
+
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.event.drag.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.mousewheel.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.canvaswrapper.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.colorhelpers.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.saturated.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.browser.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.drawSeries.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.uiConstants.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.navigate.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.touchNavigate.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.hover.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.touch.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.time.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.selection.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.legend.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.tooltip.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.axislabels.js")"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#DeviceIdName').val($("#DeviceId option:selected").text());
+            $('#MotorIdName').val($("#MotorId option:selected").text());
+
+            $('#DeviceId').change(function(){
+                refreshPage();
+            });
+
+            $('#MotorId').change(function () {
+                refreshPage();
+            });
+
+            $('#TipoRelatorio').change(function () {
+                $('#TipoRelatorioName').val($("#TipoRelatorio option:selected").text());
+
+                if ($(this).val() == '4') {
+                    $('.rel-sinal').show();
+                    $('.rel-rms').hide();
+                }
+                else
+                {
+                    $('.rel-sinal').hide();
+                    $('.rel-rms').show();
+                }
+            });
+
+            $('#Eixo').change(function () {
+                $('#EixoName').val($("#Eixo option:selected").text());
+            });
+
+            $('#DataDeviceId').change(function () {
+                $('#DataDeviceIdName').val($("#DataDeviceId option:selected").text());
+            });
+        });
+
+        function openPvModal() {
+            $('#frame-modal').modal('show');
+        }
+
+        function confirmPrint() {
+            window.frames["pvModalFrame"].focus();
+            window.frames["pvModalFrame"].print();
+        }
+
+        function refreshPage() {
+            let deviceId = $('#DeviceId').val();
+            let motorId = $('#MotorId').val();
+
+            if (deviceId != '' && motorId != '') {
+                $('#preloader').fadeIn();
+                document.location.href = '@Url.Action("Index")' + '?DeviceId=' + deviceId + '&MotorId=' + motorId;
+            } 
+        }
+
+    </script>
+}

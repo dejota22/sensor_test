@@ -178,6 +178,7 @@
         var valor_data = [];
         var valor_limite_red = [];
         var valor_limite_yel = [];
+        var ddIds = [];
         var color_grafico = '';
         var yaxis_label = '';
 
@@ -214,6 +215,7 @@
                             valor_data = [];
                             valor_limite_red = [];
                             valor_limite_yel = [];
+                            ddIds = [];
                             $('#grafico-wrapper').show();
                             $('.head-row').show();
 
@@ -224,6 +226,7 @@
                                 valor_data.push([value.dataReceive, value.value, value.origem]);
                                 valor_limite_red.push([value.dataReceive, data.limitered, "Limite"]);
                                 valor_limite_yel.push([value.dataReceive, data.limiteyel, "Limite"]);
+                                ddIds.push(value.dataDevice);
                         });
 
                         drawGraficos();
@@ -256,7 +259,8 @@
                     { position: 'bottom', show: true, axisLabel: 'Data', showTickLabels: 'none', gridLines: false, showTicks: false }
                 ],
                 grid: {
-                    hoverable: true
+                    hoverable: true,
+                    clickable: true
                 },
                 tooltip: {
                     show: true,
@@ -284,6 +288,16 @@
                 plot.clearSelection();
 
                 overview.setSelection(ranges, true);
+            });
+
+            $("#chartdiv").bind("plotclick", function (event, pos, item) {
+                if (item) {
+                    let motorId = $('#MotorId').val();
+                    let deviceId = $('#DeviceId').val();
+                    let deviceDataId = ddIds[item.dataIndex];
+
+                    window.open('@Url.Action("ReportDeviceDataRedict", "Report")?DeviceId=' + deviceId + '&MotorId=' + motorId + '&DeviceDataId=' + deviceDataId, "_blank");
+                }
             });
 
 

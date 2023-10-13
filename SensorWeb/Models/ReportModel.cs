@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 
 namespace SensorWeb.Models
@@ -52,14 +53,8 @@ namespace SensorWeb.Models
         [Display(Name = "GRÁFICO")]
         public string Grafico { get; set; }
 
-        [Display(Name = "Equipamento")]
-        public string Equipamento { get; set; }
-
         [Display(Name = "PONTO")]
         public string Ponto { get; set; }
-
-        [Display(Name = "TIPO")]
-        public string Tipo { get; set; }
 
         [Display(Name = "UNIDADE")]
         public string Unidade { get; set; }
@@ -72,6 +67,33 @@ namespace SensorWeb.Models
 
         [Display(Name = "Nome do Arquivo")]
         public string NomeArquivo { get; set; }
+
+
+        [Display(Name = "EQUIPAMENTO")]
+        public int MotorId { get; set; }
+        public string MotorIdName { get; set; }
+
+        [Display(Name = "SENSOR")]
+        public int DeviceId { get; set; }
+        public string DeviceIdName { get; set; }
+
+        [Display(Name = "TIPO")]
+        public int TipoRelatorio { get; set; }
+        public string TipoRelatorioName { get; set; }
+
+        [Display(Name = "DATA INICIAL")]
+        public DateTime StartDate { get; set; }
+
+        [Display(Name = "DATA FINAL")]
+        public DateTime EndDate { get; set; }
+
+        [Display(Name = "EIXO")]
+        public int Eixo { get; set; }
+        public string EixoName { get; set; }
+
+        [Display(Name = "DADOS")]
+        public int DataDeviceId { get; set; }
+        public string DataDeviceIdName { get; set; }
     }
 
     public enum Alarme

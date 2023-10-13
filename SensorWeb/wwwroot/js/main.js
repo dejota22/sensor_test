@@ -29,7 +29,7 @@ $(document).ready(function () {
 
     // Preloader
     $('#preloader').fadeOut('normall', function () {
-        $(this).remove();
+        $(this).hide();
     });
 
     // Scroll to Top

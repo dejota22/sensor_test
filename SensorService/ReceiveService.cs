@@ -265,7 +265,8 @@ namespace SensorService
             {
                 DataReceive = (long)(d.DataReceive.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds),
                 Value = reportType == 1 ? d.rms_acc : reportType == 2 ? d.rms_spd : reportType == 3 ? d.ftr_crista : 0,
-                Origem = "Completo"
+                Origem = "Completo",
+                DataDevice = d.IdReceiveData
             }).ToList();
 
             var listGlobalMod = new List<RMSCristaModelResponse>();
