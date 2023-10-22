@@ -26,6 +26,6 @@ namespace Core.Service
 
         List<SelectListItemDTO> GetQueryDropDownList();
 
-        List<SelectListItemDTO> GetQueryDropDownListByTag();
+        List<SelectListItemDTO> GetQueryDropDownListByCode();
     }
 }

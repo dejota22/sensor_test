@@ -88,8 +88,11 @@
                                             <table style="width:100%">
                                                 <tr>
                                                     <td style="padding:0 4px"><a href="@Url.Action("Details", "Device", new { id = item.Id })" title="@localizer.Get("View")"><i class="fas fa-eye"></i></a></td>
-                                                    <td style="padding:0 4px"><a href="@Url.Action("Edit", "Device", new { id = item.Id })" title="@localizer.Get("Edit")"><i class="fas fa-edit" style="color:#ff6a00"></i></a></td>
-                                                    <td style="padding:0 4px"><a href="@Url.Action("Delete", "Device", new { id = item.Id })" title="@localizer.Get("Delete")" style="color:#ff0000"><i class="fas fa-window-close"></i></a></td>
+                                                    @if (User.IsInRole("Administrador"))
+                                                    {
+                                                        <td style="padding:0 4px"><a href="@Url.Action("Edit", "Device", new { id = item.Id })" title="@localizer.Get("Edit")"><i class="fas fa-edit" style="color:#ff6a00"></i></a></td>
+                                                        <td style="padding:0 4px"><a href="@Url.Action("Delete", "Device", new { id = item.Id })" title="@localizer.Get("Delete")" style="color:#ff0000"><i class="fas fa-window-close"></i></a></td>
+                                                    }
                                                 </tr>
                                             </table>
                                         </td>

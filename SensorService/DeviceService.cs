@@ -95,18 +95,17 @@ namespace SensorService
         /// GetQueryDropDownList
         /// </summary>
         /// <returns></returns>
-        private List<SelectListItemDTO> GetQueryDropDownListByTag()
+        private List<SelectListItemDTO> GetQueryDropDownListByCode()
         {
-            return null;
-            //IQueryable<Device> tb_Device = _context.Device;
-            //var query = (from Device in tb_Device
-            //             select new SelectListItemDTO()
-            //             {
-            //                 Key = Device.Id,
-            //                 Value = String.Concat(Device.Tag, " - ",  Device.Name)
-            //             }).Distinct().ToList();
+            IQueryable<Device> tb_Device = _context.Device;
+            var query = (from Device in tb_Device
+                         select new SelectListItemDTO()
+                         {
+                             Key = Device.Id,
+                             Value = String.Concat(Device.Code, " - ", Device.Tag)
+                         }).Distinct().ToList();
 
-            //return query;
+            return query;
         }
 
         private IQueryable<Device> GetQuery()
@@ -226,9 +225,9 @@ namespace SensorService
         }
 
 
-        List<SelectListItemDTO> IDeviceService.GetQueryDropDownListByTag()
+        List<SelectListItemDTO> IDeviceService.GetQueryDropDownListByCode()
         {
-            return GetQueryDropDownListByTag();
+            return GetQueryDropDownListByCode();
         }
 
         Device IDeviceService.GetByDeviceTag(string DeviceTag)

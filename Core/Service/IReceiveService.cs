@@ -15,7 +15,11 @@ namespace Core.Service
 
         ReceiveData GetData(int id);
 
-        IEnumerable<ReceiveGlobal> GetAllGlobal();
+        IEnumerable<ReceiveGlobal> ListGlobal();
+
+        IEnumerable<ReceiveGlobal> ListGlobalLastAlarm();
+
+        IEnumerable<ReceiveData> ListDataLastAlarm();
 
         IEnumerable<ReceiveData> GetAllData();
 
@@ -24,5 +28,9 @@ namespace Core.Service
         IEnumerable<ReceiveDataDado> GetDataDadoByDataReceiveId(int dataId);
 
         IEnumerable<RMSCristaModelResponse> GetDataUnionGlobalByDateType(int deviceId, int motorId, DateTime startDate, DateTime endDate, int reportType, int eixo);
+        IEnumerable<DataGlobalModel> ListDeviceCodeAlarme(int? deviceId, int? motorId, DateTime? startDate,
+            DateTime? endDate, string gravidade, int skip = 0);
+        int ListDeviceCodeAlarmeCount(int? deviceId, int? motorId, DateTime? startDate,
+            DateTime? endDate, string gravidade);
     }
 }

@@ -1,0 +1,236 @@
+﻿@model ReportOcorrenciasModel
+
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+
+@inject Core.Service.IDeviceMeasureService deviceMeasureService
+@inject Core.Service.IMotorService motorService
+@inject Core.Service.IDeviceService deviceService
+@inject Core.Service.ICompanyService companyService
+
+
+<h4 style="text-align:center">Relatório de Ocorrências</h4>
+<hr />
+
+<div class="container">
+
+    <form id="form-ocorrencias" method="post" action="@Url.Action("ReportOcorrencias", "Report")">
+
+        <div class="row">
+
+            <div class="form-group col-md-3">
+                <label class="control-label">Equipamento</label>
+                @Html.DropDownList("MotorId", new SelectList(motorService.GetQueryDropDownListByTag(), "Key", "Value"),
+                @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "class", "form-control main-selects" } })
+                <span id="validation-MotorId" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label class="control-label">Sensor</label>
+                @Html.DropDownList("DeviceId", new SelectList(deviceService.GetQueryDropDownList(), "Key", "Value"),
+                @localizer.Get("DeviceSelect"), new Dictionary<string, object> { { "class", "form-control main-selects" } })
+                <span id="validation-DeviceId" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label class="control-label">Data Inicial</label>
+                <input asp-for="StartDate" type="date" id="StartDate" name="StartDate" class="form-control" />
+                <span id="validation-StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label class="control-label">Data Final</label>
+                <input asp-for="EndDate" type="date" id="EndDate" name="EndDate" class="form-control" />
+                <span id="validation-EndDate" class="text-danger"></span>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="form-group col-md-3">
+                <label class="control-label">Gravidade</label>
+                <select asp-for="Gravidade" id="Gravidade" name="Gravidade" class="form-control">
+                    <option value="">Todos</option>
+                    <option value="amarelo">Amarelo</option>
+                    <option value="vermelho">Vermelho</option>
+                </select>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label class="control-label">&nbsp;</label>
+                <input type="hidden" id="PageIndex" name="PageIndex" value="@Model.PageIndex" />
+                <input type="hidden" id="PageTotal" name="PageTotal" value="@Model.PageTotal" />
+                <input id="btn-view-ocorrencias" type="button" value="Visualizar" class="btn btn-primary" style="width:100%;" />
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-white">
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="example" class="display table" style="width:100%;text-align:center">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Data
+                                    </th>
+                                    <th>
+                                        Equipamento
+                                    </th>
+                                    <th>
+                                        Sensor
+                                    </th>
+                                    <th>
+                                        Id
+                                    </th>
+                                    <th>
+                                        Alarme
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in Model.DataGlobalModel)
+                                {
+                                    string lineColor = item.alarm >= 7 ? "background-color:crimson;" : item.alarm >= 1 ? "background-color:gold;" : "";
+                                    string alarmName = item.alarm == 0 ? "Sem Alarme" : new int[] { 1, 4, 7, 10 }.Contains(item.alarm) ? "Alarme Eixo X" :
+                                    new int[] { 2, 5, 8, 11 }.Contains(item.alarm) ? "Alarme Eixo Y" : new int[] { 3, 6, 9, 12 }.Contains(item.alarm) ? "Alarme Eixo Z" : "";
+
+                                    <tr style="@lineColor">
+                                        <td>
+                                            @item.dataReceive.ToString("dd/MM/yyyy HH:mm:ss")
+                                        </td>
+                                        <td>
+                                            @item.motor
+                                        </td>
+                                        <td>
+                                            @item.device
+                                        </td>
+                                        <td>
+                                            @item.id
+                                        </td>
+                                        <td>
+                                            @alarmName
+                                        </td>
+                                    </tr>
+                                }
+
+                                @if (Model.DataGlobalModel.Any() == false)
+                                {
+                                    <tr>
+                                        <td colspan="4">
+                                            Nenhum registro para exibir. Utilize o filtro para fazer nova busca.
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.DataGlobalModel.Any())
+    {
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item @(Model.PageIndex > 0 ? "" : "disabled")"><a id="prev-page" class="page-link" href="#">Anterior</a></li>
+                        @if (Model.PageIndex > 0)
+                        {
+                            <li class="page-item"><a id="first-page" class="page-link" href="#">1</a></li>
+                        }
+
+                        <li class="page-item active"><a class="page-link" href="#">@(Model.PageIndex + 1)</a></li>
+
+                        @if (Model.PageIndex < Model.PageTotal)
+                        {
+                            <li class="page-item"><a id="last-page" class="page-link" href="#">@(Model.PageTotal + 1)</a></li>
+                        }
+
+                        <li class="page-item @(Model.PageIndex < Model.PageTotal ? "" : "disabled")"><a id="next-page" class="page-link" href="#">Próximo</a></li>
+                    </ul>
+                </nav>
+
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+    }
+
+    
+</div>
+
+@section Scripts
+    {
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#DeviceId').change(function(){
+                $('#PageIndex').val('0');
+                $('#PageTotal').val('0');
+            });
+            $('#MotorId').change(function () {
+                $('#PageIndex').val('0');
+                $('#PageTotal').val('0');
+            });
+            $('#StartDate').change(function () {
+                $('#PageIndex').val('0');
+                $('#PageTotal').val('0');
+            });
+            $('#EndDate').change(function () {
+                $('#PageIndex').val('0');
+                $('#PageTotal').val('0');
+            });
+            $('#Gravidade').change(function () {
+                $('#PageIndex').val('0');
+                $('#PageTotal').val('0');
+            });
+
+            $('#btn-view-ocorrencias').bind('click', function (e) {
+                let deviceId = $('#DeviceId').val();
+                let motorId = $('#MotorId').val();
+                let startDate = $('#StartDate').val();
+                let endDate = $('#EndDate').val();
+
+                $('#form-ocorrencias').submit();
+            });
+
+            $('#next-page').bind('click', function (e) {
+                let nextPage = parseInt($('#PageIndex').val()) + 1;
+                $('#PageIndex').val(nextPage);
+                $('#form-ocorrencias').submit();
+            });
+
+            $('#prev-page').bind('click', function (e) {
+                let prevPage = parseInt($('#PageIndex').val()) - 1;
+                $('#PageIndex').val(prevPage);
+                $('#form-ocorrencias').submit();
+            });
+
+            $('#first-page').bind('click', function (e) {
+                $('#PageIndex').val('0');
+                $('#form-ocorrencias').submit();
+            });
+
+            $('#last-page').bind('click', function (e) {
+                $('#PageIndex').val('@(Model.PageTotal)');
+                $('#form-ocorrencias').submit();
+            });
+        });
+
+
+        
+
+    </script>
+}

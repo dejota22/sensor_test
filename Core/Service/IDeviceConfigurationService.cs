@@ -11,6 +11,8 @@ namespace Core.Service
 
         DeviceConfiguration Get(int id);
 
+        DeviceConfigurationModel GetLastBySensorCode(string sensorCode);
+
         DeviceConfigurationModel GetLast(int deviceId, int motorId);
 
         DeviceConfiguration GetByDeviceId(int deviceId);

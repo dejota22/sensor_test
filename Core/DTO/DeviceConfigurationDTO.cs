@@ -96,10 +96,19 @@ namespace Core.DTO
         public int? end { get; set; }
         public int? gtw { get; set; }
         public int? syn { get; set; }
+        public int? pwr { get; set; }
         #endregion
 
         public bool isEdit { get; set; }
         public bool isEditUserSetup { get; set; }
+        public string codigoSensor { get; set; }
+
+        public string motorName { get; set; }
+        public string deviceTag { get; set; }
+
+        public int? CopyToMotorId { get; set; }
+        public int? CopyToDeviceId { get; set; }
+
         public bool? config { get; set; }
 
         public IList<DeviceConfigurationHorariosEnviosCard> DeviceConfigurationHorariosEnviosCard { get; set; }

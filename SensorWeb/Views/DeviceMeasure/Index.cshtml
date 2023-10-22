@@ -11,35 +11,62 @@
 <hr />
 <div class="container">
 
-    <form asp-action="Create">
+    <form asp-action="Index" method="post">
 
         <div>
             <div class="form-group" style="margin-top:0px">
-                <input type="submit" value="Configurar Sensor" class="btn btn-primary" />
+                @if (User.IsInRole("Administrador") || User.IsInRole("Supervisor"))
+                {
+                    <input type="submit" value="Configurar Sensor" class="btn btn-primary" />
+                }
+                
                 <input type="hidden" id="isEdit" name="isEdit" value="@Model.isEdit.ToString()" />
+                <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+
+                @if (Model.Id != 0 && (User.IsInRole("Administrador") || User.IsInRole("Supervisor")))
+                {
+                    <button type="button" class="btn btn-warning" style="margin-left:40px;" onclick="javascript:abrirCopyConfigModal();">Copiar Configurações</button>
+                }
             </div>
         </div>
 
         <div class="row">
-            @*<div class="form-group col-md-4">
-                <label asp-for="CompanyId" class="control-label"></label>
-                @Html.DropDownListFor(model => model.CompanyId, new SelectList(companyService.GetQueryDropDownList(), "Key", "Value"),
-                @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
-                <span asp-validation-for="CompanyId" class="text-danger"></span>
-            </div>*@
             <div class="form-group col-md-4">
-                <label class="control-label">Descrição do Ativo Monitorado</label>
-                @Html.DropDownListFor(model => model.MotorId, new SelectList(motorService.GetQueryDropDownListByTag(), "Key", "Value"),
-                @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "class", "form-control main-selects" } })
-                <span asp-validation-for="MotorId" class="text-danger"></span>
+                <label class="control-label">Código do Sensor </label>
+                <input type="text" value="@Model.codigoSensor" asp-for="codigoSensor" name="codigoSensor" id="codigoSensor" class="form-control" />
+                <span asp-validation-for="codigoSensor" class="text-danger"></span>
             </div>
             <div class="form-group col-md-4">
-                <label asp-for="DeviceId" class="control-label"></label>
-                @Html.DropDownListFor(model => model.DeviceId, new SelectList(deviceService.GetQueryDropDownList(), "Key", "Value"),
-                @localizer.Get("DeviceSelect"), new Dictionary<string, object> { { "class", "form-control main-selects" } })
-                <span asp-validation-for="DeviceId" class="text-danger"></span>
+                <br />
+                <input id="sensor-search" type="button" value="Pesquisar" class="btn btn-info" />
             </div>
         </div>
+
+        @if (Model.Id == 0 && Model.codigoSensor != null)
+        {
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <br />
+                    <span style="color:crimson;">Não há Configuração para o código informado</span>
+                </div>
+            </div>
+        }
+
+        @if (Model.DeviceId != null)
+        {
+            <div class="row desc-row">
+                <div class="form-group col-md-4">
+                    <label class="control-label">Máquina: </label>
+                    <input type="text" asp-for="motorName" id="motorName" name="motorName" value="@Model.motorName" class="form-control" readonly />
+                    <input type="hidden" asp-for="MotorId" id="MotorId" name="MotorId" value="@Model.MotorId" />
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="DeviceId" class="control-label">Sensor: </label>
+                    <input type="text" asp-for="deviceTag" id="deviceTag" name="deviceTag" value="@Model.deviceTag" class="form-control" readonly />
+                    <input type="hidden" asp-for="DeviceId" id="DeviceId" name="DeviceId" value="@Model.DeviceId" />
+                </div>
+            </div>
+        }
 
         <nav>
             <div class="nav nav-tabs" id="deviceTab" role="tablist">
@@ -326,8 +353,11 @@
                                     <span asp-validation-for="usr_amostras" class="text-danger"></span>
                                 </div>
                                 <div class="form-group col-md-3" style="display: grid;">
-                                    <label class="control-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                    <input id="btnEditUserSetup" type="button" value="Configuração Leitura Especial" class="btn btn-sm btn-primary" />
+                                    @if (User.IsInRole("Administrador") || User.IsInRole("Supervisor"))
+                                    {
+                                        <label class="control-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                        <input id="btnEditUserSetup" type="button" value="Configuração Leitura Especial" class="btn btn-sm btn-primary" />
+                                    }
                                 </div>
                             </div>
 
@@ -344,7 +374,7 @@
                         <label class="control-label">
                             Modo de Atuação <i class="fa fa-info-circle" title="Se o funcionamento do Sensor será Contínuo: Atuação por contagem de minutos ou Modo Hora: Horários Agendados"></i>
                         </label>
-                            <input type="number" max="1" min="0" value="@Model.modo_hora" asp-for="modo_hora" name="modo_hora" id="modo_hora" class="form-control" />
+                            <input type="number" max="1" min="0" value="@Model.modo_hora" asp-for="modo_hora" name="modo_hora" id="modo_hora" class="form-control" onblur="modoContinuoFunc();" />
                         <span asp-validation-for="modo_hora" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
@@ -366,7 +396,7 @@
                         <input type="hidden" id="dias_run" name="dias_run" value="@(Model.dias_run != null ? Model.dias_run : "________")" />
                         <span asp-validation-for="dias_run" class="text-danger"></span>
                     </div>
-                    <div class="form-group col-md-3" style="display: grid;">
+                    <div class="form-group col-md-3 modo-field" style="display: grid;">
                         <label class="control-label">Início de Turno <i class="fa fa-info-circle" title="Horário de inicio da operação do Sensor"></i></label>
                         <input type="time" value="@Model.inicio_turno" step="0" asp-for="inicio_turno" name="inicio_turno" id="inicio_turno" class="form-control" />
                             <span asp-validation-for="inicio_turno" class="text-danger"></span>
@@ -374,7 +404,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="form-group col-md-3" style="display: grid;">
+                    <div class="form-group col-md-3 modo-field" style="display: grid;">
                         <label class="control-label">Fim de Turno <i class="fa fa-info-circle" title="Horário de fim da operação do Sensor"></i></label>
                         <input type="time" value="@Model.fim_turno" step="0" asp-for="fim_turno" name="fim_turno" id="fim_turno" class="form-control" />
                         <span asp-validation-for="fim_turno" class="text-danger"></span>
@@ -397,7 +427,7 @@
                 </div>
 
                     <div class="row">
-                        <div class="form-group col-md-3" style="display: grid;">
+                    <div class="form-group col-md-3 modo-field" style="display: grid;">
                         <label class="control-label">Quantidade Horários de Análise (Máx 12) <i class="fa fa-info-circle" title="Quantidade de Horários em que devem ocorrer as análises para valores Globais"></i></label>
                             <input value="@Model.quant_horarios_cards" asp-for="quant_horarios_cards" name="quant_horarios_cards" id="quant_horarios_cards" class="form-control" />
                             <span asp-validation-for="quant_horarios_cards" class="text-danger"></span>
@@ -531,13 +561,33 @@
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">Gateway</label>
-                        <input type="number" min="0" value="@Model.gtw" asp-for="gtw" name="gtw" id="gtw" class="form-control" readonly="readonly" />
+                        <input type="number" min="0" value="@Model.gtw" asp-for="gtw" name="gtw" id="gtw" class="form-control" />
                         <span asp-validation-for="gtw" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">Sincronismo</label>
                         <input type="number" min="0" value="@Model.syn" asp-for="syn" name="syn" id="syn" class="form-control" readonly="readonly" />
                         <span asp-validation-for="syn" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">Potência de Transmissão</label>
+
+                        <select name="pwr" id="pwr" class="form-control" asp-for="pwr" style="width:100%">
+                            <option value="20">5</option>
+                            <option value="26">6</option>
+                            <option value="32">7</option>
+                            <option value="38">8</option>
+                            <option value="44">9</option>
+                            <option value="50">10</option>
+                            <option value="56">11</option>
+                            <option value="62">12</option>
+                            <option value="68">13</option>
+                            <option value="74">14</option>
+                            <option value="80">15</option>
+                            <option value="86">16</option>
+                            <option value="92">17</option>
+                        </select>
+                        <span asp-validation-for="pwr" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -712,6 +762,44 @@
 </div>
 
 
+<div class="modal fade" id="copyConfigModal" tabindex="-1" role="dialog" aria-labelledby="copyConfigModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="copyConfigModalLabel">Copiar Configurações</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Informe Equipamento e Sensor para enviar as configurações: <br /><br />
+
+                <div class="row mb-3">
+                    <div class="form-group col-md-6">
+                        <label class="control-label">Equipamento</label>
+                        @Html.DropDownListFor(model => model.CopyToMotorId, new SelectList(motorService.GetQueryDropDownList(), "Key", "Value"),
+                        @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "class", "form-control copy-selects" } })
+                        <span asp-validation-for="MotorId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="DeviceId" class="control-label"></label>
+                        @Html.DropDownListFor(model => model.CopyToDeviceId, new SelectList(deviceService.GetQueryDropDownListByCode(), "Key", "Value"),
+                        @localizer.Get("DeviceSelect"), new Dictionary<string, object> { { "class", "form-control copy-selects" } })
+                        <span asp-validation-for="DeviceId" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <button id="btnCopyConfig" type="button" class="btn btn-primary">Copiar Configurações</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @section Scripts
 {
     <script type="text/javascript">
@@ -736,6 +824,11 @@
                 $(this).removeClass('active');
 
             $('#dia_envio_relat').val(setDaysField('#btn-dia_envio_relat'));
+        });
+
+        $('#sensor-search').on('click', function (e) {
+            if ($('#codigoSensor').val() != '')
+                document.location.href = '@Url.Action("Index")' + '?codeAttempt=' + $('#codigoSensor').val();
         });
 
         setDaysControl('#btn-dias_run', $('#dias_run').val());
@@ -763,17 +856,26 @@
 
         });
 
-        $('.main-selects').on('change', function (e) {
-            let deviceId = $('#DeviceId').val();
-            let motorId = $('#MotorId').val();
-
-            if (deviceId != '' && motorId != '')
-                document.location.href = '@Url.Action("Index")' + '?DeviceId=' + deviceId + '&MotorId=' + motorId;
-        });
-
         $('#btnEditUserSetup').on('click', function () {
             $('#isEditUserSetup').val('True');
             $('form').submit();
+        });
+
+        $('#btnCopyConfig').on('click', function () {
+            let toMotor = $('#CopyToMotorId').val();
+            let toDevice = $('#CopyToDeviceId').val();
+
+            if (toMotor != '' && toDevice != '') {
+                let toDeviceCode = $('#CopyToDeviceId option:selected').text().split(" - ")[0];
+
+                $('#MotorId').val(toMotor);
+                $('#DeviceId').val(toDevice);
+                $('#codigoSensor').val(toDeviceCode);
+
+                $('form').attr('action', '@Url.Action("Copy")');
+                $('form').submit();
+            }
+
         });
 
         function setDaysField(idPart) {
@@ -825,6 +927,22 @@
                     $(controlIdPart + (i + 1)).addClass('active');
                 }
             }
+        }
+
+        function modoContinuoFunc() {
+            if ($('#modo_hora').val() == '0') {
+                $('#inicio_turno').val('');
+                $('#fim_turno').val('');
+                $('#quant_horarios_cards').val('');
+                $('.modo-field').hide();
+            } else {
+                $('.modo-field').show();
+            }
+            
+        }
+
+        function abrirCopyConfigModal() {
+            $('#copyConfigModal').modal('show');
         }
 
         $(document).ready(function ($) {

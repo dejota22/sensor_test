@@ -10,7 +10,7 @@ namespace Core.Utils
         {
             public const string Administrator = "Administrador";
             public const string Supervisor = "Supervisor";
-            public const string Analyst = "Analista";
+            public const string User = "Usuário";
         }
 
         public static class CompanyTypes

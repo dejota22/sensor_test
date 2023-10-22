@@ -14,10 +14,14 @@ namespace SensorService
     {
         private readonly SensorContext _context;
         private readonly IDeviceService _device;
+        private readonly IMotorService _motor;
 
         public DeviceConfigurationService(SensorContext context)
         {
             _context = context;
+
+            _device = new DeviceService(context);
+            _motor = new MotorService(context);
         }
 
         //void IUserTypeService.Edit(UserType userType)
@@ -109,6 +113,28 @@ namespace SensorService
         public DeviceConfiguration Get(int id)
         {
             return GetQuery().Where(x => x.Id.Equals(id)).FirstOrDefault();
+        }
+
+        public DeviceConfigurationModel GetLastBySensorCode(string sensorCode)
+        {
+            var config = new DeviceConfigurationModel();
+            var device = _device.GetByCode(sensorCode);
+
+            if (device != null)
+            {
+                var motor = _motor.GetAll().Where(m => m.DeviceId == device.Id).LastOrDefault();
+
+                if (motor != null)
+                {
+                    config = GetLast(device.Id, motor.Id);
+
+                    config.motorName = _motor.Get(motor.Id).Name;
+                    config.deviceTag = _device.Get(device.Id).Tag;
+                }
+                    
+            }
+
+            return config;
         }
 
         public DeviceConfigurationModel GetLast(int deviceId, int motorId)

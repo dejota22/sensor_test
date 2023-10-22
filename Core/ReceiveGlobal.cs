@@ -14,8 +14,11 @@ namespace Core
         public DateTime DataReceive { get; set; }
         public int? IdDeviceConfiguration { get; set; }
 
+        [Column(TypeName = "varchar(60)")]
         public string id { get; set; }
+        [Column(TypeName = "varchar(45)")]
         public string gtw { get; set; }
+        [Column(TypeName = "varchar(45)")]
         public string ver { get; set; }
         public int seq { get; set; }
         public int resets { get; set; }
@@ -45,8 +48,10 @@ namespace Core
         public double ftr_crista_X { get; set; }
         public double ftr_crista_Y { get; set; }
         public double ftr_crista_Z { get; set; }
+        public bool? enviado_vinkins { get; private set; }
 
         [ForeignKey("IdDeviceConfiguration")]
         public DeviceConfiguration DeviceConfiguration { get; set; }
+        
     }
 }

@@ -107,8 +107,8 @@ namespace SensorWeb.Controllers
             var returnDictionary = new Dictionary<string, int>();
             var receiveDataAndGlobal = new List<DataAndGlobalModel>();
 
-            var allData = _receiveService.GetAllData().OrderByDescending(d => d.DataReceive).ToList();
-            var allGlobal = _receiveService.GetAllGlobal().OrderByDescending(d => d.DataReceive).ToList();
+            var allData = _receiveService.ListDataLastAlarm();
+            var allGlobal = _receiveService.ListGlobalLastAlarm();
             
             if (allData != null && allData.Any())
             {
@@ -147,7 +147,7 @@ namespace SensorWeb.Controllers
         {
             List<MotorModel> list = new List<MotorModel>();
 
-            foreach(var m in listaMotores)
+            foreach(var m in listaMotores.Where(m => m.Device != null))
             {
                 MotorModel model = new MotorModel();
 
@@ -172,5 +172,8 @@ namespace SensorWeb.Controllers
         public string id;
         public int alarm;
         public DateTime dataReceive;
+
+        public string motor;
+        public string device;
     }
 }

@@ -244,4 +244,24 @@ namespace SensorWeb.Models
         //public virtual Ring Ring { get; set; }
         //public virtual ICollection<DeviceMeasure> DeviceMeasure { get; set; }
     }
+
+
+    public class ReportOcorrenciasModel
+    {
+        public ReportOcorrenciasModel()
+        {
+            DataGlobalModel = new List<DataGlobalModel> { };
+        }
+
+        public int? MotorId { get; set; }
+        public int? DeviceId { get; set; }
+        public DateTime? StartDate { get; set;}
+        public DateTime? EndDate { get; set; }
+        public string Gravidade { get; set; }
+
+        public int PageIndex { get; set; }
+        public int PageTotal { get; set; }
+
+        public List<DataGlobalModel> DataGlobalModel { get; set; }
+    }
 }

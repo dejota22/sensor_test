@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core
 {
@@ -31,14 +33,19 @@ namespace Core
 
         public int? modo_hora { get; set; }
         public int? conta_envios { get; set; }
+        [Column(TypeName = "varchar(50)")]
         public string dias_run { get; set; }
+        [Column(TypeName = "varchar(50)")]
         public string inicio_turno { get; set; }
+        [Column(TypeName = "varchar(50)")]
         public string fim_turno { get; set; }
         public int? intervalo_analise { get; set; }
         public int? intervalo_analise_alarme { get; set; }
         public int? quant_alarme { get; set; }
         public int? quant_horarios_cards { get; set; }
+        [Column(TypeName = "varchar(50)")]
         public string dia_envio_relat { get; set; }
+        [Column(TypeName = "varchar(50)")]
         public string hora_envio_relat { get; set; }
         public int? t_card_normal { get; set; }
 

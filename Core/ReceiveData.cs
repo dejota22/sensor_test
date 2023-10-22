@@ -34,6 +34,9 @@ namespace Core
         public double rms_spd { get; set; }
         public double ftr_crista { get; set; }
         public int alarme { get; set; }
+
+        public bool? enviado_vinkins { get; private set; }
+
         public string dado { get; set; }
 
         [ForeignKey("IdDeviceConfiguration")]

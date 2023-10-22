@@ -1569,6 +1569,7 @@ namespace Core
                 entity.Property(e => e.setup_eixo).HasColumnName("setup_eixo");
                 entity.Property(e => e.setup_fs).HasColumnName("setup_fs");
                 entity.Property(e => e.setup_amostras).HasColumnName("setup_amostras");
+                entity.Property(e => e.enviado_vinkins).HasColumnName("enviado_vinkins");
                 entity.Property(e => e.dado).HasColumnName("dado");
             });
 
@@ -1632,6 +1633,7 @@ namespace Core
                 entity.Property(e => e.setup_af_filtro).HasColumnName("setup_af_filtro");
                 entity.Property(e => e.setup_af_fs).HasColumnName("setup_af_fs");
                 entity.Property(e => e.setup_af_amostras).HasColumnName("setup_af_amostras");
+                entity.Property(e => e.enviado_vinkins).HasColumnName("enviado_vinkins");
             });
 
             modelBuilder.Entity<Reducer>(entity =>

@@ -51,17 +51,23 @@ namespace SensorWeb.Controllers
             _logger = logger;
         }
 
-        public ActionResult Index(int? DeviceId, int? MotorId)
+        public ActionResult Index(string codeAttempt = null)
         {
             try
             {
                 var configModel = new DeviceConfigurationModel();
 
-                if (DeviceId != null && MotorId != null)
-                    configModel = _deviceMeasureService.GetLast(DeviceId.Value, MotorId.Value);
+                if (string.IsNullOrWhiteSpace(codeAttempt) == false)
+                    configModel = _deviceMeasureService.GetLastBySensorCode(codeAttempt);
                 else
                     configModel = _deviceMeasureService.GetLast(0, 0);
 
+                //if (DeviceId != null && MotorId != null)
+                //    configModel = _deviceMeasureService.GetLast(DeviceId.Value, MotorId.Value);
+                //else
+                //    configModel = _deviceMeasureService.GetLast(0, 0);
+
+                configModel.codigoSensor = codeAttempt;
                 return View(configModel);
             }
             catch (Exception ex)
@@ -71,72 +77,105 @@ namespace SensorWeb.Controllers
             }
         }
 
-        // POST: DeviceMeasureController/Create
+        // POST: DeviceMeasureController/Index
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(DeviceConfigurationModel deviceMeasureModel)
+        public ActionResult Index(DeviceConfigurationModel deviceMeasureModel)
         {
             try
             {
-                if (deviceMeasureModel.DeviceId != null && deviceMeasureModel.MotorId != null)
-                {
-                    DeviceConfigurationSpecialRead usrSetup = null;
-                    if (deviceMeasureModel.isEditUserSetup == true)
-                    {
-                        usrSetup = deviceMeasureModel.GetDeviceConfigurationSpecialReadFromModel();
-                        usrSetup.CreatedAt = DateTime.Now;
+                PersistDeviceConfiguration(deviceMeasureModel);
 
-                        if (deviceMeasureModel.isEdit == true)
-                        {
-                            var usrSetupFromDB = _deviceMeasureService.GetUsrSetup(deviceMeasureModel.MotorId.Value, deviceMeasureModel.DeviceId.Value);
-                            
-                            if (usrSetupFromDB != null)
-                            {
-                                usrSetupFromDB.usr_amostras = usrSetup.usr_amostras;
-                                usrSetupFromDB.usr_freq_cut = usrSetup.usr_freq_cut;
-                                usrSetupFromDB.usr_eixo = usrSetup.usr_eixo;
-                                usrSetupFromDB.usr_filtro = usrSetup.usr_filtro;
-                                usrSetupFromDB.usr_fs = usrSetup.usr_fs;
-                                usrSetupFromDB.usr_odr = usrSetup.usr_odr;
-                            }
-                                
-
-                            _deviceMeasureService.Edit(deviceMeasureModel.GetDeviceConfigurationFromModel(), usrSetupFromDB != null ? usrSetupFromDB : usrSetup);
-                        }
-                        else
-                        {
-                            _deviceMeasureService.Insert(deviceMeasureModel.GetDeviceConfigurationFromModel(), usrSetup);
-                        }   
-                    }
-                    else
-                    {
-                        if (deviceMeasureModel.isEdit == true)
-                        {
-                            var configModel = _deviceMeasureService.GetLast(deviceMeasureModel.DeviceId.Value, deviceMeasureModel.MotorId.Value);
-                            if (configModel != null)
-                            {
-                                deviceMeasureModel.Id = configModel.Id;
-                                deviceMeasureModel.config = true;
-
-                                _deviceMeasureService.Edit(deviceMeasureModel.GetDeviceConfigurationFromModel(), null);
-                            }
-                        }
-                        else
-                        {
-                            //if (ModelState.IsValid)
-                            //{
-                            deviceMeasureModel.Id = _deviceMeasureService.GetlastCode();
-                            _deviceMeasureService.Insert(deviceMeasureModel.GetDeviceConfigurationFromModel(), null);
-                            //}
-                        }
-                    }
-                }
-
-                return RedirectToAction(nameof(Index));
+                return View(deviceMeasureModel);
             }
             catch (Exception e)
             {
                 return View();
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Copy(DeviceConfigurationModel deviceMeasureModel)
+        {
+            try
+            {
+                var configModel = _deviceMeasureService
+                    .GetLast(deviceMeasureModel.DeviceId.Value, deviceMeasureModel.MotorId.Value);
+
+                if (configModel.Id == 0)
+                {
+                    deviceMeasureModel.isEdit = false;
+                }
+                else
+                {
+                    deviceMeasureModel.isEdit = true;
+                }
+
+                PersistDeviceConfiguration(deviceMeasureModel);
+
+                return RedirectToAction(nameof(Index), new { codeAttempt = deviceMeasureModel.codigoSensor });
+            }
+            catch (Exception e)
+            {
+                return View();
+            }
+        }
+
+        private void PersistDeviceConfiguration(DeviceConfigurationModel deviceMeasureModel)
+        {
+            if (deviceMeasureModel.DeviceId != null && deviceMeasureModel.MotorId != null)
+            {
+                DeviceConfigurationSpecialRead usrSetup = null;
+                if (deviceMeasureModel.isEditUserSetup == true)
+                {
+                    usrSetup = deviceMeasureModel.GetDeviceConfigurationSpecialReadFromModel();
+                    usrSetup.CreatedAt = DateTime.Now;
+
+                    if (deviceMeasureModel.isEdit == true)
+                    {
+                        var usrSetupFromDB = _deviceMeasureService.GetUsrSetup(deviceMeasureModel.MotorId.Value, deviceMeasureModel.DeviceId.Value);
+
+                        if (usrSetupFromDB != null)
+                        {
+                            usrSetupFromDB.usr_amostras = usrSetup.usr_amostras;
+                            usrSetupFromDB.usr_freq_cut = usrSetup.usr_freq_cut;
+                            usrSetupFromDB.usr_eixo = usrSetup.usr_eixo;
+                            usrSetupFromDB.usr_filtro = usrSetup.usr_filtro;
+                            usrSetupFromDB.usr_fs = usrSetup.usr_fs;
+                            usrSetupFromDB.usr_odr = usrSetup.usr_odr;
+                        }
+
+
+                        _deviceMeasureService.Edit(deviceMeasureModel.GetDeviceConfigurationFromModel(), usrSetupFromDB != null ? usrSetupFromDB : usrSetup);
+                    }
+                    else
+                    {
+                        _deviceMeasureService.Insert(deviceMeasureModel.GetDeviceConfigurationFromModel(), usrSetup);
+                    }
+                }
+                else
+                {
+                    if (deviceMeasureModel.isEdit == true)
+                    {
+                        var configModel = _deviceMeasureService.GetLast(deviceMeasureModel.DeviceId.Value, deviceMeasureModel.MotorId.Value);
+                        if (configModel != null)
+                        {
+                            deviceMeasureModel.Id = configModel.Id;
+                            deviceMeasureModel.config = true;
+
+                            _deviceMeasureService.Edit(deviceMeasureModel.GetDeviceConfigurationFromModel(), null);
+                        }
+                    }
+                    else
+                    {
+                        //if (ModelState.IsValid)
+                        //{
+                        deviceMeasureModel.Id = _deviceMeasureService.GetlastCode();
+                        _deviceMeasureService.Insert(deviceMeasureModel.GetDeviceConfigurationFromModel(), null);
+                        //}
+                    }
+                }
             }
         }
     }

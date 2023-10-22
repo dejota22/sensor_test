@@ -15,6 +15,8 @@ using System;
 using SensorWeb.Resources;
 using Org.BouncyCastle.Asn1.X509;
 using System.IO;
+using Core.DTO;
+using System.Drawing.Printing;
 
 namespace SensorWeb.Controllers
 {
@@ -25,18 +27,24 @@ namespace SensorWeb.Controllers
         private readonly IStringLocalizer<Resources.CommonResources> _localizer;
         IReceiveService _receiveService;
         IDeviceConfigurationService _deviceConfigService;
+        IDeviceService _deviceService;
+        IMotorService _motorService;
 
         /// <summary>
         /// Construtor
         /// </summary>
         /// <param name="mapper"></param>
         /// <param name="localizer"></param>
-        public ReportController(IMapper mapper, IStringLocalizer<Resources.CommonResources> localizer, IReceiveService ReceiveService, IDeviceConfigurationService DeviceConfigurationService)
+        public ReportController(IMapper mapper, IStringLocalizer<Resources.CommonResources> localizer, 
+            IReceiveService ReceiveService, IDeviceConfigurationService DeviceConfigurationService, 
+            IDeviceService DeviceService, IMotorService MotorService)
         {
             _mapper = mapper;
             _localizer = localizer;
             _receiveService = ReceiveService;
             _deviceConfigService = DeviceConfigurationService;
+            _deviceService = DeviceService;
+            _motorService = MotorService;
         }
 
         // GET: ReportController
@@ -69,36 +77,6 @@ namespace SensorWeb.Controllers
 
             return View("DownloadPDF", report);
         }
-
-        //[HttpPost]
-        //public async Task<IActionResult> Create(ReportModel report)
-        //{
-        //    var reportView = await this.RenderViewToStringAsync("DownloadPDF", report);
-
-        //    // instantiate a html to pdf converter object
-        //    HtmlToPdf converter = new HtmlToPdf();
-
-
-        //    converter.Options.CssMediaType = HtmlToPdfCssMediaType.Screen;
-        //    converter.Options.ViewerPreferences.CenterWindow = true;
-        //    converter.Options.AutoFitHeight = HtmlToPdfPageFitMode.AutoFit;
-        //    converter.Options.AutoFitWidth = HtmlToPdfPageFitMode.AutoFit;
-        //    converter.Options.PdfPageSize = PdfPageSize.A4;
-        //    converter.Options.PdfPageOrientation = PdfPageOrientation.Portrait;
-        //    converter.Options.InternalLinksEnabled = true;
-
-        //    PdfDocument doc = converter.ConvertHtmlString(reportView);
-
-        //    byte[] pdf = doc.Save();
-        //    doc.Close();
-
-        //    FileResult fileResult = new FileContentResult(pdf, "application/pdf")
-        //    {
-        //        FileDownloadName = $"{report.NomeArquivo}.pdf"
-        //    };
-
-        //    return fileResult;
-        //}
 
         public ActionResult ReportDeviceData(int? DeviceId, int? MotorId)
         {
@@ -140,6 +118,26 @@ namespace SensorWeb.Controllers
         public ActionResult ReportRMSCrista()
         {
             return View();
+        }
+
+        public ActionResult ReportOcorrencias()
+        {
+            return View(new ReportOcorrenciasModel());
+        }
+
+        [HttpPost]
+        public ActionResult ReportOcorrencias(ReportOcorrenciasModel model)
+        {
+            var newEndDate = model.EndDate;
+            if (model.EndDate.HasValue)
+                newEndDate = model.EndDate.Value.Date.Add(new TimeSpan(23, 59, 59));
+
+            var list = GetDeviceCodeAlarme(model.DeviceId, model.MotorId, model.StartDate, newEndDate, model.Gravidade, model.PageIndex);
+            model.DataGlobalModel = list;
+
+            var listTotal = _receiveService.ListDeviceCodeAlarmeCount(model.DeviceId, model.MotorId, model.StartDate, newEndDate, model.Gravidade);
+            model.PageTotal = listTotal > 10 ? ((listTotal + 10 - 1) / 10) - 1 : 0;
+            return View(model);
         }
 
         public JsonResult ReportRMSCristaUpdate(int deviceId, int motorId, DateTime startDate, DateTime endDate, int reportType, int eixo)
@@ -199,6 +197,16 @@ namespace SensorWeb.Controllers
             }
 
             return "";
+        }
+
+        private List<DataGlobalModel> GetDeviceCodeAlarme(int? deviceId, int? motorId, DateTime? startDate, 
+            DateTime? endDate, string gravidade, int pageIndex = 0)
+        {
+            var skip = pageIndex * 10;
+            var receiveDataAndGlobal = _receiveService
+                .ListDeviceCodeAlarme(deviceId, motorId, startDate, endDate, gravidade, skip);
+
+            return receiveDataAndGlobal.ToList();
         }
     }
 }

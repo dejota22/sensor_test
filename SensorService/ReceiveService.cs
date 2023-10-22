@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Core;
@@ -9,32 +10,104 @@ using Core.DTO;
 using Core.Service;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
+using Dapper;
+using Microsoft.Extensions.Options;
+using Renci.SshNet.Messages;
 
 namespace SensorService
 {
     public class ReceiveService : IReceiveService
     {
         private readonly SensorContext _context;
+        private readonly string _connectionString;
 
         public ReceiveService(SensorContext context)
         {
             _context = context;
+            _connectionString = context.Database.GetDbConnection().ConnectionString;
+        }
+
+        #region Globals
+
+        public int InsertGlobal(ReceiveGlobal receiveGlobal)
+        {
+            receiveGlobal.DataReceive = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
+            _context.ReceiveGlobal.Add(receiveGlobal);
+            _context.SaveChanges();
+
+            return receiveGlobal.IdReceiveGlobal;
+        }
+
+        public IEnumerable<ReceiveGlobal> ListGlobal()
+        {
+            return GetQueryGlobal();
+        }
+
+        public IEnumerable<ReceiveGlobal> ListGlobalLastAlarm()
+        {
+            List<ReceiveGlobal> globals = new List<ReceiveGlobal>();
+
+            using (var conn = new MySql.Data.MySqlClient.MySqlConnection(_connectionString))
+            {
+                try
+                {
+                    globals = conn.Query<ReceiveGlobal>(@"SELECT rd1.id, rd1.DataReceive, rd1.alrm 
+                        FROM sensorDB.Receive_Global rd1 
+                        JOIN (
+	                        SELECT id, max(DataReceive) as DataReceive, alrm
+                            FROM sensorDB.Receive_Global
+                            GROUP BY id) as rd2
+                        on rd1.id = rd2.id and rd1.DataReceive = rd2.DataReceive;")
+                    .ToList();
+                }
+                catch (MySql.Data.MySqlClient.MySqlException ex)
+                {
+                    conn.Close();
+                }
+            }
+
+            return globals;
+        }
+
+        public ReceiveGlobal GetGlobal(int id)
+        {
+            return GetQueryGlobal().Where(x => x.IdReceiveGlobal.Equals(id)).FirstOrDefault();
         }
 
         private IQueryable<ReceiveGlobal> GetQueryGlobal()
         {
             IQueryable<ReceiveGlobal> tb_receiveglobal = _context.ReceiveGlobal;
-            var query = from receiveGlobal in tb_receiveglobal
-                        select receiveGlobal;
+            var query = tb_receiveglobal.Include(g => g.DeviceConfiguration);
 
             return query;
         }
 
+        private IList<ReceiveGlobal> RawQueryGlobal()
+        {
+            List<ReceiveGlobal> globals = new List<ReceiveGlobal>();
+
+            using (var conn = new MySql.Data.MySqlClient.MySqlConnection(_connectionString))
+            {
+                try
+                {
+                    globals = conn.Query<ReceiveGlobal>("SELECT * FROM sensorDB.Receive_Global;").ToList();
+                }
+                catch (MySql.Data.MySqlClient.MySqlException ex)
+                {
+                    conn.Close();
+                }
+            }
+
+            return globals;
+        }
+
+        #endregion
+
         private IQueryable<ReceiveData> GetQueryData()
         {
             IQueryable<ReceiveData> tb_receivedata = _context.ReceiveData;
-            var query = from receiveData in tb_receivedata
-                        select receiveData;
+            var query = tb_receivedata.Include(d => d.DeviceConfiguration);
 
             return query;
         }
@@ -48,23 +121,9 @@ namespace SensorService
             return query;
         }
 
-        public ReceiveGlobal GetGlobal(int id)
-        {
-            return GetQueryGlobal().Where(x => x.IdReceiveGlobal.Equals(id)).FirstOrDefault();
-        }
-
         public ReceiveData GetData(int id)
         {
             return GetQueryData().Where(x => x.IdReceiveData.Equals(id)).FirstOrDefault();
-        }
-
-        public int InsertGlobal(ReceiveGlobal receiveGlobal)
-        {
-            receiveGlobal.DataReceive = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
-            _context.ReceiveGlobal.Add(receiveGlobal);
-            _context.SaveChanges();
-
-            return receiveGlobal.IdReceiveGlobal;
         }
 
         public int InsertData(ReceiveData receiveData)
@@ -85,19 +144,45 @@ namespace SensorService
             return receiveData.IdReceiveData;
         }
 
-        public IEnumerable<ReceiveGlobal> GetAllGlobal()
-        {
-            return GetQueryGlobal();
-        }
+        
 
         public IEnumerable<ReceiveData> GetAllData()
         {
             return GetQueryData();
         }
 
+        public IEnumerable<ReceiveData> ListDataLastAlarm()
+        {
+            List<ReceiveData> globals = new List<ReceiveData>();
+
+            using (var conn = new MySql.Data.MySqlClient.MySqlConnection(_connectionString))
+            {
+                try
+                {
+                    globals = conn.Query<ReceiveData>(@"SELECT rd1.id, rd1.DataReceive, rd1.alarme 
+                        FROM sensorDB.Receive_Data rd1 
+                        JOIN (
+	                        SELECT id, max(DataReceive) as DataReceive, alarme
+                            FROM sensorDB.Receive_Data
+                            GROUP BY id) as rd2
+                        on rd1.id = rd2.id and rd1.DataReceive = rd2.DataReceive;")
+                    .ToList();
+                }
+                catch (MySql.Data.MySqlClient.MySqlException ex)
+                {
+                    conn.Close();
+                }
+            }
+
+            return globals;
+        }
+
         public IEnumerable<ReceiveData> GetDataByDeviceMotor(int? deviceId, int? motorId)
         {
-            return GetQueryData().Where(d => d.DeviceConfiguration.DeviceId == deviceId && d.DeviceConfiguration.MotorId == motorId && d.ReceiveDataDados.Any() == true);
+            var receiveDataList = GetQueryData().Where(d => d.DeviceConfiguration.DeviceId == deviceId 
+                && d.DeviceConfiguration.MotorId == motorId).ToList();
+
+            return receiveDataList;
         }
 
         public IEnumerable<ReceiveDataDado> GetDataDadoByDataReceiveId(int dataId)
@@ -118,6 +203,168 @@ namespace SensorService
                 d.DataReceive >= startDate && d.DataReceive <= endDate).ToList();
 
             return MontaListaReportRMSCrista(listaData, listaGlobal, reportType, eixo);
+        }
+
+        public IEnumerable<DataGlobalModel> ListDeviceCodeAlarme(int? deviceId, int? motorId, DateTime? startDate,
+            DateTime? endDate, string gravidade, int skip = 0)
+        {
+            List<DataGlobalModel> receiveDataAndGlobal = new List<DataGlobalModel>();
+            string queryConditionData = " WHERE 1 = 1 ";
+            string queryConditionGlobal = " WHERE 1 = 1 ";
+            if (motorId.HasValue)
+            {
+                queryConditionData += $" AND m.id = {motorId} ";
+            }
+            if (deviceId.HasValue)
+            {
+                queryConditionData += $" AND d.id = {deviceId} ";
+            }
+            if (startDate.HasValue)
+            {
+                queryConditionData += $" AND DataReceive >= '{startDate.Value.ToString("yyyy-MM-dd")}' ";
+            }
+            if (endDate.HasValue)
+            {
+                queryConditionData += $" AND DataReceive <= '{endDate.Value.ToString("yyyy-MM-dd")}' ";
+            }
+
+            queryConditionGlobal = queryConditionData;
+
+            queryConditionData += $" AND rd.alarme >= 1 ";
+            queryConditionGlobal += $" AND rg.alrm >= 1 ";
+
+            if (gravidade != null)
+            {
+                switch (gravidade)
+                {
+                    case "amarelo":
+                        queryConditionData += $" AND rd.alarme < 7 ";
+                        queryConditionGlobal += $" AND rg.alrm < 7 ";
+                        break;
+                    case "vermelho":
+                        queryConditionData += $" AND rd.alarme >= 7 ";
+                        queryConditionGlobal += $" AND rg.alrm >= 7 ";
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            using (var conn = new MySql.Data.MySqlClient.MySqlConnection(_connectionString))
+            {
+                try
+                {
+                    string query = $@"(SELECT
+	                    rg.id, rg.alrm AS alarm, rg.DataReceive AS dataReceive, d.tag AS device, m.name AS motor,
+                        m.id AS motorId, d.id AS deviceId
+                    FROM sensorDB.Receive_Global rg
+                    JOIN sensorDB.Device_Configuration dc on rg.IdDeviceConfiguration = dc.id
+                    JOIN sensorDB.device d on dc.device_id = d.id
+                    JOIN sensorDB.motor m on dc.motor_id = m.id
+                    {queryConditionGlobal})
+                    UNION
+                    (SELECT
+	                    rd.id, rd.alarme AS alarm, rd.DataReceive AS dataReceive, d.tag AS device, m.name AS motor,
+                        m.id AS motorId, d.id AS deviceId
+                    FROM sensorDB.Receive_Data rd
+                    JOIN sensorDB.Device_Configuration dc on rd.IdDeviceConfiguration = dc.id
+                    JOIN sensorDB.device d on dc.device_id = d.id
+                    JOIN sensorDB.motor m on dc.motor_id = m.id
+                    {queryConditionData})
+                     order by dataReceive
+                    LIMIT {skip},10;";
+
+                    receiveDataAndGlobal = conn.Query<DataGlobalModel>(query).ToList();
+                }
+                catch (MySql.Data.MySqlClient.MySqlException ex)
+                {
+                    conn.Close();
+                }
+            }
+
+            return receiveDataAndGlobal;
+        }
+
+        public int ListDeviceCodeAlarmeCount(int? deviceId, int? motorId, DateTime? startDate,
+            DateTime? endDate, string gravidade)
+        {
+            int receiveDataAndGlobalCount = 0;
+            string queryConditionData = " WHERE 1 = 1 ";
+            string queryConditionGlobal = " WHERE 1 = 1 ";
+            if (motorId.HasValue)
+            {
+                queryConditionData += $" AND m.id = {motorId} ";
+            }
+            if (deviceId.HasValue)
+            {
+                queryConditionData += $" AND d.id = {deviceId} ";
+            }
+            if (startDate.HasValue)
+            {
+                queryConditionData += $" AND DataReceive >= '{startDate.Value.ToString("yyyy-MM-dd")}' ";
+            }
+            if (endDate.HasValue)
+            {
+                queryConditionData += $" AND DataReceive <= '{endDate.Value.ToString("yyyy-MM-dd")}' ";
+            }
+
+            queryConditionGlobal = queryConditionData;
+
+            queryConditionData += $" AND rd.alarme >= 1 ";
+            queryConditionGlobal += $" AND rg.alrm >= 1 ";
+
+            if (gravidade != null)
+            {
+                switch (gravidade)
+                {
+                    case "amarelo":
+                        queryConditionData += $" AND rd.alarme < 7 ";
+                        queryConditionGlobal += $" AND rg.alrm < 7 ";
+                        break;
+                    case "vermelho":
+                        queryConditionData += $" AND rd.alarme >= 7 ";
+                        queryConditionGlobal += $" AND rg.alrm >= 7 ";
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            using (var conn = new MySql.Data.MySqlClient.MySqlConnection(_connectionString))
+            {
+                try
+                {
+                    string query = $@"SELECT COUNT(*)
+	                FROM
+	                (
+                        (SELECT
+	                        rg.id, rg.alrm AS alarm, rg.DataReceive AS dataReceive, d.tag AS device, m.name AS motor,
+                            m.id AS motorId, d.id AS deviceId
+                        FROM sensorDB.Receive_Global rg
+                        JOIN sensorDB.Device_Configuration dc on rg.IdDeviceConfiguration = dc.id
+                        JOIN sensorDB.device d on dc.device_id = d.id
+                        JOIN sensorDB.motor m on dc.motor_id = m.id
+                        {queryConditionGlobal})
+                        UNION
+                        (SELECT
+	                        rd.id, rd.alarme AS alarm, rd.DataReceive AS dataReceive, d.tag AS device, m.name AS motor,
+                            m.id AS motorId, d.id AS deviceId
+                        FROM sensorDB.Receive_Data rd
+                        JOIN sensorDB.Device_Configuration dc on rd.IdDeviceConfiguration = dc.id
+                        JOIN sensorDB.device d on dc.device_id = d.id
+                        JOIN sensorDB.motor m on dc.motor_id = m.id
+                        {queryConditionData})
+                    ) x;";
+
+                    receiveDataAndGlobalCount = conn.Query<int>(query).First();
+                }
+                catch (MySql.Data.MySqlClient.MySqlException ex)
+                {
+                    conn.Close();
+                }
+            }
+
+            return receiveDataAndGlobalCount;
         }
 
         private List<String> MontaListaDado(string dados)
@@ -314,4 +561,13 @@ namespace SensorService
                             .Select(i => str.Substring(i * n, n));
         }
     }
+
+    //public static IEnumerable<T> Select<T>(this IDataReader reader,
+    //                                   Func<IDataReader, T> projection)
+    //{
+    //    while (reader.Read())
+    //    {
+    //        yield return projection(reader);
+    //    }
+    //}
 }

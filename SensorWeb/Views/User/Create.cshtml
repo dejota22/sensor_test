@@ -97,16 +97,6 @@
                      new SelectList(userTypeService.GetQueryDropDownList(), "Key", "Value")
                          , @localizer.Get("UserTypeSelect"), new Dictionary<string, object> { { "class", "form-control" } })
 
-                    @*@Html.DropDownListFor(model => model.UserTypeId,
-                         new List<SelectListItem>
-                         {
-                                new SelectListItem{ Text="Administrador", Value = "1" },
-                                new SelectListItem{ Text="Analista", Value = "3" },
-                                new SelectListItem{ Text="Consultor", Value = "4" },
-                                new SelectListItem{ Text="Suporte", Value = "5" },
-                                new SelectListItem{ Text="Suporte Nivel 2", Value = "6" }
-                        }
-                        , null, new Dictionary<string, object> { { "class", "form-control" } })*@
 
                     <span asp-validation-for="UserTypeId" class="text-danger"></span>
                 </div>
