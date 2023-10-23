@@ -141,6 +141,7 @@ namespace SensorWeb.Models
         
         //[Display(Name = "ReducerDetails")]
         //public string ReducerDetails { get; set; }
+
         
         [Display(Name = "PumpDescription")]
         public string PumpDescription { get; set; }
@@ -153,7 +154,14 @@ namespace SensorWeb.Models
         
         [Display(Name = "PumpModel")]
         public string PumpModel { get; set; }
-        
+
+        public int? PumpShovelQuantity { get; set; }
+        public int? PumpGearTeethQuantity { get; set; }
+        public int? PumpBladeQuantity { get; set; }
+        public int? PumpRotation { get; set; }
+        public int? PumpBearings { get; set; }
+
+
         [Display(Name = "RingDriveGearTeethZ1")]
         public int? RingDriveGearTeethZ1 { get; set; }
         
@@ -180,7 +188,9 @@ namespace SensorWeb.Models
     
         [Display(Name = "PulleyRatio")]
         public double? PulleyRatio { get; set; }
+
         
+
         [Display(Name = "ExhaustFanDescription")]
         //[Required(ErrorMessage = "Required")]
 
@@ -202,7 +212,11 @@ namespace SensorWeb.Models
         
         [Display(Name = "ExhaustFanNumberOfBlades")]
         public int? ExhaustFanNumberOfBlades { get; set; }
-       
+
+        public int? ExhaustFanRotation { get; set; }
+        public int? ExhaustFanBearings { get; set; }
+
+
         [Display(Name = "CompressorDescription")]
         public string CompressorDescription { get; set; }
 
@@ -214,6 +228,10 @@ namespace SensorWeb.Models
       
         [Display(Name = "CompressorModel")]
         public string CompressorModel { get; set; }
+
+        public int? CompressorRotation { get; set; }
+        public int? CompressorBearings { get; set; }
+
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
@@ -243,6 +261,25 @@ namespace SensorWeb.Models
         //public virtual Pulley Pulley { get; set; }
         //public virtual Ring Ring { get; set; }
         //public virtual ICollection<DeviceMeasure> DeviceMeasure { get; set; }
+
+
+        public bool InputAxle { get; set; }
+        public int? InputAxleRoll { get; set; }
+        public int? InputAxleTeeth { get; set; }
+
+        public bool MiddleAxle { get; set; }
+        public int? MiddleAxleRoll { get; set; }
+        public int? MiddleAxleTeeth1 { get; set; }
+        public int? MiddleAxleTeeth2 { get; set; }
+
+        public bool MiddleAxle2 { get; set; }
+        public int? MiddleAxle2Roll { get; set; }
+        public int? MiddleAxle2Teeth1 { get; set; }
+        public int? MiddleAxle2Teeth2 { get; set; }
+
+        public bool OutputAxle { get; set; }
+        public int? OutputAxleRoll { get; set; }
+        public int? OutputAxleTeeth { get; set; }
     }
 
 

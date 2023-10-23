@@ -866,14 +866,25 @@
             let toDevice = $('#CopyToDeviceId').val();
 
             if (toMotor != '' && toDevice != '') {
-                let toDeviceCode = $('#CopyToDeviceId option:selected').text().split(" - ")[0];
 
-                $('#MotorId').val(toMotor);
-                $('#DeviceId').val(toDevice);
-                $('#codigoSensor').val(toDeviceCode);
+                $.get('@Url.Content("~/DeviceMeasure/GetExistingConfig")?idMotor=' + toMotor + '&idDevice=' + toDevice, function (data) {
+                    if (data.exists == false) {
+                        let toDeviceCode = $('#CopyToDeviceId option:selected').text().split(" - ")[0];
 
-                $('form').attr('action', '@Url.Action("Copy")');
-                $('form').submit();
+                        $('#MotorId').val(toMotor);
+                        $('#DeviceId').val(toDevice);
+                        $('#codigoSensor').val(toDeviceCode);
+
+                        $('form').attr('action', '@Url.Action("Copy")');
+                        $('form').submit();
+                    }
+                    else
+                    {
+                        alert('Já existe uma configuração para o Sensor selecionado.')
+                    }
+                });
+
+                
             }
 
         });

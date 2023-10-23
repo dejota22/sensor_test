@@ -48,6 +48,11 @@ namespace Core
         public string PumpTag { get; set; }
         public string PumpBrand { get; set; }
         public string PumpModel { get; set; }
+        public int? PumpShovelQuantity { get; set; }
+        public int? PumpGearTeethQuantity { get; set; }
+        public int? PumpBladeQuantity { get; set; }
+        public int? PumpRotation { get; set; }
+        public int? PumpBearings { get; set; }
         public int? RingDriveGearTeethZ1 { get; set; }
         public int? RingDriveGearTeethZ2 { get; set; }
         public string RingRatio { get; set; }
@@ -63,12 +68,16 @@ namespace Core
         public string ExhaustFanModel { get; set; }
         public double? ExhaustFanRotorDiameter { get; set; }
         public int? ExhaustFanNumberOfBlades { get; set; }
+        public int? ExhaustFanRotation { get; set; }
+        public int? ExhaustFanBearings { get; set; }
         public string CompressorDescription { get; set; }
         public string CompressorTag { get; set; }
         public string CompressorBrand { get; set; }
         public string CompressorModel { get; set; }
         public string CompressorSerialNumber { get; set; }
         public string CompressorDetails { get; set; }
+        public int? CompressorRotation { get; set; }
+        public int? CompressorBearings { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
@@ -77,6 +86,24 @@ namespace Core
         public int? CompanyId { get; set; }
         public int? TypeId { get; set; }
         public string SectorDesc { get; set; }
+
+        public bool InputAxle { get; set; }
+        public int? InputAxleRoll { get; set; }
+        public int? InputAxleTeeth { get; set; }
+
+        public bool MiddleAxle { get; set; }
+        public int? MiddleAxleRoll { get; set; }
+        public int? MiddleAxleTeeth1 { get; set; }
+        public int? MiddleAxleTeeth2 { get; set; }
+
+        public bool MiddleAxle2 { get; set; }
+        public int? MiddleAxle2Roll { get; set; }
+        public int? MiddleAxle2Teeth1 { get; set; }
+        public int? MiddleAxle2Teeth2 { get; set; }
+
+        public bool OutputAxle { get; set; }
+        public int? OutputAxleRoll { get; set; }
+        public int? OutputAxleTeeth { get; set; }
 
         public virtual Device Device { get; set; }
     }

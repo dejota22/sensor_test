@@ -59,6 +59,7 @@ namespace SensorService
         {
             IQueryable<FixationType> tb_FixationType = _context.FixationType;
             var query = (from FixationType in tb_FixationType
+                         where FixationType.DeletedAt == null
                          select new SelectListItemDTO()
                          {
                              Key = FixationType.Id,

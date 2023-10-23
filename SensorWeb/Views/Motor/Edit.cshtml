@@ -17,13 +17,72 @@
 
     $('body').ready(function () {
         hideGroups();
+        hidePumpGroups();
         aFunc($("#TypeId").val());
+        pumpFunc($("#PumpTypeId").val());
         getDeviceData($("#DeviceId").val());
     });
 
     $(document).on('change', '#DeviceId', function () {
         getDeviceData($("#DeviceId").val());
     });
+
+    $(document).on('click', '#tcoll', function () {
+        $("#transmissaoCollapse").toggle();
+    });
+
+    $(document).on('click', '#motorCopyBtn', function () {
+        $("form").attr('action', '@Url.Action("CreateCopy")');
+        $("form").submit();
+    });
+
+    $(document).on('change', '#InputAxle', function () {
+        if ($('#InputAxle').is(':checked'))
+            $('.input-axle-field').show();
+        else
+            $('.input-axle-field').hide();
+    });
+    $(document).on('change', '#MiddleAxle', function () {
+        if ($('#MiddleAxle').is(':checked'))
+            $('.middle-axle-field').show();
+        else
+            $('.middle-axle-field').hide();
+    });
+    $(document).on('change', '#MiddleAxle2', function () {
+        if ($('#MiddleAxle2').is(':checked'))
+            $('.middle-axle2-field').show();
+        else
+            $('.middle-axle2-field').hide();
+    });
+    $(document).on('change', '#OutputAxle', function () {
+        if ($('#OutputAxle').is(':checked'))
+            $('.output-axle-field').show();
+        else
+            $('.output-axle-field').hide();
+    });
+
+    $(document).on('change', '#PumpTypeId', function () { pumpFunc($("#PumpTypeId").val()); });
+
+    function pumpFunc(pumpTypeId) {
+        hidePumpGroups();
+
+        if (pumpTypeId == 7) {
+            $(".pumpcentgroup").show();
+        }
+        else if (pumpTypeId == 1 || pumpTypeId == 8) {
+            $(".pumpgeargroup").show();
+
+        }
+        else if (pumpTypeId == 4) {
+            $(".pumpbladegroup").show();
+        }
+    }
+
+    function hidePumpGroups() {
+        $(".pumpcentgroup").hide();
+        $(".pumpgeargroup").hide();
+        $(".pumpbladegroup").hide();
+    }
 
     function getDeviceData(deviceId) {
         $.get('@Url.Content("~/Device/GetDeviceData")?id=' + deviceId, function (data) {
@@ -51,6 +110,7 @@
 
     function hideGroups() {
         $(".motorgroup").hide();
+        $(".transmissaogroup").hide();
         $(".acopladorgroup").hide();
         $(".cardangroup").hide();
         $(".poliagroup").hide();
@@ -74,6 +134,7 @@
 
     function hideGroups() {
         $(".motorgroup").hide();
+        $(".transmissaogroup").hide();
         $(".acopladorgroup").hide();
         $(".cardangroup").hide();
         $(".poliagroup").hide();
@@ -89,6 +150,7 @@
 
         if (typeId == 1) {
             $(".motorgroup").show();
+            $(".transmissaogroup").show();
             $(".acopladorgroup").show();
             $(".cardangroup").show();
             $(".poliagroup").show();
@@ -96,18 +158,22 @@
         }
 
         if (typeId == 2) {
+            $(".transmissaogroup").show();
             $(".acopladorgroup").show();
         }
 
         if (typeId == 3) {
+            $(".transmissaogroup").show();
             $(".cardangroup").show();
         }
 
         if (typeId == 4) {
+            $(".transmissaogroup").show();
             $(".poliagroup").show();
         }
 
         if (typeId == 5) {
+            $(".transmissaogroup").show();
             $(".coroagroup").show();
         }
 
@@ -172,7 +238,9 @@
                             <option value="6">Redutores</option>
                             <option value="7">Bomba</option>
                             <option value="8">Ventilador/Exaustor</option>
+                            <option value="10">Torre de Resfriamento</option>
                             <option value="9">Compressor</option>
+                            <option value="11">Gerador</option>
                         </select>
                     </div>
 
@@ -329,124 +397,104 @@
                 </div>
             </div>
 
-            @*Acoplamento*@
-            @*<label for="input2" class="col-sm-2 labelbox acopladorgroup">
-            <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("Coupling")</span>
-            </label>*@
-            <div class="mt-n3 acopladorgroup" id="input2">
-                <div class="col-md-12 formclasscreate">
-                    <div class="form-group col-md-4" style=" display: grid;">
-                        <label asp-for="CouplingTypeId" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.CouplingTypeId,
-                        new SelectList(couplingService.GetQueryDropDownList(), "Key", "Value")
-                        , @localizer.Get("CouplingTypeSelect"), new Dictionary<string, object> { { "class", "form-control" } })
-                        <span asp-validation-for="CouplingTypeId" class="text-danger"></span>
-                    </div>
 
-                    <div class="form-group col-md-2">
-                        <label asp-for="CouplingBrand" class="control-label"></label>
-                        <input asp-for="CouplingBrand" class="form-control" />
-                        <span asp-validation-for="CouplingBrand" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label asp-for="CouplingModel" class="control-label"></label>
-                        <input asp-for="CouplingModel" class="form-control" />
-                        <span asp-validation-for="CouplingModel" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label asp-for="CouplingDescription" class="control-label"></label>
-                        <input asp-for="CouplingDescription" class="form-control" />
-                        <span asp-validation-for="CouplingDescription" class="text-danger"></span>
+            <div class="mt-n3 transmissaogroup">
+                <p class="form-group">
+                    <a id="tcoll" href="javascript:void(0);">
+                        Transmissão
+                    </a>
+                </p>
+                <div id="transmissaoCollapse" style="display:none;">
+                    <div class="card card-body">
+                        @*Acoplamento*@
+                        @*<label for="input2" class="col-sm-2 labelbox acopladorgroup">
+                        <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("Coupling")</span>
+                        </label>*@
+                        <div class="mt-n3 acopladorgroup" id="input2">
+                            <div class="col-md-12 formclasscreate">
+                                <div class="form-group col-md-4" style=" display: grid;">
+                                    <label asp-for="CouplingTypeId" class="control-label"></label>
+                                    @Html.DropDownListFor(model => model.CouplingTypeId,
+                                    new SelectList(couplingService.GetQueryDropDownList(), "Key", "Value")
+                                    , @localizer.Get("CouplingTypeSelect"), new Dictionary<string, object> { { "class", "form-control" } })
+                                    <span asp-validation-for="CouplingTypeId" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <label asp-for="CouplingBrand" class="control-label"></label>
+                                    <input asp-for="CouplingBrand" class="form-control" />
+                                    <span asp-validation-for="CouplingBrand" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label asp-for="CouplingModel" class="control-label"></label>
+                                    <input asp-for="CouplingModel" class="form-control" />
+                                    <span asp-validation-for="CouplingModel" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label asp-for="CouplingDescription" class="control-label"></label>
+                                    <input asp-for="CouplingDescription" class="form-control" />
+                                    <span asp-validation-for="CouplingDescription" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*Eixo Cardan*@
+                        @*<label for="input3" class="col-sm-2 labelbox cardangroup">
+                        <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("CardanShaft")</span>
+                        </label>*@
+                        <div class="mt-n3 cardangroup" id="input3">
+                            <div class="col-md-6 formclasscreate">
+                                <div class="form-group col-md-7" style="display: grid;">
+                                    <label asp-for="CardanShaftTypeId" class="control-label"></label>
+                                    @Html.DropDownListFor(model => model.CardanShaftTypeId, new SelectList(cardanShaftTypeService.GetQueryDropDownList(), "Key", "Value"),
+                                    @localizer.Get("CardanShaftTypeSelect"), new Dictionary<string, object> { { "class", "form-control" } })
+                                    <span asp-validation-for="CardanShaftTypeId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*Polia/Correntes*@
+                        @*<label for="input4" class="col-sm-2 labelbox poliagroup">
+                        <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("PulleyBox")</span>
+                        </label>*@
+                        <div class="mt-n3 poliagroup" id="input4">
+
+                            @*Polias/Correntes*@
+                            <div class="col-md-12 formclasscreate">
+                                <div class="form-group col-md-2">
+                                    <label asp-for="PulleyD1" class="control-label"></label>
+                                    <input asp-for="PulleyD1" class="form-control" />
+                                    <span asp-validation-for="PulleyD1" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <label asp-for="PulleyD2" class="control-label"></label>
+                                    <input asp-for="PulleyD2" class="form-control" />
+                                    <span asp-validation-for="PulleyD2" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <label asp-for="PulleyRatio" class="control-label"></label>
+                                    <input asp-for="PulleyRatio" class="form-control" />
+                                    <span asp-validation-for="PulleyRatio" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label asp-for="PulleyBetweenAxles" class="control-label"></label>
+                                    <input asp-for="PulleyBetweenAxles" class="form-control" />
+                                    <span asp-validation-for="PulleyBetweenAxles" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label asp-for="PulleyBeltQuantity" class="control-label"></label>
+                                    <input asp-for="PulleyBeltQuantity" class="form-control" />
+                                    <span asp-validation-for="PulleyBeltQuantity" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            @*Eixo Cardan*@
-            @*<label for="input3" class="col-sm-2 labelbox cardangroup">
-            <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("CardanShaft")</span>
-            </label>*@
-            <div class="mt-n3 cardangroup" id="input3">
-                <div class="col-md-6 formclasscreate">
-                    <div class="form-group col-md-7" style="display: grid;">
-                        <label asp-for="CardanShaftTypeId" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.CardanShaftTypeId, new SelectList(cardanShaftTypeService.GetQueryDropDownList(), "Key", "Value"),
-                        @localizer.Get("CardanShaftTypeSelect"), new Dictionary<string, object> { { "class", "form-control" } })
-                        <span asp-validation-for="CardanShaftTypeId" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
-
-            @*Polia/Correntes*@
-            @*<label for="input4" class="col-sm-2 labelbox poliagroup">
-            <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("PulleyBox")</span>
-            </label>*@
-            <div class="mt-n3 poliagroup" id="input4">
-
-                @*Polias/Correntes*@
-                <div class="col-md-12 formclasscreate">
-                    <div class="form-group col-md-2">
-                        <label asp-for="PulleyD1" class="control-label"></label>
-                        <input asp-for="PulleyD1" class="form-control" />
-                        <span asp-validation-for="PulleyD1" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group col-md-2">
-                        <label asp-for="PulleyD2" class="control-label"></label>
-                        <input asp-for="PulleyD2" class="form-control" />
-                        <span asp-validation-for="PulleyD2" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group col-md-2">
-                        <label asp-for="PulleyRatio" class="control-label"></label>
-                        <input asp-for="PulleyRatio" class="form-control" />
-                        <span asp-validation-for="PulleyRatio" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group col-md-3">
-                        <label asp-for="PulleyBetweenAxles" class="control-label"></label>
-                        <input asp-for="PulleyBetweenAxles" class="form-control" />
-                        <span asp-validation-for="PulleyBetweenAxles" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label asp-for="PulleyBeltQuantity" class="control-label"></label>
-                        <input asp-for="PulleyBeltQuantity" class="form-control" />
-                        <span asp-validation-for="PulleyBeltQuantity" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
-
-            @*Coroa/Correntes*@
-            @*<label for="input5" class="col-sm-2 labelbox coroagroup">
-            <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("CoroaBox")</span>
-            </label>*@
-            <div class="mt-n3 coroagroup" id="input5">
-                @*Coroa/Corrente*@
-                <div class="col-md-12 formclasscreate">
-                    <div class="form-group col-md-3">
-                        <label asp-for="RingDriveGearTeethZ1" class="control-label"></label>
-                        <input asp-for="RingDriveGearTeethZ1" class="form-control" />
-                        <span asp-validation-for="RingDriveGearTeethZ1" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group col-md-3">
-                        <label asp-for="RingDriveGearTeethZ2" class="control-label"></label>
-                        <input asp-for="RingDriveGearTeethZ2" class="form-control" />
-                        <span asp-validation-for="RingDriveGearTeethZ2" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group col-md-3">
-                        <label asp-for="RingRatio" class="control-label"></label>
-                        <input asp-for="RingRatio" class="form-control" />
-                        <span asp-validation-for="RingRatio" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group col-md-3">
-                        <label asp-for="RingBetweenAxles" class="control-label"></label>
-                        <input asp-for="RingBetweenAxles" class="form-control" />
-                        <span asp-validation-for="RingBetweenAxles" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
 
             @*Redutor*@
             @*<label for="input6" class="col-sm-2 labelbox redutorgroup ">
@@ -496,8 +544,101 @@
                         <input asp-for="ReducerNumberOfAxles" class="form-control" />
                         <span asp-validation-for="ReducerNumberOfAxles" class="text-danger"></span>
                     </div>
-
                 </div>
+
+                <div class="col-md-12 formclasscreate">
+                    <div class="form-group col-md-2">
+                        <br />
+                        <label asp-for="InputAxle" class="control-label">Eixo de Entrada</label>
+                        <input asp-for="InputAxle" class="form-control" />
+                        <span asp-validation-for="InputAxle" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-3 input-axle-field" style="display:none;">
+                        <label asp-for="InputAxleRoll" class="control-label">Rolamentos</label>
+                        <input asp-for="InputAxleRoll" min="1" max="4" class="form-control" />
+                        <span asp-validation-for="InputAxleRoll" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3 input-axle-field" style="display:none;">
+                        <label asp-for="InputAxleTeeth" class="control-label">Eng Motora 1 (Pinhão) - Nº de Dentes</label>
+                        <input asp-for="InputAxleTeeth" max="15" class="form-control" />
+                        <span asp-validation-for="InputAxleTeeth" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-12 formclasscreate">
+                    <div class="form-group col-md-2">
+                        <br />
+                        <label asp-for="MiddleAxle" class="control-label">Eixo Intermediário</label>
+                        <input asp-for="MiddleAxle" class="form-control" />
+                        <span asp-validation-for="MiddleAxle" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-3 middle-axle-field" style="display:none;">
+                        <label asp-for="MiddleAxleRoll" class="control-label">Rolamentos</label>
+                        <input asp-for="MiddleAxleRoll" min="1" max="4" class="form-control" />
+                        <span asp-validation-for="MiddleAxleRoll" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-3 middle-axle-field" style="display:none;">
+                        <label asp-for="MiddleAxleTeeth1" class="control-label">Eng Movida 1 - Nº de Dentes</label>
+                        <input asp-for="MiddleAxleTeeth1" max="27" class="form-control" />
+                        <span asp-validation-for="MiddleAxleTeeth1" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3 middle-axle-field" style="display:none;">
+                        <label asp-for="MiddleAxleTeeth2" class="control-label">Eng Motora 2 - Nº de Dentes</label>
+                        <input asp-for="MiddleAxleTeeth2" max="99" class="form-control" />
+                        <span asp-validation-for="MiddleAxleTeeth2" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-12 formclasscreate">
+                    <div class="form-group col-md-2">
+                        <br />
+                        <label asp-for="MiddleAxle2" class="control-label">Eixo Intermediário-2</label>
+                        <input asp-for="MiddleAxle2" class="form-control" />
+                        <span asp-validation-for="MiddleAxle2" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-3 middle-axle2-field" style="display:none;">
+                        <label asp-for="MiddleAxle2Roll" class="control-label">Rolamentos</label>
+                        <input asp-for="MiddleAxle2Roll" min="1" max="4" class="form-control" />
+                        <span asp-validation-for="MiddleAxle2Roll" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-3 middle-axle2-field" style="display:none;">
+                        <label asp-for="MiddleAxle2Teeth1" class="control-label">Eng Movida 2 - Nº de Dentes</label>
+                        <input asp-for="MiddleAxle2Teeth1" max="99" class="form-control" />
+                        <span asp-validation-for="MiddleAxle2Teeth1" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3 middle-axle2-field" style="display:none;">
+                        <label asp-for="MiddleAxle2Teeth2" class="control-label">Eng Motora 3 - Nº de Dentes</label>
+                        <input asp-for="MiddleAxle2Teeth2" max="99" class="form-control" />
+                        <span asp-validation-for="MiddleAxle2Teeth2" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-12 formclasscreate">
+                    <div class="form-group col-md-2">
+                        <br />
+                        <label asp-for="OutputAxle" class="control-label">Eixo de Saída</label>
+                        <input asp-for="OutputAxle" class="form-control" />
+                        <span asp-validation-for="OutputAxle" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-3 output-axle-field" style="display:none;">
+                        <label asp-for="OutputAxleRoll" class="control-label">Rolamentos</label>
+                        <input asp-for="OutputAxleRoll" min="1" max="4" class="form-control" />
+                        <span asp-validation-for="OutputAxleRoll" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-3 output-axle-field" style="display:none;">
+                        <label asp-for="OutputAxleTeeth" class="control-label">Eng Movida 2 - Nº de Dentes</label>
+                        <input asp-for="OutputAxleTeeth" max="99" class="form-control" />
+                        <span asp-validation-for="OutputAxleTeeth" class="text-danger"></span>
+                    </div>
+                </div>
+
             </div>
 
             @*Pump*@
@@ -509,7 +650,7 @@
                 <div class="col-md-12 formclasscreate">
                     <div class="form-group col-md-3" style="display: grid;">
                         <label asp-for="PumpTypeId" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.PumpTypeId, new SelectList(pumpTypeService.GetQueryDropDownList(), "Key", "Value"),
+                        @Html.DropDownListFor(model => model.PumpTypeId, new SelectList(pumpTypeService.GetQueryDropDownList().OrderBy(p => p.Value), "Key", "Value"),
                         @localizer.Get("PumpTypeSelect"), new Dictionary<string, object> { { "class", "form-control" } })
                         <span asp-validation-for="PumpTypeId" class="text-danger"></span>
                     </div>
@@ -538,6 +679,39 @@
                         <span asp-validation-for="PumpModel" class="text-danger"></span>
                     </div>
                 </div>
+
+                <div class="col-md-12 formclasscreate">
+                    <div class="form-group col-md-3 pumpcentgroup">
+                        <label asp-for="PumpShovelQuantity" class="control-label">Quantidade de pás</label>
+                        <input asp-for="PumpShovelQuantity" class="form-control" />
+                        <span asp-validation-for="PumpShovelQuantity" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-3 pumpgeargroup">
+                        <label asp-for="PumpGearTeethQuantity" class="control-label">Quantidade de dentes das engrenagens</label>
+                        <input asp-for="PumpGearTeethQuantity" class="form-control" />
+                        <span asp-validation-for="PumpGearTeethQuantity" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-2 pumpbladegroup">
+                        <label asp-for="PumpBladeQuantity" class="control-label">Quantidade de palhetas</label>
+                        <input asp-for="PumpBladeQuantity" class="form-control" />
+                        <span asp-validation-for="PumpBladeQuantity" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <label asp-for="PumpRotation" class="control-label">Rotação (rpm)</label>
+                        <input asp-for="PumpRotation" class="form-control" />
+                        <span asp-validation-for="PumpRotation" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <label asp-for="PumpBearings" class="control-label">Rolamentos</label>
+                        <input asp-for="PumpBearings" class="form-control" />
+                        <span asp-validation-for="PumpBearings" class="text-danger"></span>
+                    </div>
+                </div>
+
             </div>
 
             @*ExaustFan*@
@@ -581,6 +755,20 @@
                         <label asp-for="ExhaustFanNumberOfBlades" class="control-label"></label>
                         <input asp-for="ExhaustFanNumberOfBlades" class="form-control" />
                         <span asp-validation-for="ExhaustFanNumberOfBlades" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-12 formclasscreate">
+                    <div class="form-group col-md-3">
+                        <label asp-for="ExhaustFanRotation" class="control-label">Rotação Nominal</label>
+                        <input asp-for="ExhaustFanRotation" class="form-control" />
+                        <span asp-validation-for="ExhaustFanRotation" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label asp-for="ExhaustFanBearings" class="control-label">Rolamentos</label>
+                        <input asp-for="ExhaustFanBearings" class="form-control" />
+                        <span asp-validation-for="ExhaustFanBearings" class="text-danger"></span>
                     </div>
                 </div>
             </div>
@@ -632,6 +820,20 @@
                         <span asp-validation-for="CompressorModel" class="text-danger"></span>
                     </div>
 
+                </div>
+
+                <div class="col-md-12 formclasscreate">
+                    <div class="form-group col-md-3">
+                        <label asp-for="CompressorRotation" class="control-label">Rotação Nominal</label>
+                        <input asp-for="CompressorRotation" class="form-control" />
+                        <span asp-validation-for="CompressorRotation" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label asp-for="CompressorBearings" class="control-label">Rolamentos</label>
+                        <input asp-for="CompressorBearings" class="form-control" />
+                        <span asp-validation-for="CompressorBearings" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
 
@@ -781,10 +983,13 @@
 
             <!--</div>-->
 
-            <div class="col-md-12">
+            <div class="row">
                 <div class="form-group screenCreateControls col-md-6">
                     <a href="@Url.Action("Index", "Motor")"><input asp-action="Index" type="button" value="@localizer.Get("BackToList")" class="btn btn-primary" /></a>
                     <input type="submit" value="@localizer.Get("Create")" class="btn btn-primary" />
+                </div>
+                <div class="form-group screenCreateControls col-md-6" style="text-align: right;">
+                    <button id="motorCopyBtn" type="button" class="btn btn-warning">Copiar</button>
                 </div>
             </div>
         </form>

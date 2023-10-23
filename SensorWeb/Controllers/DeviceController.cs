@@ -97,6 +97,15 @@ namespace SensorWeb.Controllers
 
             return View();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateCopy(DeviceModel model)
+        {
+            model.Id = 0;
+            return View("Create", model);
+        }
+
         // POST: DeviceController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]

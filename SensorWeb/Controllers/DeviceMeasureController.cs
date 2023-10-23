@@ -122,6 +122,14 @@ namespace SensorWeb.Controllers
             }
         }
 
+        public JsonResult GetExistingConfig(int idMotor, int idDevice)
+        {
+            var configModel = _deviceMeasureService.GetLast(idDevice, idMotor);
+            var existing = configModel.Id != 0;
+
+            return Json(new { exists = existing });
+        }
+
         private void PersistDeviceConfiguration(DeviceConfigurationModel deviceMeasureModel)
         {
             if (deviceMeasureModel.DeviceId != null && deviceMeasureModel.MotorId != null)

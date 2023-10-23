@@ -1134,6 +1134,9 @@ namespace Core
 
                 entity.Property(e => e.CompressorTypeId).HasColumnName("compressor_type_id");
 
+                entity.Property(e => e.CompressorRotation).HasColumnName("compressor_rotation");
+                entity.Property(e => e.CompressorBearings).HasColumnName("compressor_bearings");
+
                 entity.Property(e => e.CouplingBrand)
                     .HasColumnName("coupling_brand")
                     .HasMaxLength(255)
@@ -1183,6 +1186,9 @@ namespace Core
                     .HasColumnName("exhaust_fan_tag")
                     .HasMaxLength(255)
                     .IsUnicode(false);
+
+                entity.Property(e => e.ExhaustFanRotation).HasColumnName("exhaust_fan_rotation");
+                entity.Property(e => e.ExhaustFanBearings).HasColumnName("exhaust_fan_bearings");
 
                 entity.Property(e => e.FixationTypeId).HasColumnName("fixation_type_id");
 
@@ -1248,6 +1254,12 @@ namespace Core
                     .IsUnicode(false);
 
                 entity.Property(e => e.PumpTypeId).HasColumnName("pump_type_id");
+
+                entity.Property(e => e.PumpShovelQuantity).HasColumnName("pump_shovel_quantity");
+                entity.Property(e => e.PumpGearTeethQuantity).HasColumnName("pump_gear_teeth_quantity");
+                entity.Property(e => e.PumpBladeQuantity).HasColumnName("pump_blade_quantity");
+                entity.Property(e => e.PumpRotation).HasColumnName("pump_rotation");
+                entity.Property(e => e.PumpBearings).HasColumnName("pump_bearings");
 
                 entity.Property(e => e.ReducerBrand)
                     .HasColumnName("reducer_brand")
@@ -1318,6 +1330,24 @@ namespace Core
                 entity.Property(e => e.Voltage).HasColumnName("voltage");
 
                 entity.Property(e => e.Yeld).HasColumnName("yeld");
+
+                entity.Property(e => e.InputAxle).HasColumnName("input_axle");
+                entity.Property(e => e.InputAxleRoll).HasColumnName("input_axle_roll");
+                entity.Property(e => e.InputAxleTeeth).HasColumnName("input_axle_teeth");
+
+                entity.Property(e => e.MiddleAxle).HasColumnName("middle_axle");
+                entity.Property(e => e.MiddleAxleRoll).HasColumnName("middle_axle_roll");
+                entity.Property(e => e.MiddleAxleTeeth1).HasColumnName("middle_axle_teeth1");
+                entity.Property(e => e.MiddleAxleTeeth2).HasColumnName("middle_axle_teeth2");
+
+                entity.Property(e => e.MiddleAxle2).HasColumnName("middle_axle2");
+                entity.Property(e => e.MiddleAxle2Roll).HasColumnName("middle_axle2_roll");
+                entity.Property(e => e.MiddleAxle2Teeth1).HasColumnName("middle_axle2_teeth1");
+                entity.Property(e => e.MiddleAxle2Teeth2).HasColumnName("middle_axle2_teeth2");
+
+                entity.Property(e => e.OutputAxle).HasColumnName("output_axle");
+                entity.Property(e => e.OutputAxleRoll).HasColumnName("output_axle_roll");
+                entity.Property(e => e.OutputAxleTeeth).HasColumnName("output_axle_teeth");
             });
 
             modelBuilder.Entity<Pulley>(entity =>

@@ -2,6 +2,15 @@
 @inject SensorWeb.Resources.CommonLocalizationService localizer
 @inject Core.Service.ICompanyService companyService
 
+<script>
+
+    $(document).on('click', '#deviceCopyBtn', function () {
+        $("form").attr('action', '@Url.Action("CreateCopy")');
+        $("form").submit();
+    });
+
+</script>
+
 <h4 class="screenTitle">Editar Sensor </h4>
 <hr />
 <div class="row screenCreate">
@@ -211,9 +220,15 @@
                 </div>
             </div>
 
-            <div class="form-group screenCreateControls">
-                <a href="@Url.Action("Index", "Device")"><input asp-action="Index" type="button" value="@localizer.Get("BackToList")" class="btn btn-primary" /></a>
-                <input type="submit" value="@localizer.Get("Save")" class="btn btn-primary" />
+            <div class="row">
+                <div class="form-group screenCreateControls col-md-6">
+                    <a href="@Url.Action("Index", "Device")"><input asp-action="Index" type="button" value="@localizer.Get("BackToList")" class="btn btn-primary" /></a>
+                    <input type="submit" value="@localizer.Get("Save")" class="btn btn-primary" />
+                </div>
+                <div class="form-group screenCreateControls col-md-6" style="text-align: right;">
+                    <button id="deviceCopyBtn" type="button" class="btn btn-warning">Copiar</button>
+                </div>
+                
             </div>
         </form>
     </div>

@@ -113,6 +113,34 @@ namespace SensorWeb.Controllers
             return View(motorModel);
         }
 
+        // POST: MotorController/CreateCopy
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateCopy(MotorModel motorModel)
+        {
+            motorModel.Id = 0;
+            var userId = LoggedUserId;
+            var user = _userService.Get(Convert.ToInt32(userId));
+            var userCompany = user.Contact.CompanyId;
+            var companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany).ToList();
+
+            motorModel.Companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany || x.Id == userCompany)
+                    .Select(y => new SelectListItemDTO()
+                    {
+                        Key = y.Id,
+                        Value = y.TradeName
+                    }).Distinct().ToList();
+
+            motorModel.Devices = _deviceService.GetAll().Where(x => x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId))
+                    .Select(y => new SelectListItemDTO()
+                    {
+                        Key = y.Id,
+                        Value = y.Tag
+                    }).Distinct().ToList();
+
+            return View("Create", motorModel);
+        }
+
         // POST: MotorController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
