@@ -261,7 +261,6 @@
 
 <div id="grafico-wrapper" style="display:none;">
 
-    <div id="overview"></div>
     <div id="legenddiv"></div>
     <div id="chartdiv"></div>
 
@@ -358,32 +357,8 @@
                 plot.setupGrid();
                 plot.draw();
                 plot.clearSelection();
-
-                // don't fire event on the overview to prevent eternal loop
-                overview.setSelection(ranges, true);
             });
 
-
-            var overview = $.plot("#overview", [{ data: valor_data }], {
-                series: {
-                    lines: {
-                        show: true,
-                        lineWidth: 1
-                    },
-                    shadowSize: 0
-                },
-                xaxis: {
-                    position: "top"
-                },
-                selection: {
-                    mode: "x"
-                },
-                colors: ["rgb(51,102,204)"]
-            });
-
-            $("#overview").bind("plotselected", function (event, ranges) {
-                plot.setSelection(ranges);
-            });
         }
 
         function updateHeader() {

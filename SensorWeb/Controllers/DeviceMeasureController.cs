@@ -21,6 +21,7 @@ namespace SensorWeb.Controllers
     public class DeviceMeasureController : BaseController
     {
         IDeviceConfigurationService _deviceMeasureService;
+        IDeviceService _deviceService;
         IMotorService _motorService;
         IUserService _userService;
         ICompanyService _companyService;
@@ -35,14 +36,16 @@ namespace SensorWeb.Controllers
         /// <param name="mapper"></param>
         /// <param name="localizer"></param>
         public DeviceMeasureController(IDeviceConfigurationService DeviceMeasureService,
-                                   IMotorService MotorService,
-                                   IUserService UserService,
-                                   ICompanyService CompanyService,
-                                   IMapper mapper,
-                                   IStringLocalizer<Resources.CommonResources> localizer,
-                                   ILogger<DeviceMeasureController> logger)
+                                IDeviceService DeviceService,
+                                IMotorService MotorService,
+                                IUserService UserService,
+                                ICompanyService CompanyService,
+                                IMapper mapper,
+                                IStringLocalizer<Resources.CommonResources> localizer,
+                                ILogger<DeviceMeasureController> logger)
         {
             _deviceMeasureService = DeviceMeasureService;
+            _deviceService = DeviceService;
             _motorService = MotorService;
             _userService = UserService;
             _companyService = CompanyService;
@@ -62,10 +65,7 @@ namespace SensorWeb.Controllers
                 else
                     configModel = _deviceMeasureService.GetLast(0, 0);
 
-                //if (DeviceId != null && MotorId != null)
-                //    configModel = _deviceMeasureService.GetLast(DeviceId.Value, MotorId.Value);
-                //else
-                //    configModel = _deviceMeasureService.GetLast(0, 0);
+                ViewBag.AllCodes = _deviceService.GetAll().Select(d => d.Code);
 
                 configModel.codigoSensor = codeAttempt;
                 return View(configModel);

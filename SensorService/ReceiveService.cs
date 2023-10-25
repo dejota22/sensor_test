@@ -256,7 +256,9 @@ namespace SensorService
                 {
                     string query = $@"(SELECT
 	                    rg.id, rg.alrm AS alarm, rg.DataReceive AS dataReceive, d.tag AS device, m.name AS motor,
-                        m.id AS motorId, d.id AS deviceId
+                        m.id AS motorId, d.id AS deviceId,
+                        CASE WHEN  rg.alrm > 0 and (rg.rms_spd_X > dc.rms_spd_red or rg.rms_spd_X > dc.rms_spd_yel or rg.rms_spd_Y > dc.rms_spd_red or rg.rms_spd_Y > dc.rms_spd_yel or rg.rms_spd_Z > dc.rms_spd_red or rg.rms_spd_Z > dc.rms_spd_yel) THEN ""RMS SPD"" 
+                        WHEN rg.alrm > 0 and (rg.rms_acc_X > dc.rms_acc_red or rg.rms_acc_X > dc.rms_acc_yel or rg.rms_acc_Y > dc.rms_acc_red or rg.rms_acc_Y > dc.rms_acc_yel or rg.rms_acc_Z > dc.rms_acc_red or rg.rms_acc_Z > dc.rms_acc_yel) THEN ""RMS ACC"" ELSE """" END AS tipo
                     FROM sensorDB.Receive_Global rg
                     JOIN sensorDB.Device_Configuration dc on rg.IdDeviceConfiguration = dc.id
                     JOIN sensorDB.device d on dc.device_id = d.id
@@ -265,13 +267,13 @@ namespace SensorService
                     UNION
                     (SELECT
 	                    rd.id, rd.alarme AS alarm, rd.DataReceive AS dataReceive, d.tag AS device, m.name AS motor,
-                        m.id AS motorId, d.id AS deviceId
+                        m.id AS motorId, d.id AS deviceId, CASE WHEN rd.tipo = 2 THEN ""RMS SPD"" WHEN rd.tipo = 1 THEN ""RMS ACC"" ELSE """" END AS tipo
                     FROM sensorDB.Receive_Data rd
                     JOIN sensorDB.Device_Configuration dc on rd.IdDeviceConfiguration = dc.id
                     JOIN sensorDB.device d on dc.device_id = d.id
                     JOIN sensorDB.motor m on dc.motor_id = m.id
                     {queryConditionData})
-                     order by dataReceive
+                     order by dataReceive desc
                     LIMIT {skip},10;";
 
                     receiveDataAndGlobal = conn.Query<DataGlobalModel>(query).ToList();

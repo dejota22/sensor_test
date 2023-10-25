@@ -6,6 +6,9 @@
 
     $(document).on('click', '#deviceCopyBtn', function () {
         $("form").attr('action', '@Url.Action("CreateCopy")');
+        $("#Code").val("Cópia - " + $("#Code").val());
+        $("#Tag").val("");
+        $("#Id").val("0");
         $("form").submit();
     });
 

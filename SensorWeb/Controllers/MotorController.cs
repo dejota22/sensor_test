@@ -119,6 +119,7 @@ namespace SensorWeb.Controllers
         public ActionResult CreateCopy(MotorModel motorModel)
         {
             motorModel.Id = 0;
+
             var userId = LoggedUserId;
             var user = _userService.Get(Convert.ToInt32(userId));
             var userCompany = user.Contact.CompanyId;

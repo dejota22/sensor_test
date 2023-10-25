@@ -20,11 +20,11 @@
         hidePumpGroups();
         aFunc($("#TypeId").val());
         pumpFunc($("#PumpTypeId").val());
-        getDeviceData($("#DeviceId").val());
+        //getDeviceData($("#DeviceId").val());
     });
 
     $(document).on('change', '#DeviceId', function () {
-        getDeviceData($("#DeviceId").val());
+        //getDeviceData($("#DeviceId").val());
     });
 
     $(document).on('click', '#tcoll', function () {
@@ -33,6 +33,9 @@
 
     $(document).on('click', '#motorCopyBtn', function () {
         $("form").attr('action', '@Url.Action("CreateCopy")');
+        $("#Name").val("Cópia - " + $("#Name").val());
+        $("#Tag").val("");
+        $("#Id").val("0");
         $("form").submit();
     });
 
@@ -400,9 +403,9 @@
 
             <div class="mt-n3 transmissaogroup">
                 <p class="form-group">
-                    <a id="tcoll" href="javascript:void(0);">
+                    <button type="button" id="tcoll" class="btn btn-sm btn-info">
                         Transmissão
-                    </a>
+                    </button>
                 </p>
                 <div id="transmissaoCollapse" style="display:none;">
                     <div class="card card-body">
@@ -556,7 +559,7 @@
 
                     <div class="form-group col-md-3 input-axle-field" style="display:none;">
                         <label asp-for="InputAxleRoll" class="control-label">Rolamentos</label>
-                        <input asp-for="InputAxleRoll" min="1" max="4" class="form-control" />
+                        <input asp-for="InputAxleRoll" maxlength="40" class="form-control" />
                         <span asp-validation-for="InputAxleRoll" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3 input-axle-field" style="display:none;">
@@ -576,7 +579,7 @@
 
                     <div class="form-group col-md-3 middle-axle-field" style="display:none;">
                         <label asp-for="MiddleAxleRoll" class="control-label">Rolamentos</label>
-                        <input asp-for="MiddleAxleRoll" min="1" max="4" class="form-control" />
+                        <input asp-for="MiddleAxleRoll" maxlength="40" class="form-control" />
                         <span asp-validation-for="MiddleAxleRoll" class="text-danger"></span>
                     </div>
 
@@ -602,7 +605,7 @@
 
                     <div class="form-group col-md-3 middle-axle2-field" style="display:none;">
                         <label asp-for="MiddleAxle2Roll" class="control-label">Rolamentos</label>
-                        <input asp-for="MiddleAxle2Roll" min="1" max="4" class="form-control" />
+                        <input asp-for="MiddleAxle2Roll" maxlength="40" class="form-control" />
                         <span asp-validation-for="MiddleAxle2Roll" class="text-danger"></span>
                     </div>
 
@@ -628,7 +631,7 @@
 
                     <div class="form-group col-md-3 output-axle-field" style="display:none;">
                         <label asp-for="OutputAxleRoll" class="control-label">Rolamentos</label>
-                        <input asp-for="OutputAxleRoll" min="1" max="4" class="form-control" />
+                        <input asp-for="OutputAxleRoll" maxlength="40" class="form-control" />
                         <span asp-validation-for="OutputAxleRoll" class="text-danger"></span>
                     </div>
 
@@ -707,7 +710,7 @@
 
                     <div class="form-group col-md-2">
                         <label asp-for="PumpBearings" class="control-label">Rolamentos</label>
-                        <input asp-for="PumpBearings" class="form-control" />
+                        <input asp-for="PumpBearings" maxlength="40" class="form-control" />
                         <span asp-validation-for="PumpBearings" class="text-danger"></span>
                     </div>
                 </div>
@@ -767,7 +770,7 @@
 
                     <div class="form-group col-md-3">
                         <label asp-for="ExhaustFanBearings" class="control-label">Rolamentos</label>
-                        <input asp-for="ExhaustFanBearings" class="form-control" />
+                        <input asp-for="ExhaustFanBearings" maxlength="40" class="form-control" />
                         <span asp-validation-for="ExhaustFanBearings" class="text-danger"></span>
                     </div>
                 </div>
@@ -831,7 +834,7 @@
 
                     <div class="form-group col-md-3">
                         <label asp-for="CompressorBearings" class="control-label">Rolamentos</label>
-                        <input asp-for="CompressorBearings" class="form-control" />
+                        <input asp-for="CompressorBearings" maxlength="40" class="form-control" />
                         <span asp-validation-for="CompressorBearings" class="text-danger"></span>
                     </div>
                 </div>
@@ -855,6 +858,7 @@
 
 
                 @*Medições do sensor*@
+                @*
                 <div class="col-md-12 formclasscreate">
                     <div class="form-group col-md-2" style="display: grid;">
                         <label class="control-label">Frequencia</label>
@@ -940,7 +944,7 @@
                         <input id="DCrestFactorMax" class="form-control" readonly />
                     </div>
                 </div>
-                @*  *@
+                  *@
             </div>
 
             <!--<div class="form-group col-md-6">

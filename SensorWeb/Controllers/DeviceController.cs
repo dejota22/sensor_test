@@ -103,6 +103,7 @@ namespace SensorWeb.Controllers
         public ActionResult CreateCopy(DeviceModel model)
         {
             model.Id = 0;
+
             return View("Create", model);
         }
 

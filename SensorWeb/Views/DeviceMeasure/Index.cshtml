@@ -7,6 +7,7 @@
 @inject Core.Service.IDeviceService deviceService
 @inject Core.Service.ICompanyService companyService
 
+
 <h4 style="text-align:center">Configuração Sensor</h4>
 <hr />
 <div class="container">
@@ -27,13 +28,23 @@
                 {
                     <button type="button" class="btn btn-warning" style="margin-left:40px;" onclick="javascript:abrirCopyConfigModal();">Copiar Configurações</button>
                 }
+                else if (Model.Id == 0)
+                {
+                    <button type="button" class="btn btn-secondary" style="margin-left:40px;" disabled>Copiar Configurações</button>
+                }
             </div>
         </div>
 
         <div class="row">
             <div class="form-group col-md-4">
                 <label class="control-label">Código do Sensor </label>
-                <input type="text" value="@Model.codigoSensor" asp-for="codigoSensor" name="codigoSensor" id="codigoSensor" class="form-control" />
+                <input value="@Model.codigoSensor" list="codigoSensor" name="codigoSensor" class="form-control" />
+                <datalist id="codigoSensor">
+                    @foreach(string code in ViewBag.AllCodes)
+                    {
+                        <option value="@code">@code</option>
+                    }
+                </datalist>
                 <span asp-validation-for="codigoSensor" class="text-danger"></span>
             </div>
             <div class="form-group col-md-4">
@@ -75,7 +86,7 @@
                 <a class="nav-item nav-link" id="tempo-tab" data-toggle="tab" href="#tempo" role="tab" aria-controls="tempo" aria-selected="false">Configuração Análises</a>
                 <a class="nav-item nav-link" id="limites-tab" data-toggle="tab" href="#limites" role="tab" aria-controls="limites" aria-selected="false">Alarmes</a>
                 <a class="nav-item nav-link" id="lora-tab" data-toggle="tab" href="#lora" role="tab" aria-controls="lora" aria-selected="false">Lora</a>
-                <a class="nav-item nav-link" id="old-tab" data-toggle="tab" href="#old" role="tab" aria-controls="old" aria-selected="false">OLD</a>
+                <a class="nav-item nav-link" id="old-tab" data-toggle="tab" href="#old" role="tab" aria-controls="old" aria-selected="false" style="display:none;">OLD</a>
 
             </div>
         </nav>
@@ -374,7 +385,11 @@
                         <label class="control-label">
                             Modo de Atuação <i class="fa fa-info-circle" title="Se o funcionamento do Sensor será Contínuo: Atuação por contagem de minutos ou Modo Hora: Horários Agendados"></i>
                         </label>
-                            <input type="number" max="1" min="0" value="@Model.modo_hora" asp-for="modo_hora" name="modo_hora" id="modo_hora" class="form-control" onblur="modoContinuoFunc();" />
+                        <select name="modo_hora" id="modo_hora" style="width:100%" asp-for="modo_hora" class="form-control" onchange="modoContinuoFunc();">
+                            <option value="" selected disabled hidden>Selecionar</option>
+                            <option value="1">Modo Hora - 1</option>
+                            <option value="0">Modo Contínuo - 0</option>
+                        </select>
                         <span asp-validation-for="modo_hora" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
@@ -496,12 +511,12 @@
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">RMS Aceleração - Alerta <i class="fa fa-info-circle" title="Limite inferior da zona de severidade vermelha"></i></label>
-                        <input type="text" value="@(Model.rms_acc_red.HasValue ? Model.rms_acc_red.Value.ToString("0.00") : "")" asp-for="rms_acc_red" name="rms_acc_red" id="rms_acc_red" class="form-control decimal-field" />
+                        <input type="text" value="@(Model.rms_acc_red.HasValue ? Model.rms_acc_red.Value.ToString("0.00") : "")" asp-for="rms_acc_red" name="rms_acc_red" id="rms_acc_red" class="form-control decimal-field aa-field" />
                         <span asp-validation-for="rms_acc_red" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">RMS Aceleração - Atenção <i class="fa fa-info-circle" title="Limite inferior da zona de severidade amarela"></i></label>
-                        <input type="text" value="@(Model.rms_acc_yel.HasValue ? Model.rms_acc_yel.Value.ToString("0.00") : "")" asp-for="rms_acc_yel" name="rms_acc_yel" id="rms_acc_yel" class="form-control decimal-field" />
+                        <input type="text" value="@(Model.rms_acc_yel.HasValue ? Model.rms_acc_yel.Value.ToString("0.00") : "")" asp-for="rms_acc_yel" name="rms_acc_yel" id="rms_acc_yel" class="form-control decimal-field aa-field" />
                         <span asp-validation-for="rms_acc_yel" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
@@ -519,12 +534,12 @@
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">RMS Velocidade - Alerta <i class="fa fa-info-circle" title="Limite inferior da zona de severidade vermelha"></i></label>
-                        <input type="text" value="@(Model.rms_spd_red.HasValue ? Model.rms_spd_red.Value.ToString("0.00") : "")" asp-for="rms_spd_red" name="rms_spd_red" id="rms_spd_red" class="form-control decimal-field" />
+                        <input type="text" value="@(Model.rms_spd_red.HasValue ? Model.rms_spd_red.Value.ToString("0.00") : "")" asp-for="rms_spd_red" name="rms_spd_red" id="rms_spd_red" class="form-control decimal-field aa-field" />
                         <span asp-validation-for="rms_spd_red" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">RMS Velocidade - Atenção <i class="fa fa-info-circle" title="Limite inferior da zona de severidade amarela"></i></label>
-                        <input type="text" value="@(Model.rms_spd_yel.HasValue ? Model.rms_spd_yel.Value.ToString("0.00") : "")" asp-for="rms_spd_yel" name="rms_spd_yel" id="rms_spd_yel" class="form-control decimal-field" />
+                        <input type="text" value="@(Model.rms_spd_yel.HasValue ? Model.rms_spd_yel.Value.ToString("0.00") : "")" asp-for="rms_spd_yel" name="rms_spd_yel" id="rms_spd_yel" class="form-control decimal-field aa-field" />
                         <span asp-validation-for="rms_spd_yel" class="text-danger"></span>
                     </div>
                 </div>
@@ -827,8 +842,28 @@
         });
 
         $('#sensor-search').on('click', function (e) {
-            if ($('#codigoSensor').val() != '')
-                document.location.href = '@Url.Action("Index")' + '?codeAttempt=' + $('#codigoSensor').val();
+            if ($('input[name=codigoSensor]').val() != '')
+                document.location.href = '@Url.Action("Index")' + '?codeAttempt=' + $('input[name=codigoSensor]').val();
+        });
+
+        $('.aa-field').blur(function () {
+            let alertAcc = $('#rms_acc_red').val();
+            let attentionAcc = $('#rms_acc_yel').val();
+            let alertSpd = $('#rms_spd_red').val();
+            let attentionSpd = $('#rms_spd_yel').val();
+
+            if (alertAcc != '' && attentionAcc != '') {
+                let numAlertAcc = Number(alertAcc);
+                let numAttentionAcc = Number(attentionAcc);
+                if (numAlertAcc < numAttentionAcc)
+                    $(this).val('');
+            }
+            if (alertSpd != '' && attentionSpd != '') {
+                let numAlertSpd = Number(alertSpd);
+                let numAttentionSpd = Number(attentionSpd);
+                if (numAlertSpd < numAttentionSpd)
+                    $(this).val('');
+            }
         });
 
         setDaysControl('#btn-dias_run', $('#dias_run').val());

@@ -9,6 +9,7 @@ namespace Core.DTO
         public string id;
         public int alarm;
         public DateTime dataReceive;
+        public string tipo;
 
         public int motorId;
         public string motor;
