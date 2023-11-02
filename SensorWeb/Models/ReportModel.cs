@@ -94,6 +94,8 @@ namespace SensorWeb.Models
         [Display(Name = "DADOS")]
         public int DataDeviceId { get; set; }
         public string DataDeviceIdName { get; set; }
+
+        public string ResponsavelTecnico { get; set; }
     }
 
     public enum Alarme

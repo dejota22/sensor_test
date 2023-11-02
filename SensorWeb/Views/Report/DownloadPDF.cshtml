@@ -13,6 +13,7 @@
     body {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+        overflow: hidden;
     }
 
     .page-sidebar, .page-header, .page-footer {
@@ -149,6 +150,18 @@
     <div class="row">
         <div class="col-sm-8">
             <div class="row text-center border-bottom">
+                <div class ="col-sm">
+                    <img src="@Url.Content("~/img/logo_report.jpg")" style="padding:5px;" />
+                </div>
+                <div class ="col-sm">
+
+                </div>
+                <div class ="col-sm border-right">
+
+                </div>
+            </div>
+
+            <div class="row text-center border-bottom">
                 <div class="col-sm border-right">
                     <b>@Html.DisplayNameFor(m => m.MotorId): </b>@Html.DisplayTextFor(m => m.MotorIdName)
                     <input type="hidden" id="MotorId" name="MotorId" value="@Model.MotorId" />
@@ -222,6 +235,7 @@
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-sm-12">
             <div class="row border-bottom">
@@ -249,11 +263,11 @@
             </div>
         </div>
     </div>
+
 </div>
 
 <div id="grafico-wrapper" style="display:none;">
 
-    <div id="overview"></div>
     <div id="legenddiv"></div>
     <div id="chartdiv"></div>
 
@@ -261,6 +275,24 @@
 
 <input id="limiteRed" type="hidden" value="@ViewBag.LimiteRed" />
 <input id="limiteYel" type="hidden" value="@ViewBag.LimiteYel" />
+
+<div class="row" style="margin-top:20px;">
+    <div class="col-sm-8">
+        <div>&nbsp;</div>
+    </div>
+    <div class="col-sm-4">
+        <div class="row">
+            <div class="border-bottom text-center"></div>
+        </div>
+        <div class="row">
+            <div class="text-center">@Html.DisplayTextFor(m => m.ResponsavelTecnico)</div>
+            <input type="hidden" id="ResponsavelTecnico" name="ResponsavelTecnico" value="@Model.ResponsavelTecnico" />
+        </div>
+        <div class="row">
+            <div class="text-center" style="font-size:10px;"><b>(RESPONSÁVEL TÉCNICO)</b></div>
+        </div>
+    </div>
+</div>
 
 @section Scripts
     {
@@ -339,6 +371,8 @@
                             });
 
                             drawGraficos();
+                            $('body').css('overflow', 'auto');
+                            parent.frameGraphLoaded();
                         });
                 }
 
@@ -394,8 +428,6 @@
                 plot.setupGrid();
                 plot.draw();
                 plot.clearSelection();
-
-                overview.setSelection(ranges, true);
             });
 
             $("#chartdiv").bind("plotclick", function (event, pos, item) {
@@ -408,28 +440,6 @@
                 }
             });
 
-
-            var overview = $.plot("#overview", [{ data: valor_data }], {
-                series: {
-                    lines: {
-                        show: true,
-                        lineWidth: 1
-                    },
-                    shadowSize: 0
-                },
-                xaxis: {
-                    position: "top",
-                    mode: "time", timeBase: "milliseconds", timeformat: "%d/%m %H:%M"
-                },
-                selection: {
-                    mode: "x"
-                },
-                colors: [color_grafico]
-            });
-
-            $("#overview").bind("plotselected", function (event, ranges) {
-                plot.setSelection(ranges);
-            });
         }
 
     </script>
