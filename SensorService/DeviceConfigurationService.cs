@@ -128,7 +128,9 @@ namespace SensorService
                 {
                     config = GetLast(device.Id, motor.Id);
 
+                    config.MotorId = motor.Id;
                     config.motorName = _motor.Get(motor.Id).Name;
+                    config.DeviceId = device.Id;
                     config.deviceTag = _device.Get(device.Id).Tag;
                 }
                     
