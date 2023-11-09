@@ -86,6 +86,8 @@ namespace SensorWeb.Controllers
             {
                 PersistDeviceConfiguration(deviceMeasureModel);
 
+                ViewBag.AllCodes = _deviceService.GetAll().Select(d => d.Code);
+
                 return View(deviceMeasureModel);
             }
             catch (Exception e)
