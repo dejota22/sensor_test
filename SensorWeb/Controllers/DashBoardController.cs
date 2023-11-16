@@ -14,6 +14,7 @@ namespace SensorWeb.Controllers
     {
         IDeviceMeasureService _DeviceMeasureService;
         IMotorService _MotoService;
+        IDeviceService _DeviceService;
         IMapper _mapper;
         private readonly IStringLocalizer<Resources.CommonResources> _localizer;
 
@@ -25,44 +26,37 @@ namespace SensorWeb.Controllers
         /// <param name="localizer"></param>
         public DashBoardController(IDeviceMeasureService DeviceMeasureService,
                                    IMotorService MotorService,
+                                   IDeviceService DeviceService,
                                   IMapper mapper,
                                   IStringLocalizer<Resources.CommonResources> localizer)
         {
             _DeviceMeasureService = DeviceMeasureService;
             _MotoService = MotorService;
+            _DeviceService = DeviceService;
             _mapper = mapper;
             _localizer = localizer;
         }
 
         // GET: UserTypeController
-        public ActionResult Index(string readDataType, int MotorId)
+        public ActionResult Index(string readDataType, int DeviceId)
         {
             var XAxle = "";
             var YAxle = "";
             var ZAxle = "";
             try
             {
-                if (MotorId >   0)
-                {
-                    //var motorModel = _MotoService.GetBymotorTag(ReadDataType);
-                    //if (motorModel != null)
-                    //{
+                if (DeviceId >   0)
+                {               
 
-                    //    var measureListMotorId = _DeviceMeasureService.GetByMotorid().FirstOrDefault();
-                    //}                    
-
-                    var motorData = _MotoService.Get(MotorId);
-                    if (motorData != null)
+                    var deviceData = _DeviceService.Get(DeviceId);
+                    if (deviceData != null)
                     {
-
-                        ViewData["DeviceId"] = motorData.DeviceId;
-
                         var readDate = new DeviceMeasure();
 
                         if (!String.IsNullOrEmpty(readDataType))
                             readDate = _DeviceMeasureService.Get(Convert.ToInt32(readDataType.Split("-")[2].Trim()));
                         else
-                           readDate = _DeviceMeasureService.GetByDeviceId(Convert.ToInt32(motorData.DeviceId));
+                           readDate = _DeviceMeasureService.GetByDeviceId(Convert.ToInt32(DeviceId));
 
                         if (readDate != null)
                         {
@@ -123,99 +117,5 @@ namespace SensorWeb.Controllers
             return View();
         }
 
-        //// GET: UserTypeController/Details/5
-        //public ActionResult Details(int id)
-        //{
-        //    UserType UserType = _DeviceMeasureService.Get(id);
-        //    UserTypeModel UserTypeModel = _mapper.Map<UserTypeModel>(UserType);
-        //    return View(UserTypeModel);
-        //}
-
-        //// GET: UserTypeController/Create
-        //public ActionResult Create()
-        //{
-        //    UserTypeModel user = new UserTypeModel()
-        //    {
-        //        Id = _DeviceMeasureService.GetlastCode()
-        //    };
-
-        //    return View(user);
-        //}
-
-        //// POST: UserTypeController/Create
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create(UserTypeModel UserTypeModel)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            UserTypeModel.Id = _DeviceMeasureService.GetlastCode();
-        //            var UserType = _mapper.Map<UserType>(UserTypeModel);
-        //            _DeviceMeasureService.Insert(UserType);
-        //        }
-
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch(Exception e)
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        //// GET: UserTypeController/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    UserType UserType = _DeviceMeasureService.Get(id);
-        //    UserTypeModel UserTypeModel = _mapper.Map<UserTypeModel>(UserType);
-        //    return View(UserTypeModel);
-        //}
-
-        //// POST: UserTypeController/Edit/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit(int id, UserTypeModel UserTypeModel)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            var UserType = _mapper.Map<UserType>(UserTypeModel);
-        //            _DeviceMeasureService.Edit(UserType);
-
-        //        }
-
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        //// GET: UserTypeController/Delete/5
-        //public ActionResult Delete(int id)
-        //{
-        //    UserType UserType = _DeviceMeasureService.Get(id);
-        //    UserTypeModel UserTypeModel = _mapper.Map<UserTypeModel>(UserType);
-        //    return View(UserTypeModel);
-        //}
-
-        //// POST: UserTypeController/Delete/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Delete(int id, UserTypeModel UserTypeModel)
-        //{
-        //    try
-        //    {
-        //        _DeviceMeasureService.Remove(id);
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
     }
 }

@@ -255,5 +255,23 @@ namespace SensorWeb.Controllers
 
             return Json(deviceModel);
         }
+
+        [HttpPost]
+        public JsonResult GetDeviceByMotorId(int mId)
+        {
+            var devices = _deviceService.GetAll()
+                .Where(d => d.DeviceMotor?.MotorId == mId).ToList();
+
+            return Json(devices);
+        }
+
+        [HttpPost]
+        public JsonResult GetFreeDevice()
+        {
+            var devices = _deviceService.GetAll()
+                .Where(d => d.DeviceMotorId == null).ToList();
+
+            return Json(devices);
+        }
     }
 }

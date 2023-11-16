@@ -51,13 +51,13 @@
                 <br />
                 <input id="sensor-search" type="button" value="Pesquisar" class="btn btn-info" />
             </div>
-            @if (Model.Id == 0 && Model.codigoSensor != null)
+            @*@if (Model.Id == 0 && Model.codigoSensor != null)
             {
                 <div class="form-group col-md-6">
                     <br />
                     <span style="color:crimson;">Não há Configuração para o código informado</span>
                 </div>
-            }
+            }*@
         </div>
 
         @if (Model.DeviceId != null || Model.codigoSensor != null)
@@ -797,9 +797,16 @@
                         <span asp-validation-for="MotorId" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-6">
-                        <label asp-for="DeviceId" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.CopyToDeviceId, new SelectList(deviceService.GetQueryDropDownListByCode(), "Key", "Value"),
-                        @localizer.Get("DeviceSelect"), new Dictionary<string, object> { { "class", "form-control copy-selects" } })
+                        <label class="control-label">Sensor</label>
+                        <select id="CopyToDeviceId" name="CopyToDeviceId" style="" class="form-control copy-selects">
+                            <option value="">-- Selecione o Sensor --</option>
+                            @if ((KeyValuePair<int?, string>?)ViewBag.DeviceSelect != null)
+                            {
+                                var deviceSelect = (KeyValuePair<int?, string>)ViewBag.DeviceSelect;
+
+                                <option value="@deviceSelect.Key.Value" selected>@deviceSelect.Value</option>
+                            }
+                        </select>
                         <span asp-validation-for="DeviceId" class="text-danger"></span>
                     </div>
                 </div>
@@ -923,9 +930,34 @@
 
         });
 
+        $('#CopyToMotorId').bind('change', function () {
+            populateDeviceSelect();
+        });
+
         $('button.close').on('click', function () {
             $('#copyConfigModal').modal('hide');
         });
+
+        function populateDeviceSelect() {
+            let masterMotor = $('#MotorId').val();
+            let masterDevice = $('#DeviceId').val();
+            let deviceSelect = $('#CopyToDeviceId');
+            let motorId = $('#CopyToMotorId').val();
+            deviceSelect.find('option').not(':first').remove();
+
+            //$.post('@Url.Content("~/Device/GetDeviceByMotorId")', { mId: motorId }, function (data) {
+            //    $.each(data, function () {
+            //        if (masterDevice != this.id)
+            //            deviceSelect.append($("<option />").val(this.id).text(this.tag));
+            //    });
+            //});
+
+            $.post('@Url.Content("~/Device/GetFreeDevice")', function (data) {
+                $.each(data, function () {
+                    deviceSelect.append($("<option />").val(this.id).text(this.tag));
+                });
+            });
+        }
 
         function setDaysField(idPart) {
             let diasRunString = '_';

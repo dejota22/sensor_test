@@ -48,7 +48,7 @@ namespace SensorWeb.Controllers
         }
 
         // GET: ReportController
-        public ActionResult Index(int? DeviceId, int? MotorId)
+        public ActionResult Index(int? DeviceId, int? MotorId, string? DeviceIdName)
         {
             ReportModel model = new ReportModel();
 
@@ -57,6 +57,7 @@ namespace SensorWeb.Controllers
             if (DeviceId != null && MotorId != null)
             {
                 model.DeviceId = DeviceId.Value;
+                model.DeviceIdName = DeviceIdName;
                 model.MotorId = MotorId.Value;
 
                 var dataList = _receiveService.GetDataByDeviceMotor(DeviceId, MotorId);
@@ -78,12 +79,14 @@ namespace SensorWeb.Controllers
             return View("DownloadPDF", report);
         }
 
-        public ActionResult ReportDeviceData(int? DeviceId, int? MotorId)
+        public ActionResult ReportDeviceData(int? DeviceId, int? MotorId, string? DeviceIdName)
         {
             ViewBag.DeviceData = new List<ReceiveData>();
 
             if (DeviceId != null && MotorId != null)
             {
+                ViewBag.DeviceSelect = (KeyValuePair<int?, string>?)new KeyValuePair<int?, string>(DeviceId, DeviceIdName);
+
                 var dataList = _receiveService.GetDataByDeviceMotor(DeviceId, MotorId);
                 if (dataList != null)
                 {

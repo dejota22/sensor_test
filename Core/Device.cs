@@ -16,6 +16,8 @@ namespace Core
 
         public int Id { get; set; }
         public int CompanyId { get; set; }
+        public int? DeviceMotorId { get; set; }
+
         public string Tag { get; set; }
         public string Code { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -42,6 +44,7 @@ namespace Core
         public int? CrestFactorMax { get; set; }
 
         public virtual Company Company { get; set; }
+        public virtual DeviceMotor DeviceMotor { get; set; }
         public virtual ICollection<Compressor> Compressor { get; set; }
         public virtual ICollection<Dados> Dados { get; set; }
         public virtual ICollection<ExhaustFan> ExhaustFan { get; set; }

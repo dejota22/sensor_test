@@ -105,6 +105,8 @@ namespace Core
         public string OutputAxleRoll { get; set; }
         public int? OutputAxleTeeth { get; set; }
 
-        public virtual Device Device { get; set; }
+        //public virtual Device Device { get; set; }
+
+        public virtual ICollection<DeviceMotor> MotorDevices { get; set; }
     }
 }

@@ -23,6 +23,7 @@ namespace SensorWeb.Controllers
     [Authorize]
     public class HomeController : BaseController
     {
+        IDeviceService _deviceService;
         IMotorService _motorService;
         IUserService _userService;
         ICompanyService _companyService;
@@ -31,7 +32,7 @@ namespace SensorWeb.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IStringLocalizer<Resources.CommonResources> _localizer;
 
-        public HomeController(IMotorService motorService,
+        public HomeController(IDeviceService deviceService, IMotorService motorService,
                                 IUserService userService,
                                 ICompanyService companyService,
                                 IReceiveService receiveService,
@@ -39,6 +40,7 @@ namespace SensorWeb.Controllers
                                 IStringLocalizer<Resources.CommonResources> localizer,
                                 ILogger<HomeController> logger)
         {
+            _deviceService = deviceService;
             _motorService = motorService;
             _userService = userService;
             _companyService = companyService;
@@ -50,7 +52,7 @@ namespace SensorWeb.Controllers
 
         public IActionResult Index()
         {
-            var listaMotores = _motorService.GetAll().ToList();
+            var listaSensores = _deviceService.GetAll().ToList();
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _userService.Get(Convert.ToInt32(userId));
@@ -59,12 +61,12 @@ namespace SensorWeb.Controllers
 
             if (user.UserType.Name != Constants.Roles.Administrator)
             {
-                listaMotores = listaMotores.Where(x => x.CompanyId.Value == userCompany || companies.Any(y => y.Id == x.CompanyId.Value)).ToList();
+                listaSensores = listaSensores.Where(x => x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId)).ToList();
             }
 
             var deviceCodeAndAlarm = GetLastDeviceCodeAlarme();
 
-            List<MotorModel> listaMotorModel = GetMotorModels(listaMotores, deviceCodeAndAlarm);
+            List<MotorModel> listaMotorModel = GetMotorModels(listaSensores, deviceCodeAndAlarm);
 
             return View(listaMotorModel.OrderBy(x => x.Id));
         }
@@ -143,21 +145,21 @@ namespace SensorWeb.Controllers
             return returnDictionary;
         }
 
-        private List<MotorModel> GetMotorModels(List<Motor> listaMotores, Dictionary<string, int> deviceCodeAndAlarm)
+        private List<MotorModel> GetMotorModels(List<Device> listaSensores, Dictionary<string, int> deviceCodeAndAlarm)
         {
             List<MotorModel> list = new List<MotorModel>();
 
-            foreach(var m in listaMotores.Where(m => m.Device != null))
+            foreach(var d in listaSensores.Where(s => s.DeviceMotorId != null))
             {
                 MotorModel model = new MotorModel();
 
-                model.Name = m.Name;
-                model.DeviceId = m.DeviceId;
-                model.Device = m.Device;
+                model.Name = d.DeviceMotor.Motor.Name;
+                model.DeviceId = d.Id;
+                model.Device = d;
 
-                if (deviceCodeAndAlarm.Any(dca => dca.Key == m.Device.Code))
+                if (deviceCodeAndAlarm.Any(dca => dca.Key == d.Code))
                 {
-                    model.Alarm = deviceCodeAndAlarm[m.Device.Code];
+                    model.Alarm = deviceCodeAndAlarm[d.Code];
                 }
 
                 list.Add(model);

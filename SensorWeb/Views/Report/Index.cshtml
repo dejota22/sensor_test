@@ -69,7 +69,7 @@
                         <b>EQUIPAMENTO</b>
                     </div>
                     <div class="col-sm border">
-                        @Html.DropDownList("MotorId", new SelectList(motorService.GetQueryDropDownListByTag(), "Key", "Value"),
+                        @Html.DropDownList("MotorId", new SelectList(motorService.GetQueryDropDownList(), "Key", "Value"),
                         @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "style", "width:200px;" } })
                         <input id="MotorIdName" name="MotorIdName" type="hidden" />
                     </div>
@@ -77,8 +77,13 @@
                         <b>SENSOR</b>
                     </div>
                     <div class="col-sm border">
-                        @Html.DropDownList("DeviceId", new SelectList(deviceService.GetQueryDropDownList(), "Key", "Value"),
-                        @localizer.Get("DeviceSelect"), new Dictionary<string, object> { { "style", "width:200px;" } })
+                        <select id="DeviceId" name="DeviceId" asp-for="DeviceId" style="width:200px" class="">
+                            <option value="">-- Selecione o Sensor --</option>
+                            @if (Model.DeviceId != 0)
+                            {
+                                <option value="@Model.DeviceId" selected>@Model.DeviceIdName</option>
+                            }
+                        </select>
                         <input id="DeviceIdName" name="DeviceIdName" type="hidden" />
                     </div>
                 </div>
@@ -335,7 +340,7 @@
             });
 
             $('#MotorId').change(function () {
-                refreshPage();
+                populateDeviceSelect();
             });
 
             $('#TipoRelatorio').change(function () {
@@ -374,13 +379,25 @@
             window.frames["pvModalFrame"].print();
         }
 
+        function populateDeviceSelect() {
+            let deviceSelect = $('#DeviceId');
+            let motorId = $('#MotorId').val();
+            deviceSelect.find('option').not(':first').remove();
+            $.post('@Url.Content("~/Device/GetDeviceByMotorId")', { mId: motorId }, function (data) {
+                $.each(data, function () {
+                    deviceSelect.append($("<option />").val(this.id).text(this.tag));
+                });
+            });
+        }
+
         function refreshPage() {
             let deviceId = $('#DeviceId').val();
             let motorId = $('#MotorId').val();
+            let deviceIdName = $("#DeviceId option:selected").text();
 
             if (deviceId != '' && motorId != '') {
                 $('#preloader').fadeIn();
-                document.location.href = '@Url.Action("Index")' + '?DeviceId=' + deviceId + '&MotorId=' + motorId;
+                document.location.href = '@Url.Action("Index")' + '?DeviceId=' + deviceId + '&MotorId=' + motorId + '&DeviceIdName=' + deviceIdName;
             } 
         }
 

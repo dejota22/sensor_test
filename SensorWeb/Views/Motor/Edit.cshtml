@@ -10,6 +10,16 @@
 
 <link href="@Url.Content("~/css/screenCustomMotor.css?p=4")" rel="stylesheet" />
 
+<style>
+    .cont-row {
+        background: #ddd;
+    }
+
+        .cont-row:nth-child(2n) {
+            background: #fff;
+        }
+</style>
+
 <h4 class="screenTitle">Editar Equipamento </h4>
 <hr />
 
@@ -844,107 +854,78 @@
             @*<label for="input9" class="col-sm-2 labelbox">
             <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">Configurações de Leitura do sensor</span>
             </label>*@
-            <div class="mt-n3" id="input9">
+            <div class="mt-n3" id="input9" style="padding:10px;background-color:gainsboro;">
 
                 @*SensorSelect*@
                 <div class="col-md-12 formclasscreate">
                     <div class="form-group col-md-4" style="display: grid;">
-                        <label asp-for="DeviceId" class="control-label"></label>
+                        <label class="control-label">Sensor</label>
                         @Html.DropDownListFor(model => model.DeviceId, new SelectList(Model.Devices, "Key", "Value"),
                         @localizer.Get("DeviceSelect"), new Dictionary<string, object> { { "class", "form-control" } })
-                        <span asp-validation-for="DeviceId" class="text-danger"></span>
+                        <span id="MotorDeviceValidation" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label class="control-label">Plano de Medição</label>
+                        <select id="MeasurementPlan" style="width:100%" class="form-control">
+                            <option value="">-- Selecione o Plano --</option>
+                            <option value="Plano 1">Plano 1</option>
+                            <option value="Plano 2">Plano 2</option>
+                            <option value="Plano 3">Plano 3</option>
+                            <option value="Plano 4">Plano 4</option>
+                            <option value="Plano 5">Plano 5</option>
+                            <option value="Plano 6">Plano 6</option>
+                            <option value="Plano 7">Plano 7</option>
+                            <option value="Plano 8">Plano 8</option>
+                            <option value="Plano 9">Plano 9</option>
+                            <option value="Plano 10">Plano 10</option>
+                            <option value="Plano 11">Plano 11</option>
+                            <option value="Plano 12">Plano 12</option>
+                        </select>
+                        <span id="MeasurementPlanValidation" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label class="control-label">Orientação do Sensor</label>
+                        <select id="SensorOrientation" style="width:100%" class="form-control">
+                            <option value="">-- Selecione a Orientação --</option>
+                            <option value="Y Radial / X Vertical / Z Axial">Y Radial / X Vertical / Z Axial</option>
+                            <option value="Y Vertical / X Radial / Z Axial">Y Vertical / X Radial / Z Axial</option>
+                            <option value="Y Axial / X Radial / Z Vertical">Y Axial / X Radial / Z Vertical</option>
+                        </select>
+                        <span id="SensorOrientationValidation" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <br />
+                        <button id="sensorAddBtn" type="button" class="btn btn-sm btn-primary" onclick="javascript:salvarMotorDevice();">Adicionar</button>
                     </div>
                 </div>
 
 
-                @*Medições do sensor*@
-                @*
-                <div class="col-md-12 formclasscreate">
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Frequencia</label>
-                        <input id="DFrequency" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">BDR</label>
-                        <input id="DBdr" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">CutOff</label>
-                        <input id="DCutoff" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">LPF</label>
-                        <input id="DLpf" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Lines</label>
-                        <input id="DLines" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Eixos</label>
-                        <input id="DAxies" class="form-control" readonly />
-                    </div>
+                <div class="col-md-12 formclasscreate" style="background-color:white;border:1px solid gray;">
+                    <div class="col-md-4" style="padding: 0 10px;"><b>SENSOR</b></div>
+                    <div class="col-md-3" style="padding: 0 10px;"><b>PLANO DE MEDIÇÃO</b></div>
+                    <div class="col-md-3" style="padding: 0 10px;"><b>ORIENTAÇÃO DO SENSOR</b></div>
+                    <div class="col-md-2"></div>
                 </div>
 
-                <div class="col-md-12 formclasscreate">
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Temperatura</label>
-                        <input id="DTemperature" class="form-control" readonly />
-                    </div>
+                @{
+                    var listDevice = (List<Core.Device>)ViewBag.MotorDevices;
+                }
 
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">RMS</label>
-                        <input id="DRms" class="form-control" readonly />
+                @foreach (var device in listDevice)
+                {
+                    <div class="col-md-12 formclasscreate cont-row" style="border-bottom:1px solid gray;">
+                        <div class="col-md-4 pt-2" style="padding: 0 10px;"> @device.Tag </div>
+                        <div class="col-md-3 pt-2" style="padding: 0 10px;"> @device.DeviceMotor.MeasurementPlan </div>
+                        <div class="col-md-3 pt-2" style="padding: 0 10px;"> @device.DeviceMotor.SensorOrientation </div>
+                        <div class="col-md-2">
+                            <button type="button" title="Excluir" class="btn btn-sm btn-danger" onclick="javascript:excluirMotorDevice('@device.DeviceMotor.Id');" style="padding: 2px 8px;margin: 5px;"><i class="far fa-trash-alt"></i></button>
+                        </div>
                     </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Bateria</label>
-                        <input id="DBattery" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Timer</label>
-                        <input id="DHours" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Global em Velocidade (Min)</label>
-                        <input id="DVelocityMin" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Global em Velocidade (Max)</label>
-                        <input id="DVelocityMax" class="form-control" readonly />
-                    </div>
-                </div>
-
-                <div class="col-md-12 formclasscreate">
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Global em Aceleração (Min)</label>
-                        <input id="DAccelerationMin" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Global em Aceleração (Max)</label>
-                        <input id="DAccelerationMax" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Fator de Crista (Min)</label>
-                        <input id="DCrestFactorMin" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Fator de Crista (Max)</label>
-                        <input id="DCrestFactorMax" class="form-control" readonly />
-                    </div>
-                </div>
-                  *@
+                }
+                
             </div>
 
             <!--<div class="form-group col-md-6">
@@ -1006,6 +987,58 @@
     </div>*@
 
 @section Scripts {
+
+    <script type="text/javascript">
+
+        function salvarMotorDevice() {
+            var idMotor = document.getElementById("Id").value;
+            var idDevice = document.getElementById("DeviceId").value;
+            var planoMedicao = document.getElementById("MeasurementPlan").value;
+            var orientacaoSensor = document.getElementById("SensorOrientation").value;
+
+            if (idDevice == '' || planoMedicao == '' || orientacaoSensor == '')
+            {
+                if (idDevice == '')
+                    $('#MotorDeviceValidation').html('O Sensor é obrigatório');
+                else
+                    $('#MotorDeviceValidation').html('');
+
+                if (planoMedicao == '')
+                    $('#MeasurementPlanValidation').html('O Plano de Medição é obrigatório');
+                else
+                    $('#MeasurementPlanValidation').html('');
+
+                if (orientacaoSensor == '')
+                    $('#SensorOrientationValidation').html('A Orientação do Sensor é obrigatória');
+                else
+                    $('#SensorOrientationValidation').html('');
+            }
+            else
+            {
+                $.post('@Url.Content("~/Motor/InsertMotorDevice")', { mId: idMotor, dId: idDevice, planoMedicao: planoMedicao, orientacaoSensor: orientacaoSensor }, function (data) {
+                    if (data.success) {
+                        alert('Sensor adicionado com sucesso');
+                        document.location.reload();
+                    }
+                });
+            }
+        }
+
+        function excluirMotorDevice(id) {
+            var idMotor = document.getElementById("Id").value;
+
+            if (confirm("Tem certeza que deseja remover o sensor?") == true) {
+                $.post('@Url.Content("~/Motor/DeleteMotorDevice")', { mId: idMotor, id: id }, function (data) {
+                    if (data.success) {
+                        alert('Sensor removido com sucesso');
+                        document.location.reload();
+                    }
+                });
+            }
+        }
+
+    </script>
+
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

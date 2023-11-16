@@ -238,6 +238,8 @@ namespace Core
 
                 entity.Property(e => e.CompanyUnitId).HasColumnName("company_unit_id");
 
+                entity.Property(e => e.ParentSectorId).HasColumnName("parent_sector_id");
+
                 entity.Property(e => e.CreatedAt).HasColumnName("created_at");
 
                 entity.Property(e => e.DeletedAt).HasColumnName("deleted_at");
@@ -259,6 +261,12 @@ namespace Core
                     .HasForeignKey(d => d.CompanyUnitId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_company_unit_sector_company_unit1");
+
+                entity.HasOne(d => d.ParentSector)
+                    .WithMany(p => p.SubSectors)
+                    .HasForeignKey(d => d.ParentSectorId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_company_unit_sector_parent_sector1");
             });
 
             modelBuilder.Entity<CompanyUser>(entity =>
@@ -601,6 +609,8 @@ namespace Core
 
                 entity.HasIndex(e => e.CompanyId)
                     .HasName("fk_device_company1_idx");
+                entity.HasIndex(e => e.DeviceMotorId)
+                    .HasName("fk_device_device_motor1_idx");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -611,6 +621,8 @@ namespace Core
                     .IsFixedLength();
 
                 entity.Property(e => e.CompanyId).HasColumnName("company_id");
+
+                entity.Property(e => e.DeviceMotorId).HasColumnName("device_motor_id");
 
                 entity.Property(e => e.CreatedAt).HasColumnName("created_at");
 
@@ -683,6 +695,12 @@ namespace Core
                     .HasForeignKey(d => d.CompanyId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_device_company1");
+
+                entity.HasOne(d => d.DeviceMotor)
+                    .WithMany(p => p.Devices)
+                    .HasForeignKey(d => d.DeviceMotorId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("fk_device_device_motor1");
             });
 
             modelBuilder.Entity<DeviceConfiguration>(entity =>
@@ -897,6 +915,27 @@ namespace Core
                 //    .HasForeignKey(d => d.DeviceMeasureId)
                 //    .OnDelete(DeleteBehavior.ClientSetNull)
                 //    .HasConstraintName("fk_device_measure_horarios_envios_card1");
+            });
+
+            modelBuilder.Entity<DeviceMotor>(entity =>
+            {
+                entity.ToTable("device_motor");
+
+                entity.HasIndex(e => e.MotorId).HasName("fk_device_motor_motor1_idx");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.MotorId).HasColumnName("motor_id");
+
+                entity.Property(e => e.MeasurementPlan).HasColumnName("measurement_plan");
+
+                entity.Property(e => e.SensorOrientation).HasColumnName("sensor_orientation");
+
+                entity.HasOne(d => d.Motor)
+                    .WithMany(p => p.MotorDevices)
+                    .HasForeignKey(d => d.MotorId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("fk_device_motor_motor1");
             });
 
             modelBuilder.Entity<ExhaustFan>(entity =>

@@ -64,10 +64,11 @@ namespace SensorService
         {
             IQueryable<Motor> tb_Motor = _context.Motor;
             var query = (from Motor in tb_Motor
+                         where Motor.Name != null || Motor.Tag != null
                          select new SelectListItemDTO()
                          {
                              Key = Motor.Id,
-                             Value = Motor.Name
+                             Value = String.Concat(Motor.Tag, " - ", Motor.Name)
                          }).Distinct().ToList();
 
             return query;
@@ -79,13 +80,13 @@ namespace SensorService
         /// <returns></returns>
         private List<SelectListItemDTO> GetQueryDropDownListByTag()
         {
-            IQueryable<Motor> tb_Motor = _context.Motor;
-            var query = (from Motor in tb_Motor
-                         where Motor.Device.Id.Equals(Motor.DeviceId)
+            IQueryable<Device> tb_Device = _context.Device;
+            var query = (from Device in tb_Device
+                         where Device.DeviceMotor.Id.Equals(Device.DeviceMotorId)
                          select new SelectListItemDTO()
                          {
-                             Key = Motor.Id,
-                             Value = String.Concat(Motor.Tag, " - ",  Motor.Name, " - Sensor: ", Motor.Device.Code)
+                             Key = Device.Id,
+                             Value = String.Concat(Device.DeviceMotor.Motor.Tag, " - ", Device.DeviceMotor.Motor.Name, " - Sensor: ", Device.Code)
                          }).Distinct().ToList();
 
             return query;
@@ -94,7 +95,7 @@ namespace SensorService
         private IQueryable<Motor> GetQuery()
         {
             IQueryable<Motor> tb_Motor = _context.Motor;
-            var query = tb_Motor.Include(d => d.Device);
+            var query = tb_Motor.Include(d => d.MotorDevices);
 
             return query;
         }

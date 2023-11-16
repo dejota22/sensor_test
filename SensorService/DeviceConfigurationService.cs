@@ -122,16 +122,20 @@ namespace SensorService
 
             if (device != null)
             {
-                var motor = _motor.GetAll().Where(m => m.DeviceId == device.Id).LastOrDefault();
+                var motorId = device.DeviceMotor?.MotorId;
 
-                if (motor != null)
+                if (motorId != null)
                 {
-                    config = GetLast(device.Id, motor.Id);
+                    config = GetLast(device.Id, motorId.Value);
 
-                    config.motorName = _motor.Get(motor.Id).Name;
-                    config.deviceTag = _device.Get(device.Id).Tag;
+                    if (config != null)
+                    {
+                        config.MotorId = motorId;
+                        config.motorName = device.DeviceMotor?.Motor.Name;
+                        config.DeviceId = device.Id;
+                        config.deviceTag = device.Tag;
+                    }
                 }
-                    
             }
 
             return config;

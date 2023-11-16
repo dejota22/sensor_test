@@ -882,10 +882,9 @@ namespace SensorApi.Controllers
                     SendMail _emailSender = new SendMail();
 
                     string motorName = "";
-                    Motor motor = _MotorService.GetAll().OrderByDescending(m => m.Id).FirstOrDefault(m => m.DeviceId == device.Id);
-                    if (motor != null)
+                    if (device.DeviceMotorId != null)
                     {
-                        motorName = motor.Name;
+                        motorName = device.DeviceMotor.Motor.Name;
                     }
 
                     string alarmName = new int[] { 1, 4, 7, 10 }.Contains(itemAlarm) ? "Alarme Eixo X" :

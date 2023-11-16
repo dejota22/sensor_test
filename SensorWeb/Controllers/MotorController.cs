@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using SensorService;
 using SensorWeb.Models;
 using System;
 using System.Collections.Generic;
@@ -83,6 +84,10 @@ namespace SensorWeb.Controllers
         {
             Motor Motor = _MotorService.Get(id);
             MotorModel MotorModel = _mapper.Map<MotorModel>(Motor);
+
+            ViewBag.MotorDevices = _deviceService.GetAll()
+                    .Where(x => x.DeviceMotor.MotorId == id).ToList();
+
             return View(MotorModel);
         }
 
@@ -101,13 +106,16 @@ namespace SensorWeb.Controllers
                     {
                         Key = y.Id,
                         Value = y.TradeName
-                    }).Distinct().ToList(),
-                Devices = _deviceService.GetAll().Where(x => x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId))
-                    .Select(y => new SelectListItemDTO()
-                    {
-                        Key = y.Id,
-                        Value = y.Tag
                     }).Distinct().ToList()
+
+                //Devices = _deviceService.GetAll()
+                //.Where(x => (x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId)) 
+                //    && x.DeviceMotorId == null)
+                //    .Select(y => new SelectListItemDTO()
+                //    {
+                //        Key = y.Id,
+                //        Value = y.Tag
+                //    }).Distinct().ToList()
             };
 
             return View(motorModel);
@@ -132,12 +140,12 @@ namespace SensorWeb.Controllers
                         Value = y.TradeName
                     }).Distinct().ToList();
 
-            motorModel.Devices = _deviceService.GetAll().Where(x => x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId))
-                    .Select(y => new SelectListItemDTO()
-                    {
-                        Key = y.Id,
-                        Value = y.Tag
-                    }).Distinct().ToList();
+            //motorModel.Devices = _deviceService.GetAll().Where(x => x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId))
+            //        .Select(y => new SelectListItemDTO()
+            //        {
+            //            Key = y.Id,
+            //            Value = y.Tag
+            //        }).Distinct().ToList();
 
             return View("Create", motorModel);
         }
@@ -187,12 +195,19 @@ namespace SensorWeb.Controllers
                     Value = y.TradeName
                 }).Distinct().ToList();
 
-                motorModel.Devices = _deviceService.GetAll().Where(x => x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId))
-                .Select(y => new SelectListItemDTO()
-                {
-                    Key = y.Id,
-                    Value = y.Tag
-                }).Distinct().ToList();
+                var allDevices = _deviceService.GetAll();
+
+                motorModel.Devices = allDevices
+                    .Where(x => (x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId))
+                        && x.DeviceMotorId == null)
+                    .Select(y => new SelectListItemDTO()
+                    {
+                        Key = y.Id,
+                        Value = y.Tag
+                    }).Distinct().ToList();
+
+                ViewBag.MotorDevices = allDevices
+                    .Where(x => x.DeviceMotor?.MotorId == id).ToList();
             }
 
             return View(motorModel);
@@ -242,6 +257,56 @@ namespace SensorWeb.Controllers
             {
                 return View();
             }
+        }
+
+        [HttpPost]
+        public JsonResult InsertMotorDevice(int mId, int dId, string planoMedicao, string orientacaoSensor)
+        {
+            var device = _deviceService.Get(dId);
+            var motor = _MotorService.Get(mId);
+
+            if (device != null)
+            {
+                var motorDevice = new DeviceMotor()
+                {
+                    MotorId = mId,
+                    MeasurementPlan = planoMedicao,
+                    SensorOrientation = orientacaoSensor
+                };
+
+                motor.MotorDevices.Add(motorDevice);
+                _MotorService.Edit(motor);
+
+                device.Company = null;
+                device.DeviceMotor = motorDevice;
+                _deviceService.Edit(device);
+            }
+
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public JsonResult DeleteMotorDevice(int mId, int id)
+        {
+            var motor = _MotorService.Get(mId);
+
+            if (motor != null && motor.MotorDevices.Any(d => d.Id == id))
+            {
+                var mDevice = motor.MotorDevices.First(d => d.Id == id);
+                var device = _deviceService.GetAll().FirstOrDefault(d => d.DeviceMotorId == id);
+
+                if (device != null)
+                {
+                    device.Company = null;
+                    device.DeviceMotorId = null; device.DeviceMotor = null;
+                    _deviceService.Edit(device);
+                }
+
+                motor.MotorDevices.Remove(mDevice);
+                _MotorService.Edit(motor);
+            }
+
+            return Json(new { success = true });
         }
     }
 }

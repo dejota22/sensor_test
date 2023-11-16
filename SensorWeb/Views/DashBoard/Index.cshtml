@@ -1,9 +1,10 @@
-﻿@model SensorWeb.Models.DeviceMeasureModel
+﻿@model SensorWeb.Models.MotorModel
 
 @inject SensorWeb.Resources.CommonLocalizationService localizer
 
 @inject Core.Service.IDeviceMeasureService deviceMeasureService
 @inject Core.Service.IMotorService motorService
+@inject Core.Service.IDeviceService deviceService
 @inject Core.Service.ICompanyService companyService
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -145,14 +146,14 @@
                                 <label class="control-label">Equipamento</label>
                             </td>
                             <td>
-                                @Html.DropDownListFor(model => model.MotorId, new SelectList(motorService.GetQueryDropDownListByTag(), "Key", "Value"),
+                                @Html.DropDownListFor(model => model.DeviceId, new SelectList(deviceService.GetQueryDropDownListByTag(), "Key", "Value"),
                                 @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "class", "form-control" } })
 
-                                <span asp-validation-for="MotorId" class="text-danger"></span>
+                                <span asp-validation-for="DeviceId" class="text-danger"></span>
 
                                 <script>
                                     $(document).ready(function () {
-                                        $('#MotorId').on('change', function () {
+                                        $('#DeviceId').on('change', function () {
                                             $(this).closest('form').submit();
                                         });
                                     });

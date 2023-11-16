@@ -855,14 +855,14 @@
             <div class="mt-n3" id="input9">
 
                 @*SensorSelect*@
-                <div class="col-md-12 formclasscreate">
+                @*<div class="col-md-12 formclasscreate">
                     <div class="form-group col-md-4" style="display: grid;">
                         <label asp-for="DeviceId" class="control-label"></label>
                         @Html.DropDownListFor(model => model.DeviceId, new SelectList(Model.Devices, "Key", "Value"),
                         @localizer.Get("DeviceSelect"), new Dictionary<string, object> { { "class", "form-control" } })
                         <span asp-validation-for="DeviceId" class="text-danger"></span>
                     </div>
-                </div>
+                </div>*@
 
 
                 @*Medições do sensor*@

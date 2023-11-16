@@ -638,105 +638,31 @@
             @*<label for="input9" class="col-sm-2 labelbox">
             <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">Configurações de Leitura do sensor</span>
             </label>*@
-            <div class="mt-n3" id="input9">
+            <div class="mt-n3" id="input9" style="padding:10px;background-color:gainsboro;">
 
-                @*SensorSelect*@
-                <div class="col-md-12 formclasscreate">
-                    <div class="form-group col-md-4" style="display: grid;">
-                        <label asp-for="DeviceId" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.DeviceId, new SelectList(deviceService.GetQueryDropDownList(), "Key", "Value"),
-                        @localizer.Get("DeviceSelect"), new Dictionary<string, object> { { "class", "form-control" }, {"disabled", "disabled"} })
-                        <span asp-validation-for="DeviceId" class="text-danger"></span>
-                    </div>
+                <div class="col-md-12 formclasscreate" style="background-color:white;border:1px solid gray;">
+                    <div class="col-md-4" style="padding: 0 10px;"><b>SENSOR</b></div>
+                    <div class="col-md-3" style="padding: 0 10px;"><b>PLANO DE MEDIÇÃO</b></div>
+                    <div class="col-md-3" style="padding: 0 10px;"><b>ORIENTAÇÃO DO SENSOR</b></div>
+                    <div class="col-md-2"></div>
                 </div>
 
+                @{
+                    var listDevice = (List<Core.Device>)ViewBag.MotorDevices;
+                }
 
-                @*Medições do sensor*@
-                <div class="col-md-12 formclasscreate">
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Frequencia</label>
-                        <input id="DFrequency" class="form-control" readonly />
+                @foreach (var device in listDevice)
+                {
+                    <div class="col-md-12 formclasscreate cont-row" style="border-bottom:1px solid gray;">
+                        <div class="col-md-4 pt-1" style="padding: 0 10px;"> @device.Tag </div>
+                        <div class="col-md-3 pt-1" style="padding: 0 10px;"> @device.DeviceMotor.MeasurementPlan </div>
+                        <div class="col-md-3 pt-1" style="padding: 0 10px;"> @device.DeviceMotor.SensorOrientation </div>
+                        <div class="col-md-2">
+                            
+                        </div>
                     </div>
+                }
 
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">BDR</label>
-                        <input id="DBdr" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">CutOff</label>
-                        <input id="DCutoff" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">LPF</label>
-                        <input id="DLpf" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Lines</label>
-                        <input id="DLines" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Eixos</label>
-                        <input id="DAxies" class="form-control" readonly />
-                    </div>
-                </div>
-
-                <div class="col-md-12 formclasscreate">
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Temperatura</label>
-                        <input id="DTemperature" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">RMS</label>
-                        <input id="DRms" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Bateria</label>
-                        <input id="DBattery" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Timer</label>
-                        <input id="DHours" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Global em Velocidade (Min)</label>
-                        <input id="DVelocityMin" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Global em Velocidade (Max)</label>
-                        <input id="DVelocityMax" class="form-control" readonly />
-                    </div>
-                </div>
-
-                <div class="col-md-12 formclasscreate">
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Global em Aceleração (Min)</label>
-                        <input id="DAccelerationMin" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Global em Aceleração (Max)</label>
-                        <input id="DAccelerationMax" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Fator de Crista (Min)</label>
-                        <input id="DCrestFactorMin" class="form-control" readonly />
-                    </div>
-
-                    <div class="form-group col-md-2" style="display: grid;">
-                        <label class="control-label">Fator de Crista (Max)</label>
-                        <input id="DCrestFactorMax" class="form-control" readonly />
-                    </div>
-                </div>
             </div>
 
             <!--<div class="form-group col-md-6">

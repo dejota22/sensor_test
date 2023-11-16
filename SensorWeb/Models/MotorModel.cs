@@ -255,6 +255,9 @@ namespace SensorWeb.Models
         public virtual Device Device { get; set; }
 
         public List<SelectListItemDTO> Companies { get; set; }
+
+        public virtual ICollection<DeviceMotor> MotorDevices { get; set; }
+
         public List<SelectListItemDTO> Devices { get; set; }
         //public virtual FixationType FixationType { get; set; }
         //public virtual Machine Machine { get; set; }

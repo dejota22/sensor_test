@@ -62,15 +62,6 @@ namespace SensorService
 
             return query;
 
-            //var query = from Device in tb_Device
-            //            select Device;
-            //var query2 = _context.Device
-            //       .Select(x => new Contact
-            //       {
-            //           Id = x.Contact.Id,
-            //           FirstName = x.Contact.FirstName,
-            //       });
-
         }
 
 
@@ -103,6 +94,20 @@ namespace SensorService
                          {
                              Key = Device.Id,
                              Value = String.Concat(Device.Code, " - ", Device.Tag)
+                         }).Distinct().ToList();
+
+            return query;
+        }
+
+        public List<SelectListItemDTO> GetQueryDropDownListByTag()
+        {
+            IQueryable<Device> tb_Device = _context.Device;
+            var query = (from Device in tb_Device
+                         where Device.DeviceMotor.Id.Equals(Device.DeviceMotorId)
+                         select new SelectListItemDTO()
+                         {
+                             Key = Device.Id,
+                             Value = String.Concat(Device.DeviceMotor.Motor.Tag, " - ", Device.DeviceMotor.Motor.Name, " - Sensor: ", Device.Code)
                          }).Distinct().ToList();
 
             return query;
@@ -145,7 +150,15 @@ namespace SensorService
                             AccelerationMax = Device.AccelerationMax,
                             CrestFactorMax = Device.CrestFactorMax,
                             CrestFactorMin = Device.CrestFactorMin,
-
+                            DeviceMotorId = Device.DeviceMotorId,
+                            DeviceMotor = Device.DeviceMotorId != null ? new DeviceMotor()
+                            {
+                                Id = Device.DeviceMotor.Id,
+                                MotorId = Device.DeviceMotor.MotorId,
+                                MeasurementPlan = Device.DeviceMotor.MeasurementPlan,
+                                SensorOrientation = Device.DeviceMotor.SensorOrientation,
+                                Motor = Device.DeviceMotor.Motor
+                            } : null,
                             Company = new Company()
                             {
                                 LegalName = Device.Company.LegalName,

@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using Dapper;
 using Microsoft.Extensions.Options;
-using Renci.SshNet.Messages;
+//using Renci.SshNet.Messages;
 
 namespace SensorService
 {

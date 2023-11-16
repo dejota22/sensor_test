@@ -68,14 +68,21 @@
             
             <div class="form-group col-md-3">
                 <label class="control-label">Equipamento</label>
-                @Html.DropDownList("MotorId", new SelectList(motorService.GetQueryDropDownListByTag(), "Key", "Value"),
+                @Html.DropDownList("MotorId", new SelectList(motorService.GetQueryDropDownList(), "Key", "Value"),
                 @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "class", "form-control main-selects" } })
                 <span id="validation-MotorId" class="text-danger"></span>
             </div>
             <div class="form-group col-md-3">
                 <label class="control-label">Sensor</label>
-                @Html.DropDownList("DeviceId", new SelectList(deviceService.GetQueryDropDownList(), "Key", "Value"),
-                @localizer.Get("DeviceSelect"), new Dictionary<string, object> { { "class", "form-control main-selects" } })
+                <select id="DeviceId" name="DeviceId" asp-for="DeviceId" style="" class="form-control main-selects">
+                    <option value="">-- Selecione o Sensor --</option>
+                    @if ((KeyValuePair<int?, string>?)ViewBag.DeviceSelect != null)
+                    {
+                        var deviceSelect = (KeyValuePair<int?, string>)ViewBag.DeviceSelect;
+
+                        <option value="@deviceSelect.Key.Value" selected>@deviceSelect.Value</option>
+                    }
+                </select>
                 <span id="validation-DeviceId" class="text-danger"></span>
             </div>
             <div class="form-group col-md-3">
@@ -156,12 +163,17 @@
 
         $(document).ready(function () {
 
-            $('.main-selects').bind('change', function (e) {
+            $('#MotorId').bind('change', function () {
+                populateDeviceSelect();
+            });
+
+            $('#DeviceId').bind('change', function (e) {
                 let deviceId = $('#DeviceId').val();
                 let motorId = $('#MotorId').val();
+                let deviceIdName = $("#DeviceId option:selected").text();
 
                 if (deviceId != '' && motorId != '')
-                    document.location.href = '@Url.Action("ReportDeviceData")' + '?DeviceId=' + deviceId + '&MotorId=' + motorId;
+                    document.location.href = '@Url.Action("ReportDeviceData")' + '?DeviceId=' + deviceId + '&MotorId=' + motorId + '&DeviceIdName=' + deviceIdName;
             });
 
             $('#btn-visualizar').bind('click', function (e) {
@@ -197,6 +209,16 @@
 
         });
 
+        function populateDeviceSelect() {
+            let deviceSelect = $('#DeviceId');
+            let motorId = $('#MotorId').val();
+            deviceSelect.find('option').not(':first').remove();
+            $.post('@Url.Content("~/Device/GetDeviceByMotorId")', { mId: motorId }, function (data) {
+                $.each(data, function () {
+                    deviceSelect.append($("<option />").val(this.id).text(this.tag));
+                });
+            });
+        }
 
         function drawGraficos() {
             var options = {
