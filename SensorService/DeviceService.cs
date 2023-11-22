@@ -158,6 +158,13 @@ namespace SensorService
                                 MeasurementPlan = Device.DeviceMotor.MeasurementPlan,
                                 SensorOrientation = Device.DeviceMotor.SensorOrientation,
                                 Motor = Device.DeviceMotor.Motor
+                                //Motor = Device.DeviceMotor.MotorId != 0 ? new Motor()
+                                //{
+                                //    Id = Device.DeviceMotor.Motor.Id,
+                                //    Name = Device.DeviceMotor.Motor.Name,
+                                //    CompanyId = Device.DeviceMotor.Motor.CompanyId,
+                                //    GroupId = Device.DeviceMotor.Motor.GroupId,
+                                //} : null
                             } : null,
                             Company = new Company()
                             {

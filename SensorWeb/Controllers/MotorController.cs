@@ -60,7 +60,7 @@ namespace SensorWeb.Controllers
                 var userCompany = user.Contact.CompanyId;
                 var companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany).ToList();
 
-                var listaMotors = _MotorService.GetAll();
+                var listaMotors = _MotorService.GetAllEquipamento();
 
                 var listaMotorModel = _mapper.Map<List<MotorModel>>(listaMotors);
 
@@ -308,5 +308,215 @@ namespace SensorWeb.Controllers
 
             return Json(new { success = true });
         }
+
+
+        #region Agrupamento
+
+        public ActionResult GroupIndex()
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = _userService.Get(Convert.ToInt32(userId));
+                var userCompany = user.Contact.CompanyId;
+                var companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany).ToList();
+
+                var listaMotors = _MotorService.GetAllAgrupamento();
+
+                var listaMotorModel = _mapper.Map<List<MotorModel>>(listaMotors);
+
+                if (user.UserType.Name != Constants.Roles.Administrator)
+                {
+                    listaMotorModel = listaMotorModel.Where(x => x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId)).ToList();
+                }
+
+                return View(listaMotorModel.OrderBy(x => x.Id));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation($"Erro:{ex.Message}");
+                throw;
+            }
+
+        }
+
+        public ActionResult GroupCreate()
+        {
+            var userId = LoggedUserId;
+            var user = _userService.Get(Convert.ToInt32(userId));
+            var userCompany = user.Contact.CompanyId;
+            var companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany).ToList();
+
+            var motorModel = new MotorModel
+            {
+                Companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany || x.Id == userCompany)
+                    .Select(y => new SelectListItemDTO()
+                    {
+                        Key = y.Id,
+                        Value = y.TradeName
+                    }).Distinct().ToList()
+            };
+
+            return View(motorModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult GroupCreate(MotorModel motorModel)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    motorModel.Id = _MotorService.GetlastCode();
+                    var motor = _mapper.Map<Motor>(motorModel);
+                    motor.IsGrouping = true;
+                    int mId = _MotorService.Insert(motor);
+
+                    return RedirectToAction(nameof(GroupEdit), new { id = mId });
+                }
+                else
+                    return View(motorModel);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction(nameof(GroupCreate));
+            }
+        }
+
+        public ActionResult GroupEdit(int id)
+        {
+            var userId = LoggedUserId;
+            var user = _userService.Get(Convert.ToInt32(userId));
+            var userCompany = user.Contact.CompanyId;
+            var companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany).ToList();
+
+            var motor = _MotorService.Get(id);
+            var motorModel = _mapper.Map<MotorModel>(motor);
+
+            if (motorModel != null)
+            {
+                ViewBag.CompanyName = _companyService.Get(motorModel.CompanyId).TradeName;
+
+                var allMotors = _MotorService.GetAllEquipamento();
+
+                motorModel.Equips = allMotors
+                    .Where(x => x.GroupId != id && 
+                        (x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId)))
+                    .Select(y => new SelectListItemDTO()
+                    {
+                        Key = y.Id,
+                        Value = y.Name
+                    }).Distinct().ToList();
+
+                ViewBag.Motors = allMotors
+                    .Where(x => x.GroupId == id).ToList();
+            }
+
+            return View(motorModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult GroupEdit(int id, MotorModel motorModel)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var motor = _mapper.Map<Motor>(motorModel);
+                    motor.IsGrouping = true;
+                    _MotorService.Edit(motor);
+
+                }
+
+                return RedirectToAction(nameof(GroupEdit), new { id = motorModel.Id }); ;
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public ActionResult GroupDetails(int id)
+        {
+            var motor = _MotorService.Get(id);
+            var motorModel = _mapper.Map<MotorModel>(motor);
+
+            if (motorModel != null)
+            {
+                ViewBag.CompanyName = _companyService.Get(motorModel.CompanyId).TradeName;
+
+                var allMotors = _MotorService.GetAllEquipamento();
+
+                ViewBag.Motors = allMotors
+                    .Where(x => x.GroupId == id).ToList();
+            }
+
+            return View(motorModel);
+        }
+
+        public ActionResult GroupDelete(int id)
+        {
+            Motor motor = _MotorService.Get(id);
+            MotorModel motorModel = _mapper.Map<MotorModel>(motor);
+            return View(motorModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult GroupDelete(int id, MotorModel motorModel)
+        {
+            try
+            {
+                var group = _MotorService.Get(id);
+
+                if (group.Motors.Any())
+                {
+                    ViewBag.ErrorMsg = "Não foi possível excluir. Este Agrupamento possui Equipamentos vinculados.";
+                    return View(_mapper.Map<MotorModel>(group));
+                }
+
+                _MotorService.Remove(id);
+                return RedirectToAction(nameof(GroupIndex));
+            }
+            catch
+            {
+                return View(motorModel);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult InsertMotorToGroup(int mId, int gId)
+        {
+            var motor = _MotorService.Get(mId);
+            var group = _MotorService.Get(gId);
+
+            if (motor != null)
+            {
+                group.Motors.Add(motor);
+                _MotorService.Edit(group);
+            }
+
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public JsonResult RemoveMotorFromGroup(int mId, int gId)
+        {
+            var group = _MotorService.Get(gId);
+
+            if (group != null && group.Motors.Any(m => m.Id == mId))
+            {
+                var mFromGroup = group.Motors.First(m => m.Id == mId);
+
+                group.Motors.Remove(mFromGroup);
+                _MotorService.Edit(group);
+            }
+
+            return Json(new { success = true });
+        }
+
+        #endregion
     }
 }

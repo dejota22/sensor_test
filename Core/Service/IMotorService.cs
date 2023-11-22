@@ -5,25 +5,34 @@ namespace Core.Service
 {    
     public interface IMotorService
     {
-        void Edit(Motor motor);
+        #region Equipamento e Agrupamento
 
-        int Insert(Motor motor);
-
+        IEnumerable<Motor> GetAll();
+        IEnumerable<MotorDTO> GetAllDTO();
         Motor Get(int idMotor);
-
+        IEnumerable<Motor> GetByName(string name);
+        List<SelectListItemDTO> GetQueryDropDownList();
+        List<SelectListItemDTO> GetQueryDropDownListByTag();
+        int GetlastCode();
+        void Edit(Motor motor);
+        int Insert(Motor motor);
         void Remove(int idMotor);
 
-        IEnumerable<Motor> GetByName(string name);
-        IEnumerable<Motor> GetAll();
+        #endregion
 
-        IEnumerable<MotorDTO> GetAllDTO();
 
-        Motor GetBymotorTag(string motorTag);
+        #region Equipamento
 
-        int GetlastCode();
+        IEnumerable<Motor> GetAllEquipamento();
+        List<SelectListItemDTO> GetQueryDropDownListEquipamento();
 
-        List<SelectListItemDTO> GetQueryDropDownList();
+        #endregion
 
-        List<SelectListItemDTO> GetQueryDropDownListByTag();
+
+        #region Agrupamento
+
+        IEnumerable<Motor> GetAllAgrupamento();
+
+        #endregion
     }
 }

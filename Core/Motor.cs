@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Core
@@ -7,6 +8,7 @@ namespace Core
     {
         public int Id { get; set; }
         public int? MachineId { get; set; }
+        public int? GroupId { get; set; }
         public int? ActuationTypeId { get; set; }
         public int? FixationTypeId { get; set; }
         public int? CouplingTypeId { get; set; }
@@ -107,6 +109,14 @@ namespace Core
 
         //public virtual Device Device { get; set; }
 
+        public bool IsGrouping { get; set; }
+
+        public virtual Motor Group { get; set; }
+
         public virtual ICollection<DeviceMotor> MotorDevices { get; set; }
+
+        public virtual ICollection<Motor> Motors { get; set; }
+
+        public virtual ICollection<DeviceConfiguration> DeviceConfigurations { get; set; }
     }
 }

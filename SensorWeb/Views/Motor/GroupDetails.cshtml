@@ -1,0 +1,171 @@
+﻿@model SensorWeb.Models.MotorModel
+
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+@inject Core.Service.IMachineService machineService
+@inject Core.Service.IFixationTypeService fixationService
+@inject Core.Service.ICouplingTypeService couplingService
+@inject Core.Service.ICardanShaftTypeService cardanShaftTypeService
+@inject Core.Service.IPumpTypeService pumpTypeService
+@inject Core.Service.ICompressorTypeService compressorTypeService
+
+@*<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>*@
+<link href="@Url.Content("~/css/screenCustomMotor.css?p=3535")" rel="stylesheet" />
+
+<h4 class="screenTitle">Agrupamento </h4>
+<hr />
+
+<style>
+    .cont-row {
+        background: #ddd;
+    }
+
+        .cont-row:nth-child(2n) {
+            background: #fff;
+        }
+</style>
+
+<script>
+
+    $('body').ready(function () {
+        
+    });
+
+
+
+</script>
+
+
+<div class="row screenCreate">
+    <div class="col-md-12 formclasscreate">
+        <form asp-action="GroupDetails" method="post" style="min-width: 900px;">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="col-md-12 formclasscreate ">
+                <div class="form-group col-md-12">
+                    <label class="control-label">Empresa</label>
+                    <input value="@ViewBag.CompanyName" class="form-control" readonly />
+                </div>
+            </div>
+
+            <div class="mt-n3" id="input1">
+
+                <div class="col-md-12 formclasscreate ">
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Nome</label>
+                        <input asp-for="Name" class="form-control" readonly />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label asp-for="Description" class="control-label"></label>
+                        <input asp-for="Description" class="form-control" readonly />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="Tag" class="control-label"></label>
+                        <input asp-for="Tag" class="form-control" readonly />
+                        <span asp-validation-for="Tag" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="mt-n3" id="input9" style="padding:10px;background-color:gainsboro;">
+
+                <div class="col-md-12 formclasscreate">
+                    <label class="control-label">Equipamentos</label>
+                    <br />
+                </div>
+
+                @{
+                    var listMotor = (List<Core.Motor>)ViewBag.Motors;
+                }
+
+                @if (listMotor != null && listMotor.Any())
+                {
+                    <div class="col-md-12 formclasscreate" style="background-color:white;border:1px solid gray;">
+                        <div class="col-md-10" style="padding: 0 10px;"><b>NOME / TAG</b></div>
+                        <div class="col-md-2"></div>
+                    </div>
+
+                    @foreach (var motor in listMotor)
+                    {
+                        <div class="col-md-12 formclasscreate cont-row" style="border-bottom:1px solid gray;">
+                            <div class="col-md-10 pt-2" style="padding: 0 10px;"> @motor.Name @(string.IsNullOrEmpty(motor.Tag) ? "" : "/ " + motor.Tag) </div>
+                            <div class="col-md-2">
+                                
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-md-12 formclasscreate" style="">
+                        <div class="col-md-12" style="border-bottom:1px solid gray;">Nenhum equipamento no grupo</div>
+                    </div>
+                }
+
+            </div>
+
+            <div class="row">
+                <div class="form-group screenCreateControls col-md-6">
+                    <a href="@Url.Action("GroupIndex", "Motor")"><input asp-action="Index" type="button" value="@localizer.Get("BackToList")" class="btn btn-primary" /></a>
+                </div>
+                <div class="form-group screenCreateControls col-md-6" style="text-align: right;">
+                    @*<button type="button" class="btn btn-secondary" disabled>Copiar</button>*@
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<hr />
+
+@*<div>
+        <a asp-action="Index">Back to List</a>
+    </div>*@
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        function salvarEquip() {
+            var idGroup = document.getElementById("Id").value;
+            var idMotor = document.getElementById("MotorId").value;
+
+            if (idMotor == '') {
+
+                $('#MotorValidation').html('O Equipamento é obrigatório');
+
+            }
+            else {
+                $.post('@Url.Content("~/Motor/InsertMotorToGroup")', { mId: idMotor, gId: idGroup }, function (data) {
+                    if (data.success) {
+                        alert('Equipamento incluido no agrupamento com sucesso');
+                        document.location.reload();
+                    }
+                });
+            }
+        }
+
+        function excluirEquip(id) {
+            var idGroup = document.getElementById("Id").value;
+
+            if (confirm("Tem certeza que deseja remover o equipamento do grupo?") == true) {
+                $.post('@Url.Content("~/Motor/RemoveMotorFromGroup")', { mId: id, gId: idGroup }, function (data) {
+                    if (data.success) {
+                        alert('Equipamento removido do agrupamento com sucesso');
+                        document.location.reload();
+                    }
+                });
+            }
+        }
+
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}
+
+

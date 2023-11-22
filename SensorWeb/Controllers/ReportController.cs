@@ -17,6 +17,7 @@ using Org.BouncyCastle.Asn1.X509;
 using System.IO;
 using Core.DTO;
 using System.Drawing.Printing;
+using Microsoft.EntityFrameworkCore;
 
 namespace SensorWeb.Controllers
 {
@@ -60,6 +61,13 @@ namespace SensorWeb.Controllers
                 model.DeviceIdName = DeviceIdName;
                 model.MotorId = MotorId.Value;
 
+                var motor = _motorService.Get(MotorId.Value);
+                if (motor.IsGrouping)
+                {
+                    var device = _deviceService.Get(DeviceId.Value);
+                    MotorId = device.DeviceMotor.MotorId;
+                }
+
                 var dataList = _receiveService.GetDataByDeviceMotor(DeviceId, MotorId);
                 if (dataList != null)
                 {
@@ -85,6 +93,13 @@ namespace SensorWeb.Controllers
 
             if (DeviceId != null && MotorId != null)
             {
+                var motor = _motorService.Get(MotorId.Value);
+                if (motor.IsGrouping)
+                {
+                    var device = _deviceService.Get(DeviceId.Value);
+                    MotorId = device.DeviceMotor.MotorId;
+                }
+
                 ViewBag.DeviceSelect = (KeyValuePair<int?, string>?)new KeyValuePair<int?, string>(DeviceId, DeviceIdName);
 
                 var dataList = _receiveService.GetDataByDeviceMotor(DeviceId, MotorId);
@@ -135,17 +150,36 @@ namespace SensorWeb.Controllers
             if (model.EndDate.HasValue)
                 newEndDate = model.EndDate.Value.Date.Add(new TimeSpan(23, 59, 59));
 
-            var list = GetDeviceCodeAlarme(model.DeviceId, model.MotorId, model.StartDate, newEndDate, model.Gravidade, model.PageIndex);
+            var modelMotorId = model.MotorId;
+            var motor = _motorService.Get(model.MotorId.Value);
+            var device = _deviceService.Get(model.DeviceId.Value);
+            var deviceName = device.Tag;
+            if (motor.IsGrouping)
+            {
+                modelMotorId = device.DeviceMotor.MotorId;
+            }
+
+            var list = GetDeviceCodeAlarme(model.DeviceId, modelMotorId, model.StartDate, newEndDate, model.Gravidade, model.PageIndex);
             model.DataGlobalModel = list;
 
-            var listTotal = _receiveService.ListDeviceCodeAlarmeCount(model.DeviceId, model.MotorId, model.StartDate, newEndDate, model.Gravidade);
+            var listTotal = _receiveService.ListDeviceCodeAlarmeCount(model.DeviceId, modelMotorId, model.StartDate, newEndDate, model.Gravidade);
             model.PageTotal = listTotal > 10 ? ((listTotal + 10 - 1) / 10) - 1 : 0;
+
+            ViewBag.DeviceSelect = (KeyValuePair<int?, string>?)new KeyValuePair<int?, string>(model.DeviceId, deviceName);
+
             return View(model);
         }
 
         public JsonResult ReportRMSCristaUpdate(int deviceId, int motorId, DateTime startDate, DateTime endDate, int reportType, int eixo)
         {
             var newEndDate = endDate.Date.Add(new TimeSpan(23, 59, 59));
+
+            var motor = _motorService.Get(motorId);
+            if (motor.IsGrouping)
+            {
+                var device = _deviceService.Get(deviceId);
+                motorId = device.DeviceMotor.MotorId;
+            }
 
             var dadosDataReceive = _receiveService.GetDataUnionGlobalByDateType(deviceId, motorId, startDate, newEndDate, reportType, eixo);
             var limites = _deviceConfigService.GetLimitesAccSpd(deviceId, motorId, reportType);
@@ -205,6 +239,13 @@ namespace SensorWeb.Controllers
         private List<DataGlobalModel> GetDeviceCodeAlarme(int? deviceId, int? motorId, DateTime? startDate, 
             DateTime? endDate, string gravidade, int pageIndex = 0)
         {
+            var motor = _motorService.Get(motorId.Value);
+            if (motor.IsGrouping)
+            {
+                var device = _deviceService.Get(deviceId.Value);
+                motorId = device.DeviceMotor.MotorId;
+            }
+
             var skip = pageIndex * 10;
             var receiveDataAndGlobal = _receiveService
                 .ListDeviceCodeAlarme(deviceId, motorId, startDate, endDate, gravidade, skip);

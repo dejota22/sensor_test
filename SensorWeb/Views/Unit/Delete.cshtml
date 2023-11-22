@@ -1,0 +1,54 @@
+﻿@model SensorWeb.Models.CompanyUnitModel
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+
+
+<h4 style="color:white; text-align:center">@localizer.Get("CompanyTitle") </h4>
+<hr />
+
+<h5 style="color:white;">@localizer.Get("DeleteRegister")?</h5>
+<div class="row screenCreate">
+    <div class="col-md-12 formclasscreate">
+        <dl class="row">
+            <dt class="col-sm-2">
+                Empresa
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Company.LegalName)
+            </dd>
+            <dt class="col-sm-2">
+                Nome
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-12 ">
+        <div class="form-group screenCreateControls col-md-6">
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" name="Id" id="Id" class="form-control" />
+                <input type="hidden" asp-for="Name" name="Name" id="Name" class="form-control" />
+                <input type="hidden" asp-for="CompanyId" name="CompanyId" id="CompanyId" class="form-control" />
+                <input type="hidden" asp-for="Company.LegalName" class="form-control" />
+                <input type="submit" value="Excluir" class="btn btn-danger" />
+                <a asp-action="Index" class="btn btn-primary">@localizer.Get("BackToList")</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+    
+        @if (ViewBag.ErrorMsg != null)
+        {
+            <text>alert('Não foi possível excluir. Esta Unidade possui Setores vinculados.'); </text>
+        }
+
+    </script>
+
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}

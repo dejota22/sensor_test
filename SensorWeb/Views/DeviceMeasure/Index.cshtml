@@ -792,7 +792,7 @@
                 <div class="row mb-3">
                     <div class="form-group col-md-6">
                         <label class="control-label">Equipamento</label>
-                        @Html.DropDownListFor(model => model.CopyToMotorId, new SelectList(motorService.GetQueryDropDownList(), "Key", "Value"),
+                        @Html.DropDownListFor(model => model.CopyToMotorId, new SelectList(motorService.GetQueryDropDownListEquipamento(), "Key", "Value"),
                         @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "class", "form-control copy-selects" } })
                         <span asp-validation-for="MotorId" class="text-danger"></span>
                     </div>

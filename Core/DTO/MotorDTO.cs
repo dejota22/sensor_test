@@ -12,6 +12,7 @@ namespace Core
 
         public int Id { get; set; }
         public int MachineId { get; set; }
+        public int? GroupId { get; set; }
         public int DeviceId { get; set; }
         public int? ActuationTypeId { get; set; }
         public int? FixationTypeId { get; set; }
@@ -78,6 +79,7 @@ namespace Core
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
+        public bool IsGrouping { get; set; }
 
         public virtual ActuationType ActuationType { get; set; }
         public virtual CardanShaftType CardanShaftType { get; set; }
@@ -88,5 +90,6 @@ namespace Core
         public virtual Pulley Pulley { get; set; }
         public virtual Ring Ring { get; set; }
         public virtual ICollection<DeviceMeasure> DeviceMeasure { get; set; }
+        public virtual ICollection<Motor> Motors { get; set; }
     }
 }

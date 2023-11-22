@@ -1,0 +1,82 @@
+﻿@model SensorWeb.Models.CompanyUnitModel
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+
+<style>
+    .cont-row {
+        background: #fff;
+    }
+
+    .sub-row {
+        background: #ccc;
+    }
+</style>
+
+<h4 class="screenTitle">Unidade </h4>
+<hr />
+<div class="row screenCreate">
+        <form asp-action="Details">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="col-md-12 formclasscreate ">
+
+                    <div class="form-group col-md-6">
+                        <input type="hidden" asp-for="Id" class="form-control" readonly />
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" readonly />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="control-label">Empresa</label>
+                        <input value="@Model.Company.LegalName" class="form-control" readonly />
+                    </div>
+                </div>
+
+                <div class="mt-n3" id="input9" style="padding:10px;background-color:gainsboro;">
+                    <div class="col-md-12 formclasscreate" style="">
+                        <div class="col-md-12" style=""><b>SETORES / SUB-SETORES</b></div>
+                    </div>
+                    @if (Model.CompanyUnitSector != null && Model.CompanyUnitSector.Any(s => s.ParentSector == null))
+                    {
+                        <div class="col-md-12 formclasscreate" style="background-color:white;border:1px solid gray;">
+                            <div class="col-md-10" style="padding: 0 10px;"><b>NOME</b></div>
+                            <div class="col-md-2"></div>
+                        </div>
+                        @foreach (var sector in Model.CompanyUnitSector.Where(s => s.ParentSector == null))
+                        {
+                    <div class="row cont-row" style="border-bottom:1px solid gray;margin: 0 5px;">
+                                <div class="col-md-10 pt-1" style="padding: 0 10px;"> @sector.Name </div>
+                                <div class="col-md-2">
+                                </div>
+                            </div>
+
+                            @foreach (var subsector in Model.CompanyUnitSector.Where(s => s.ParentSectorId == sector.Id))
+                            {
+                                <div class="row sub-row" style="border-bottom:1px solid gray;margin: 0 5px;">
+                                    <div class="col-md-1 pt-1">
+                                    </div>
+                                    <div class="col-md-7 pt-1" style=""> @subsector.Name </div>
+                                    <div class="col-md-2">
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-md-12 formclasscreate" style="">
+                            <div class="col-md-12" style="border-bottom:1px solid gray;">Nenhum setor cadastrado</div>
+                        </div>
+                    }
+
+                </div>
+
+            <div class="form-group screenCreateControls pt-3">
+                <a href="@Url.Action("Index", "Unit")"><input asp-action="Index" type="button" value="@localizer.Get("BackToList")" class="btn btn-primary" /></a>
+            </div>
+        </form>
+</div>
+<hr />
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -260,7 +260,7 @@ namespace SensorWeb.Controllers
         public JsonResult GetDeviceByMotorId(int mId)
         {
             var devices = _deviceService.GetAll()
-                .Where(d => d.DeviceMotor?.MotorId == mId).ToList();
+                .Where(d => d.DeviceMotor?.MotorId == mId || d.DeviceMotor?.Motor?.GroupId == mId).ToList();
 
             return Json(devices);
         }

@@ -237,7 +237,7 @@ namespace SensorWeb.Models
         public DateTime UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
 
-        public int MotorId { get; set; }
+        //public int MotorId { get; set; }
         //public string Temperature { get; set; }
         //public string ReadDataType { get; set; }
         //public string XAxle { get; set; }
@@ -265,6 +265,15 @@ namespace SensorWeb.Models
         //public virtual Ring Ring { get; set; }
         //public virtual ICollection<DeviceMeasure> DeviceMeasure { get; set; }
 
+        public int? GroupId { get; set; }
+
+        public virtual Motor Group { get; set; }
+
+        public virtual ICollection<Motor> Motors { get; set; }
+
+        public List<SelectListItemDTO> Equips { get; set; }
+
+        public bool IsGrouping { get; set; }
 
         public bool InputAxle { get; set; }
         public string InputAxleRoll { get; set; }

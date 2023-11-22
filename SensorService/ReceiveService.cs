@@ -180,7 +180,7 @@ namespace SensorService
         public IEnumerable<ReceiveData> GetDataByDeviceMotor(int? deviceId, int? motorId)
         {
             var receiveDataList = GetQueryData().Where(d => d.DeviceConfiguration.DeviceId == deviceId 
-                && d.DeviceConfiguration.MotorId == motorId).ToList();
+                && (d.DeviceConfiguration.MotorId == motorId || d.DeviceConfiguration.Motor.GroupId == motorId)).ToList();
 
             return receiveDataList;
         }

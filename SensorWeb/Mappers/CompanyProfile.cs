@@ -12,4 +12,12 @@ namespace SensorWeb.Mappers
             CreateMap<CompanyModel, Company>().ReverseMap();
         }
     }
+
+    public class CompanyUnitProfile : Profile
+    {
+        public CompanyUnitProfile()
+        {
+            CreateMap<CompanyUnitModel, CompanyUnit>().ReverseMap();
+        }
+    }
 }

@@ -17,15 +17,17 @@ namespace SensorService
             _context = context;
         }
 
-        void IMotorService.Edit(Motor Motor)
+        
+
+        #region Equipamento e Agrupamento
+
+        private IQueryable<Motor> GetQuery()
         {
-            Motor.UpdatedAt = DateTime.Now;
+            IQueryable<Motor> tb_Motor = _context.Motor;
+            var query = tb_Motor.Include(d => d.MotorDevices).Include(d => d.Motors);
 
-            _context.Update(Motor);
-            _context.SaveChanges();
+            return query;
         }
-
-
 
         private IQueryable<MotorDTO> GetQueryDTO()
         {
@@ -37,34 +39,42 @@ namespace SensorService
                         select new MotorDTO
                         {
                             Id = Motor.Id,
+                            GroupId = Motor.GroupId,
                             Name = Motor.Name,
                             CreatedAt = Motor.CreatedAt,
                             UpdatedAt = Motor.UpdatedAt,
+                            IsGrouping = Motor.IsGrouping
                         };
 
             return query;
-
-            //var query = from Motor in tb_Motor
-            //            select Motor;
-            //var query2 = _context.Motor
-            //       .Select(x => new Contact
-            //       {
-            //           Id = x.Contact.Id,
-            //           FirstName = x.Contact.FirstName,
-            //       });
-
         }
 
+        IEnumerable<Motor> IMotorService.GetAll()
+        {
+            return GetQuery().Where(m => m.GroupId == null);
+        }
 
-        /// <summary>
-        /// GetQueryDropDownList
-        /// </summary>
-        /// <returns></returns>
-        private List<SelectListItemDTO> GetQueryDropDownList()
+        IEnumerable<MotorDTO> IMotorService.GetAllDTO()
+        {
+            return GetQueryDTO().Where(m => m.GroupId == null);
+        }
+
+        Motor IMotorService.Get(int idMotor)
+        {
+            return GetQuery().Where(x => x.Id.Equals(idMotor)).FirstOrDefault();
+        }
+
+        IEnumerable<Motor> IMotorService.GetByName(string name)
+        {
+            return GetQuery().Where(x => x.Name.Equals(name));
+        }
+
+        List<SelectListItemDTO> IMotorService.GetQueryDropDownList()
         {
             IQueryable<Motor> tb_Motor = _context.Motor;
             var query = (from Motor in tb_Motor
-                         where Motor.Name != null || Motor.Tag != null
+                         where Motor.GroupId == null 
+                         && (Motor.Name != null || Motor.Tag != null)
                          select new SelectListItemDTO()
                          {
                              Key = Motor.Id,
@@ -74,11 +84,7 @@ namespace SensorService
             return query;
         }
 
-        /// <summary>
-        /// GetQueryDropDownList
-        /// </summary>
-        /// <returns></returns>
-        private List<SelectListItemDTO> GetQueryDropDownListByTag()
+        List<SelectListItemDTO> IMotorService.GetQueryDropDownListByTag()
         {
             IQueryable<Device> tb_Device = _context.Device;
             var query = (from Device in tb_Device
@@ -90,51 +96,6 @@ namespace SensorService
                          }).Distinct().ToList();
 
             return query;
-        }
-
-        private IQueryable<Motor> GetQuery()
-        {
-            IQueryable<Motor> tb_Motor = _context.Motor;
-            var query = tb_Motor.Include(d => d.MotorDevices);
-
-            return query;
-        }
-
-        Motor IMotorService.Get(int idMotor)
-        {
-            return GetQuery().Where(x => x.Id.Equals(idMotor)).FirstOrDefault();
-        }
-
-        IEnumerable<Motor> IMotorService.GetAll()
-        {
-            return GetQuery();
-        }
-
-        IEnumerable<MotorDTO> IMotorService.GetAllDTO()
-        {
-            return GetQueryDTO();
-        }
-
-        IEnumerable<Motor> IMotorService.GetByName(string name)
-        {
-            return GetQuery().Where(x => x.Name.Equals(name));
-        }
-
-        int IMotorService.Insert(Motor Motor)
-        {
-            Motor.CreatedAt = DateTime.Now;
-            Motor.UpdatedAt = DateTime.Now;
-
-            _context.Add(Motor);
-            _context.SaveChanges();
-            return Motor.Id;
-        }
-
-        void IMotorService.Remove(int idMotor)
-        {
-            var _Motor = _context.Motor.Find(idMotor);
-            _context.Remove(_Motor);
-            _context.SaveChanges();
         }
 
         int IMotorService.GetlastCode()
@@ -149,20 +110,64 @@ namespace SensorService
             }
         }
 
-        List<SelectListItemDTO> IMotorService.GetQueryDropDownList()
+        int IMotorService.Insert(Motor Motor)
         {
-            return GetQueryDropDownList();
+            Motor.CreatedAt = DateTime.Now;
+            Motor.UpdatedAt = DateTime.Now;
+
+            _context.Add(Motor);
+            _context.SaveChanges();
+            return Motor.Id;
         }
 
-
-        List<SelectListItemDTO> IMotorService.GetQueryDropDownListByTag()
+        void IMotorService.Edit(Motor Motor)
         {
-            return GetQueryDropDownListByTag();
+            Motor.UpdatedAt = DateTime.Now;
+
+            _context.Update(Motor);
+            _context.SaveChanges();
         }
 
-        Motor IMotorService.GetBymotorTag(string motorTag)
+        void IMotorService.Remove(int idMotor)
         {
-            return GetQuery().Where(x => x.Tag.Equals(motorTag)).FirstOrDefault();
+            var _Motor = _context.Motor.Find(idMotor);
+            _context.Remove(_Motor);
+            _context.SaveChanges();
         }
+
+        #endregion
+
+        #region Equipamento
+
+        IEnumerable<Motor> IMotorService.GetAllEquipamento()
+        {
+            return GetQuery().Where(e => e.IsGrouping == false);
+        }
+
+        List<SelectListItemDTO> IMotorService.GetQueryDropDownListEquipamento()
+        {
+            IQueryable<Motor> tb_Motor = _context.Motor;
+            var query = (from Motor in tb_Motor
+                         where Motor.GroupId == null && Motor.IsGrouping == false
+                         && (Motor.Name != null || Motor.Tag != null)
+                         select new SelectListItemDTO()
+                         {
+                             Key = Motor.Id,
+                             Value = String.Concat(Motor.Tag, " - ", Motor.Name)
+                         }).Distinct().ToList();
+
+            return query;
+        }
+
+        #endregion
+
+        #region Agrupamento
+
+        IEnumerable<Motor> IMotorService.GetAllAgrupamento()
+        {
+            return GetQuery().Where(e => e.IsGrouping == true);
+        }
+
+        #endregion
     }
 }

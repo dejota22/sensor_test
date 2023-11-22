@@ -1,0 +1,229 @@
+﻿@model SensorWeb.Models.CompanyUnitModel
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+@inject Core.Service.ICompanyUnitService companyUnitService
+@inject Core.Service.ICompanyService companyService
+
+<style>
+    .cont-row {
+        background: #fff;
+    }
+
+    .sub-row {
+        background: #ccc;
+    }
+</style>
+
+<h4 class="screenTitle">Unidade </h4>
+<hr />
+<div class="row screenCreate">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-md-12 formclasscreate ">
+
+            <div class="form-group col-md-6">
+
+                <input type="hidden" asp-for="Id" name="Id" id="Id" class="form-control" />
+
+                <label class="control-label">Empresa</label>
+                @Html.DropDownListFor(model => model.CompanyId, new SelectList(companyService.GetQueryDropDownList(), "Key", "Value"),
+                @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" }, { "required", "required" } })
+                <span asp-validation-for="CompanyId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+        </div>
+
+        <div class="mt-n3" id="input9" style="padding:10px;background-color:gainsboro;">
+            <div class="col-md-12 formclasscreate" style="">
+                <div class="col-md-12" style="">
+                    <b>SETORES / SUB-SETORES</b> 
+                    <button id="btnAbrirSetorModal" type="button" class="btn btn-sm btn-info"
+                            onclick="javascript:abrirSetorModal();" style="text-transform:none;margin: 0 0 6px 20px;font-weight: bold;">
+                        Incluir Setor</button>
+                </div>
+            </div>
+            @if (Model.CompanyUnitSector != null && Model.CompanyUnitSector.Any(s => s.ParentSector == null))
+            {
+                <div class="row formclasscreate" style="background-color:white;border:1px solid gray;margin: 0 5px;">
+                    <div class="col-md-10" style="padding: 0 10px;"><b>NOME</b></div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+                @foreach (var sector in Model.CompanyUnitSector.Where(s => s.ParentSector == null))
+                {
+                    string hasSubs = Model.CompanyUnitSector.Any(s => s.ParentSectorId == sector.Id) ? "true" : "false";
+
+                    <div class="row cont-row" style="border-bottom:1px solid gray;margin: 0 5px;">
+                        <div class="col-md-8 pt-1" style="padding: 0 10px;"> @sector.Name </div>
+                        <div class="col-md-4">
+                            <button type="button" title="Excluir" class="btn btn-danger" onclick="javascript:excluirSetor('@sector.Id','@hasSubs');" style="padding: 2px 8px;margin: 5px;"><i class="far fa-trash-alt"></i></button>
+                            <button id="btnAbrirSubSetorModal" type="button" class="btn btn-sm btn-info"
+                                    onclick="javascript:abrirSubSetorModal('@sector.Name', '@sector.Id');" style="text-transform:none;margin:5px;font-weight: bold;">
+                                Incluir Sub-Setor
+                            </button>
+                        </div>
+                    </div>
+
+                    @foreach (var subsector in Model.CompanyUnitSector.Where(s => s.ParentSectorId == sector.Id))
+                    {
+                        <div class="row sub-row" style="border-bottom:1px solid gray;margin: 0 5px;">
+                            <div class="col-md-1 pt-1">
+                            </div>
+                            <div class="col-md-7 pt-1" style=""> @subsector.Name </div>
+                            <div class="col-md-2">
+                                <button type="button" title="Excluir" class="btn btn-danger" onclick="javascript:excluirSetor('@subsector.Id','false');" style="padding:1px 5px;margin:3px;height:25px;width:25px;"><i class="far fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+            else
+            {
+                <div class="col-md-12 formclasscreate" style="">
+                    <div class="col-md-12" style="border-bottom:1px solid gray;">Nenhum setor cadastrado</div>
+                </div>
+            }
+
+        </div>
+
+        <div class="form-group screenCreateControls pt-3">
+            <a href="@Url.Action("Index", "Unit")"><input asp-action="Index" type="button" value="@localizer.Get("BackToList")" class="btn btn-primary" /></a>
+            <input type="submit" value="@localizer.Get("Save")" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+<hr />
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="SetorModalLabel" aria-hidden="true" id="setor-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Novo Setor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="setor-form">
+                    <div class="form-group">
+                        <div class="form-floating">
+                            <input id="SetorNome" type="text" placeholder="" class="form-control" maxlength="40" required />
+                            <label>Nome</label>
+                        </div>
+                    </div>
+
+                    <div class="invalid-feedback"></div>
+
+                    <button id="btnSector" type="button" class="btn btn-primary" onclick="javascript:salvarSetor(false);">Incluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="SubSetorModalLabel" aria-hidden="true" id="subsetor-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Novo Sub-Setor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="setor-form">
+                    <div class="form-group">
+                        <div class="form-floating">
+                            <input id="ChosenSetorNome" type="text" placeholder="" class="form-control" maxlength="40" readonly required />
+                            <input id="ChosenSetorId" type="hidden" />
+                            <label>Setor</label>
+                        </div>
+                        <div class="form-floating" style="margin-top:10px;">
+                            <input id="SubSetorNome" type="text" placeholder="" class="form-control" maxlength="40" required />
+                            <label>Nome</label>
+                        </div>
+                    </div>
+
+                    <div class="invalid-feedback"></div>
+
+                    <button id="btnSubSector" type="button" class="btn btn-primary" onclick="javascript:salvarSetor(true);">Incluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        function salvarSetor(isSubSector) {
+            var btnEvt = '#btnSector';
+            var idUnit = document.getElementById("Id").value;
+            var sectorNome = document.getElementById("SetorNome").value;
+            var parentSectorId = null;
+
+            if (isSubSector) {
+                btnEvt = '#btnSubSector';
+                sectorNome = document.getElementById("SubSetorNome").value;
+                parentSectorId = document.getElementById("ChosenSetorId").value;
+            }
+
+            if (sectorNome != '') {
+                $(btnEvt).attr('disabled','disabled');
+                $.post('@Url.Content("~/Unit/InsertSector")', { unitId: idUnit, name: sectorNome, parentSector: parentSectorId }, function (data) {
+                    if (data.success) {
+                        alert('Setor cadastrado com sucesso');
+                        document.location.reload();
+                    }
+                    else {
+                        $(btnEvt).removeAttr('disabled');
+                        alert(data.msg);
+                    }
+                });
+            }
+            else{
+                alert('Não é possível cadastrar. O Nome é obrigatório.');
+            }
+        }
+
+        function excluirSetor(id, hasSubs) {
+
+            if (hasSubs == 'true'){
+                alert('Não é possível excluir. O Setor possui Sub-Setores vinculados.');
+            }
+            else
+            {
+                if (confirm("Tem certeza que deseja excluir este setor?") == true) {
+                    $.post('@Url.Content("~/Unit/DeleteSector")', { id: id }, function (data) {
+                        if (data.success) {
+                            alert('Setor excluído com sucesso.');
+                            document.location.reload();
+                        }
+                        else {
+                            alert(msg);
+                        }
+                    });
+                }
+            }
+        }
+
+        function abrirSetorModal() {
+            $('#setor-modal').modal('show');
+        }
+
+        function abrirSubSetorModal(sectorName,sectorId) {
+            $('#ChosenSetorNome').val(sectorName);
+            $('#ChosenSetorId').val(sectorId);
+            $('#subsetor-modal').modal('show');
+        }
+
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

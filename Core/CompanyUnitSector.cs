@@ -12,6 +12,7 @@ namespace Core
 
         public int Id { get; set; }
         public int CompanyUnitId { get; set; }
+        public int? ParentSectorId { get; set; }
         public string Name { get; set; }
         public string Tag { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -19,6 +20,9 @@ namespace Core
         public DateTime? DeletedAt { get; set; }
 
         public virtual CompanyUnit CompanyUnit { get; set; }
+        public virtual CompanyUnitSector ParentSector { get; set; }
+
         public virtual ICollection<Machine> Machine { get; set; }
+        public virtual ICollection<CompanyUnitSector> SubSectors { get; set; }
     }
 }

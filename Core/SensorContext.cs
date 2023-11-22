@@ -751,6 +751,12 @@ namespace Core
 
                 entity.Property(e => e.config).HasColumnName("config");
                 entity.Property(e => e.sent_date).HasColumnName("sent_date");
+
+                entity.HasOne(d => d.Motor)
+                    .WithMany(p => p.DeviceConfigurations)
+                    .HasForeignKey(d => d.MotorId)
+                    .OnDelete(DeleteBehavior.SetNull)
+                    .HasConstraintName("fk_device_configuration_motor1");
             });
 
             modelBuilder.Entity<DeviceConfigurationHorariosEnviosCard>(entity =>
@@ -1123,6 +1129,8 @@ namespace Core
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.GroupId).HasColumnName("group_id");
+
                 entity.Property(e => e.ActuationTypeId).HasColumnName("actuation_type_id");
 
                 entity.Property(e => e.Bushing)
@@ -1387,6 +1395,14 @@ namespace Core
                 entity.Property(e => e.OutputAxle).HasColumnName("output_axle");
                 entity.Property(e => e.OutputAxleRoll).HasColumnName("output_axle_roll");
                 entity.Property(e => e.OutputAxleTeeth).HasColumnName("output_axle_teeth");
+
+                entity.Property(e => e.IsGrouping).HasColumnName("is_grouping");
+
+                entity.HasOne(d => d.Group)
+                    .WithMany(p => p.Motors)
+                    .HasForeignKey(d => d.GroupId)
+                    .OnDelete(DeleteBehavior.SetNull)
+                    .HasConstraintName("fk_motor_motor1");
             });
 
             modelBuilder.Entity<Pulley>(entity =>

@@ -61,6 +61,9 @@ namespace Core
         public bool? config { get; set; }
         public DateTime? sent_date { get; set; }
 
+        [ForeignKey("MotorId")]
+        public Motor Motor { get; set; }
+
         public virtual ICollection<DeviceConfigurationHorariosEnviosCard> DeviceConfigurationHorariosEnviosCard { get; set; }
     }
 }

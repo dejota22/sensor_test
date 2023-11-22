@@ -151,9 +151,19 @@ namespace SensorWeb.Controllers
 
             foreach(var d in listaSensores.Where(s => s.DeviceMotorId != null))
             {
+                var modelName = "";
+                if (d.DeviceMotor.Motor.GroupId != null)
+                {
+                    modelName = _motorService.Get(d.DeviceMotor.Motor.GroupId.Value).Name;
+                }
+                else
+                {
+                    modelName = d.DeviceMotor.Motor.Name;
+                }
+
                 MotorModel model = new MotorModel();
 
-                model.Name = d.DeviceMotor.Motor.Name;
+                model.Name = modelName;
                 model.DeviceId = d.Id;
                 model.Device = d;
 

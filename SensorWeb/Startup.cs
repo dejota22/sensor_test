@@ -41,6 +41,7 @@ namespace SensorWeb
             services.AddTransient<IUserTypeService, UserTypeService>();
             services.AddTransient<ICompanyService, CompanyService>();
             services.AddTransient<ICompanyTypeService, CompanyTypeService>();
+            services.AddTransient<ICompanyUnitService, CompanyUnitService>();
             services.AddTransient<IContactService, ContactService>();
             services.AddTransient<ICompanyAlertContactService, CompanyAlertContactService>();
             services.AddTransient<IDeviceConfigurationService, DeviceConfigurationService>();
