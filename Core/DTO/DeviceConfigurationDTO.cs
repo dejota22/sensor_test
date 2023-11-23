@@ -111,6 +111,10 @@ namespace Core.DTO
 
         public bool? config { get; set; }
 
+        public string unitName { get; set; }
+        public string sectorName { get; set; }
+        public string subSectorName { get; set; }
+
         public IList<DeviceConfigurationHorariosEnviosCard> DeviceConfigurationHorariosEnviosCard { get; set; }
 
         public DeviceConfiguration GetDeviceConfigurationFromModel()

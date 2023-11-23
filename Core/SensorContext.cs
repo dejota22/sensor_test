@@ -1131,6 +1131,8 @@ namespace Core
 
                 entity.Property(e => e.GroupId).HasColumnName("group_id");
 
+                entity.Property(e => e.SectorId).HasColumnName("company_unit_sector_id");
+
                 entity.Property(e => e.ActuationTypeId).HasColumnName("actuation_type_id");
 
                 entity.Property(e => e.Bushing)

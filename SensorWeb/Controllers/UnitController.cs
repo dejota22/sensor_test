@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
+using SensorService;
 using SensorWeb.Models;
 using System;
 using System.Collections.Generic;
@@ -200,6 +201,32 @@ namespace SensorWeb.Controllers
             _companyUnitService.RemoveSector(id);
 
             return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public JsonResult GetSectors(int uId)
+        {
+            var unit = _companyUnitService.Get(uId);
+            var mainsectors = new List<CompanyUnitSector>();
+
+            if (unit.CompanyUnitSector != null)
+                mainsectors = unit.CompanyUnitSector.Where(s => s.ParentSectorId == null)
+                    .Select(s => new CompanyUnitSector() { Id = s.Id, Name = s.Name }).ToList();
+
+            return Json(new { secs = mainsectors });
+        }
+
+        [HttpPost]
+        public JsonResult GetSubSectors(int sId)
+        {
+            var sector = _companyUnitService.GetSector(sId);
+            var subsectors = new List<CompanyUnitSector>();
+
+            if (sector.SubSectors != null)
+                subsectors = sector.SubSectors
+                    .Select(s => new CompanyUnitSector() { Id = s.Id, Name = s.Name }).ToList();
+
+            return Json(new { subs = subsectors });
         }
     }
 }

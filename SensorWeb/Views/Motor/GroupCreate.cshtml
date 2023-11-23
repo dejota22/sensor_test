@@ -39,11 +39,34 @@
             <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">Equipamento</span>
             </label>*@
             <div class="col-md-12 formclasscreate ">
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-3">
                     <label asp-for="CompanyId" class="control-label"></label>
                     @Html.DropDownListFor(model => model.CompanyId, new SelectList(Model.Companies, "Key", "Value"),
                     @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
                     <span asp-validation-for="CompanyId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label class="control-label">Unidade</label>
+                    @Html.DropDownList("UnitId", new SelectList(Model.Units, "Key", "Value"),
+                    "-- Selecione a unidade --", new Dictionary<string, object> { { "class", "form-control" } })
+                    <span validation-for="UnitId" class="text-danger"></span>
+                    <input type="hidden" id="SectorId" name="SectorId" />
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label class="control-label">Setor</label>
+                    <select id="SetorId" name="SetorId" class="form-control">
+                        <option value="">-- Selecione o setor --</option>
+                    </select>
+                    <span asp-validation-for="SetorId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label class="control-label">Sub-Setor</label>
+                    <select id="SubSetorId" class="form-control">
+                        <option value="">-- Selecione o sub-setor --</option>
+                    </select>
                 </div>
             </div>
 
@@ -53,7 +76,7 @@
                 <div class="col-md-12 formclasscreate ">
                     <div class="form-group col-md-4">
                         <label asp-for="Name" class="control-label"></label>
-                        <input asp-for="Name" class="form-control" />
+                        <input asp-for="Name" class="form-control" required />
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
 
@@ -96,6 +119,60 @@
     </div>*@
 
 @section Scripts {
+
+    <script type="text/javascript">
+
+        $(document).ready(function ($) {
+
+            $('#UnitId').on('change', function () {
+
+                let unitId = $('#UnitId').val();
+                let setorSelect = $('#SetorId');
+                let subSetorSelect = $('#SubSetorId');
+
+                setorSelect.find('option').not(':first').remove();
+                subSetorSelect.find('option').not(':first').remove();
+
+                if (unitId != '') {
+                    $('#SetorId').attr('required','required');
+                    $.post('@Url.Content("~/Unit/GetSectors")', { uId: unitId }, function (data) {
+                        $.each(data.secs, function () {
+                            setorSelect.append($("<option />").val(this.id).text(this.name));
+                        });
+                    });
+                }
+                else {
+                    $('#SetorId').removeAttr('required');
+                }
+            });
+
+            $('#SetorId').on('change', function () {
+
+                let setorId = $('#SetorId').val();
+                let subSetorSelect = $('#SubSetorId');
+
+                if (setorId != '') {
+                    $('#SectorId').val(setorId);
+                    $.post('@Url.Content("~/Unit/GetSubSectors")', { sId: setorId }, function (data) {
+                        $.each(data.subs, function () {
+                            subSetorSelect.append($("<option />").val(this.id).text(this.name));
+                        });
+                    });
+                }
+            });
+
+            $('#SubSetorId').on('change', function () {
+
+                let subSetorId = $('#SubSetorId').val();
+
+                if (subSetorId != '') {
+                    $('#SectorId').val(subSetorId);
+                }
+            });
+        });
+
+    </script>
+
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

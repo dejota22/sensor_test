@@ -20,12 +20,17 @@ namespace Core.Service
 
         IEnumerable<CompanyUnitSector> GetSectorByName(string name);
 
+        CompanyUnitSector GetSector(int id);
+
         IEnumerable<CompanyUnitDTO> GetAllDTO();
 
         int GetlastCode();
 
-        List<SelectListItemDTO> GetQueryDropDownList();
+        List<SelectListCustomItemDTO> GetQueryDropDownList();
 
         void RemoveSector(int idCompanyUnitSector);
+
+        List<SelectListCustomItemDTO> GetQueryDropDownListSector();
+        List<SelectListCustomItemDTO> GetQueryDropDownListSubSector();
     }
 }

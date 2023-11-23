@@ -141,17 +141,26 @@
                     <input asp-for="Id" class="form-control" readonly />
                 </div>
 
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                     <label asp-for="CompanyId" class="control-label"></label>
                     @Html.DropDownListFor(model => model.CompanyId, new SelectList(companyService.GetQueryDropDownList(), "Key", "Value"),
                     @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
                     <span asp-validation-for="CompanyId" class="text-danger"></span>
                 </div>
 
-                <div class="form-group col-md-8">
-                    <label asp-for="SectorDesc" class="control-label"></label>
-                    <input asp-for="SectorDesc" class="form-control" />
-                    <span asp-validation-for="SectorDesc" class="text-danger"></span>
+                <div class="form-group col-md-3">
+                    <label class="control-label">Unidade</label>
+                    <input value="@ViewBag.UnitName" class="form-control" readonly />
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label class="control-label">Setor</label>
+                    <input value="@ViewBag.SectorName" class="form-control" readonly />
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label class="control-label">Sub-Setor</label>
+                    <input value="@ViewBag.SubSectorName" class="form-control" readonly />
                 </div>
             </div>
 

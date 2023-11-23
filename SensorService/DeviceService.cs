@@ -122,7 +122,8 @@ namespace SensorService
                         {
                             Code = Device.Code,
                             CompanyId = Device.CompanyId,
-                            Tag = Device.Tag,
+                            Tag = Device.DeviceMotorId == null || Device.DeviceMotor.Motor.GroupId == null ? Device.Tag
+                                : $"{Device.DeviceMotor.Motor.Name} - {Device.Tag}",
                             Dados = Device.Dados,
                             Compressor = Device.Compressor,
                             CreatedAt = Device.CreatedAt,

@@ -13,6 +13,9 @@ namespace SensorWeb.Models
         [Display(Name = "CompanyId")]
         public int CompanyId { get; set; }
 
+        [Display(Name = "Setor")]
+        public int? SectorId { get; set; }
+
         [Display(Name = "Tipo de Equipamento")]
         public int? TypeId { get; set; }
 
@@ -256,6 +259,8 @@ namespace SensorWeb.Models
 
         public List<SelectListItemDTO> Companies { get; set; }
 
+        public List<SelectListItemDTO> Units { get; set; }
+
         public virtual ICollection<DeviceMotor> MotorDevices { get; set; }
 
         public List<SelectListItemDTO> Devices { get; set; }
@@ -292,6 +297,11 @@ namespace SensorWeb.Models
         public bool OutputAxle { get; set; }
         public string OutputAxleRoll { get; set; }
         public int? OutputAxleTeeth { get; set; }
+
+        [Display(Name = "Unidade")]
+        public int? UnitId { get; set; }
+        [Display(Name = "Setor")]
+        public int? SetorId { get; set; }
     }
 
 

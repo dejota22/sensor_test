@@ -1,8 +1,10 @@
-﻿@model ReportModel
+﻿@using Core.DTO
+@model ReportModel
 
 @inject SensorWeb.Resources.CommonLocalizationService localizer
 @inject Core.Service.IDeviceService deviceService
 @inject Core.Service.IMotorService motorService
+@inject Core.Service.ICompanyUnitService unitService
 
 @{
     Layout = "~/Views/Shared/_Layout_Graficos.cshtml";
@@ -64,13 +66,55 @@
     <div class="row form-group">
         <div class="row">
             <div class="col-sm-8">
+                <div class="row" style="margin-bottom:5px;">
+                    <div class="col-sm border">
+                        <select id="UnitId" name="UnitId" style="width:200px;" class="">
+                            <option value="">-- Selecione a Unidade --</option>
+                            @foreach (var unit in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownList())
+                            {
+                                <option value="@unit.Key">@unit.Value</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-sm border">
+                        <select id="SectorId" name="SectorId" style="width:200px;" class="">
+                            <option value="">-- Selecione a Unidade --</option>
+                            @foreach (var sector in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSector())
+                            {
+                                <option uid="@sector.Unit" value="@sector.Key">@sector.Value</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-sm border">
+                        <select id="SubSectorId" name="SubSectorId" style="width:200px;" class="">
+                            <option value="">-- Selecione a Unidade --</option>
+                            @foreach (var subsector in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSubSector())
+                            {
+                                <option uid="@subsector.Unit" sid="@subsector.Sector" value="@subsector.Key">@subsector.Value</option>
+                            }
+                        </select>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm border">
                         <b>EQUIPAMENTO</b>
                     </div>
                     <div class="col-sm border">
-                        @Html.DropDownList("MotorId", new SelectList(motorService.GetQueryDropDownList(), "Key", "Value"),
-                        @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "style", "width:200px;" } })
+                        <select id="MotorId" name="MotorId" asp-for="MotorId" style="width:200px;" class="">
+                            <option value="">-- Selecione a Tag --</option>
+                            @foreach (var motor in (List<MotorDropdownModel>)ViewBag.MotorSelect)
+                            {
+                                if (motor.IsSelected == false)
+                                {
+                                    <option uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id">@motor.Name</option>
+                                }
+                                else
+                                {
+                                    <option uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id" selected>@motor.Name</option>
+                                }
+
+                            }
+                        </select>
                         <input id="MotorIdName" name="MotorIdName" type="hidden" />
                     </div>
                     <div class="col-sm border">
@@ -283,7 +327,7 @@
 
 <!-- end page main wrapper -->
 <div class="page-footer">
-    <p>Iot Nest/Vibração &copy; <span class="current-year"></span>. Conteúdo de uso exclusivo.</p>
+    <p>IotNest/Vibração &copy; <span class="current-year"></span>. Conteúdo de uso exclusivo.</p>
 </div>
 
 <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="frame-modal">
@@ -357,6 +401,16 @@
                 }
             });
 
+            $('#UnitId').bind('change', function () {
+                populateMotorSelect('u');
+            });
+            $('#SectorId').bind('change', function () {
+                populateMotorSelect('s');
+            });
+            $('#SubSectorId').bind('change', function () {
+                populateMotorSelect('ss');
+            });
+
             $('#Eixo').change(function () {
                 $('#EixoName').val($("#Eixo option:selected").text());
             });
@@ -364,7 +418,83 @@
             $('#DataDeviceId').change(function () {
                 $('#DataDeviceIdName').val($("#DataDeviceId option:selected").text());
             });
+
+            @if (ViewBag.UnitId != null)
+            {
+                <text>
+                    $('#UnitId').val('@ViewBag.UnitId');
+                </text>
+            }
+
+            @if (ViewBag.SectorId != null)
+            {
+                <text>
+                    $('#SectorId').val('@ViewBag.SectorId');
+                </text>
+            }
+
+            @if (ViewBag.SubSectorId != null)
+            {
+                <text>
+                    $('#SubSectorId').val('@ViewBag.SubSectorId');
+                </text>
+            }
         });
+
+        function populateMotorSelect(filtro) {
+
+            $('#MotorId option').show();
+
+            switch (filtro) {
+                case 'u':
+                    let unitId = $('#UnitId').val();
+                    if (unitId != '') {
+                        $('#MotorId option[uid!="' + unitId + '"]').hide();
+                        $('#MotorId option[uid="' + unitId + '"]').show();
+
+                        $('#SectorId option[uid!="' + unitId + '"]').hide();
+                        $('#SectorId option[uid="' + unitId + '"]').show();
+                    }
+                    else {
+                        $('#SectorId option').show();
+                        $('#SubSectorId option').show();
+                    }
+
+                    $('#SectorId').val('');
+                    $('#SubSectorId').val('');
+
+                    break;
+                case 's':
+                    let sectorId = $('#SectorId').val();
+                    if (sectorId != '') {
+                        $('#MotorId option[sid!="' + sectorId + '"]').hide();
+                        $('#MotorId option[sid="' + sectorId + '"]').show();
+
+                        $('#SubSectorId option[sid!="' + sectorId + '"]').hide();
+                        $('#SubSectorId option[sid="' + sectorId + '"]').show();
+                    }
+                    else {
+                        $('#SubSectorId option').show();
+                        populateMotorSelect('u');
+                    }
+
+                    $('#SubSectorId').val('');
+
+                    break;
+                case 'ss':
+                    let subsectorId = $('#SubSectorId').val();
+                    if (subsectorId != '') {
+                        $('#MotorId option[ssid!="' + subsectorId + '"]').hide();
+                        $('#MotorId option[ssid="' + subsectorId + '"]').show();
+                    }
+                    else
+                        populateMotorSelect('s');
+
+                    break;
+                default:
+                    break;
+            }
+        }
 
         function frameGraphLoaded() {
             $('#confirm-print').removeAttr('disabled');

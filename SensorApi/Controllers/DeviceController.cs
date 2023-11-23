@@ -913,7 +913,7 @@ namespace SensorApi.Controllers
                     msgBuilder.Append("<br />");
                     msgBuilder.Append("</p>");
 
-                    _emailSender.Send(contactEmails, "Alerta Monitoramento - IOT NEST/VIBRAÇÃO", msgBuilder.ToString());
+                    _emailSender.Send(contactEmails, "Alerta Monitoramento - IOTNEST/VIBRAÇÃO", msgBuilder.ToString());
                 }
             }
             catch { }

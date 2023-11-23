@@ -24,6 +24,7 @@ namespace SensorWeb.Controllers
         IUserService _userService;
         ICompanyService _companyService;
         IDeviceService _deviceService;
+        ICompanyUnitService _companyUnitService;
         private readonly IStringLocalizer<Resources.CommonResources> _localizer;
 
         private readonly ILogger<MotorController> _logger;
@@ -37,6 +38,7 @@ namespace SensorWeb.Controllers
                                   IUserService UserService,
                                   ICompanyService CompanyService,
                                   IDeviceService DeviceService,
+                                  ICompanyUnitService CompanyUnitService,
                                   IMapper mapper,
                                   IStringLocalizer<Resources.CommonResources> localizer,
                                   ILogger<MotorController> logger)
@@ -45,6 +47,7 @@ namespace SensorWeb.Controllers
             _userService = UserService; ;
             _companyService = CompanyService;
             _deviceService = DeviceService;
+            _companyUnitService = CompanyUnitService;
             _mapper = mapper;
             _localizer = localizer;
             _logger = logger;
@@ -85,6 +88,20 @@ namespace SensorWeb.Controllers
             Motor Motor = _MotorService.Get(id);
             MotorModel MotorModel = _mapper.Map<MotorModel>(Motor);
 
+            if (Motor.SectorId != null)
+            {
+                var sector = _companyUnitService.GetSector(Motor.SectorId.Value);
+
+                ViewBag.UnitName = sector.CompanyUnit.Name;
+                ViewBag.SectorName = sector.Name;
+
+                if (sector.ParentSectorId != null)
+                {
+                    ViewBag.SectorName = sector.ParentSector.Name;
+                    ViewBag.SubSectorName = sector.Name;
+                }
+            }
+
             ViewBag.MotorDevices = _deviceService.GetAll()
                     .Where(x => x.DeviceMotor.MotorId == id).ToList();
 
@@ -106,16 +123,14 @@ namespace SensorWeb.Controllers
                     {
                         Key = y.Id,
                         Value = y.TradeName
-                    }).Distinct().ToList()
+                    }).Distinct().ToList(),
 
-                //Devices = _deviceService.GetAll()
-                //.Where(x => (x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId)) 
-                //    && x.DeviceMotorId == null)
-                //    .Select(y => new SelectListItemDTO()
-                //    {
-                //        Key = y.Id,
-                //        Value = y.Tag
-                //    }).Distinct().ToList()
+                Units = _companyUnitService.GetAll().Where(x => x.CompanyId == userCompany)
+                    .Select(y => new SelectListItemDTO()
+                    {
+                        Key = y.Id,
+                        Value = y.Name
+                    }).Distinct().ToList()
             };
 
             return View(motorModel);
@@ -188,6 +203,20 @@ namespace SensorWeb.Controllers
 
             if (motorModel != null)
             {
+                if (motor.SectorId != null)
+                {
+                    var sector = _companyUnitService.GetSector(motor.SectorId.Value);
+
+                    ViewBag.UnitName = sector.CompanyUnit.Name;
+                    ViewBag.SectorName = sector.Name;
+
+                    if (sector.ParentSectorId != null)
+                    {
+                        ViewBag.SectorName = sector.ParentSector.Name;
+                        ViewBag.SubSectorName = sector.Name;
+                    }
+                }
+
                 motorModel.Companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany || x.Id == userCompany)
                 .Select(y => new SelectListItemDTO()
                 {
@@ -209,6 +238,13 @@ namespace SensorWeb.Controllers
                 ViewBag.MotorDevices = allDevices
                     .Where(x => x.DeviceMotor?.MotorId == id).ToList();
             }
+
+            motorModel.Units = _companyUnitService.GetAll().Where(x => x.CompanyId == userCompany)
+                .Select(y => new SelectListItemDTO()
+                {
+                    Key = y.Id,
+                    Value = y.Name
+                }).Distinct().ToList();
 
             return View(motorModel);
         }
@@ -354,6 +390,13 @@ namespace SensorWeb.Controllers
                     {
                         Key = y.Id,
                         Value = y.TradeName
+                    }).Distinct().ToList(),
+
+                Units = _companyUnitService.GetAll().Where(x => x.CompanyId == userCompany)
+                    .Select(y => new SelectListItemDTO()
+                    {
+                        Key = y.Id,
+                        Value = y.Name
                     }).Distinct().ToList()
             };
 
@@ -398,10 +441,24 @@ namespace SensorWeb.Controllers
             {
                 ViewBag.CompanyName = _companyService.Get(motorModel.CompanyId).TradeName;
 
+                if (motor.SectorId != null)
+                {
+                    var sector = _companyUnitService.GetSector(motor.SectorId.Value);
+
+                    ViewBag.UnitName = sector.CompanyUnit.Name;
+                    ViewBag.SectorName = sector.Name;
+
+                    if (sector.ParentSectorId != null)
+                    {
+                        ViewBag.SectorName = sector.ParentSector.Name;
+                        ViewBag.SubSectorName = sector.Name;
+                    }
+                }
+
                 var allMotors = _MotorService.GetAllEquipamento();
 
                 motorModel.Equips = allMotors
-                    .Where(x => x.GroupId != id && 
+                    .Where(x => x.GroupId == null && x.SectorId == motor.SectorId &&
                         (x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId)))
                     .Select(y => new SelectListItemDTO()
                     {
@@ -412,6 +469,13 @@ namespace SensorWeb.Controllers
                 ViewBag.Motors = allMotors
                     .Where(x => x.GroupId == id).ToList();
             }
+
+            motorModel.Units = _companyUnitService.GetAll().Where(x => x.CompanyId == userCompany)
+                .Select(y => new SelectListItemDTO()
+                {
+                    Key = y.Id,
+                    Value = y.Name
+                }).Distinct().ToList();
 
             return View(motorModel);
         }
@@ -445,6 +509,20 @@ namespace SensorWeb.Controllers
 
             if (motorModel != null)
             {
+                if (motor.SectorId != null)
+                {
+                    var sector = _companyUnitService.GetSector(motor.SectorId.Value);
+
+                    ViewBag.UnitName = sector.CompanyUnit.Name;
+                    ViewBag.SectorName = sector.Name;
+
+                    if (sector.ParentSectorId != null)
+                    {
+                        ViewBag.SectorName = sector.ParentSector.Name;
+                        ViewBag.SubSectorName = sector.Name;
+                    }
+                }
+
                 ViewBag.CompanyName = _companyService.Get(motorModel.CompanyId).TradeName;
 
                 var allMotors = _MotorService.GetAllEquipamento();
@@ -473,8 +551,8 @@ namespace SensorWeb.Controllers
 
                 if (group.Motors.Any())
                 {
-                    ViewBag.ErrorMsg = "Não foi possível excluir. Este Agrupamento possui Equipamentos vinculados.";
-                    return View(_mapper.Map<MotorModel>(group));
+                    group.Motors = new List<Motor>();
+                    _MotorService.Edit(group);
                 }
 
                 _MotorService.Remove(id);

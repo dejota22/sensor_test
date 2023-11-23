@@ -1,4 +1,5 @@
-﻿@model Core.DTO.DeviceConfigurationModel
+﻿@using Core.DTO
+@model Core.DTO.DeviceConfigurationModel
 
 @inject SensorWeb.Resources.CommonLocalizationService localizer
 
@@ -6,6 +7,7 @@
 @inject Core.Service.IMotorService motorService
 @inject Core.Service.IDeviceService deviceService
 @inject Core.Service.ICompanyService companyService
+@inject Core.Service.ICompanyUnitService unitService
 
 @{
     Layout = "~/Views/Shared/_Layout_Graficos.cshtml";
@@ -63,15 +65,69 @@
 <hr />
 <div class="container">
 
+        <div class="row">
+
+            <div class="form-group col-md-3">
+                <label class="control-label">Unidade</label>
+                <select id="UnitId" name="UnitId" style="" class="form-control main-selects">
+                    <option value="">-- Selecione a Unidade --</option>
+                    @foreach (var unit in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownList())
+                    {
+                        <option value="@unit.Key">@unit.Value</option>
+                    }
+                </select>
+            <span id="validation-UnitId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label class="control-label">Setor</label>
+                <select id="SectorId" name="SectorId" style="" class="form-control main-selects">
+                    <option value="">-- Selecione a Unidade --</option>
+                    @foreach (var sector in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSector())
+                    {
+                        <option uid="@sector.Unit" value="@sector.Key">@sector.Value</option>
+                    }
+                </select>
+                    
+            <span id="validation-SectorId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label class="control-label">Sub-Setor</label>
+                <select id="SubSectorId" name="SubSectorId" style="" class="form-control main-selects">
+                    <option value="">-- Selecione a Unidade --</option>
+                    @foreach (var subsector in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSubSector())
+                    {
+                        <option uid="@subsector.Unit" sid="@subsector.Sector" value="@subsector.Key">@subsector.Value</option>
+                    }
+                </select>
+            <span id="validation-SubSectorId" class="text-danger"></span>
+            </div>
+
+        </div>
 
         <div class="row">
             
             <div class="form-group col-md-3">
                 <label class="control-label">Equipamento</label>
-                @Html.DropDownList("MotorId", new SelectList(motorService.GetQueryDropDownList(), "Key", "Value"),
-                @localizer.Get("MotorSelect"), new Dictionary<string, object> { { "class", "form-control main-selects" } })
+                <select id="MotorId" name="MotorId" asp-for="MotorId" style="" class="form-control main-selects">
+                    <option value="">-- Selecione a Tag --</option>
+                    @foreach (var motor in (List<MotorDropdownModel>)ViewBag.MotorSelect)
+                    {
+                        if (motor.IsSelected == false)
+                        {
+                            <option uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id">@motor.Name</option>
+                        }
+                        else
+                        {
+                            <option uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id" selected>@motor.Name</option>
+                        }
+                    
+                    }
+                </select>
                 <span id="validation-MotorId" class="text-danger"></span>
             </div>
+
             <div class="form-group col-md-3">
                 <label class="control-label">Sensor</label>
                 <select id="DeviceId" name="DeviceId" asp-for="DeviceId" style="" class="form-control main-selects">
@@ -85,6 +141,7 @@
                 </select>
                 <span id="validation-DeviceId" class="text-danger"></span>
             </div>
+
             <div class="form-group col-md-3">
                 <label class="control-label">Dados</label>
                 <select id="DataDeviceId" name="DataDeviceId" class="form-control">
@@ -171,9 +228,24 @@
                 let deviceId = $('#DeviceId').val();
                 let motorId = $('#MotorId').val();
                 let deviceIdName = $("#DeviceId option:selected").text();
+                let unitId = $('#UnitId').val();
+                let sectorId = $('#SectorId').val();
+                let subId = $('#SubSectorId').val();
 
                 if (deviceId != '' && motorId != '')
-                    document.location.href = '@Url.Action("ReportDeviceData")' + '?DeviceId=' + deviceId + '&MotorId=' + motorId + '&DeviceIdName=' + deviceIdName;
+                    document.location.href = '@Url.Action("ReportDeviceData")' + '?DeviceId=' + deviceId
+                        + '&MotorId=' + motorId + '&DeviceIdName=' + deviceIdName + '&UnitId=' + unitId
+                        + '&SectorId=' + sectorId + '&SubSectorId=' + subId;
+            });
+
+            $('#UnitId').bind('change', function () {
+                populateMotorSelect('u');
+            });
+            $('#SectorId').bind('change', function () {
+                populateMotorSelect('s');
+            });
+            $('#SubSectorId').bind('change', function () {
+                populateMotorSelect('ss');
             });
 
             $('#btn-visualizar').bind('click', function (e) {
@@ -207,7 +279,82 @@
                 </text>
             }
 
+            @if (ViewBag.UnitId != null)
+            {
+                <text>
+                    $('#UnitId').val('@ViewBag.UnitId');
+                </text>
+            }
+
+            @if (ViewBag.SectorId != null)
+            {
+                <text>
+                    $('#SectorId').val('@ViewBag.SectorId');
+                </text>
+            }
+
+            @if (ViewBag.SubSectorId != null)
+            {
+                <text>
+                    $('#SubSectorId').val('@ViewBag.SubSectorId');
+                </text>
+            }
         });
+
+        function populateMotorSelect(filtro) {
+
+            $('#MotorId option').show();
+
+            switch(filtro){
+                case 'u':
+                    let unitId = $('#UnitId').val();
+                    if (unitId != '') {
+                        $('#MotorId option[uid!="' + unitId + '"]').hide();
+                        $('#MotorId option[uid="' + unitId + '"]').show();
+
+                        $('#SectorId option[uid!="' + unitId + '"]').hide();
+                        $('#SectorId option[uid="' + unitId + '"]').show();
+                    }
+                    else {
+                        $('#SectorId option').show();
+                        $('#SubSectorId option').show();
+                    }
+
+                    $('#SectorId').val('');
+                    $('#SubSectorId').val('');
+
+                    break;
+                case 's':
+                    let sectorId = $('#SectorId').val();
+                    if (sectorId != '') {
+                        $('#MotorId option[sid!="' + sectorId + '"]').hide();
+                        $('#MotorId option[sid="' + sectorId + '"]').show();
+
+                        $('#SubSectorId option[sid!="' + sectorId + '"]').hide();
+                        $('#SubSectorId option[sid="' + sectorId + '"]').show();
+                    }
+                    else {
+                        $('#SubSectorId option').show();
+                        populateMotorSelect('u');
+                    }
+
+                    $('#SubSectorId').val('');
+
+                    break;
+                case 'ss':
+                    let subsectorId = $('#SubSectorId').val();
+                    if (subsectorId != '') {
+                        $('#MotorId option[ssid!="' + subsectorId + '"]').hide();
+                        $('#MotorId option[ssid="' + subsectorId + '"]').show();
+                    }
+                    else
+                        populateMotorSelect('s');
+                    
+                    break;
+                default:
+                    break;
+            }
+        }
 
         function populateDeviceSelect() {
             let deviceSelect = $('#DeviceId');

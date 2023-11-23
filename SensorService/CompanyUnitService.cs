@@ -42,24 +42,6 @@ namespace SensorService
             return query;
         }
 
-
-        /// <summary>
-        /// GetQueryDropDownList
-        /// </summary>
-        /// <returns></returns>
-        private List<SelectListItemDTO> GetQueryDropDownList()
-        {
-            IQueryable<CompanyUnit> tb_Company = _context.CompanyUnit;
-            var query = (from CompanyUnit in tb_Company
-                         select new SelectListItemDTO()
-                         {
-                             Key = CompanyUnit.Id,
-                             Value = CompanyUnit.Name
-                         }).Distinct().ToList();
-
-            return query;
-        }
-
         private IQueryable<CompanyUnit> GetQuery()
         {
             IQueryable<CompanyUnit> tb_Company = _context.CompanyUnit.Include(c => c.Company);
@@ -72,7 +54,7 @@ namespace SensorService
         private IQueryable<CompanyUnit> GetQueryFull()
         {
             IQueryable<CompanyUnit> tb_Company = _context.CompanyUnit
-                .Include(c => c.Company).Include(c => c.CompanyUnitSector);
+                .Include(c => c.Company).Include(c => c.CompanyUnitSector).ThenInclude(s => s.SubSectors);
             var query = from CompanyUnit in tb_Company
                         select CompanyUnit;
 
@@ -81,7 +63,8 @@ namespace SensorService
 
         private IQueryable<CompanyUnitSector> GetSectorQuery()
         {
-            IQueryable<CompanyUnitSector> tb_Company = _context.CompanyUnitSector;
+            IQueryable<CompanyUnitSector> tb_Company = _context.CompanyUnitSector
+                .Include(s => s.CompanyUnit).Include(s => s.SubSectors).Include(s => s.ParentSector);
             var query = from CompanyUnitSector in tb_Company
                         select CompanyUnitSector;
 
@@ -111,6 +94,11 @@ namespace SensorService
         IEnumerable<CompanyUnitSector> ICompanyUnitService.GetSectorByName(string name)
         {
             return GetSectorQuery().Where(x => x.Name.Equals(name));
+        }
+
+        CompanyUnitSector ICompanyUnitService.GetSector(int id)
+        {
+            return GetSectorQuery().FirstOrDefault(x => x.Id.Equals(id));
         }
 
         int ICompanyUnitService.Insert(CompanyUnit CompanyUnit)
@@ -152,9 +140,48 @@ namespace SensorService
             return GetQuery().ToList().LastOrDefault().Id + 1;
         }
 
-        List<SelectListItemDTO> ICompanyUnitService.GetQueryDropDownList()
+        List<SelectListCustomItemDTO> ICompanyUnitService.GetQueryDropDownList()
         {
-            return GetQueryDropDownList();
+            IQueryable<CompanyUnit> tb_Company = _context.CompanyUnit;
+            var query = (from CompanyUnit in tb_Company
+                         select new SelectListCustomItemDTO()
+                         {
+                             Key = CompanyUnit.Id,
+                             Value = CompanyUnit.Name
+                         }).Distinct().ToList();
+
+            return query;
+        }
+
+        List<SelectListCustomItemDTO> ICompanyUnitService.GetQueryDropDownListSector()
+        {
+            IQueryable<CompanyUnitSector> tb_Sector = _context.CompanyUnitSector;
+            var query = (from CompanyUnitSector in tb_Sector
+                         where CompanyUnitSector.ParentSectorId == null
+                         select new SelectListCustomItemDTO()
+                         {
+                             Key = CompanyUnitSector.Id,
+                             Value = CompanyUnitSector.Name,
+                             Unit = CompanyUnitSector.CompanyUnitId
+                         }).Distinct().ToList();
+
+            return query;
+        }
+
+        List<SelectListCustomItemDTO> ICompanyUnitService.GetQueryDropDownListSubSector()
+        {
+            IQueryable<CompanyUnitSector> tb_Sector = _context.CompanyUnitSector;
+            var query = (from CompanyUnitSector in tb_Sector
+                         where CompanyUnitSector.ParentSectorId != null
+                         select new SelectListCustomItemDTO()
+                         {
+                             Key = CompanyUnitSector.Id,
+                             Value = CompanyUnitSector.Name,
+                             Unit = CompanyUnitSector.CompanyUnitId,
+                             Sector = CompanyUnitSector.ParentSectorId
+                         }).Distinct().ToList();
+
+            return query;
         }
     }
 }

@@ -11,7 +11,7 @@
     <meta name="description" content="." />
 
     <!-- title  -->
-    <title>Iot Nest | Dashboard</title>
+    <title>IotNest | Dashboard</title>
 
 @*    <!-- favicon -->
     <link rel="shortcut icon" href="favicon.png">*@
@@ -78,8 +78,8 @@
         ================================================== -->
         <div class="page-sidebar .ignore-to-print">
 
-            <a class="logo-box" style="background-color:#014E6A">
-                <span>Iot Nest/Vibração</span>
+            <a class="logo-box" style="background-color:#00afef">
+                <span>IotNest/Vibração</span>
                 <i class="icon-close" id="sidebar-toggle-button-close"></i>
             </a>
 
@@ -93,7 +93,7 @@
                         </li>
                         <li>
                             <a href="#!">
-                                <i class="menu-icon icon-public"></i><span>@localizer.Get("Records")</span><i class="accordion-icon fa fa-angle-left"></i>
+                                <i class="menu-icon icon-folder-open"></i><span>@localizer.Get("Records")</span><i class="accordion-icon fa fa-angle-left"></i>
                             </a>
                             <ul>
                                 @*<li><a href="#.html">Empresas</a></li>*@
@@ -127,10 +127,10 @@
                         </li>
                         <li>
                             <a href="#!">
-                                <i class="menu-icon icon-flash_on"></i><span>Dashboard</span><i class="accordion-icon fa fa-angle-left"></i>
+                                <i class="menu-icon icon-meter"></i><span>Dashboard</span><i class="accordion-icon fa fa-angle-left"></i>
                             </a>
                             <ul>
-                                <li>@Html.ActionLink(@localizer.Get("Devices"), "Index", "DashBoard")</li>
+                                @*<li>@Html.ActionLink(@localizer.Get("Devices"), "Index", "DashBoard")</li>*@
                                 <li><a href="#.html">Viking</a></li>
                             </ul>
                         </li>
@@ -156,7 +156,7 @@
                         </li>
                         <li>
                             <a href="/DeviceMeasure/Index">
-                                <i class="menu-icon icon-markunread"></i><span>Configuração Sensor</span>
+                                <i class="menu-icon icon-cog"></i><span>Configuração Sensor</span>
                             </a>
                         </li>
                         <li>
@@ -286,7 +286,7 @@
                 </div>
                 <!-- end page main wrapper -->
                 <div class="page-footer">
-                    <p>Iot Nest/Vibração &copy; <span class="current-year"></span>. Conteúdo de uso exclusivo.</p>
+                    <p>IotNest/Vibração &copy; <span class="current-year"></span>. Conteúdo de uso exclusivo.</p>
                 </div>
             </div>
             <!-- end page inner -->

@@ -130,10 +130,23 @@ namespace SensorService
 
                     if (config != null)
                     {
+                        var sectorId = device.DeviceMotor?.Motor.SectorId;
+
                         config.MotorId = motorId;
                         config.motorName = device.DeviceMotor?.Motor.Name;
                         config.DeviceId = device.Id;
                         config.deviceTag = device.Tag;
+
+                        if (sectorId != null)
+                        {
+                            var sector = _context.CompanyUnitSector.Include(s => s.CompanyUnit)
+                                .Include(s => s.ParentSector).FirstOrDefault(s => s.Id == sectorId);
+
+                            config.unitName = sector.CompanyUnit?.Name;
+                            config.sectorName = sector.ParentSectorId == null ? sector.Name : sector.ParentSector.Name;
+                            config.subSectorName = sector.ParentSectorId == null ? "" : sector.Name;  
+                        }
+                            
                     }
                 }
             }

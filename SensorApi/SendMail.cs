@@ -49,7 +49,7 @@ namespace SensorApi
             var sb = new StringBuilder();
 
             sb.Append("<div style=\"text-align:center;\">");
-            sb.Append("<p style=\"background-color:#014E6A;color:#fff;font-size:16px;padding:5px;\"><strong>IOT NEST/Vibração</strong></p>");
+            sb.Append("<p style=\"background-color:#014E6A;color:#fff;font-size:16px;padding:5px;\"><strong>IOTNEST/Vibração</strong></p>");
 
             sb.Append(message);
 

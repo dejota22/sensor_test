@@ -49,11 +49,23 @@ namespace SensorWeb.Controllers
         }
 
         // GET: ReportController
-        public ActionResult Index(int? DeviceId, int? MotorId, string? DeviceIdName)
+        public ActionResult Index(int? DeviceId, int? MotorId, string? DeviceIdName,
+            int? UnitId, int? SectorId, int? SubSectorId)
         {
             ReportModel model = new ReportModel();
 
             ViewBag.DeviceData = new List<ReceiveData>();
+
+            ViewBag.MotorSelect = _motorService.GetAll().Select(m => new MotorDropdownModel()
+            {
+                Id = m.Id,
+                IsSelected = MotorId != null && m.Id == MotorId,
+                Name = m.Name,
+                SectorId = m.Sector?.ParentSectorId == null ? m.SectorId : m.Sector.ParentSectorId,
+                SubSectorId = m.Sector?.ParentSectorId == null ? null : m.SectorId,
+                UnitId = m.Sector?.CompanyUnitId,
+                IsGrouping = m.IsGrouping
+            }).ToList();
 
             if (DeviceId != null && MotorId != null)
             {
@@ -75,6 +87,10 @@ namespace SensorWeb.Controllers
                 }
             }
 
+            ViewBag.UnitId = UnitId;
+            ViewBag.SectorId = SectorId;
+            ViewBag.SubSectorId = SubSectorId;
+
             return View(model);
         }
 
@@ -87,9 +103,21 @@ namespace SensorWeb.Controllers
             return View("DownloadPDF", report);
         }
 
-        public ActionResult ReportDeviceData(int? DeviceId, int? MotorId, string? DeviceIdName)
+        public ActionResult ReportDeviceData(int? DeviceId, int? MotorId, string? DeviceIdName, 
+            int? UnitId, int? SectorId, int? SubSectorId)
         {
             ViewBag.DeviceData = new List<ReceiveData>();
+
+            ViewBag.MotorSelect = _motorService.GetAll().Select(m => new MotorDropdownModel()
+            {
+                Id = m.Id,
+                IsSelected = MotorId != null && m.Id == MotorId,
+                Name = m.Name,
+                SectorId = m.Sector?.ParentSectorId == null ? m.SectorId : m.Sector.ParentSectorId,
+                SubSectorId = m.Sector?.ParentSectorId == null ? null : m.SectorId,
+                UnitId = m.Sector?.CompanyUnitId,
+                IsGrouping = m.IsGrouping
+            }).ToList();
 
             if (DeviceId != null && MotorId != null)
             {
@@ -108,7 +136,11 @@ namespace SensorWeb.Controllers
                     ViewBag.DeviceData = dataList;
                 }
             }
-                
+
+            ViewBag.UnitId = UnitId;
+            ViewBag.SectorId = SectorId;
+            ViewBag.SubSectorId = SubSectorId;
+
             return View();
         }
 
@@ -135,16 +167,36 @@ namespace SensorWeb.Controllers
 
         public ActionResult ReportRMSCrista()
         {
+            ViewBag.MotorSelect = _motorService.GetAll().Select(m => new MotorDropdownModel()
+            {
+                Id = m.Id,
+                Name = m.Name,
+                SectorId = m.Sector?.ParentSectorId == null ? m.SectorId : m.Sector.ParentSectorId,
+                SubSectorId = m.Sector?.ParentSectorId == null ? null : m.SectorId,
+                UnitId = m.Sector?.CompanyUnitId,
+                IsGrouping = m.IsGrouping
+            }).ToList();
+
             return View();
         }
 
         public ActionResult ReportOcorrencias()
         {
+            ViewBag.MotorSelect = _motorService.GetAll().Select(m => new MotorDropdownModel()
+            {
+                Id = m.Id,
+                Name = m.Name,
+                SectorId = m.Sector?.ParentSectorId == null ? m.SectorId : m.Sector.ParentSectorId,
+                SubSectorId = m.Sector?.ParentSectorId == null ? null : m.SectorId,
+                UnitId = m.Sector?.CompanyUnitId,
+                IsGrouping = m.IsGrouping
+            }).ToList();
+
             return View(new ReportOcorrenciasModel());
         }
 
         [HttpPost]
-        public ActionResult ReportOcorrencias(ReportOcorrenciasModel model)
+        public ActionResult ReportOcorrencias(ReportOcorrenciasModel model, int? UnitId, int? SectorId, int? SubSectorId)
         {
             var newEndDate = model.EndDate;
             if (model.EndDate.HasValue)
@@ -166,6 +218,21 @@ namespace SensorWeb.Controllers
             model.PageTotal = listTotal > 10 ? ((listTotal + 10 - 1) / 10) - 1 : 0;
 
             ViewBag.DeviceSelect = (KeyValuePair<int?, string>?)new KeyValuePair<int?, string>(model.DeviceId, deviceName);
+
+            ViewBag.MotorSelect = _motorService.GetAll().Select(m => new MotorDropdownModel()
+            {
+                Id = m.Id,
+                IsSelected = model.MotorId != null && m.Id == model.MotorId,
+                Name = m.Name,
+                SectorId = m.Sector?.ParentSectorId == null ? m.SectorId : m.Sector.ParentSectorId,
+                SubSectorId = m.Sector?.ParentSectorId == null ? null : m.SectorId,
+                UnitId = m.Sector?.CompanyUnitId,
+                IsGrouping = m.IsGrouping
+            }).ToList();
+
+            ViewBag.UnitId = UnitId;
+            ViewBag.SectorId = SectorId;
+            ViewBag.SubSectorId = SubSectorId;
 
             return View(model);
         }

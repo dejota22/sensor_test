@@ -67,6 +67,15 @@ namespace SensorWeb.Controllers
 
                 ViewBag.AllCodes = _deviceService.GetAll().Select(d => d.Code);
 
+                ViewBag.MotorSelect = _motorService.GetAllEquipamento().Select(m => new MotorDropdownModel()
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    SectorId = m.Sector?.ParentSectorId == null ? m.SectorId : m.Sector.ParentSectorId,
+                    SubSectorId = m.Sector?.ParentSectorId == null ? null : m.SectorId,
+                    UnitId = m.Sector?.CompanyUnitId
+                }).ToList();
+
                 configModel.codigoSensor = codeAttempt;
                 return View(configModel);
             }
