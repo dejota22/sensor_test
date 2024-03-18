@@ -9,6 +9,10 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Core.Utils;
+using MySqlX.XDevAPI;
+using SensorWeb.Models;
+using System.Text;
+using System.Web;
 
 namespace SensorWeb.Controllers
 {
@@ -26,8 +30,20 @@ namespace SensorWeb.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult Login()
+        public ActionResult Login(string? qr)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (qr != null)
+                {
+                    //User.Claims.
+                    return RedirectToAction("ActionQR", "Device", new { dCode = qr, obfs = true });
+                }
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            ViewBag.qr = qr;
             return View();
         }
 
@@ -44,6 +60,13 @@ namespace SensorWeb.Controllers
             if (pass is null)
             {
                 throw new ArgumentNullException(nameof(pass));
+            }
+
+            if (returnUrl != null && returnUrl.Contains("obfs"))
+            {
+                Uri myUri = new Uri($"http://localhost{returnUrl}");
+                string dCode = HttpUtility.ParseQueryString(myUri.Query).Get("dCode");
+                ViewBag.qr = dCode;
             }
 
             var passCrypto = MD5Hash.CalculaHash(pass);
@@ -76,11 +99,14 @@ namespace SensorWeb.Controllers
             return Redirect(returnUrl ?? "/Home/Index");
         }
 
-        public async Task<ActionResult> Logout()
+        public async Task<ActionResult> Logout(string qr = null)
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            return RedirectToAction("Login", "Login");
+            if (qr == null)
+                return RedirectToAction("Login", "Login");
+            else
+                return RedirectToAction("Login", "Login", new { qr = Convert.ToBase64String(Encoding.UTF8.GetBytes(qr)) });
         }
 
         [AllowAnonymous]

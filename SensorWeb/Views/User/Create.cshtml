@@ -1,8 +1,14 @@
-﻿@model SensorWeb.Models.UserModel
+﻿@using System.Security.Claims
+@using Core.DTO;
+@model SensorWeb.Models.UserModel
 
 @inject SensorWeb.Resources.CommonLocalizationService localizer
 @inject Core.Service.IUserTypeService userTypeService
 @inject Core.Service.ICompanyService companyService
+
+@{
+    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
 
 <h4 class="screenTitle">@localizer.Get("UserTitle") </h4>
 <hr />
@@ -23,7 +29,7 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label asp-for="Email" class="control-label"></label>
-                    <input asp-for="Email" class="form-control" />
+                    <input asp-for="Email" type="email" class="form-control" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
             </div>
@@ -72,77 +78,29 @@
                         , "-- Selecione a empresa --", new Dictionary<string, object> { { "class", "form-control" } })*@
 
 
-                    @Html.DropDownListFor(model => model.Contact.CompanyId,
-               new SelectList(companyService.GetQueryDropDownList(), "Key", "Value")
-    , @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
+                    <select id="Contact_CompanyId" name="Contact.CompanyId" style="" class="form-control company-selects">
+                        <option value="">-- Selecione a Empresa --</option>
+                        @foreach (var company in (List<SelectListCustomItemDTO>)companyService.GetQueryDropDownListStrictCustom(userId))
+                        {
+                            <option ctid="@company.CompanyId" value="@company.Key">@company.Value</option>
+                        }
+                    </select>
+
                     <span asp-validation-for="Contact.CompanyId" class="text-danger"></span>
                 </div>
 
                 <div class="form-group col-md-6" style=" display: grid;">
                     <label asp-for="UserTypeId" class="control-label"></label>
-                    @*<input asp-for="UserTypeId" class="" />*@
-                    @*@Html.DropDownListFor(model => model.UserTypeId,
-                         new List<SelectListItem>
-                         {
-                                new SelectListItem{ Text="Engrenagem com Grade", Value = "1" },
-                                new SelectListItem{ Text="Hidraulica", Value = "3" },
-                                new SelectListItem{ Text="Fixação por parafuso", Value = "4" },
-                                new SelectListItem{ Text="Fixação por parafuso 2", Value = "5" },
-                                new SelectListItem{ Text="Fixação por parafuso 3", Value = "6" }
-                        }
-                        , null, new Dictionary<string, object> { { "class", "form-control fake-sel" } })*@
-
                     @Html.DropDownListFor(model => model.UserTypeId,
-                     /*new SelectList(ViewBag.ListUserType, t => t.StateName.ToString()), "Key", "Value")*/
-                     new SelectList(userTypeService.GetQueryDropDownList(), "Key", "Value")
+                     new SelectList(userTypeService.GetQueryDropDownListStrict(userId), "Key", "Value")
                          , @localizer.Get("UserTypeSelect"), new Dictionary<string, object> { { "class", "form-control" } })
 
 
                     <span asp-validation-for="UserTypeId" class="text-danger"></span>
                 </div>
 
-                <!--<div class="form-group col-md-6">
-                    "-- Selecione o Tipo --"
-                <label asp-for="ContactId" class="control-label"></label>-->
-                @*<input asp-for="ContactId" class="form-control" />*@
-                <!--Html.DropDownListFor(model => model.ContactId,
-                 new List<SelectListItem>
-                 {
-                        new SelectListItem{ Text="Adriano", Value = "1" },
-                        new SelectListItem{ Text="Alessandro", Value = "2" },
-                        new SelectListItem{ Text="Henrique", Value = "3" },
-                }
-                , "-- Selecione o contato relacionado --", new Dictionary<string, object> { { "class", "form-control" } })
-                       <span asp-validation-for="ContactId" class="text-danger"></span>
-                   </div>-->
-
             </div>
 
-            <!--<div class="col-md-12 formclasscreate">-->
-            @*<div class="form-group col-md-6">
-                <label asp-for="IsActive" class="control-label"></label>
-                <c asp-for="IsActive" class="form-control" />
-                <span asp-validation-for="IsActive" class="text-danger"></span>
-
-                </div>*@
-            @*<div class="form-group col-md-6">
-                    <label asp-for="Contact.Department" class="control-label"></label>
-                    <input asp-for="Contact.Department" class="form-control" />
-                    <span asp-validation-for="Contact.Department" class="text-danger"></span>
-                </div>*@
-
-            @*<div class="form-group">
-                    <label asp-for="CreatedAt" class="control-label"></label>
-                    <input asp-for="CreatedAt" class="form-control" />
-                    <span asp-validation-for="CreatedAt" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="UpdatedAt" class="control-label"></label>
-                    <input asp-for="UpdatedAt" class="form-control" />
-                    <span asp-validation-for="UpdatedAt" class="text-danger"></span>
-                </div>*@
-
-            <!--</div>-->
 
             <div class="col-md-12">
                 <div class="form-group screenCreateControls col-md-6">
@@ -160,6 +118,34 @@
     </div>*@
 
 @section Scripts {
+
+    <script type="text/javascript">
+
+        $(document).ready(function ($) {
+            $('#UserTypeId option').hide();
+            $('#Contact_CompanyId').on('change', function(){
+                $('#UserTypeId').val('');
+                $('#UserTypeId option').hide();
+                let companyType = $("#Contact_CompanyId option:selected").attr('ctid');
+
+                if (companyType == '1'){
+                    $('#UserTypeId option').show();
+                }
+                else if (companyType == '2') {
+                    $('#UserTypeId option[value="2"]').show();
+                    $('#UserTypeId option[value="3"]').show();
+                    $('#UserTypeId option[value="4"]').show();
+                }
+                else if (companyType == '3') {
+                    $('#UserTypeId option[value="2"]').show();
+                    $('#UserTypeId option[value="3"]').show();
+                }
+            });
+
+        });
+
+    </script>
+
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
 }

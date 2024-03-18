@@ -1,0 +1,453 @@
+﻿@using Core.DTO
+@using System.Security.Claims
+@model IEnumerable<HomeDashModel>
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+@inject Core.Service.ICompanyUnitService unitService
+
+@{
+    Layout = "~/Views/Shared/_Layout_Graficos.cshtml";
+    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+
+<style>
+    .mini-sqr {
+        width: 8px;
+        height: 8px;
+        display: block;
+        margin-top: 5px;
+    }
+</style>
+
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-white">
+                <div class="card-heading clearfix">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td><h4 class="card-title">Dashboard</h4></td>
+                            <td style="width:50px;"><button id="backBtn" type="button" class="btn btn-primary">Voltar</button></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Empresa</label>
+                            <select id="CompanyId" name="CompanyId" style="" class="form-control main-selects">
+                                <option value="0">Todas</option>
+                                @{
+                                    var listCompany = (List<Core.Company>)ViewBag.UserCompanies;
+                                }
+
+                                @foreach (var company in listCompany)
+                                {
+
+                                    <option value="@company.Id">@company.LegalName</option>
+
+
+                                }
+                            </select>
+                            <span id="validation-UnitId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Unidade</label>
+                            <select id="UnitId" name="UnitId" style="" class="form-control main-selects">
+                                @{
+                                    var listUnit = (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownList(userId);
+                                }
+
+                                @if (listUnit.Any(u => u.Key == Model.FirstOrDefault()?.UnitId))
+                                {
+                                    var unit1 = listUnit.First(u => u.Key == Model.FirstOrDefault()?.UnitId);
+                                    <option cid="@unit1.CompanyId" value="@unit1.Key" selected>@unit1.Value</option>
+                                }
+                                else
+                                {
+                                    <option value="" uid="" selected>Sem Unidade</option>
+                                }
+
+                                @foreach (var unit in listUnit)
+                                {
+                                    if (Model.FirstOrDefault()?.UnitId != unit.Key)
+                                    {
+                                        <option cid="@unit.CompanyId" value="@unit.Key">@unit.Value</option>
+                                    }
+                                }
+                            </select>
+                            <span id="validation-UnitId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Setor</label>
+                            <select id="SectorId" name="SectorId" style="" class="form-control main-selects">
+                                @{
+                                    var listSector = (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSector(userId);
+                                }
+
+                                @if (listSector.Any(u => u.Key == Model.FirstOrDefault()?.SectorId))
+                                {
+                                    var sector1 = listSector.First(u => u.Key == Model.FirstOrDefault()?.SectorId);
+                                    <option cid="@sector1.CompanyId" value="@sector1.Key" uid="@sector1.Unit" selected>@sector1.Value</option>
+                                }
+                                else
+                                {
+                                    <option value="" uid="" selected>Sem Setor</option>
+                                }
+
+                                @foreach (var sector in listSector)
+                                {
+                                    if (Model.FirstOrDefault()?.SectorId != sector.Key)
+                                    {
+                                        <option cid="@sector.CompanyId" value="@sector.Key" uid="@sector.Unit">@sector.Value</option>
+                                    }
+
+                                }
+                            </select>
+                            <span id="validation-SectorId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Sub-Setor</label>
+                            <select id="SubSectorId" name="SubSectorId" style="" class="form-control main-selects">
+                                @{
+                                    var listSubSector = (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSubSector(userId);
+                                }
+
+                                @if (listSubSector.Any(u => u.Key == Model.FirstOrDefault()?.SubSectorId))
+                                {
+                                    var sub1 = listSubSector.First(u => u.Key == Model.FirstOrDefault()?.SubSectorId);
+                                    <option cid="@sub1.CompanyId" value="@sub1.Key" uid="@sub1.Unit" sid="@sub1.Sector" selected>@sub1.Value</option>
+                                }
+                                else
+                                {
+                                    <option value="" uid="" sid="" selected>Sem Sub-Setor</option>
+                                }
+
+                                @foreach (var sub in listSubSector)
+                                {
+                                    if (Model.FirstOrDefault()?.SubSectorId != sub.Key)
+                                    {
+                                        <option cid="@sub.CompanyId" value="@sub.Key" uid="@sub.Unit" sid="@sub.Sector">@sub.Value</option>
+                                    }
+
+                                }
+                            </select>
+                            <span id="validation-SubSectorId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Status</label>
+                            <select id="AlertStatusSelect" name="AlertStatusSelect" style="" class="form-control main-selects">
+                                <option value="">Todos</option>
+                                <option value="Alerta">Alerta</option>
+                                <option value="Atenção">Atenção</option>
+                                <option value="Normal">Normal</option>
+                                <option value="Sem Sinal">Sem Sinal</option>
+                            </select>
+
+                            @if (ViewBag.AlertStatus != null)
+                            {
+                                <input id="AlertStatus" type="hidden" value="@ViewBag.AlertStatus" />
+                            }
+
+                            <span id="validation-AlertStatusSelect" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <br />
+                            <button id="filterBtn" type="button" class="btn btn-primary">Filtrar</button>
+                        </div>
+
+                    </div>
+
+
+                    <div class="table-responsive">
+                        <table id="example" class="display table" style="width:100%;text-align:center">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Motor
+                                    </th>
+                                    <th>
+                                        Sensores
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr style="">
+                                        <td style="vertical-align:middle;">
+                                            <label id="motorlabel_@item.MotorId" class="motor-label" style="cursor:pointer;font-weight:bold;">@item.MotorName</label>
+                                        </td>
+                                        <td style="width:300px;">
+                                            <div id="motordash_@(item.SubSectorId != null ? item.SubSectorId : item.SectorId)_@(item.MotorId)" class="motor-dash" style="width:280px;height:280px;margin:auto;">
+
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div style="width:110px;font-size:13px;margin-top: 90px;">
+                                                <div class="row">
+                                                    <div class="col-1" style="padding: 0;">
+                                                        <span class="mini-sqr" style="background-color:#fd0000;"></span>
+                                                    </div>
+                                                    <div class="col-8" style="text-align:left;">
+                                                        Alerta
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-1" style="padding: 0;">
+                                                        <span class="mini-sqr" style="background-color:#ffff00;"></span>
+                                                    </div>
+                                                    <div class="col-8" style="text-align:left;">
+                                                        Atenção
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-1" style="padding: 0;">
+                                                        <span class="mini-sqr" style="background-color:#00af50;"></span>
+                                                    </div>
+                                                    <div class="col-8" style="text-align:left;">
+                                                        Normal
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-1" style="padding: 0;">
+                                                        <span class="mini-sqr" style="background-color:lightgray;"></span>
+                                                    </div>
+                                                    <div class="col-8" style="text-align:left;">
+                                                        Sem Sinal
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+    {
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.event.drag.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.mousewheel.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.canvaswrapper.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.colorhelpers.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.pie.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.saturated.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.browser.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.drawSeries.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.uiConstants.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.navigate.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.touchNavigate.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.hover.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.touch.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.time.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.selection.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.legend.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.tooltip.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.axislabels.js")"></script>
+
+    <script type="text/javascript">
+        var valor_data = [];
+        var ids_dict = [];
+
+        $(window).on('pageshow', function () {
+            $('#preloader').hide();
+        });
+
+        $(document).ready(function () {
+
+            if ($('#AlertStatus').length > 0) {
+                $('#AlertStatusSelect').val($('#AlertStatus').val());
+            }
+
+            $('.motor-dash').each(function(i) {
+                let secId = this.id.split('_')[1];
+                let motorId = this.id.split('_')[2];
+                let dashWrapper = $(this);
+
+                $.get('@Url.Action("HomeDashLvl3_Upd", "Home")?idMotor=' + motorId + '&idSector=' + secId, function (data) {
+                    valor_data = [];
+
+                    $.each(data, function (index, value) {
+                        let iColor = value.alertStatus == "Alerta" ? "crimson"
+                            : value.alertStatus == "Atenção" ? "gold" 
+                            : value.alertStatus == "Normal" ? "green" : "lightgray";
+                        valor_data.push({ label: value.alertStatus, data: value.alertQtd, color: iColor });
+                        //ids_dict.push(unitId);
+                    });
+
+                    drawPie(dashWrapper);
+                });
+            });
+
+            $('#backBtn').click(function () {
+                let sensorLvl = $('#AlertStatusSelect').val();
+                $('#preloader').fadeIn();
+                window.location.href = '@Url.Action("HomeDashLvl2", "Home")?idUnit=' + $('#UnitId').val() + '&lvlAlert=' + sensorLvl;
+            });
+
+            $('#filterBtn').click(function () {
+                let sectorId = $('#SectorId').val();
+                let subsectorId = $('#SubSectorId').val();
+                let sensorLvl = $('#AlertStatusSelect').val();
+
+                $('#preloader').fadeIn();
+                window.location.href = '@Url.Action("HomeDashLvl3", "Home")?idSector=' + sectorId + '&idSubSector=' + subsectorId + '&lvlAlert=' + sensorLvl;
+            });
+
+            $('.motor-label').on('click', function () {
+                let motorId = $(this).attr('id').split('_')[1];
+
+                $('#preloader').fadeIn();
+                window.location.href = '@Url.Action("HomeDashLvl4", "Home")?idMotor=' + motorId;
+            });
+
+            $('#CompanyId').on('change', function () {
+                loadUnitsFromCompany();
+            });
+
+           @if (ViewBag.IdCompany != null)
+            {
+                <text>
+                    $('#CompanyId').val('@ViewBag.IdCompany');
+                    loadUnitsFromCompany();
+                </text>
+            }
+        });
+
+        function loadUnitsFromCompany() {
+            let companyId = $('#CompanyId').val();
+            if (companyId != '0') {
+                $('#UnitId option[cid!="' + companyId + '"]').hide();
+                $('#UnitId option[cid="' + companyId + '"]').show();
+
+                $('#SectorId option[cid!="' + companyId + '"]').hide();
+                $('#SectorId option[cid="' + companyId + '"]').show();
+
+                $('#SubSectorId option[cid!="' + companyId + '"]').hide();
+                $('#SubSectorId option[cid="' + companyId + '"]').show();
+            }
+            else {
+                $('#UnitId option').show();
+                $('#SectorId option').show();
+                $('#SubSectorId option').show();
+            }
+
+            $('#UnitId').val('');
+            $('#SectorId').val('');
+            $('#SubSectorId').val('');
+        }
+
+        function drawPie(pieWrapper) {
+            var options = {
+                series: {
+                    pie: {
+                        show: true,
+                        label: {
+                            show: true,
+                            radius: 1/2,
+                            formatter: function (label, series) {
+                                return '<div style="font-size:11pt;text-align:center;padding:2px;'
+                                    + 'color:#000;font-weight:bold;">' + series.data[0][1] + '</div>';
+                            }
+                        }
+                    }
+                },
+                grid: {
+                    clickable: true,
+                    hoverable: true
+                }
+            };
+
+            var plot = $.plot(pieWrapper, valor_data, options);
+
+            pieWrapper.bind("plotclick", function (event, pos, item) {
+                if (item) {
+                    let motorId = event.target.id.split('_')[2];
+                    let sensorLvl = item.series.label;
+
+                    window.location.href = '@Url.Action("HomeDashLvl4", "Home")?idMotor=' + motorId + '&lvlAlert=' + sensorLvl;
+                }
+            });
+            pieWrapper.bind("plothover", function (event, pos, obj) {
+                if (obj != null && pos != null)
+                    $(this).css('cursor', 'pointer');
+                else if (pos.x == null)
+                    $(this).css('cursor', 'default');
+            });
+
+            $('#UnitId').bind('change', function () {
+                populateMotorSelect('u');
+            });
+            $('#SectorId').bind('change', function () {
+                populateMotorSelect('s');
+            });
+
+            populateMotorSelect('u');
+            populateMotorSelect('s');
+        }
+
+
+        function populateMotorSelect(filtro) {
+
+            $('#SubSectorId option').show();
+
+            switch (filtro) {
+                case 'u':
+                    let unitId = $('#UnitId').val();
+                    if (unitId != '') {
+                        $('#SectorId option[uid!="' + unitId + '"]').hide();
+                        $('#SectorId option[uid="' + unitId + '"]').show();
+                    }
+                    else {
+                        $('#SectorId option').show();
+                        $('#SubSectorId option').show();
+                    }
+
+                    $('#SectorId').val('');
+                    $('#SubSectorId').val('');
+
+                    break;
+                case 's':
+                    let sectorId = $('#SectorId').val();
+                    if (sectorId != '') {
+                        $('#SubSectorId option[sid!="' + sectorId + '"]').hide();
+                        $('#SubSectorId option[sid="' + sectorId + '"]').show();
+                    }
+                    else {
+                        $('#SubSectorId option').show();
+                        populateMotorSelect('u');
+                    }
+
+                    $('#SubSectorId').val('');
+
+                    break;
+                case 'ss':
+                    let subsectorId = $('#SubSectorId').val();
+                    if (subsectorId == '') {
+                        populateMotorSelect('s');
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    </script>
+}

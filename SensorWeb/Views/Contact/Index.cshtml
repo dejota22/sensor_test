@@ -16,9 +16,9 @@
 <table class="table sclistTable">
     <thead>
         <tr>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(modelItem => modelItem.Id)
-            </th>
+            </th>*@
             <th>
                 @Html.DisplayNameFor(modelItem => modelItem.NomeCompleto)
 
@@ -43,9 +43,9 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
+                @*<td>
                     @Html.DisplayFor(modelItem => item.Id)
-                </td>
+                </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.NomeCompleto)
                 </td>

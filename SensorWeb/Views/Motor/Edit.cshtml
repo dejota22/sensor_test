@@ -1,4 +1,6 @@
-﻿@model SensorWeb.Models.MotorModel
+﻿@using Core.DTO
+@using System.Security.Claims
+@model SensorWeb.Models.MotorModel
 
 @inject SensorWeb.Resources.CommonLocalizationService localizer
 @inject Core.Service.IMachineService machineService
@@ -7,6 +9,11 @@
 @inject Core.Service.ICardanShaftTypeService cardanShaftTypeService
 @inject Core.Service.IPumpTypeService pumpTypeService
 @inject Core.Service.ICompressorTypeService compressorTypeService
+@inject Core.Service.ICompanyUnitService unitService
+
+@{
+    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
 
 <link href="@Url.Content("~/css/screenCustomMotor.css?p=4")" rel="stylesheet" />
 
@@ -17,6 +24,20 @@
 
         .cont-row:nth-child(2n) {
             background: #fff;
+        }
+
+    #tblChanges, #tblChanges tr, #tblChanges td {
+        border: 1px solid #888;
+    }
+
+        #tblChanges td {
+            padding: 0 10px;
+        }
+
+        tr.headerChanges {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
         }
 </style>
 
@@ -132,6 +153,8 @@
         $(".bombagroup").hide();
         $(".ventiladorgroup").hide();
         $(".compressorgroup").hide();
+        $(".resfriamentogroup").hide();
+        $(".geradorgroup").hide();
     }
 
     //$(document).on('load', '#TypeId', function () {
@@ -156,6 +179,8 @@
         $(".bombagroup").hide();
         $(".ventiladorgroup").hide();
         $(".compressorgroup").hide();
+        $(".resfriamentogroup").hide();
+        $(".geradorgroup").hide();
     }
 
     function aFunc(typeId) {
@@ -205,6 +230,14 @@
         if (typeId == 9) {
             $(".compressorgroup").show();
         }
+
+        if (typeId == 10) {
+            $(".resfriamentogroup").show();
+        }
+
+        if (typeId == 11) {
+            $(".geradorgroup").show();
+        }
     }
 
 </script>
@@ -228,7 +261,7 @@
 
                 <div class="form-group col-md-3">
                     <label asp-for="CompanyId" class="control-label"></label>
-                    @Html.DropDownListFor(model => model.CompanyId, new SelectList(Model.Companies, "Key", "Value"),
+                    @Html.DropDownListFor(model => model.CompanyId, new SelectList(Model.Companies, "Key", "Value", Model.CompanyId),
                     @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
                     <span asp-validation-for="CompanyId" class="text-danger"></span>
                     <input type="hidden" asp-for="SectorId" />
@@ -255,8 +288,13 @@
                 {
                     <div class="form-group col-md-3">
                         <label class="control-label">Unidade</label>
-                        @Html.DropDownList("UnitId", new SelectList(Model.Units, "Key", "Value"),
-                        "-- Selecione a unidade --", new Dictionary<string, object> { { "class", "form-control" } })
+                        <select id="UnitId" name="UnitId" style="" class="form-control">
+                            <option value="">-- Selecione a Unidade --</option>
+                            @foreach (var unit in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownList(userId))
+                            {
+                                <option cid="@unit.CompanyId" value="@unit.Key">@unit.Value</option>
+                            }
+                        </select>
                         <input type="hidden" id="SectorId" name="SectorId" />
                     </div>
 
@@ -309,40 +347,40 @@
             @*<label for="input1" class="col-sm-2 labelbox motorgroup">
             <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("EletricMotor")</span>
             </label>*@
-            <div class="mt-n3 motorgroup" id="input1" style="padding-top: 10px; ">
+            <div class="mt-n3" id="input1" style="padding-top: 10px; ">
 
                 @*Motor Eletrico*@
                 <div class="col-md-12 formclasscreate ">
 
-                    <div class="form-group col-md-3" style="display: grid;">
+                    <div class="form-group col-md-3 motorgroup" style="display: grid;">
                         <label asp-for="MachineId" class="control-label"></label>
                         @Html.DropDownListFor(model => model.MachineId, new SelectList(machineService.GetQueryDropDownList(), "Key", "Value"),
                         @localizer.Get("MachineSelect"), new Dictionary<string, object> { { "class", "form-control" } })
                         <span asp-validation-for="MachineId" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md-2 motorgroup redutorgroup bombagroup ventiladorgroup compressorgroup resfriamentogroup geradorgroup">
                         <label asp-for="Name" class="control-label"></label>
                         <input asp-for="Name" class="form-control" />
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md-2 motorgroup resfriamentogroup geradorgroup">
                         <label asp-for="Description" class="control-label"></label>
                         <input asp-for="Description" class="form-control" />
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md-2 motorgroup resfriamentogroup geradorgroup">
                         <label asp-for="Tag" class="control-label"></label>
                         <input asp-for="Tag" class="form-control" />
                         <span asp-validation-for="Tag" class="text-danger"></span>
                     </div>
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md-2 motorgroup">
                         <label asp-for="Manufacturer" class="control-label"></label>
                         <input asp-for="Manufacturer" class="form-control" />
                         <span asp-validation-for="Manufacturer" class="text-danger"></span>
                     </div>
-                    <div class="form-group  col-md-1">
+                    <div class="form-group  col-md-1 motorgroup">
                         <label asp-for="Carcase" class="control-label"></label>
                         <input asp-for="Carcase" class="form-control" />
                         <span asp-validation-for="Carcase" class="text-danger"></span>
@@ -352,7 +390,7 @@
                 </div>
 
                 @*Motor Eletrico*@
-                <div class="col-md-12 formclasscreate">
+                <div class="col-md-12 formclasscreate motorgroup">
 
                     <div class="form-group col-md-1">
                         <label asp-for="CvPotency" class="control-label"></label>
@@ -411,7 +449,7 @@
                 </div>
 
                 @*Motor Eletrico*@
-                <div class="col-md-12 formclasscreate">
+                <div class="col-md-12 formclasscreate motorgroup">
 
                     <div class="form-group col-md-1">
                         <label asp-for="Pf" class="control-label"></label>
@@ -438,7 +476,7 @@
 
 
                 @*Motor Eletrico*@
-                <div class="col-md-12 formclasscreate">
+                <div class="col-md-12 formclasscreate motorgroup">
                     <div class="form-group col-md-6" style="display: grid;">
                         <label asp-for="FixationTypeId" class="control-label"></label>
                         @Html.DropDownListFor(model => model.FixationTypeId, new SelectList(fixationService.GetQueryDropDownList(), "Key", "Value"),
@@ -1024,11 +1062,43 @@
         <a asp-action="Index">Back to List</a>
     </div>*@
 
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="msg-modal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:orangered;">
+                <h5 class="modal-title">Atenção</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="modalBody" class="modal-body">
+
+                Esse Sensor não pode ser associado a este equipamento porque ele ultrapassou o número máximo de alterações permitidas. Entre em contato com a IOT Nest.
+                <br /><br />
+
+                Mudanças realizadas:<br />
+
+                <table id="tblChanges">
+
+                </table>
+                
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary close" type="button" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
 
     <script type="text/javascript">
 
         $(document).ready(function ($) {
+
+            loadUnitsFromCompany();
+
+            $('#CompanyId').on('change', function () {
+                loadUnitsFromCompany();
+            });
 
             $('#UnitId').on('change', function () {
 
@@ -1077,6 +1147,21 @@
             });
         });
 
+        function loadUnitsFromCompany() {
+            let companyId = $('#CompanyId').val();
+            if (companyId != '') {
+                $('#UnitId option[cid!="' + companyId + '"]').hide();
+                $('#UnitId option[cid="' + companyId + '"]').show();
+            }
+            else {
+                $('#UnitId option').show();
+            }
+
+            $('#UnitId').val('');
+            $('#SectorId').val('');
+            $('#SubSectorId').val('');
+        }
+
         function salvarMotorDevice() {
             var idMotor = document.getElementById("Id").value;
             var idDevice = document.getElementById("DeviceId").value;
@@ -1102,23 +1187,56 @@
             }
             else
             {
+                $('#preloader').fadeIn();
                 $.post('@Url.Content("~/Motor/InsertMotorDevice")', { mId: idMotor, dId: idDevice, planoMedicao: planoMedicao, orientacaoSensor: orientacaoSensor }, function (data) {
                     if (data.success) {
                         alert('Sensor adicionado com sucesso');
                         document.location.reload();
                     }
+                    else {
+                        let msg = "";
+
+                        msg += '<tr class="headerChanges">';
+                        msg += ("<th>Data</th>");
+                        msg += ("<th>Equipamento</th>");
+                        msg += ("<th>Usuário</th>");
+                        msg += ("<th>Nº Mudança</th>");
+                        msg += "</tr>";
+
+                        $.each(data.logs, function (index, value) {
+                            msg += '<tr class="cont-row">';
+                            msg +=  ("<td>" + value.data + "</td>");
+                            msg +=  ("<td>" + value.equip + "</td>");
+                            msg += ("<td>" + value.user + "</td>");
+                            msg += ("<td>" + (index == 0 ? 'Alocação Inicial' : value.change) + "</td>");
+                            msg += "</tr>";
+                        });
+
+
+                        $('#tblChanges').html(msg);
+                        abrirMsgModal();
+                        $('#preloader').hide();
+                    }
                 });
             }
+        }
+
+        function abrirMsgModal() {
+            $('#msg-modal').modal('show');
         }
 
         function excluirMotorDevice(id) {
             var idMotor = document.getElementById("Id").value;
 
             if (confirm("Tem certeza que deseja remover o sensor?") == true) {
+                $('#preloader').fadeIn();
                 $.post('@Url.Content("~/Motor/DeleteMotorDevice")', { mId: idMotor, id: id }, function (data) {
                     if (data.success) {
                         alert('Sensor removido com sucesso');
                         document.location.reload();
+                    }
+                    else {
+                        $('#preloader').hide();
                     }
                 });
             }

@@ -20,6 +20,7 @@ namespace Core
         public int? IdDeviceConfiguration { get; set; }
         public string id { get; set; }
         public string gtw { get; set; }
+        public string data_hora { get; set; }
         public int seq { get; set; }
         public double temp { get; set; }
         public double dec { get; set; }

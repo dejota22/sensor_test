@@ -111,9 +111,12 @@ namespace Core.DTO
 
         public bool? config { get; set; }
 
+        public string companyName { get; set; }
         public string unitName { get; set; }
         public string sectorName { get; set; }
         public string subSectorName { get; set; }
+
+        public bool? IsMobile { get; set; }
 
         public IList<DeviceConfigurationHorariosEnviosCard> DeviceConfigurationHorariosEnviosCard { get; set; }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using Core;
 using Core.DTO;
 using Core.Service;
+using Core.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace SensorService
@@ -44,7 +45,8 @@ namespace SensorService
 
         private IQueryable<CompanyUnit> GetQuery()
         {
-            IQueryable<CompanyUnit> tb_Company = _context.CompanyUnit.Include(c => c.Company);
+            IQueryable<CompanyUnit> tb_Company = _context.CompanyUnit.Include(c => c.Company)
+                .ThenInclude(c => c.ParentCompanyCol);
             var query = from CompanyUnit in tb_Company
                         select CompanyUnit;
 
@@ -79,6 +81,11 @@ namespace SensorService
         IEnumerable<CompanyUnit> ICompanyUnitService.GetAll()
         {
             return GetQuery();
+        }
+
+        IEnumerable<CompanyUnit> ICompanyUnitService.GetAllFull()
+        {
+            return GetQueryFull();
         }
 
         IEnumerable<CompanyUnitDTO> ICompanyUnitService.GetAllDTO()
@@ -140,45 +147,89 @@ namespace SensorService
             return GetQuery().ToList().LastOrDefault().Id + 1;
         }
 
-        List<SelectListCustomItemDTO> ICompanyUnitService.GetQueryDropDownList()
+        List<SelectListCustomItemDTO> ICompanyUnitService.GetQueryDropDownList(string userId)
         {
-            IQueryable<CompanyUnit> tb_Company = _context.CompanyUnit;
-            var query = (from CompanyUnit in tb_Company
-                         select new SelectListCustomItemDTO()
+            var user = _context.User.Include(u => u.Contact).Include(u => u.UserType)
+                .FirstOrDefault(u => u.Id == Convert.ToInt32(userId));
+            var userCompany = user.Contact.CompanyId;
+            var companies = _context.Company.Where(x => x.ParentCompanyId == userCompany).ToList();
+
+            var tb_Company = _context.CompanyUnit.ToList();
+            if (user.UserType.Name == Constants.Roles.Supervisor || user.UserType.Name == Constants.Roles.User)
+            {
+                tb_Company = tb_Company.Where(x => x.CompanyId == user.Contact.CompanyId).ToList();
+            }
+            else if (user.UserType.Name == Constants.Roles.Sysadmin)
+            {
+                tb_Company = tb_Company.Where(x => x.CompanyId == user.Contact.CompanyId || companies.Any(y => y.Id == x.CompanyId)).ToList();
+            }
+
+            var query = tb_Company.Select(c => new SelectListCustomItemDTO()
                          {
-                             Key = CompanyUnit.Id,
-                             Value = CompanyUnit.Name
+                             Key = c.Id,
+                             Value = c.Name,
+                             CompanyId = c.CompanyId
                          }).Distinct().ToList();
 
             return query;
         }
 
-        List<SelectListCustomItemDTO> ICompanyUnitService.GetQueryDropDownListSector()
+        List<SelectListCustomItemDTO> ICompanyUnitService.GetQueryDropDownListSector(string userId)
         {
-            IQueryable<CompanyUnitSector> tb_Sector = _context.CompanyUnitSector;
-            var query = (from CompanyUnitSector in tb_Sector
-                         where CompanyUnitSector.ParentSectorId == null
-                         select new SelectListCustomItemDTO()
+            var user = _context.User.Include(u => u.Contact).Include(u => u.UserType)
+                .FirstOrDefault(u => u.Id == Convert.ToInt32(userId));
+            var userCompany = user.Contact.CompanyId;
+            var companies = _context.Company.Where(x => x.ParentCompanyId == userCompany).ToList();
+
+            var tb_Sector = _context.CompanyUnitSector.Include(s => s.CompanyUnit)
+                .Where(s => s.ParentSectorId == null).ToList();
+
+            if (user.UserType.Name == Constants.Roles.Supervisor || user.UserType.Name == Constants.Roles.User)
+            {
+                tb_Sector = tb_Sector.Where(x => x.CompanyUnit.CompanyId == user.Contact.CompanyId).ToList();
+            }
+            else if (user.UserType.Name == Constants.Roles.Sysadmin)
+            {
+                tb_Sector = tb_Sector.Where(x => x.CompanyUnit.CompanyId == user.Contact.CompanyId || companies.Any(y => y.Id == x.CompanyUnit.CompanyId)).ToList();
+            }
+
+            var query = tb_Sector.Select(s => new SelectListCustomItemDTO()
                          {
-                             Key = CompanyUnitSector.Id,
-                             Value = CompanyUnitSector.Name,
-                             Unit = CompanyUnitSector.CompanyUnitId
+                             Key = s.Id,
+                             Value = s.Name,
+                             Unit = s.CompanyUnitId,
+                             CompanyId = s.CompanyUnit.CompanyId
                          }).Distinct().ToList();
 
             return query;
         }
 
-        List<SelectListCustomItemDTO> ICompanyUnitService.GetQueryDropDownListSubSector()
+        List<SelectListCustomItemDTO> ICompanyUnitService.GetQueryDropDownListSubSector(string userId)
         {
-            IQueryable<CompanyUnitSector> tb_Sector = _context.CompanyUnitSector;
-            var query = (from CompanyUnitSector in tb_Sector
-                         where CompanyUnitSector.ParentSectorId != null
-                         select new SelectListCustomItemDTO()
-                         {
-                             Key = CompanyUnitSector.Id,
-                             Value = CompanyUnitSector.Name,
-                             Unit = CompanyUnitSector.CompanyUnitId,
-                             Sector = CompanyUnitSector.ParentSectorId
+            var user = _context.User.Include(u => u.Contact).Include(u => u.UserType)
+                .FirstOrDefault(u => u.Id == Convert.ToInt32(userId));
+            var userCompany = user.Contact.CompanyId;
+            var companies = _context.Company.Where(x => x.ParentCompanyId == userCompany).ToList();
+
+            var tb_Sector = _context.CompanyUnitSector.Include(s => s.CompanyUnit)
+                .Where(s => s.ParentSectorId != null).ToList();
+
+            if (user.UserType.Name == Constants.Roles.Supervisor || user.UserType.Name == Constants.Roles.User)
+            {
+                tb_Sector = tb_Sector.Where(x => x.CompanyUnit.CompanyId == user.Contact.CompanyId).ToList();
+            }
+            else if (user.UserType.Name == Constants.Roles.Sysadmin)
+            {
+                tb_Sector = tb_Sector.Where(x => x.CompanyUnit.CompanyId == user.Contact.CompanyId || companies.Any(y => y.Id == x.CompanyUnit.CompanyId)).ToList();
+            }
+
+            var query = tb_Sector.Select(s => new SelectListCustomItemDTO()
+                        {
+                             Key = s.Id,
+                             Value = s.Name,
+                             Unit = s.CompanyUnitId,
+                             Sector = s.ParentSectorId,
+                             CompanyId = s.CompanyUnit.CompanyId
                          }).Distinct().ToList();
 
             return query;

@@ -4,6 +4,7 @@ using System.Linq;
 using Core;
 using Core.DTO;
 using Core.Service;
+using Microsoft.EntityFrameworkCore;
 
 namespace SensorService
 {
@@ -18,13 +19,19 @@ namespace SensorService
 
         void IDeviceService.Edit(Device Device)
         {
-            Device.UpdatedAt = DateTime.Now;
+            var baseDevice = _context.Device.Find(Device.Id);
 
-            _context.Update(Device);
+            baseDevice.UpdatedAt = DateTime.Now;
+            baseDevice.Tag = Device.Tag;
+            baseDevice.Code = Device.Code;
+            baseDevice.CompanyId = Device.CompanyId;
+            baseDevice.DeviceMotorId = Device.DeviceMotor?.Id;
+            baseDevice.DeviceMotor = Device.DeviceMotor;
+            baseDevice.DeviceMotorMaxChanges = Device.DeviceMotorMaxChanges;
+
+            _context.Update(baseDevice);
             _context.SaveChanges();
         }
-
-
 
         private IQueryable<DeviceDTO> GetQueryDTO()
         {
@@ -116,7 +123,8 @@ namespace SensorService
         private IQueryable<Device> GetQuery()
         {
             IQueryable<Device> tb_Device = _context.Device;
-            var query = from Device in tb_Device
+            var query = from Device in tb_Device.Include(d => d.DeviceMotor).ThenInclude(d => d.Motor)
+                            .ThenInclude(m => m.Sector)
                         where Device.Company.Id.Equals(Device.CompanyId)
                         select new Device
                         {
@@ -151,6 +159,7 @@ namespace SensorService
                             AccelerationMax = Device.AccelerationMax,
                             CrestFactorMax = Device.CrestFactorMax,
                             CrestFactorMin = Device.CrestFactorMin,
+                            DeviceMotorMaxChanges = Device.DeviceMotorMaxChanges,
                             DeviceMotorId = Device.DeviceMotorId,
                             DeviceMotor = Device.DeviceMotorId != null ? new DeviceMotor()
                             {
@@ -171,7 +180,9 @@ namespace SensorService
                             {
                                 LegalName = Device.Company.LegalName,
                                 TradeName = Device.Company.TradeName,
-                                Cnpj = Device.Company.Cnpj
+                                Cnpj = Device.Company.Cnpj,
+                                CompanyTypeId = Device.Company.CompanyTypeId,
+                                DeviceMotorMaxChanges = Device.Company.DeviceMotorMaxChanges
                             }
                         };
 

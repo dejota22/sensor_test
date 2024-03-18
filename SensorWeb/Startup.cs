@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SensorService;
+using SensorWeb.Models;
 using SensorWeb.Resources;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,9 @@ namespace SensorWeb
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+            var appSettingsSection = Configuration.GetSection("WebsiteSettings");
+            services.Configure<WebsiteSettings>(appSettingsSection);
 
             //Injeção Dependencia DbContext 
             services.AddDbContext<SensorContext>(options => options.UseMySQL(Configuration.GetConnectionString("localdb")));
@@ -58,6 +62,7 @@ namespace SensorWeb
             services.AddTransient<IMotorService, MotorService>();
             services.AddTransient<ICompanySubService, CompanySubService>();
             services.AddTransient<ICompanyUserService, CompanyUserService>();
+            services.AddTransient<IConfigService, ConfigService>();
             //Injeção dependencia Mappers
             services.AddAutoMapper(typeof(Startup).Assembly);
 
@@ -97,6 +102,8 @@ namespace SensorWeb
                     options.LoginPath = "/Login";
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
                 });
+
+            services.AddMemoryCache();
 
             //services.Configure<IISOptions>(options =>
             //{

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using Core;
 using Core.DTO;
 using Core.Service;
+using Microsoft.EntityFrameworkCore;
 
 namespace SensorService
 {
@@ -70,16 +72,19 @@ namespace SensorService
         }
         private IQueryable<Company> GetQuery()
         {
-            IQueryable<Company> tb_Company = _context.Company;
+            IQueryable<Company> tb_Company = _context.Company.Include(c => c.ParentCompany);
             var query = from Company in tb_Company
                         select Company;
 
-            //var query2 = _context.Company
-            //       .Select(x => new Contact
-            //       {
-            //           Id = x.Contact.Id,
-            //           FirstName = x.Contact.FirstName,
-            //       });
+            return query;
+        }
+        private IQueryable<Company> GetQueryFull()
+        {
+            IQueryable<Company> tb_Company = _context.Company.Include(c => c.ParentCompany)
+                .ThenInclude(c => c.Contact).ThenInclude(c => c.Company);
+            var query = from Company in tb_Company
+                        select Company;
+
             return query;
 
         }
@@ -89,9 +94,12 @@ namespace SensorService
             return GetQuery().Where(x => x.Id.Equals(idCompany)).FirstOrDefault();
         }
 
-        IEnumerable<Company> ICompanyService.GetAll()
+        IEnumerable<Company> ICompanyService.GetAll(bool full = false)
         {
-            return GetQuery();
+            if (full == false)
+                return GetQuery();
+            else
+                return GetQueryFull();
         }
 
         IEnumerable<CompanyDTO> ICompanyService.GetAllDTO()
@@ -129,6 +137,86 @@ namespace SensorService
         List<SelectListItemDTO> ICompanyService.GetQueryDropDownList()
         {
             return GetQueryDropDownList();
+        }
+
+        List<SelectListItemDTO> ICompanyService.GetQueryDropDownListStrict(string userId)
+        {
+            var user = _context.User.Include(u => u.Contact).FirstOrDefault(u => u.Id == Convert.ToInt32(userId));
+
+            IQueryable<Company> tb_Company = _context.Company;
+            var query = tb_Company.ToList();
+            
+            if (user.UserTypeId != 1)
+            {
+                var userCompany = user.Contact.CompanyId;
+                var companies = _context.Company.Where(x => x.ParentCompanyId == userCompany).ToList();
+                query = query.Where(c => c.Id == user.Contact.CompanyId || companies.Any(y => y.Id == c.Id)).ToList();
+            }
+            
+            var sel = query.Select(c => new SelectListItemDTO()
+                {
+                    Key = c.Id,
+                    Value = c.LegalName
+                }).Distinct().ToList();
+
+            return sel;
+        }
+
+        List<SelectListCustomItemDTO> ICompanyService.GetQueryDropDownListStrictCustom(string userId)
+        {
+            var user = _context.User.Include(u => u.Contact).FirstOrDefault(u => u.Id == Convert.ToInt32(userId));
+
+            IQueryable<Company> tb_Company = _context.Company;
+            var query = tb_Company.ToList();
+
+            if (user.UserTypeId != 1)
+            {
+                var userCompany = user.Contact.CompanyId;
+                var companies = _context.Company.Where(x => x.ParentCompanyId == userCompany).ToList();
+                query = query.Where(c => c.Id == user.Contact.CompanyId || companies.Any(y => y.Id == c.Id)).ToList();
+            }
+
+            var sel = query.Select(c => new SelectListCustomItemDTO()
+            {
+                Key = c.Id,
+                Value = c.LegalName,
+                CompanyId = c.CompanyTypeId
+            }).Distinct().ToList();
+
+            return sel;
+        }
+
+        string ICompanyService.GetRelatedLocks(int idEmpresa)
+        {
+            string locks = "";
+
+            var contacts = _context.Contact.Where(c => c.CompanyId == idEmpresa);
+            var devices = _context.Device.Where(c => c.CompanyId == idEmpresa);
+            var motors = _context.Motor.Where(c => c.CompanyId == idEmpresa);
+            var units = _context.CompanyUnit.Where(c => c.CompanyId == idEmpresa);
+
+            if (contacts.Any())
+            {
+                locks += "pelos contatos: ";
+                locks +=  string.Join(",", contacts.Select(c => c.Email));
+            }
+            if (devices.Any())
+            {
+                locks += " e pelos sensores: ";
+                locks += string.Join(",", devices.Select(c => c.Tag));
+            }
+            if(motors.Any())
+            {
+                locks += " e pelos equipamentos: ";
+                locks += string.Join(",", motors.Select(c => c.Name));
+            }
+            if (units.Any())
+            {
+                locks += " e pelas unidades: ";
+                locks += string.Join(",", units.Select(c => c.Name));
+            }
+
+            return $"Esta empresa não pode ser removida. Ela é usada {locks}";
         }
     }
 }

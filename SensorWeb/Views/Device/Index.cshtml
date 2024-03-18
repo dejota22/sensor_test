@@ -40,9 +40,9 @@
                         <table id="example" class="display table" style="width:100%;text-align:center">
                             <thead>
                                 <tr>
-                                    <th>
+                                    @*<th>
                                         @Html.DisplayNameFor(modelItem => modelItem.Id)
-                                    </th>
+                                    </th>*@
                                     <th>
                                         @Html.DisplayNameFor(modelItem => modelItem.Tag)
                                     </th>
@@ -50,9 +50,12 @@
                                         @Html.DisplayNameFor(modelItem => modelItem.Code)
                                     </th>
 
-                                    @*<th style="text-align:start">
-                                    @Html.DisplayNameFor(modelItem => modelItem.CompanyId)
-                                    </th>*@
+                                    @if (User.IsInRole("Administrador") || User.IsInRole("Sysadmin"))
+                                    {
+                                        <th style="text-align:center">
+                                            @Html.DisplayNameFor(modelItem => modelItem.CompanyId)
+                                        </th>
+                                    }
 
                                     <th style="text-align:center">
                                         @localizer.Get("QrCode")
@@ -69,18 +72,29 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td>
+                                        @*<td>
                                             @Html.DisplayFor(modelItem => item.Id)
-                                        </td>
+                                        </td>*@
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Tag)
                                         </td>
                                         <td class="sccentralize">
                                             @Html.DisplayFor(modelItem => item.Code)
                                         </td>
-                                        @*<td style="text-align:start">
-                                    @Html.DisplayFor(modelItem => item.Company.LegalName)
-                                    </td>*@
+
+                                        @if (User.IsInRole("Administrador"))
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Company.LegalName)
+                                            </td>
+                                        }
+                                        else if (User.IsInRole("Sysadmin") && item.Company.CompanyTypeId == 2)
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Company.LegalName)
+                                            </td>
+                                        }
+                                        
                                         <td style="text-align:center">
                                             <img style="height:50px;width:50px;cursor:pointer" id="img_@item.Id" src="@String.Format("data:image/png;base64,{0}", Convert.ToBase64String( item.QrCodeImg))" />
                                         </td>
@@ -88,9 +102,11 @@
                                             <table style="width:100%">
                                                 <tr>
                                                     <td style="padding:0 4px"><a href="@Url.Action("Details", "Device", new { id = item.Id })" title="@localizer.Get("View")"><i class="fas fa-eye"></i></a></td>
+
+                                                        <td style="padding:0 4px"><a href="@Url.Action("Edit", "Device", new { id = item.Id })" title="@localizer.Get("Edit")"><i class="fas fa-edit" style="color:#ff6a00"></i></a></td>
+
                                                     @if (User.IsInRole("Administrador"))
                                                     {
-                                                        <td style="padding:0 4px"><a href="@Url.Action("Edit", "Device", new { id = item.Id })" title="@localizer.Get("Edit")"><i class="fas fa-edit" style="color:#ff6a00"></i></a></td>
                                                         <td style="padding:0 4px"><a href="@Url.Action("Delete", "Device", new { id = item.Id })" title="@localizer.Get("Delete")" style="color:#ff0000"><i class="fas fa-window-close"></i></a></td>
                                                     }
                                                 </tr>

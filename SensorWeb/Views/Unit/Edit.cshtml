@@ -1,8 +1,12 @@
-﻿@model SensorWeb.Models.CompanyUnitModel
+﻿@using System.Security.Claims
+@model SensorWeb.Models.CompanyUnitModel
 @inject SensorWeb.Resources.CommonLocalizationService localizer
 @inject Core.Service.ICompanyUnitService companyUnitService
 @inject Core.Service.ICompanyService companyService
 
+@{
+    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
 <style>
     .cont-row {
         background: #fff;
@@ -25,13 +29,13 @@
                 <input type="hidden" asp-for="Id" name="Id" id="Id" class="form-control" />
 
                 <label class="control-label">Empresa</label>
-                @Html.DropDownListFor(model => model.CompanyId, new SelectList(companyService.GetQueryDropDownList(), "Key", "Value"),
+                @Html.DropDownListFor(model => model.CompanyId, new SelectList(companyService.GetQueryDropDownListStrict(userId), "Key", "Value"),
                 @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" }, { "required", "required" } })
                 <span asp-validation-for="CompanyId" class="text-danger"></span>
             </div>
 
             <div class="form-group col-md-6">
-                <label asp-for="Name" class="control-label"></label>
+                <label class="control-label">Nome Unidade</label>
                 <input asp-for="Name" class="form-control" required />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>

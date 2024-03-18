@@ -2,10 +2,10 @@
 @inject SensorWeb.Resources.CommonLocalizationService localizer
 
 
-<h4 style="color:white; text-align:center">@localizer.Get("MotorTitle") </h4>
+<h4 style="text-align:center">@localizer.Get("MotorTitle") </h4>
 <hr />
 
-<h5 style="color:white;">@localizer.Get("DeleteRegister")?</h5>
+<h5 style="">@localizer.Get("DeleteRegister")?</h5>
 <div class="row screenCreate">
     <div class="col-md-12 formclasscreate">
         <dl class="row">
@@ -33,3 +33,24 @@
     </div>
 </div>
 
+@section Scripts {
+
+    <script type="text/javascript">
+
+        $(document).ready(function ($) {
+
+        @if (ViewBag.ErrorMsg != null)
+        {
+            <text>
+                    alert('@Html.Raw(ViewBag.ErrorMsg)');
+            </text>
+        }
+
+                });
+
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

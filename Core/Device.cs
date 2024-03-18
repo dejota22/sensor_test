@@ -43,6 +43,8 @@ namespace Core
         public int? CrestFactorMin { get; set; }
         public int? CrestFactorMax { get; set; }
 
+        public int? DeviceMotorMaxChanges { get; set; }
+
         public virtual Company Company { get; set; }
         public virtual DeviceMotor DeviceMotor { get; set; }
         public virtual ICollection<Compressor> Compressor { get; set; }

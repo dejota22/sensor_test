@@ -1,0 +1,69 @@
+﻿@model IEnumerable<MotorModel>
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-white">
+                <div class="card-heading clearfix">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td><h4 class="card-title">Listagem de sensores</h4></td>                            
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="example" class="display table" style="width:100%;text-align:center">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Equipamento
+                                    </th>
+                                    <th>
+                                        Sensor
+                                    </th>
+                                    <th>
+                                        Id
+                                    </th>
+                                    <th>
+                                        Alarme
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    string lineColor = item.Alarm >= 7 ? "background-color:crimson;" : item.Alarm >= 1 ? "background-color:gold;" : "";
+                                    string alarmName = item.Alarm == 0 ? "Sem Alarme" : new int[] { 1, 4, 7, 10 }.Contains(item.Alarm) ? "Alarme Eixo X" :
+                                        new int[] { 2, 5, 8, 11 }.Contains(item.Alarm) ? "Alarme Eixo Y" : new int[] { 3, 6, 9, 12 }.Contains(item.Alarm) ? "Alarme Eixo Z" : "";
+
+                                    <tr style="@lineColor">
+                                        <td>
+                                            @item.Name
+                                        </td>
+                                        <td>
+                                            @item.Device.Tag
+                                        </td>
+                                        <td>
+                                            @item.Device.Code
+                                        </td>
+                                        <td>
+                                            @alarmName
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

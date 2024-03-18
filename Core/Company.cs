@@ -23,12 +23,17 @@ namespace Core
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
+        public int? DeviceMotorMaxChanges { get; set; }
+        public string VikingsSendDataTime { get; set; }
         public virtual CompanyType CompanyType { get; set; }
         public virtual Company ParentCompany { get; set; }
         public virtual ICollection<Company> ParentCompanyCol { get; set; }
         public virtual ICollection<CompanyUnit> CompanyUnit { get; set; }
         public virtual ICollection<Contact> Contact { get; set; }
         public virtual ICollection<Device> Device { get; set; }
+
+        public virtual ICollection<Motor> Motors { get; set; }
+
         public virtual ICollection<CompanyAlertContact> CompanyAlertContact { get; set; }
     }
 }

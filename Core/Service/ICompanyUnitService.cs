@@ -26,11 +26,12 @@ namespace Core.Service
 
         int GetlastCode();
 
-        List<SelectListCustomItemDTO> GetQueryDropDownList();
+        List<SelectListCustomItemDTO> GetQueryDropDownList(string userId);
 
         void RemoveSector(int idCompanyUnitSector);
 
-        List<SelectListCustomItemDTO> GetQueryDropDownListSector();
-        List<SelectListCustomItemDTO> GetQueryDropDownListSubSector();
+        List<SelectListCustomItemDTO> GetQueryDropDownListSector(string userId);
+        List<SelectListCustomItemDTO> GetQueryDropDownListSubSector(string userId);
+        IEnumerable<CompanyUnit> GetAllFull();
     }
 }

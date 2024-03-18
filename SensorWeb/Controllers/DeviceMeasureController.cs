@@ -59,15 +59,95 @@ namespace SensorWeb.Controllers
             try
             {
                 var configModel = new DeviceConfigurationModel();
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = _userService.Get(Convert.ToInt32(userId));
+                var userCompany = user.Contact.CompanyId;
+                var companies = _companyService.GetAll();
+
+                if (user.UserType.Name != Constants.Roles.Administrator)
+                    companies = companies.Where(x => x.Id == user.Contact.CompanyId || (x.ParentCompanyId == userCompany && x.CompanyTypeId == 3)).ToList();
+                else
+                    companies = companies.ToList();
 
                 if (string.IsNullOrWhiteSpace(codeAttempt) == false)
                     configModel = _deviceMeasureService.GetLastBySensorCode(codeAttempt);
                 else
                     configModel = _deviceMeasureService.GetLast(0, 0);
 
-                ViewBag.AllCodes = _deviceService.GetAll().Select(d => d.Code);
+                var devices = _deviceService.GetAll();
+                if (user.UserType.Name == Constants.Roles.Supervisor || user.UserType.Name == Constants.Roles.User)
+                {
+                    devices = devices.Where(x => x.CompanyId == user.Contact.CompanyId);
+                }
+                else if (user.UserType.Name == Constants.Roles.Sysadmin)
+                {
+                    devices = devices.Where(x => x.CompanyId == user.Contact.CompanyId || companies.Any(y => y.Id == x.CompanyId));
+                }
 
-                ViewBag.MotorSelect = _motorService.GetAllEquipamento().Select(m => new MotorDropdownModel()
+                ViewBag.AllCodes = devices.Select(d => d.Code);
+
+                var listaMotorModel = _motorService.GetAllEquipamento();
+                if (user.UserType.Name != Constants.Roles.Administrator)
+                {
+                    listaMotorModel = listaMotorModel.Where(x => x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId)).ToList();
+                }
+
+                ViewBag.MotorSelect = listaMotorModel.Select(m => new MotorDropdownModel()
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    SectorId = m.Sector?.ParentSectorId == null ? m.SectorId : m.Sector.ParentSectorId,
+                    SubSectorId = m.Sector?.ParentSectorId == null ? null : m.SectorId,
+                    UnitId = m.Sector?.CompanyUnitId,
+                    CompanyId = m.CompanyId,
+                }).ToList();
+
+                ViewBag.UserCompanies = companies;
+
+                configModel.codigoSensor = codeAttempt;
+                return View(configModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation($"Erro:{ex.Message}");
+                throw;
+            }
+        }
+
+        public ActionResult IndexMobile(string codeAttempt = null)
+        {
+            try
+            {
+                var configModel = new DeviceConfigurationModel();
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = _userService.Get(Convert.ToInt32(userId));
+                var userCompany = user.Contact.CompanyId;
+                var companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany && x.CompanyTypeId == 3).ToList();
+
+                if (string.IsNullOrWhiteSpace(codeAttempt) == false)
+                    configModel = _deviceMeasureService.GetLastBySensorCode(codeAttempt);
+                else
+                    configModel = _deviceMeasureService.GetLast(0, 0);
+
+                var devices = _deviceService.GetAll();
+                if (user.UserType.Name == Constants.Roles.Supervisor || user.UserType.Name == Constants.Roles.User)
+                {
+                    devices = devices.Where(x => x.CompanyId == user.Contact.CompanyId);
+                }
+                else if (user.UserType.Name == Constants.Roles.Sysadmin)
+                {
+                    devices = devices.Where(x => x.CompanyId == user.Contact.CompanyId || companies.Any(y => y.Id == x.CompanyId));
+                }
+
+                ViewBag.AllCodes = new List<string>() { codeAttempt };
+
+                var listaMotorModel = _motorService.GetAllEquipamento();
+                if (user.UserType.Name != Constants.Roles.Administrator)
+                {
+                    listaMotorModel = listaMotorModel.Where(x => x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId)).ToList();
+                }
+
+                ViewBag.MotorSelect = listaMotorModel.Select(m => new MotorDropdownModel()
                 {
                     Id = m.Id,
                     Name = m.Name,
@@ -77,6 +157,7 @@ namespace SensorWeb.Controllers
                 }).ToList();
 
                 configModel.codigoSensor = codeAttempt;
+                ViewBag.DeviceCode = codeAttempt;
                 return View(configModel);
             }
             catch (Exception ex)
@@ -95,9 +176,36 @@ namespace SensorWeb.Controllers
             {
                 PersistDeviceConfiguration(deviceMeasureModel);
 
-                ViewBag.AllCodes = _deviceService.GetAll().Select(d => d.Code);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = _userService.Get(Convert.ToInt32(userId));
+                var userCompany = user.Contact.CompanyId;
+                var companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany && x.CompanyTypeId == 3).ToList();
 
-                return View(deviceMeasureModel);
+                var devices = _deviceService.GetAll();
+                if (user.UserType.Name == Constants.Roles.Supervisor || user.UserType.Name == Constants.Roles.User)
+                {
+                    devices = devices.Where(x => x.CompanyId == user.Contact.CompanyId);
+                }
+                else if (user.UserType.Name == Constants.Roles.Sysadmin)
+                {
+                    devices = devices.Where(x => x.CompanyId == user.Contact.CompanyId || companies.Any(y => y.Id == x.CompanyId));
+                }
+
+                ViewBag.AllCodes = devices.Select(d => d.Code);
+
+                ViewBag.MotorSelect = _motorService.GetAllEquipamento().Select(m => new MotorDropdownModel()
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    SectorId = m.Sector?.ParentSectorId == null ? m.SectorId : m.Sector.ParentSectorId,
+                    SubSectorId = m.Sector?.ParentSectorId == null ? null : m.SectorId,
+                    UnitId = m.Sector?.CompanyUnitId
+                }).ToList();
+
+                if (deviceMeasureModel.IsMobile != null && deviceMeasureModel.IsMobile == true)
+                    return RedirectToAction("ActionQR", "Device", new { dCode = deviceMeasureModel.codigoSensor });
+                else
+                    return View(deviceMeasureModel);
             }
             catch (Exception e)
             {
@@ -111,6 +219,7 @@ namespace SensorWeb.Controllers
         {
             try
             {
+                var device = _deviceService.Get(deviceMeasureModel.DeviceId.Value);
                 var configModel = _deviceMeasureService
                     .GetLast(deviceMeasureModel.DeviceId.Value, deviceMeasureModel.MotorId.Value);
 
@@ -125,7 +234,10 @@ namespace SensorWeb.Controllers
 
                 PersistDeviceConfiguration(deviceMeasureModel);
 
-                return RedirectToAction(nameof(Index), new { codeAttempt = deviceMeasureModel.codigoSensor });
+                if (deviceMeasureModel.IsMobile != null && deviceMeasureModel.IsMobile == true)
+                    return RedirectToAction(nameof(IndexMobile), new { codeAttempt = device.Code });
+                else
+                    return RedirectToAction(nameof(Index), new { codeAttempt = device.Code });
             }
             catch (Exception e)
             {

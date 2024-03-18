@@ -202,7 +202,16 @@ namespace SensorService
         void IUserService.Remove(int iduser)
         {
             var _user = _context.User.Find(iduser);
+            Contact _contact = null;
+
+            if (_user.ContactId != null)
+            {
+                 _contact = _context.Contact.Find(_user.ContactId);
+            }
+            
             _context.Remove(_user);
+            if (_contact != null)
+                _context.Remove(_contact);
             _context.SaveChanges();
         }
 

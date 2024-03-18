@@ -1,4 +1,6 @@
-﻿@model SensorWeb.Models.MotorModel
+﻿@using Core.DTO
+@using System.Security.Claims
+@model SensorWeb.Models.MotorModel
 
 @inject SensorWeb.Resources.CommonLocalizationService localizer
 @inject Core.Service.IMachineService machineService
@@ -7,6 +9,11 @@
 @inject Core.Service.ICardanShaftTypeService cardanShaftTypeService
 @inject Core.Service.IPumpTypeService pumpTypeService
 @inject Core.Service.ICompressorTypeService compressorTypeService
+@inject Core.Service.ICompanyUnitService unitService
+
+@{
+    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
 
 @*<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>*@
 <link href="@Url.Content("~/css/screenCustomMotor.css?p=3535")" rel="stylesheet" />
@@ -29,8 +36,6 @@
     $('body').ready(function () {
         
     });
-
-
 
 </script>
 
@@ -70,8 +75,13 @@
                 {
                     <div class="form-group col-md-3">
                         <label class="control-label">Unidade</label>
-                        @Html.DropDownList("UnitId", new SelectList(Model.Units, "Key", "Value"),
-                    "-- Selecione a unidade --", new Dictionary<string, object> { { "class", "form-control" } })
+                        <select id="UnitId" name="UnitId" style="" class="form-control">
+                            <option value="">-- Selecione a Unidade --</option>
+                            @foreach (var unit in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownList(userId))
+                            {
+                                <option cid="@unit.CompanyId" value="@unit.Key">@unit.Value</option>
+                            }
+                        </select>
                         <input type="hidden" id="SectorId" name="SectorId" />
                     </div>
 
@@ -188,6 +198,12 @@
 
         $(document).ready(function ($) {
 
+            loadUnitsFromCompany();
+
+            $('#CompanyId').on('change', function () {
+                loadUnitsFromCompany();
+            });
+
             $('#UnitId').on('change', function () {
 
                 let unitId = $('#UnitId').val();
@@ -234,6 +250,21 @@
                 }
             });
         });
+
+        function loadUnitsFromCompany() {
+            let companyId = $('#CompanyId').val();
+            if (companyId != '') {
+                $('#UnitId option[cid!="' + companyId + '"]').hide();
+                $('#UnitId option[cid="' + companyId + '"]').show();
+            }
+            else {
+                $('#UnitId option').show();
+            }
+
+            $('#UnitId').val('');
+            $('#SectorId').val('');
+            $('#SubSectorId').val('');
+        }
 
         function salvarEquip() {
             var idGroup = document.getElementById("Id").value;

@@ -1,0 +1,103 @@
+﻿@using Core;
+@model IEnumerable<ConfigParams>
+
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+
+
+<h4 style="text-align:center">Parâmetros do Sistema</h4>
+<hr />
+
+<table class="table sclistTable">
+    <thead>
+        <tr>
+            <th>
+                Parâmetro
+            </th>
+            <th class="sccentralize">
+                Valor
+            </th>
+
+            <th style="text-align:center">
+                @localizer.Get("Actions")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody class="sctbodyresult">
+        @foreach (var item in Model)
+        {
+            
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td class="sccentralize">
+                    @if (item.Name == "NumeroMudancasSensorEquipamento")
+                    {
+                        <input id="val_@item.Id" type="number" class="form-control val-upd" value="@item.Value" min="0" max="9999" />
+                    }
+                    else if (item.Name == "HoraEnvioDadoVikings")
+                    {
+                        <input type="text" class="form-control horatype" id="val_@item.Id" placeholder="HH:MM" />
+                    }
+
+                    <input id="orival_@item.Id" type="hidden" value="@item.Value" />
+                </td>
+                <td style="text-align:center">
+
+                    <button id="@item.Id" type="button" title="Atualizar" class="btn-upd btn btn-primary" disabled>
+                        Atualizar
+                    </button>
+
+                </td>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('.horatype').mask("00:00", { reverse: true });
+
+            $('.btn-upd').click(function () {
+                let configId = $(this).attr('id');
+                let configValue = $('#val_'+configId).val();
+
+                $('#preloader').fadeIn();
+                window.location.href = '@Url.Action("UpdateParam", "Config")?id=' + configId + '&value=' + configValue;
+            });
+
+            $('.val-upd').bind('change', function () {
+                let oriVal = $('#orival_' + $(this).attr('id')).val();
+                let thisVal = $(this).val();
+                let thisBtnId = $(this).attr('id').split('_')[1];
+
+                if (thisVal == '' || thisVal != oriVal) {
+                    $('#' + thisBtnId).removeAttr('disabled');
+                }
+                else {
+                    $('#' + thisBtnId).attr('disabled', 'disabled');
+                }
+            });
+
+            $('.horatype').bind('change', function () {
+                let oriVal = $('#orival_' + $(this).attr('id')).val();
+                let thisVal = $(this).val();
+                let thisBtnId = $(this).attr('id').split('_')[1];
+
+                let regex = /^([01][0-9]|2[0-3]):[0-5][0-9]$/;
+                if (!regex.test(thisVal)) {
+                    $(this).val('');
+                    $('#' + thisBtnId).attr('disabled', 'disabled');
+                }
+                else {
+                    $('#' + thisBtnId).removeAttr('disabled');
+                }
+            });
+        });
+    </script>
+}

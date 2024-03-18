@@ -17,6 +17,8 @@ namespace SensorWeb.Models
         public string Tag { get; set; }
         public byte[] QrCodeImg { get; set; }
 
+        public int? DeviceMotorId { get; set; }
+
 
         [Display(Name = "Code")]
         public string Code { get; set; }                
@@ -43,6 +45,10 @@ namespace SensorWeb.Models
         public int? AccelerationMax { get; set; }
         public int? CrestFactorMin { get; set; }
         public int? CrestFactorMax { get; set; }
+        public int? DeviceMotorMaxChanges { get; set; }
+
+        public bool? IsMobile { get; set; }
+
         public virtual Company Company { get; set; }
         public List<SelectListItemDTO> Companies { get; set; }
         //public virtual ICollection<Compressor> Compressor { get; set; }

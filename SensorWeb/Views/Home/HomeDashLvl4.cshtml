@@ -1,0 +1,487 @@
+﻿@using Core.DTO
+@using System.Security.Claims
+@model IEnumerable<HomeDashModel>
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+@inject Core.Service.ICompanyUnitService unitService
+@inject Core.Service.IMotorService motorService
+
+@{
+    Layout = "~/Views/Shared/_Layout_Graficos.cshtml";
+    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+
+<style>
+
+    .mini-rect {
+        width: 100%;
+        height: 30px;
+        border: 1px solid #bbb;
+        padding: 3px 5px;
+        background-color: #ddd;
+    }
+
+    .mini-rect-act {
+        border: 5px solid lightblue !important;
+    }
+
+</style>
+
+<div id="main-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-white">
+                <div class="card-heading clearfix">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td><h4 class="card-title">Dashboard</h4></td>
+                            <td style="width:50px;"><button id="backBtn" type="button" class="btn btn-primary">Voltar</button></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Empresa</label>
+                            <select id="CompanyId" name="CompanyId" style="" class="form-control main-selects">
+                                <option value="0">Todas</option>
+                                @{
+                                    var listCompany = (List<Core.Company>)ViewBag.UserCompanies;
+                                }
+
+                                @foreach (var company in listCompany)
+                                {
+
+                                    <option value="@company.Id">@company.LegalName</option>
+
+
+                                }
+                            </select>
+                            <span id="validation-UnitId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Unidade</label>
+                            <select id="UnitId" name="UnitId" style="" class="form-control main-selects">
+                                @{
+                                    var listUnit = (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownList(userId);
+                                }
+
+                                @if (listUnit.Any(u => u.Key == Model.FirstOrDefault()?.UnitId))
+                                {
+                                    var unit1 = listUnit.First(u => u.Key == Model.FirstOrDefault()?.UnitId);
+                                    <option cid="@unit1.CompanyId" value="@unit1.Key" selected>@unit1.Value</option>
+                                }
+
+                                @foreach (var unit in listUnit)
+                                {
+                                    if (Model.FirstOrDefault()?.UnitId != unit.Key)
+                                    {
+                                        <option cid="@unit.CompanyId" value="@unit.Key">@unit.Value</option>
+                                    }
+                                }
+                            </select>
+                            <span id="validation-UnitId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Setor</label>
+                            <select id="SectorId" name="SectorId" style="" class="form-control main-selects">
+                                @{
+                                    var listSector = (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSector(userId);
+                                }
+
+                                @if (listSector.Any(u => u.Key == Model.FirstOrDefault()?.SectorId))
+                                {
+                                    var sector1 = listSector.First(u => u.Key == Model.FirstOrDefault()?.SectorId);
+                                    <option cid="@sector1.CompanyId" value="@sector1.Key" uid="@sector1.Unit" selected>@sector1.Value</option>
+                                }
+
+                                @foreach (var sector in listSector)
+                                {
+                                    if (Model.FirstOrDefault()?.SectorId != sector.Key)
+                                    {
+                                        <option cid="@sector.CompanyId" value="@sector.Key" uid="@sector.Unit">@sector.Value</option>
+                                    }
+
+                                }
+                            </select>
+                            <span id="validation-SectorId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Sub-Setor</label>
+                            <select id="SubSectorId" name="SubSectorId" style="" class="form-control main-selects">
+                                @{
+                                    var listSubSector = (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSubSector(userId);
+                                }
+
+                                @if (listSubSector.Any(u => u.Key == Model.FirstOrDefault()?.SubSectorId))
+                                {
+                                    var sub1 = listSubSector.First(u => u.Key == Model.FirstOrDefault()?.SubSectorId);
+                                    <option cid="@sub1.CompanyId" value="@sub1.Key" uid="@sub1.Unit" sid="@sub1.Sector" selected>@sub1.Value</option>
+                                }
+
+                                @foreach (var sub in listSubSector)
+                                {
+                                    if (Model.FirstOrDefault()?.SubSectorId != sub.Key)
+                                    {
+                                        <option cid="@sub.CompanyId" value="@sub.Key" uid="@sub.Unit" sid="@sub.Sector">@sub.Value</option>
+                                    }
+
+                                }
+                            </select>
+                            <span id="validation-SubSectorId" class="text-danger"></span>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Equipamento</label>
+                            <select id="MotorId" name="MotorId" style="" class="form-control main-selects">
+                                @{
+                                    var listMotor = (List<MotorDropdownModel>)ViewBag.MotorSelect;
+                                }
+
+                                @if (listMotor.Any(u => u.IsSelected == true))
+                                {
+                                    var motor1 = listMotor.First(u => u.IsSelected == true);
+                                    <option uid="@motor1.UnitId" sid="@motor1.SectorId" ssid="@motor1.SubSectorId" value="@motor1.Id" selected>@motor1.Name</option>
+                                }
+
+                                @foreach (var motor in listMotor)
+                                {
+                                    if (motor.IsSelected == false)
+                                    {
+                                        <option uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id">@motor.Name</option>
+                                    }
+
+                                }
+                            </select>
+                            <span id="validation-MotorId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Status</label>
+                            <select id="AlertStatusSelect" name="AlertStatusSelect" style="" class="form-control main-selects">
+                                <option value="">Todos</option>
+                                <option value="Alerta">Alerta</option>
+                                <option value="Atenção">Atenção</option>
+                                <option value="Normal">Normal</option>
+                                <option value="Sem Sinal">Sem Sinal</option>
+                            </select>
+
+                            @if (ViewBag.AlertStatus != null)
+                            {
+                                <input id="AlertStatus" type="hidden" value="@ViewBag.AlertStatus" />
+                            }
+
+                            <span id="validation-AlertStatusSelect" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <br />
+                            <button id="filterBtn" type="button" class="btn btn-primary">Filtrar</button>
+                        </div>
+
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="example" class="display table" style="width:100%;text-align:center">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Sensor
+                                    </th>
+                                    <th>
+                                        Plano de Medição
+                                    </th>
+                                    <th>
+                                        Orientação
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @if (((IEnumerable<DataGlobalHomeModel>)ViewBag.ListaSensors) == null
+                                || ((IEnumerable<DataGlobalHomeModel>)ViewBag.ListaSensors).Any() == false)
+                                {
+                                    <tr>
+                                        <td colspan="3">
+                                            <label class="" style="">NENHUM SENSOR ENCONTRADO</label>
+                                        </td>
+                                    </tr>
+                                }
+
+                                @foreach (var item in ((IEnumerable<DataGlobalHomeModel>)ViewBag.ListaSensors))
+                                {
+                                    <tr style="background-color: #eee;border-top: 2px solid #333;">
+                                        <td>
+                                            <label class="" style="font-weight:bold;">@item.device</label>
+                                        </td>
+                                        <td>
+                                            <label class="" style="font-weight:bold;">@item.plan</label>
+                                        </td>
+                                        <td>
+                                            <label class="" style="font-weight:bold;">@item.orientation</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            <div id="sensordash_@(item.motorId)_@(item.deviceId)" class="sensor-dash" style="height:200px;padding:5px 20px;">
+                                                @{
+                                                    string accXstyle = item.alertaAccX == "Normal" ? "background-color:green;color:white;" :
+                                                        item.alertaAccX == "Atenção" ? "background-color:gold;color:black;" :
+                                                        item.alertaAccX == "Alerta" ? "background-color:crimson;color:white;" : "background-color:lightgray;color: rgba(0, 0, 0, 0);";
+                                                    string accYstyle = item.alertaAccY == "Normal" ? "background-color:green;color:white;" :
+                                                        item.alertaAccY == "Atenção" ? "background-color:gold;color:black;" :
+                                                        item.alertaAccY == "Alerta" ? "background-color:crimson;color:white;" : "background-color:lightgray;color: rgba(0, 0, 0, 0);";
+                                                    string accZstyle = item.alertaAccZ == "Normal" ? "background-color:green;color:white;" :
+                                                        item.alertaAccZ == "Atenção" ? "background-color:gold;color:black;" :
+                                                        item.alertaAccZ == "Alerta" ? "background-color:crimson;color:white;" : "background-color:lightgray;color: rgba(0, 0, 0, 0);";
+                                                    string spdXstyle = item.alertaSpdX == "Normal" ? "background-color:green;color:white;" :
+                                                        item.alertaSpdX == "Atenção" ? "background-color:gold;color:black;" :
+                                                        item.alertaSpdX == "Alerta" ? "background-color:crimson;color:white;" : "background-color:lightgray;color: rgba(0, 0, 0, 0);";
+                                                    string spdYstyle = item.alertaSpdY == "Normal" ? "background-color:green;color:white;" :
+                                                        item.alertaSpdY == "Atenção" ? "background-color:gold;color:black;" :
+                                                        item.alertaSpdY == "Alerta" ? "background-color:crimson;color:white;" : "background-color:lightgray;color: rgba(0, 0, 0, 0);";
+                                                    string spdZstyle = item.alertaSpdZ == "Normal" ? "background-color:green;color:white;" :
+                                                        item.alertaSpdZ == "Atenção" ? "background-color:gold;color:black;" :
+                                                        item.alertaSpdZ == "Alerta" ? "background-color:crimson;color:white;" : "background-color:lightgray;color: rgba(0, 0, 0, 0);";
+                                                }
+
+                                                <div class="row">
+                                                    <div class="col-2" style="text-align:center;">
+                                                        RMS ACC - X <br />
+                                                        <div class="mini-rect" mid="@item.motorId" did="@(item.deviceId)_@(item.device)" tipo="1" eixo="1" style="cursor:pointer;@accXstyle">
+                                                            @(string.IsNullOrEmpty(item.valorAccX) ? item.valorAccX : item.valorAccX.Length <= 4 ? item.valorAccX : item.valorAccX.Substring(0, 4))
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-2" style="text-align:center;">
+                                                        RMS ACC - Y <br />
+                                                        <div class="mini-rect" mid="@item.motorId" did="@(item.deviceId)_@(item.device)" tipo="1" eixo="2" style="cursor:pointer;@accYstyle">
+                                                            @(string.IsNullOrEmpty(item.valorAccY) ? item.valorAccY : item.valorAccY.Length <= 4 ? item.valorAccY : item.valorAccY.Substring(0, 4))
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-2" style="text-align:center;">
+                                                        RMS ACC - Z <br />
+                                                        <div class="mini-rect" mid="@item.motorId" did="@(item.deviceId)_@(item.device)" tipo="1" eixo="3" style="cursor:pointer;@accZstyle">
+                                                            @(string.IsNullOrEmpty(item.valorAccZ) ? item.valorAccZ : item.valorAccZ.Length <= 4 ? item.valorAccZ : item.valorAccZ.Substring(0, 4))
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-2" style="text-align:center;">
+                                                        RMS SPD - X <br />
+                                                        <div class="mini-rect" mid="@item.motorId" did="@(item.deviceId)_@(item.device)" tipo="2" eixo="1" style="cursor:pointer;@spdXstyle">
+                                                            @(string.IsNullOrEmpty(item.valorSpdX) ? item.valorSpdX : item.valorSpdX.Length <= 4 ? item.valorSpdX : item.valorSpdX.Substring(0, 4))
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-2" style="text-align:center;">
+                                                        RMS SPD - Y <br />
+                                                        <div class="mini-rect" mid="@item.motorId" did="@(item.deviceId)_@(item.device)" tipo="2" eixo="2" style="cursor:pointer;@spdYstyle">
+                                                            @(string.IsNullOrEmpty(item.valorSpdY) ? item.valorSpdY : item.valorSpdY.Length <= 4 ? item.valorSpdY : item.valorSpdY.Substring(0, 4))
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-2" style="text-align:center;">
+                                                        RMS SPD - Z <br />
+                                                        <div class="mini-rect" mid="@item.motorId" did="@(item.deviceId)_@(item.device)" tipo="2" eixo="3" style="cursor:pointer;@spdZstyle">
+                                                            @(string.IsNullOrEmpty(item.valorSpdZ) ? item.valorSpdZ : item.valorSpdZ.Length <= 4 ? item.valorSpdZ : item.valorSpdZ.Substring(0, 4))
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row" style="margin-top:30px">
+                                                    <div class="col-3" style="text-align:center;">
+                                                        <a id="fcrista-chart-@item.deviceId" mid="@item.motorId" did="@(item.deviceId)_@(item.device)" class="fcrista" href="#!" style="color:blue;"><i class="fa fa-chart-line fa-4x"></i></a>
+                                                        <br />
+                                                        <label>Fator de Crista</label>
+                                                    </div>
+                                                    <div class="col-3" style="text-align:center;">
+                                                        <a id="stempo-chart-@item.deviceId" mid="@item.motorId" did="@(item.deviceId)_@(item.device)" class="stempo" href="#!" style="color:blueviolet;"><i class="fa fa-chart-line fa-4x"></i></a>
+                                                        <br />
+                                                        <label>Sinal no Tempo</label>
+                                                    </div>
+                                                    <div class="col-3" style="text-align:center;">
+                                                        <a href="#!" style="color:gray;"><i class="fa fa-chart-line fa-4x"></i></a>
+                                                        <br />
+                                                        <label style="color:gray;">FFT</label>
+                                                    </div>
+                                                    <div class="col-3" style="text-align:center;">
+                                                        <a href="#!" style="color:gray;"><i class="fa fa-chart-line fa-4x"></i></a>
+                                                        <br />
+                                                        <label style="color:gray;">Envelope</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+    {
+
+    <script type="text/javascript">
+        var valor_data = [];
+        var ids_dict = [];
+
+        $(window).on('pageshow', function () {
+            $('#preloader').hide();
+        });
+
+        $(document).ready(function () {
+
+            if ($('#AlertStatus').length > 0) {
+                $('#AlertStatusSelect').val($('#AlertStatus').val());
+            }
+
+            $('.mini-rect').click(function(){
+                $('.mini-rect').removeClass('mini-rect-act');
+                $(this).addClass('mini-rect-act');
+            });
+
+            $('#backBtn').click(function () {
+                $('#preloader').fadeIn();
+                window.location.href = '@Url.Action("HomeDashLvl3", "Home")?idSector=' + $('#SectorId').val() + '&idSubSector=' + $('#SubSectorId').val() + '&lvlAlert=' + $('#AlertStatusSelect').val(); 
+            });
+
+            $('#filterBtn').click(function () {
+                let sectorId = $('#SectorId').val();
+                let subsectorId = $('#SubSectorId').val();
+                let sensorLvl = $('#AlertStatusSelect').val();
+
+                $('#preloader').fadeIn();
+                window.location.href = '@Url.Action("HomeDashLvl4", "Home")?idMotor=' + $('#MotorId').val() + '&lvlAlert=' + sensorLvl;
+            });
+
+            $('.mini-rect').click(function () {
+                let tipo = $(this).attr('tipo');
+                let eixo = $(this).attr('eixo');
+                $('#preloader').fadeIn();
+                window.location.href = '@Url.Action("ReportRMSCrista", "Report")?motorId=' + $(this).attr('mid') + '&deviceIdName=' + $(this).attr('did') + '&tipo=' + tipo + '&eixo=' + eixo;
+            });
+            $('.fcrista').click(function () {
+                $('#preloader').fadeIn();
+                window.location.href = '@Url.Action("ReportRMSCrista", "Report")?motorId=' + $(this).attr('mid') + '&deviceIdName=' + $(this).attr('did') + '&tipo=3';
+            });
+            $('.stempo').click(function () {
+                $('#preloader').fadeIn();
+                window.location.href = '@Url.Action("ReportDeviceData", "Report")?dmotorId=' + $(this).attr('mid') + '&deviceIdName=' + $(this).attr('did');
+            });
+
+            $('#CompanyId').bind('change', function () {
+                loadUnitsFromCompany();
+            });
+            $('#UnitId').bind('change', function () {
+                populateMotorSelect('u');
+            });
+            $('#SectorId').bind('change', function () {
+                populateMotorSelect('s');
+            });
+            $('#SubSectorId').bind('change', function () {
+                populateMotorSelect('ss');
+            });
+
+            @if (ViewBag.IdCompany != null)
+            {
+                <text>
+                    $('#CompanyId').val('@ViewBag.IdCompany');
+                    loadUnitsFromCompany();
+                </text>
+            }
+
+            populateMotorSelect('u');
+            populateMotorSelect('s');
+            populateMotorSelect('ss');
+        });
+
+        function loadUnitsFromCompany() {
+            let companyId = $('#CompanyId').val();
+            if (companyId != '') {
+                $('#UnitId option[cid!="' + companyId + '"]').hide();
+                $('#UnitId option[cid="' + companyId + '"]').show();
+
+                $('#SectorId option[cid!="' + companyId + '"]').hide();
+                $('#SectorId option[cid="' + companyId + '"]').show();
+
+                $('#SubSectorId option[cid!="' + companyId + '"]').hide();
+                $('#SubSectorId option[cid="' + companyId + '"]').show();
+            }
+            else {
+                $('#UnitId option').show();
+                $('#SectorId option').show();
+                $('#SubSectorId option').show();
+            }
+
+            $('#UnitId').val('');
+            $('#SectorId').val('');
+            $('#SubSectorId').val('');
+        }
+
+        function populateMotorSelect(filtro) {
+
+            $('#MotorId option').show();
+
+            switch (filtro) {
+                case 'u':
+                    let unitId = $('#UnitId').val();
+                    if (unitId != '') {
+                        $('#MotorId option[uid!="' + unitId + '"]').hide();
+                        $('#MotorId option[uid="' + unitId + '"]').show();
+
+                        $('#SectorId option[uid!="' + unitId + '"]').hide();
+                        $('#SectorId option[uid="' + unitId + '"]').show();
+                    }
+                    else {
+                        $('#SectorId option').show();
+                        $('#SubSectorId option').show();
+                    }
+
+                    $('#SectorId').val('');
+                    $('#SubSectorId').val('');
+
+                    break;
+                case 's':
+                    let sectorId = $('#SectorId').val();
+                    if (sectorId != '') {
+                        $('#MotorId option[sid!="' + sectorId + '"]').hide();
+                        $('#MotorId option[sid="' + sectorId + '"]').show();
+
+                        $('#SubSectorId option[sid!="' + sectorId + '"]').hide();
+                        $('#SubSectorId option[sid="' + sectorId + '"]').show();
+                    }
+                    else {
+                        $('#SubSectorId option').show();
+                        populateMotorSelect('u');
+                    }
+
+                    $('#SubSectorId').val('');
+
+                    break;
+                case 'ss':
+                    let subsectorId = $('#SubSectorId').val();
+                    if (subsectorId != '') {
+                        $('#MotorId option[ssid!="' + subsectorId + '"]').hide();
+                        $('#MotorId option[ssid="' + subsectorId + '"]').show();
+                    }
+                    else
+                        populateMotorSelect('s');
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    </script>
+}

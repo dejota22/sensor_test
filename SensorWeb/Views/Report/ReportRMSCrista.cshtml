@@ -1,4 +1,5 @@
 ﻿@using Core.DTO
+@using System.Security.Claims
 @model Core.DTO.DeviceConfigurationModel
 
 @inject SensorWeb.Resources.CommonLocalizationService localizer
@@ -11,7 +12,7 @@
 
 @{
     Layout = "~/Views/Shared/_Layout_Graficos.cshtml";
-
+    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 
 <style>
@@ -68,12 +69,28 @@
         <div class="row">
 
             <div class="form-group col-md-3">
+                <label class="control-label">Empresa</label>
+                <select id="CompanyId" name="CompanyId" style="" class="form-control main-selects">
+                @*@if (User.IsInRole("Administrador") || User.IsInRole("Sysadmin"))
+                {*@
+                    <option value="">-- Selecione a Empresa --</option>
+                @*}*@
+                
+                        @foreach (var company in (List<Core.Company>)ViewBag.UserCompanies)
+                        {
+                            <option value="@company.Id">@company.LegalName</option>
+                        }
+                </select>
+                <span id="validation-CompanyId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group col-md-3">
                 <label class="control-label">Unidade</label>
                 <select id="UnitId" name="UnitId" style="" class="form-control main-selects">
                     <option value="">-- Selecione a Unidade --</option>
-                    @foreach (var unit in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownList())
+                @foreach (var unit in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownList(userId))
                     {
-                        <option value="@unit.Key">@unit.Value</option>
+                    <option cid="@unit.CompanyId" value="@unit.Key">@unit.Value</option>
                     }
                 </select>
                 <span id="validation-UnitId" class="text-danger"></span>
@@ -82,10 +99,10 @@
             <div class="form-group col-md-3">
                 <label class="control-label">Setor</label>
                 <select id="SectorId" name="SectorId" style="" class="form-control main-selects">
-                    <option value="">-- Selecione a Unidade --</option>
-                    @foreach (var sector in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSector())
+                <option value="">-- Selecione o Setor --</option>
+                    @foreach (var sector in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSector(userId))
                     {
-                        <option uid="@sector.Unit" value="@sector.Key">@sector.Value</option>
+                        <option cid="@sector.CompanyId" uid="@sector.Unit" value="@sector.Key">@sector.Value</option>
                     }
                 </select>
                 <span id="validation-SectorId" class="text-danger"></span>
@@ -94,38 +111,38 @@
             <div class="form-group col-md-3">
                 <label class="control-label">Sub-Setor</label>
                 <select id="SubSectorId" name="SubSectorId" style="" class="form-control main-selects">
-                    <option value="">-- Selecione a Unidade --</option>
-                    @foreach (var subsector in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSubSector())
+                <option value="">-- Selecione o Sub-Setor --</option>
+                    @foreach (var subsector in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSubSector(userId))
                     {
-                        <option uid="@subsector.Unit" sid="@subsector.Sector" value="@subsector.Key">@subsector.Value</option>
+                        <option cid="@subsector.CompanyId" uid="@subsector.Unit" sid="@subsector.Sector" value="@subsector.Key">@subsector.Value</option>
                     }
                 </select>
                 <span id="validation-SubSectorId" class="text-danger"></span>
             </div>
 
-        <div class="form-group col-md-3">
-            <label class="control-label">Equipamento</label>
-            <select id="MotorId" name="MotorId" asp-for="MotorId" style="" class="form-control main-selects">
-                <option value="">-- Selecione a Tag --</option>
-                @foreach (var motor in (List<MotorDropdownModel>)ViewBag.MotorSelect)
-                {
-                    if (motor.IsSelected == false)
-                    {
-                        <option uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id">@motor.Name</option>
-                    }
-                    else
-                    {
-                        <option uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id" selected>@motor.Name</option>
-                    }
-
-                }
-            </select>
-            <span id="validation-MotorId" class="text-danger"></span>
-        </div>
-
         </div>
 
         <div class="row">
+
+            <div class="form-group col-md-3">
+                <label class="control-label">Equipamento</label>
+                <select id="MotorId" name="MotorId" asp-for="MotorId" style="" class="form-control main-selects">
+                    <option value="">-- Selecione a Tag --</option>
+                    @foreach (var motor in (List<MotorDropdownModel>)ViewBag.MotorSelect)
+                    {
+                        if (motor.IsSelected == false)
+                        {
+                            <option uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id">@motor.Name</option>
+                        }
+                        else
+                        {
+                            <option uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id" selected>@motor.Name</option>
+                        }
+
+                    }
+                </select>
+                <span id="validation-MotorId" class="text-danger"></span>
+            </div>
 
             <div class="form-group col-md-3">
                 <label class="control-label">Sensor</label>
@@ -140,31 +157,33 @@
                 </select>
                 <span id="validation-DeviceId" class="text-danger"></span>
             </div>
+
             <div class="form-group col-md-3">
                 <label class="control-label">Data Inicial</label>
                 <input type="date" id="StartDate" name="StartDate" class="form-control" />
                 <span id="validation-StartDate" class="text-danger"></span>
             </div>
+
             <div class="form-group col-md-3">
                 <label class="control-label">Data Final</label>
                 <input type="date" id="EndDate" name="EndDate" class="form-control" />
                 <span id="validation-EndDate" class="text-danger"></span>
             </div>
 
-        <div class="form-group col-md-3">
-            <label class="control-label">Tipo Relatório</label>
-            <select id="TipoRelatorio" name="TipoRelatorio" class="form-control">
-                <option value="">-- Selecione o Tipo --</option>
-                <option value="1">RMS em Aceleração</option>
-                <option value="2">RMS Velocidade</option>
-                <option value="3">Fator de Crista</option>
-            </select>
-            <span id="validation-TipoRelatorio" class="text-danger"></span>
-        </div>
-
         </div>
 
         <div class="row">
+
+            <div class="form-group col-md-3">
+                <label class="control-label">Tipo Relatório</label>
+                <select id="TipoRelatorio" name="TipoRelatorio" class="form-control">
+                    <option value="">-- Selecione o Tipo --</option>
+                    <option value="1">RMS em Aceleração</option>
+                    <option value="2">RMS Velocidade</option>
+                    <option value="3">Fator de Crista</option>
+                </select>
+                <span id="validation-TipoRelatorio" class="text-danger"></span>
+            </div>
 
             <div class="form-group col-md-3">
                 <label class="control-label">Eixo</label>
@@ -252,6 +271,9 @@
                 populateDeviceSelect();
             });
 
+            $('#CompanyId').bind('change', function () {
+                populateMotorSelect('c');
+            });
             $('#UnitId').bind('change', function () {
                 populateMotorSelect('u');
             });
@@ -263,6 +285,7 @@
             });
 
             $('#btn-visualizar').bind('click', function (e) {
+                
                 let deviceId = $('#DeviceId').val();
                 let motorId = $('#MotorId').val();
                 let startDate = $('#StartDate').val();
@@ -272,11 +295,12 @@
 
                 if (deviceId != '' && motorId != '' && startDate != '' && endDate != '' && reportType != '' && eixo != '')
                 {
+                    $('#preloader').fadeIn();
                     switch(reportType)
                     {
                         case '1':
                             color_grafico = 'rgb(51,102,204)';
-                            yaxis_label = 'm/s²';
+                            yaxis_label = 'G';
                             break;
                         case '2':
                             color_grafico = 'rgb(51,102,204)';//'rgb(50,185,109)';
@@ -308,9 +332,66 @@
                         });
 
                         drawGraficos();
+
+                        $('#preloader').fadeOut();
                     });
                 }
             });
+
+            @if (ViewBag.CompanyId != null)
+            {
+                <text>
+                    $('#CompanyId').val('@ViewBag.CompanyId');
+                    populateMotorSelect('c');
+                </text>
+            }
+
+            @if (ViewBag.UnitId != null)
+            {
+                <text>
+                    $('#UnitId').val('@ViewBag.UnitId');
+                    populateMotorSelect('u');
+                </text>
+            }
+
+            @if (ViewBag.SectorId != null)
+            {
+                <text>
+                    $('#SectorId').val('@ViewBag.SectorId');
+                    populateMotorSelect('s');
+                </text>
+            }
+
+            @if (ViewBag.SubSectorId != null)
+            {
+                <text>
+                    $('#SubSectorId').val('@ViewBag.SubSectorId');
+                    populateMotorSelect('ss');
+                </text>
+            }
+
+            @if (ViewBag.MotorId != null)
+            {
+                <text>
+                    $('#MotorId').val('@ViewBag.MotorId');
+                </text>
+            }
+
+            @if (ViewBag.TipoRelatorio != null)
+            {
+                <text>
+                    $('#TipoRelatorio').val('@ViewBag.TipoRelatorio');
+                    populateDateFields();
+                </text>
+            }
+
+            @if (ViewBag.Eixo != null)
+            {
+                <text>
+                    $('#Eixo').val('@ViewBag.Eixo');
+                    trySendForm();
+                </text>
+            }
         });
 
         function populateMotorSelect(filtro) {
@@ -318,6 +399,32 @@
             $('#MotorId option').show();
 
             switch (filtro) {
+                case 'c':
+                    let companyId = $('#CompanyId').val();
+                    if (companyId != '') {
+                        $('#MotorId option[cid!="' + companyId + '"]').hide();
+                        $('#MotorId option[cid="' + companyId + '"]').show();
+
+                        $('#UnitId option[cid!="' + companyId + '"]').hide();
+                        $('#UnitId option[cid="' + companyId + '"]').show();
+
+                        $('#SectorId option[cid!="' + companyId + '"]').hide();
+                        $('#SectorId option[cid="' + companyId + '"]').show();
+
+                        $('#SubSectorId option[cid!="' + companyId + '"]').hide();
+                        $('#SubSectorId option[cid="' + companyId + '"]').show();
+                    }
+                    else {
+                        $('#UnitId option').show();
+                        $('#SectorId option').show();
+                        $('#SubSectorId option').show();
+                    }
+
+                    $('#UnitId').val('');
+                    $('#SectorId').val('');
+                    $('#SubSectorId').val('');
+
+                    break;
                 case 'u':
                     let unitId = $('#UnitId').val();
                     if (unitId != '') {
@@ -379,6 +486,31 @@
             });
         }
 
+        function populateDateFields() {
+            let now = new Date();
+            let day = ("0" + now.getDate()).slice(-2);
+            let dayprev = day;
+            if (day == "31")
+                dayprev = "30";
+
+            let fullYearPrev = now.getFullYear();
+            let monthprev = ("0" + (now.getMonth())).slice(-2);
+            if (monthprev == "00") {
+                monthprev = "12";
+                fullYearPrev = fullYearPrev - 1;
+            }
+            let month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+            let today = now.getFullYear() + "-" + (month) + "-" + (day);
+            let amonthago = fullYearPrev + "-" + (monthprev) + "-" + (dayprev);
+
+            $('#StartDate').val(amonthago);
+            $('#EndDate').val(today);
+        }
+
+        function trySendForm() {
+            $('#btn-visualizar').click();
+        }
 
         function drawGraficos() {
             var options = {

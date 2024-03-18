@@ -34,18 +34,42 @@
                         <span asp-validation-for="Tag" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
-                        <label asp-for="Code" class="control-label"></label>
-                        <input asp-for="Code" class="form-control" />
-                        <span asp-validation-for="Code" class="text-danger"></span>
-                    </div>
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <div class="form-group">
+                            <label asp-for="Code" class="control-label"></label>
+                            <input asp-for="Code" class="form-control" />
+                            <span asp-validation-for="Code" class="text-danger"></span>
+                        </div>
 
-                    <div class="form-group">
-                        <label asp-for="CompanyId" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.CompanyId, new SelectList(Model.Companies, "Key", "Value"),
+                        <div class="form-group">
+                            <label asp-for="CompanyId" class="control-label"></label>
+                            @Html.DropDownListFor(model => model.CompanyId, new SelectList(Model.Companies, "Key", "Value"),
                                               @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
-                        <span asp-validation-for="CompanyId" class="text-danger"></span>
-                    </div>
+                            <span asp-validation-for="CompanyId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">NumeroMudancasSensorEquipamento</label>
+                            <input asp-for="DeviceMotorMaxChanges" class="form-control" />
+                            <span asp-validation-for="DeviceMotorMaxChanges" class="text-danger"></span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <label asp-for="Code" class="control-label"></label>
+                            <input asp-for="Code" class="form-control" readonly />
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="CompanyId" class="control-label"></label>
+                            <input type="text" value="@Model.Company?.LegalName" readonly>
+                            <input asp-for="CompanyId" type="hidden" />
+                            <input asp-for="DeviceMotorId" type="hidden" />
+                        </div>
+                    }
+
                 </div>
                 <div class="col-md-8">
 
@@ -61,7 +85,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row" style="display:none;">
                 <div class="form-group col-md-3" style="display: grid;">
                     <label class="control-label">Frequencia</label>
                     <select name="Frequency" id="Frequency" class="form-control" asp-for="Frequency" style="width:100%">
@@ -127,7 +151,7 @@
                 </div>
            </div>
 
-            <div class="row">
+            <div class="row" style="display:none;">
                 <div class="form-group col-md-3" style="display: grid;">
                     <label class="control-label">Lines</label>
                     <select name="Lines" id="Lines" asp-for="Lines" style="width:100%" class="form-control">
@@ -171,7 +195,7 @@
                 </div>
             </div>
             
-            <div class="row">
+            <div class="row" style="display:none;">
                 <div class="form-group col-md-3" style="display: grid;">
                     <label class="control-label">Bateria</label>
                     <input asp-for="Battery" name="Battery" id="Battery" class="form-control" />
@@ -197,7 +221,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" style="display:none;">
                 <div class="form-group col-md-3" style="display: grid;">
                     <label class="control-label">Global em aceleração</label>
                     <input placeholder="Mínimo mm/s" asp-for="AccelerationMin" name="AccelerationMin" id="AccelerationMin" class="form-control" />
@@ -229,7 +253,10 @@
                     <input type="submit" value="@localizer.Get("Save")" class="btn btn-primary" />
                 </div>
                 <div class="form-group screenCreateControls col-md-6" style="text-align: right;">
-                    <button id="deviceCopyBtn" type="button" class="btn btn-warning">Copiar</button>
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <button id="deviceCopyBtn" type="button" class="btn btn-warning">Copiar</button>
+                    }
                 </div>
                 
             </div>

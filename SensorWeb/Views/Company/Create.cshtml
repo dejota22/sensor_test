@@ -13,7 +13,7 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="col-md-12 formclasscreate">
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-2" style="display:none;">
                 <label asp-for="Id" class="control-label"></label>
                 <input asp-for="Id" class="form-control" readonly />
                 <span asp-validation-for="Id" class="text-danger"></span>
@@ -33,7 +33,8 @@
         <div class="col-md-12 formclasscreate">
             <div class="form-group col-md-2">
                 <label asp-for="Cnpj" class="control-label"></label>
-                <input asp-for="Cnpj" class="form-control" />
+                <input asp-for="Cnpj" minlength="18" class="form-control" oninvalid="this.setCustomValidity('Digite um CNPJ válido')"
+                       oninput="this.setCustomValidity('')"  />
                 <span asp-validation-for="Cnpj" class="text-danger"></span>
             </div>
             <div class="form-group col-md-7">
@@ -66,6 +67,17 @@
 </div>
 
 @section Scripts {
+
+    <script type="text/javascript">
+
+        $(document).ready(function ($) {
+
+            $('#Cnpj').mask("00.000.000/0000-00", { reverse: true });
+
+        });
+
+    </script>
+
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

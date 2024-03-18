@@ -17,6 +17,7 @@ namespace Core.Service
         void Edit(Motor motor);
         int Insert(Motor motor);
         void Remove(int idMotor);
+        string GetRelatedLocks(int idMotor);
 
         #endregion
 

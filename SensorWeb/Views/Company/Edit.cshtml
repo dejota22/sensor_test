@@ -18,8 +18,8 @@
 <div class="row screenCreate">
     <form asp-action="Edit">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="col-md-12 formclasscreate ">
-            <div class="form-group col-md-2">
+        <div class="col-md-12 formclasscreate">
+            <div class="form-group col-md-2" style="display:none;">
                 <label asp-for="Id" class="control-label"></label>
                 <input asp-for="Id" class="form-control" readonly />
                 <span asp-validation-for="Id" class="text-danger"></span>
@@ -35,10 +35,29 @@
                 <span asp-validation-for="TradeName" class="text-danger"></span>
             </div>
         </div>
+
+        @if (User.IsInRole("Administrador"))
+        {
+            <div class="col-md-12 formclasscreate">
+                <div class="form-group col-md-5">
+                    <label class="control-label">NumeroMudancasSensorEquipamento</label>
+                    <input asp-for="DeviceMotorMaxChanges" class="form-control" />
+                    <span asp-validation-for="DeviceMotorMaxChanges" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-12 formclasscreate">
+                <div class="form-group col-md-5">
+                    <label class="control-label">HoraEnvioDadoVikings</label>
+                    <input asp-for="VikingsSendDataTime" class="form-control horatype" placeholder="HH:MM" onblur="validateTimeInput(this)" />
+                </div>
+            </div>
+        }
+
         <div class="col-md-12 formclasscreate ">
             <div class="form-group col-md-2">
                 <label asp-for="Cnpj" class="control-label"></label>
-                <input asp-for="Cnpj" class="form-control" />
+                <input asp-for="Cnpj" minlength="18" class="form-control" oninvalid="this.setCustomValidity('Digite um CNPJ válido')"
+                       oninput="this.setCustomValidity('')" />
                 <span asp-validation-for="Cnpj" class="text-danger"></span>
             </div>
             <div class="form-group col-md-7 ">
@@ -55,7 +74,7 @@
                 <div class="form-group col-md-6" style=" display: grid;">
                     <label asp-for="CompanyTypeId" class="control-label"></label>
                     @Html.DropDownListFor(model => model.CompanyTypeId,
-                    new SelectList(Model.CompanyType, "Key", "Value")
+                    new SelectList(Model.CompanyType, "Key", "Value", Model.CompanyTypeId)
                     , @localizer.Get("CompanyTypeSelect"), new Dictionary<string, object> { { "class", "form-control" } })
                     <span asp-validation-for="CompanyTypeId" class="text-danger"></span>
                 </div>
@@ -167,6 +186,20 @@
         function abrirContatoModal() {
             $('#form-modal').modal('show');
         }
+
+        $(document).ready(function ($) {
+
+            $('#Cnpj').mask("00.000.000/0000-00", { reverse: true });
+            $('.horatype').mask("00:00", { reverse: true });
+
+            $('.horatype').bind('change', function () {
+                let thisVal = $(this).val();
+                let regex = /^([01][0-9]|2[0-3]):[0-5][0-9]$/;
+                if (!regex.test(thisVal)) {
+                    $(this).val('');
+                }
+            });
+        });
 
     </script>
 

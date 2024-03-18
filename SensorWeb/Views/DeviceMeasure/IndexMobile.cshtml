@@ -1,0 +1,1206 @@
+﻿@using Core.DTO
+@using System.Security.Claims
+@model Core.DTO.DeviceConfigurationModel
+
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+
+@inject Core.Service.IDeviceMeasureService deviceMeasureService
+@inject Core.Service.IMotorService motorService
+@inject Core.Service.IDeviceService deviceService
+@inject Core.Service.ICompanyService companyService
+@inject Core.Service.ICompanyUnitService unitService
+
+@{
+    Layout = "~/Views/Shared/_Layout_Mobile.cshtml";
+    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+
+<h4 style="text-align:center">Configuração Sensor</h4>
+<hr />
+<div class="container">
+
+    <form asp-action="Index" method="post">
+
+        <input type="hidden" name="IsMobile" id="IsMobile" value="@true.ToString()" />
+
+        <div class="row">
+
+            <div class="form-group col-md-12">
+                <input type="submit" value="Configurar Sensor" class="btn btn-primary" />
+                <input type="hidden" id="isEdit" name="isEdit" value="@Model.isEdit.ToString()" />
+                <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+            </div>
+
+            <div class="form-group col-md-12">
+                @if (Model.Id != 0)
+                {
+                    <button type="button" class="btn btn-warning" style="" onclick="javascript:abrirCopyConfigModal();">Copiar Configurações</button>
+                }
+                else if (Model.Id == 0)
+                {
+                    <button type="button" class="btn btn-secondary" style="" disabled>Copiar Configurações</button>
+                }
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label class="control-label">Código do Sensor </label>
+                <input value="@Model.codigoSensor" list="codigoSensor" name="codigoSensor" class="form-control" autocomplete="off" />
+                <datalist id="codigoSensor">
+                    @foreach(string code in ViewBag.AllCodes)
+                    {
+                        <option value="@code">@code</option>
+                    }
+                </datalist>
+                <span asp-validation-for="codigoSensor" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-2">
+                <br />
+                <input id="sensor-search" type="button" value="Pesquisar" class="btn btn-info" />
+            </div>
+            @*@if (Model.Id == 0 && Model.codigoSensor != null)
+            {
+                <div class="form-group col-md-6">
+                    <br />
+                    <span style="color:crimson;">Não há Configuração para o código informado</span>
+                </div>
+            }*@
+        </div>
+
+        @if (Model.DeviceId != null || Model.codigoSensor != null)
+        {
+            <div class="row desc-row">
+                <div class="form-group col-md-4">
+                    <label class="control-label">Unidade: </label>
+                    <input type="text" asp-for="unitName" id="unitName" name="unitName" value="@Model.unitName" class="form-control" readonly />
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="sectorName" class="control-label">Setor: </label>
+                    <input type="text" asp-for="sectorName" id="sectorName" name="sectorName" value="@Model.sectorName" class="form-control" readonly />
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="subSectorName" class="control-label">Sub-Setor: </label>
+                    <input type="text" asp-for="subSectorName" id="subSectorName" name="subSectorName" value="@Model.subSectorName" class="form-control" readonly />
+                </div>
+            </div>
+
+            <div class="row desc-row">
+                <div class="form-group col-md-4">
+                    <label class="control-label">Máquina: </label>
+                    <input type="text" asp-for="motorName" id="motorName" name="motorName" value="@Model.motorName" class="form-control" readonly />
+                    <input type="hidden" asp-for="MotorId" id="MotorId" name="MotorId" value="@Model.MotorId" />
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="DeviceId" class="control-label">Sensor: </label>
+                    <input type="text" asp-for="deviceTag" id="deviceTag" name="deviceTag" value="@Model.deviceTag" class="form-control" readonly />
+                    <input type="hidden" asp-for="DeviceId" id="DeviceId" name="DeviceId" value="@Model.DeviceId" />
+                </div>
+            </div>
+        }
+
+        
+
+        <nav>
+            <div class="nav nav-tabs" id="deviceTab" role="tablist">
+
+                <a class="nav-item nav-link active" id="config-tab" data-toggle="tab" href="#config" role="tab" aria-controls="config" aria-selected="true">Medições</a>
+                <a class="nav-item nav-link" id="tempo-tab" data-toggle="tab" href="#tempo" role="tab" aria-controls="tempo" aria-selected="false">Configuração Análises</a>
+                <a class="nav-item nav-link" id="limites-tab" data-toggle="tab" href="#limites" role="tab" aria-controls="limites" aria-selected="false">Alarmes</a>
+                @if (User.IsInRole("Administrador"))
+                {
+                    <a class="nav-item nav-link" id="lora-tab" data-toggle="tab" href="#lora" role="tab" aria-controls="lora" aria-selected="false">Lora</a>
+                }
+                <a class="nav-item nav-link" id="old-tab" data-toggle="tab" href="#old" role="tab" aria-controls="old" aria-selected="false" style="display:none;">OLD</a>
+
+            </div>
+        </nav>
+
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="tab-content" id="deviceTabContent">
+
+            <div class="tab-pane fade show active" id="config" role="tabpanel" aria-labelledby="config-tab">
+
+                <div class="row">
+                    <div class="card" style="">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Configuração Aceleração</h6>
+                            <div class="row">
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">Taxa de Aquisição (Fa)</label>
+                                    <select name="acc_odr" id="acc_odr" style="width:100%" asp-for="acc_odr" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">26K</option>
+                                        <option value="1">3K3</option>
+                                        <option value="2">1K6</option>
+                                        <option value="3">1K1</option>
+                                        <option value="4">0K8</option>
+                                    </select>
+                                    <span asp-validation-for="acc_odr" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">Frequência Máxima (Fmax)</label>
+                                    <select name="acc_freq_cut" id="acc_freq_cut" style="width:100%" asp-for="acc_freq_cut" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">6K6</option>
+                                        <option value="1">2K6</option>
+                                        <option value="2">1K3</option>
+                                        <option value="3">0K5</option>
+                                        <option value="4">0K2</option>
+                                        <option value="5">0K1</option>
+                                        <option value="6">K67</option>
+                                    </select>
+                                    <span asp-validation-for="acc_freq_cut" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">Tipo de Filtro</label>
+                                    <select name="acc_filtro" id="acc_filtro" style="width:100%" asp-for="acc_filtro" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">Filtro Passa Baixas (FPB)</option>
+                                        <option value="1">Filtro Passa Altas (FPA)</option>
+                                    </select>
+                                    <span asp-validation-for="acc_filtro" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">Direção de Medição</label>
+                                    <select name="acc_eixo" id="acc_eixo" style="width:100%" asp-for="acc_eixo" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="1">X</option>
+                                        <option value="2">Y</option>
+                                        <option value="3">Z</option>
+                                        <option value="4">XY</option>
+                                        <option value="5">XZ</option>
+                                        <option value="6">YZ</option>
+                                        <option value="7">XYZ</option>
+                                    </select>
+                                    <span asp-validation-for="acc_eixo" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">Fundo de Escala [g]</label>
+                                    <select name="acc_fs" id="acc_fs" style="width:100%" asp-for="acc_fs" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">02G</option>
+                                        <option value="1">16G</option>
+                                        <option value="2">04G</option>
+                                        <option value="3">08G</option>
+                                        <option value="4">AUTO</option>
+                                    </select>
+                                    <span asp-validation-for="acc_fs" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">Quantidade de Amostras (N)</label>
+                                    <select name="acc_amostras" id="acc_amostras" style="width:100%" asp-for="acc_amostras" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="1">1024</option>
+                                        <option value="2">2048</option>
+                                        <option value="3">3072</option>
+                                        <option value="4">4096</option>
+                                        <option value="5">5120</option>
+                                        <option value="6">6144</option>
+                                        <option value="7">7168</option>
+                                        <option value="8">8192</option>
+                                    </select>
+                                    <span asp-validation-for="acc_amostras" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="card" style="">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Configuração Velocidade</h6>
+                            <div class="row">
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">Taxa de Aquisição (Fa)</label>
+                                    <select name="spd_odr" id="spd_odr" style="width:100%" asp-for="spd_odr" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">26K</option>
+                                        <option value="1">3K3</option>
+                                        <option value="2">1K6</option>
+                                        <option value="3">1K1</option>
+                                        <option value="4">0K8</option>
+                                    </select>
+                                    <span asp-validation-for="spd_odr" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">Frequência Máxima (Fmax)</label>
+                                    <select name="spd_freq_cut" id="spd_freq_cut" style="width:100%" asp-for="spd_freq_cut" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">6K6</option>
+                                        <option value="1">2K6</option>
+                                        <option value="2">1K3</option>
+                                        <option value="3">0K5</option>
+                                        <option value="4">0K2</option>
+                                        <option value="5">0K1</option>
+                                        <option value="6">K67</option>
+                                    </select>
+                                    <span asp-validation-for="spd_freq_cut" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">Tipo de Filtro</label>
+                                    <select name="spd_filtro" id="spd_filtro" style="width:100%" asp-for="spd_filtro" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">Filtro Passa Baixas (FPB)</option>
+                                        <option value="1">Filtro Passa Altas (FPA)</option>
+                                    </select>
+                                    <span asp-validation-for="spd_filtro" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">Direção de Medição</label>
+                                    <select name="spd_eixo" id="spd_eixo" style="width:100%" asp-for="spd_eixo" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="1">X</option>
+                                        <option value="2">Y</option>
+                                        <option value="3">Z</option>
+                                        <option value="4">XY</option>
+                                        <option value="5">XZ</option>
+                                        <option value="6">YZ</option>
+                                        <option value="7">XYZ</option>
+                                    </select>
+                                    <span asp-validation-for="spd_eixo" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">Fundo de Escala [g]</label>
+                                    <select name="spd_fs" id="spd_fs" style="width:100%" asp-for="spd_fs" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">02G</option>
+                                        <option value="1">16G</option>
+                                        <option value="2">04G</option>
+                                        <option value="3">08G</option>
+                                        <option value="4">AUTO</option>
+                                    </select>
+                                    <span asp-validation-for="spd_fs" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">Quantidade de Amostras (N)</label>
+                                    <select name="spd_amostras" id="spd_amostras" style="width:100%" asp-for="spd_amostras" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="1">1024</option>
+                                        <option value="2">2048</option>
+                                        <option value="3">3072</option>
+                                        <option value="4">4096</option>
+                                        <option value="5">5120</option>
+                                        <option value="6">6144</option>
+                                        <option value="7">7168</option>
+                                        <option value="8">8192</option>
+                                    </select>
+                                    <span asp-validation-for="spd_amostras" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="card" style="">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Configuração Usuário</h6>
+                            <input type="hidden" id="isEditUserSetup" name="isEditUserSetup" value="False" />
+                            <div class="row">
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">Taxa de Aquisição (Fa)</label>
+                                    <select name="usr_odr" id="usr_odr" style="width:100%" asp-for="usr_odr" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">26K</option>
+                                        <option value="1">3K3</option>
+                                        <option value="2">1K6</option>
+                                        <option value="3">1K1</option>
+                                        <option value="4">0K8</option>
+                                    </select>
+                                    <span asp-validation-for="usr_odr" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">Frequência Máxima (Fmax)</label>
+                                    <select name="usr_freq_cut" id="usr_freq_cut" style="width:100%" asp-for="usr_freq_cut" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">6K6</option>
+                                        <option value="1">2K6</option>
+                                        <option value="2">1K3</option>
+                                        <option value="3">0K5</option>
+                                        <option value="4">0K2</option>
+                                        <option value="5">0K1</option>
+                                        <option value="6">K67</option>
+                                    </select>
+                                    <span asp-validation-for="usr_freq_cut" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">Tipo de Filtro</label>
+                                    <select name="usr_filtro" id="usr_filtro" style="width:100%" asp-for="usr_filtro" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">FPB</option>
+                                        <option value="1">FPA</option>
+                                    </select>
+                                    <span asp-validation-for="usr_filtro" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">Direção de Medição</label>
+                                    <select name="usr_eixo" id="usr_eixo" style="width:100%" asp-for="usr_eixo" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="1">X</option>
+                                        <option value="2">Y</option>
+                                        <option value="3">Z</option>
+                                        <option value="4">XY</option>
+                                        <option value="5">XZ</option>
+                                        <option value="6">YZ</option>
+                                        <option value="7">XYZ</option>
+                                    </select>
+                                    <span asp-validation-for="usr_eixo" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">Fundo de Escala [g]</label>
+                                    <select name="usr_fs" id="usr_fs" style="width:100%" asp-for="usr_fs" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="0">02G</option>
+                                        <option value="1">16G</option>
+                                        <option value="2">04G</option>
+                                        <option value="3">08G</option>
+                                        <option value="4">AUTO</option>
+                                    </select>
+                                    <span asp-validation-for="usr_fs" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    <label class="control-label">Quantidade de Amostras (N)</label>
+                                    <select name="usr_amostras" id="usr_amostras" style="width:100%" asp-for="usr_amostras" class="form-control">
+                                        <option value="" selected disabled hidden>Selecionar</option>
+                                        <option value="1">1024</option>
+                                        <option value="2">2048</option>
+                                        <option value="3">3072</option>
+                                        <option value="4">4096</option>
+                                        <option value="5">5120</option>
+                                        <option value="6">6144</option>
+                                        <option value="7">7168</option>
+                                        <option value="8">8192</option>
+                                    </select>
+                                    <span asp-validation-for="usr_amostras" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-3" style="display: grid;">
+                                    @if (User.IsInRole("Administrador") || User.IsInRole("Supervisor"))
+                                    {
+                                        <label class="control-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                        <input id="btnEditUserSetup" type="button" value="Configuração Leitura Especial" class="btn btn-sm btn-primary" />
+                                    }
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="tab-pane fade" id="tempo" role="tabpanel" aria-labelledby="tempo-tab">
+
+                <div class="row">
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">
+                            Modo de Atuação <i class="fa fa-info-circle" title="Se o funcionamento do Sensor será Contínuo: Atuação por contagem de minutos ou Modo Hora: Horários Agendados"></i>
+                        </label>
+                        <select name="modo_hora" id="modo_hora" style="width:100%" asp-for="modo_hora" class="form-control" onchange="modoContinuoFunc();">
+                            <option value="" selected disabled hidden>Selecionar</option>
+                            <option value="1">Modo Hora - 1</option>
+                            <option value="0">Modo Contínuo - 0</option>
+                        </select>
+                        <span asp-validation-for="modo_hora" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">Qtde Análises Para Envio <i class="fa fa-info-circle" title="Contador de análises efetuadas para envio de relatório de Globais"></i></label>
+                        <input value="@Model.conta_envios" asp-for="conta_envios" name="conta_envios" id="conta_envios" class="form-control" />
+                        <span asp-validation-for="conta_envios" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">Dias de Operação <i class="fa fa-info-circle" title="Dias em que o Sensor funcionará"></i></label>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <button class="btn btn-sm btn-outline-primary btn-dias_run" id="btn-dias_run1" type="button" value="Domingo">D</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dias_run" id="btn-dias_run2" type="button" value="Segunda">S</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dias_run" id="btn-dias_run3" type="button" value="Terça">T</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dias_run" id="btn-dias_run4" type="button" value="Quarta">Q</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dias_run" id="btn-dias_run5" type="button" value="Quinta">Q</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dias_run" id="btn-dias_run6" type="button" value="Sexta">S</button>
+                            <button class="btn btn-sm btn-outline-primary btn-dias_run" id="btn-dias_run7" type="button" value="Sábado">S</button>
+                        </div>
+                        <input type="hidden" id="dias_run" name="dias_run" value="@(Model.dias_run != null ? Model.dias_run : "________")" />
+                        <span asp-validation-for="dias_run" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3 modo-field" style="display: grid;">
+                        <label class="control-label">Início de Turno <i class="fa fa-info-circle" title="Horário de inicio da operação do Sensor"></i></label>
+                        <input type="time" value="@Model.inicio_turno" step="0" asp-for="inicio_turno" name="inicio_turno" id="inicio_turno" class="form-control" />
+                            <span asp-validation-for="inicio_turno" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-3 modo-field" style="display: grid;">
+                        <label class="control-label">Fim de Turno <i class="fa fa-info-circle" title="Horário de fim da operação do Sensor"></i></label>
+                        <input type="time" value="@Model.fim_turno" step="0" asp-for="fim_turno" name="fim_turno" id="fim_turno" class="form-control" />
+                        <span asp-validation-for="fim_turno" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">Intervalo de Análise (Minutos) <i class="fa fa-info-circle" title="Intervalo de análise em minutos para ocorrência de uma análise de valores globais"></i></label>
+                            <input value="@Model.intervalo_analise" asp-for="intervalo_analise" name="intervalo_analise" id="intervalo_analise" class="form-control" />
+                            <span asp-validation-for="intervalo_analise" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">Intervalo de Análise em Alarme (Minutos) <i class="fa fa-info-circle" title="Intervalo de análise em minutos na condição de alarme para ocorrência de uma análise de valores globais"></i></label>
+                            <input value="@Model.intervalo_analise_alarme" asp-for="intervalo_analise_alarme" name="intervalo_analise_alarme" id="intervalo_analise_alarme" class="form-control" />
+                            <span asp-validation-for="intervalo_analise_alarme" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">Quantidade Leituras Alarme <i class="fa fa-info-circle" title="Quantidade de ocorrências em alarme para confirmar a condição de alarme"></i></label>
+                            <input value="@Model.quant_alarme" asp-for="quant_alarme" name="quant_alarme" id="quant_alarme" class="form-control" />
+                        <span asp-validation-for="quant_alarme" class="text-danger"></span>
+                    </div>
+                </div>
+
+                    <div class="row">
+                    <div class="form-group col-md-3 modo-field" style="display: grid;">
+                        <label class="control-label">Quantidade Horários de Análise (Máx 12) <i class="fa fa-info-circle" title="Quantidade de Horários em que devem ocorrer as análises para valores Globais"></i></label>
+                            <input value="@Model.quant_horarios_cards" asp-for="quant_horarios_cards" name="quant_horarios_cards" id="quant_horarios_cards" class="form-control" />
+                            <span asp-validation-for="quant_horarios_cards" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">Dias Envio Relatório Completo <i class="fa fa-info-circle" title="Dias de envio de Relatório Completo (Sinal no Tempo)"></i></label>
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="btn-dia_envio_relat1" type="button" value="Domingo">D</button>
+                                <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="btn-dia_envio_relat2" type="button" value="Segunda">S</button>
+                                <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="btn-dia_envio_relat3" type="button" value="Terça">T</button>
+                                <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="btn-dia_envio_relat4" type="button" value="Quarta">Q</button>
+                                <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="btn-dia_envio_relat5" type="button" value="Quinta">Q</button>
+                                <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="btn-dia_envio_relat6" type="button" value="Sexta">S</button>
+                                <button class="btn btn-sm btn-outline-primary btn-dia_envio_relat" id="btn-dia_envio_relat7" type="button" value="Sábado">S</button>
+                            </div>
+                            <input type="hidden" id="dia_envio_relat" name="dia_envio_relat" value="@(Model.dia_envio_relat != null ? Model.dia_envio_relat : "________")" />
+                            <span asp-validation-for="dia_envio_relat" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">Horário Envio Relatório Completo <i class="fa fa-info-circle" title="Horário de envio de Relatório Completo(Sinal no Tempo)"></i></label>
+                            <input type="time" value="@Model.hora_envio_relat" step="0" asp-for="hora_envio_relat" name="hora_envio_relat" id="hora_envio_relat" class="form-control" />
+                            <span asp-validation-for="hora_envio_relat" class="text-danger"></span>
+                        </div>
+                        @*<div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">t_card_normal</label>
+                        <input value="@Model.t_card_normal" asp-for="t_card_normal" name="t_card_normal" id="t_card_normal" class="form-control" />
+                        <span asp-validation-for="t_card_normal" class="text-danger"></span>
+                        </div>*@
+                    </div>
+
+                    <div class="row">
+                        <div class="card" style="">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Horários Leituras <i class="fa fa-info-circle" title="Horários em que devem ocorrer as análises para valores Globais"></i></h6>
+                                <div class="row horas-row" >
+
+                                    @if (Model.DeviceConfigurationHorariosEnviosCard != null)
+                                {
+                                    int i = 0;
+                                    foreach (var hora in Model.DeviceConfigurationHorariosEnviosCard)
+                                    {
+
+                                        <div class="form-group col-md-3 form-hora-item">
+                                            <input type="time" value="@(hora.Hora != null ? hora.Hora.Substring(0,5) : "")" step="0"
+                                                   asp-for="DeviceConfigurationHorariosEnviosCard[@i].Hora"
+                                                   name="DeviceConfigurationHorariosEnviosCard[@i].Hora"
+                                                   id="DeviceConfigurationHorariosEnviosCard[@i].Hora" class="form-control" />
+                                            <input type="hidden" value="@hora.Id" asp-for="DeviceConfigurationHorariosEnviosCard[@i].Id"
+                                                   name="DeviceConfigurationHorariosEnviosCard[@i].Id" 
+                                                   id="DeviceConfigurationHorariosEnviosCard[@i].Id" />
+                                        </div>
+
+                                        i++;
+                                    }
+                                }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+
+            <div class="tab-pane fade" id="limites" role="tabpanel" aria-labelledby="limites-tab">
+
+                <div class="row">
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">RMS Aceleração - Atenção <i class="fa fa-info-circle" title="Limite inferior da zona de severidade amarela"></i></label>
+                        <input type="text" value="@(Model.rms_acc_yel.HasValue ? Model.rms_acc_yel.Value.ToString("0.00") : "")" asp-for="rms_acc_yel" name="rms_acc_yel" id="rms_acc_yel" class="form-control decimal-field aa-field" />
+                        <span asp-validation-for="rms_acc_yel" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">RMS Aceleração - Alerta <i class="fa fa-info-circle" title="Limite inferior da zona de severidade vermelha"></i></label>
+                        <input type="text" value="@(Model.rms_acc_red.HasValue ? Model.rms_acc_red.Value.ToString("0.00") : "")" asp-for="rms_acc_red" name="rms_acc_red" id="rms_acc_red" class="form-control decimal-field aa-field" />
+                        <span asp-validation-for="rms_acc_red" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">Valor Mínimo Máquina Operante <i class="fa fa-info-circle" title="Menor valor considerado para identificação de máquina em funcionamento"></i></label>
+                        <input type="text" min="0" value="@(Model.min_rms_acc.HasValue ? Model.min_rms_acc.Value.ToString("0.00") : "")" asp-for="min_rms_acc" name="min_rms_acc" id="min_rms_acc" class="form-control decimal-field" />
+                        <span asp-validation-for="min_rms_acc" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">Máximo Variação para Alarme (%) <i class="fa fa-info-circle" title="Definição do alarme critico em função da variação brusca em porcentagem"></i></label>
+                        <input type="number" min="0" max="100" value="@Model.max_var" asp-for="max_var" name="max_var" id="max_var" class="form-control" />
+                        <span asp-validation-for="max_var" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">RMS Velocidade - Atenção <i class="fa fa-info-circle" title="Limite inferior da zona de severidade amarela"></i></label>
+                        <input type="text" value="@(Model.rms_spd_yel.HasValue ? Model.rms_spd_yel.Value.ToString("0.00") : "")" asp-for="rms_spd_yel" name="rms_spd_yel" id="rms_spd_yel" class="form-control decimal-field aa-field" />
+                        <span asp-validation-for="rms_spd_yel" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">RMS Velocidade - Alerta <i class="fa fa-info-circle" title="Limite inferior da zona de severidade vermelha"></i></label>
+                        <input type="text" value="@(Model.rms_spd_red.HasValue ? Model.rms_spd_red.Value.ToString("0.00") : "")" asp-for="rms_spd_red" name="rms_spd_red" id="rms_spd_red" class="form-control decimal-field aa-field" />
+                        <span asp-validation-for="rms_spd_red" class="text-danger"></span>
+                    </div>
+                </div>
+
+                
+
+            </div>
+
+            <div class="tab-pane fade" id="lora" role="tabpanel" aria-labelledby="lora-tab">
+
+                <div class="row">
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">Canal </label>
+                        <input type="number" min="0" value="@Model.canal" asp-for="canal" name="canal" id="canal" class="form-control" readonly="readonly" />
+                        <span asp-validation-for="canal" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">Spread Factor</label>
+                        <input type="number" min="0" value="@Model.sf" asp-for="sf" name="sf" id="sf" class="form-control" readonly="readonly" />
+                        <span asp-validation-for="sf" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">Band Width</label>
+                        <input type="number" min="0" value="@Model.bw" asp-for="bw" name="bw" id="bw" class="form-control" readonly="readonly" />
+                        <span asp-validation-for="bw" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">Endereço</label>
+                        <input type="number" min="0" value="@Model.end" asp-for="end" name="end" id="end" class="form-control" readonly="readonly" />
+                        <span asp-validation-for="end" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">Gateway</label>
+                        <input type="number" min="0" value="@Model.gtw" asp-for="gtw" name="gtw" id="gtw" class="form-control" />
+                        <span asp-validation-for="gtw" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">Sincronismo</label>
+                        <input type="number" min="0" value="@Model.syn" asp-for="syn" name="syn" id="syn" class="form-control" readonly="readonly" />
+                        <span asp-validation-for="syn" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">Potência de Transmissão</label>
+
+                        <select name="pwr" id="pwr" class="form-control" asp-for="pwr" style="width:100%">
+                            <option value="20">5</option>
+                            <option value="26">6</option>
+                            <option value="32">7</option>
+                            <option value="38">8</option>
+                            <option value="44">9</option>
+                            <option value="50">10</option>
+                            <option value="56">11</option>
+                            <option value="62">12</option>
+                            <option value="68">13</option>
+                            <option value="74">14</option>
+                            <option value="80">15</option>
+                            <option value="86">16</option>
+                            <option value="92">17</option>
+                        </select>
+                        <span asp-validation-for="pwr" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="tab-pane fade" id="old" role="tabpanel" aria-labelledby="old-tab">
+
+                <div class="row">
+                    <div class="col-md-12 pl-0 pr-0" style="display:flex">
+                        <div class="col-md-12 pl-0 pr-0">
+                            
+                                
+                                <div class="row">
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Frequencia</label>
+                                        <select name="Frequency" id="Frequency" class="form-control" asp-for="Frequency" style="width:100%">
+                                            <option value="">Selecionar</option>
+                                            <option value="15">15Hz</option>
+                                            <option value="20">20Hz</option>
+                                            <option value="25">25Hz</option>
+                                            <option value="30">30Hz</option>
+                                            <option value="35">35Hz</option>
+                                            <option value="40">40Hz</option>
+                                            <option value="45">45Hz</option>
+                                            <option value="50">50Hz</option>
+                                            <option value="55">55Hz</option>
+                                            <option value="60">60Hz</option>
+                                            <option value="65">65Hz</option>
+                                        </select>
+                                        <span asp-validation-for="Frequency" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">BDR</label>
+                                        <select name="Bdr" id="Bdr" class="form-control" asp-for="Bdr" style="width:100%">
+                                            <option value="">Selecionar</option>
+                                            <option value="52">52Hz</option>
+                                            <option value="104">104Hz</option>
+                                            <option value="208">208Hz</option>
+                                            <option value="417">417Hz</option>
+                                            <option value="833">833Hz</option>
+                                            <option value="1.667">1.667Hz</option>
+                                            <option value="3.333">3.333Hz</option>
+                                            <option value="6.667">6.667Hz</option>
+                                            <option value="13.333">13.333Hz</option>
+                                            <option value="26.667">26.667Hz</option>
+                                        </select>
+                                        <span asp-validation-for="Bdr" class="text-danger"></span>
+                                    </div>                            <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">CutOff</label>
+                                        <select name="Cutoff" id="Cutoff" class="form-control" asp-for="Cutoff" style="width:100%">
+                                            <option value="">Selecionar</option>
+                                            <option value="6.667">6.667Hz</option>
+                                            <option value="2.667">2.667Hz</option>
+                                            <option value="1.333">1.333Hz</option>
+                                            <option value="593">593Hz</option>
+                                            <option value="267">267Hz</option>
+                                            <option value="133">133Hz</option>
+                                            <option value="67">67Hz</option>
+                                            <option value="33">33Hz</option>
+                                        </select>
+                                        <span asp-validation-for="Cutoff" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">LPF</label>
+                                        <select name="Lpf" id="Lpf" style="width:100%" asp-for="Lpf" class="form-control">
+                                            <option value="">Selecionar</option>
+                                            <option value="1">HPF - High Pass Filter </option>
+                                            <option value="2">LPF - Low Pass Filter</option>
+                                            <option value="3">LPF + LPF2_Off</option>
+                                        </select>
+                                        <span asp-validation-for="Lpf" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Lines</label>
+                                        <select name="Lines" id="Lines" asp-for="Lines" style="width:100%" class="form-control">
+                                            <option value="">Selecionar</option>
+                                            <option value="512">512</option>
+                                            <option value="1024">1024</option>
+                                            <option value="2048">2048</option>
+                                            <option value="3456">3456</option>
+                                            <option value="4096">4096</option>
+                                            <option value="6144">6144</option>
+                                            <option value="8192">8192</option>
+                                            <option value="10240">10240</option>
+                                            <option value="16384">16384</option>
+                                            <option value="30080">30080</option>
+                                        </select>
+                                        <span asp-validation-for="Lines" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Eixos</label>
+                                        <select name="Axies" id="Axies" asp-for="Axies" style="width:100%" class="form-control">
+                                            <option value="">Selecionar</option>
+                                            <option value="1">Eixo X</option>
+                                            <option value="2">Eixo Y</option>
+                                            <option value="3">Eixo Z</option>
+                                            <option value="4">Eixos X Y Z</option>
+                                        </select>
+                                        <span asp-validation-for="Axies" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Temperatura</label>
+                                        <input value="" asp-for="Temperature" name="Temperature" id="Temperature" class="form-control" />
+                                        <span asp-validation-for="Temperature" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">RMS</label>
+                                        <input value="0 g" asp-for="Rms" id="Rms" name="Rms" class="form-control" />
+                                        <span asp-validation-for="Rms" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Bateria</label>
+                                        <input value="100%" asp-for="Battery" name="Battery" id="Battery" class="form-control" />
+                                        <span asp-validation-for="Battery" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Timer</label>
+                                        <input placeholder="Horas" asp-for="Hours" id="Hours" name="Hours" class="form-control" />
+                                        <span asp-validation-for="Hours" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Global em velocidade</label>
+                                        <input placeholder="Mínimo mm/s" asp-for="VelocityMin" id="VelocityMin" name="VelocityMin" class="form-control" />
+                                        <span asp-validation-for="VelocityMin" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Global em velocidade</label>
+                                        <input placeholder="Máximo mm/s" asp-for="VelocityMax" id="VelocityMin" name="VelocityMax" class="form-control" />
+                                        <span asp-validation-for="VelocityMax" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Global em aceleração</label>
+                                        <input placeholder="Mínimo mm/s" asp-for="AccelerationMin" name="AccelerationMin" id="AccelerationMin" class="form-control" />
+                                        <span asp-validation-for="AccelerationMin" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Global em aceleração</label>
+                                        <input placeholder="Máximo mm/s" asp-for="AccelerationMax" id="AccelerationMax" name="AccelerationMax" class="form-control" />
+                                        <span asp-validation-for="AccelerationMax" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Fator de Crista</label>
+                                        <input placeholder="Mínimo mm/s" asp-for="CrestFactorMin" id="CrestFactorMin" name="CrestFactorMin" class="form-control" />
+                                        <span asp-validation-for="CrestFactorMin" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-3" style="display: grid;">
+                                        <label class="control-label">Fator de Crista</label>
+                                        <input placeholder="Máximo mm/s" asp-for="CrestFactorMax" id="CrestFactorMax" name="CrestFactorMax" class="form-control" />
+                                        <span asp-validation-for="CrestFactorMax" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="form-group screenCreateControls col-md-6">
+                <a href="@Url.Action("ActionQR", "Device")?dCode=@Model.codigoSensor" class="btn btn-primary">@localizer.Get("BackToList")</a>
+            </div>
+
+        </div>
+
+    </form>
+    
+
+
+</div>
+
+
+<div class="modal fade" id="copyConfigModal" tabindex="-1" role="dialog" aria-labelledby="copyConfigModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="copyConfigModalLabel">Copiar Configurações</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Informe Equipamento e Sensor para enviar as configurações: <br /><br />
+
+                <div class="row">
+
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Unidade</label>
+                        <select id="UnitId" name="UnitId" style="" class="form-control main-selects">
+                            <option value="">-- Selecione a Unidade --</option>
+                            @foreach (var unit in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownList(userId))
+                            {
+                                <option value="@unit.Key">@unit.Value</option>
+                            }
+                        </select>
+                        <span id="validation-UnitId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Setor</label>
+                        <select id="SectorId" name="SectorId" style="" class="form-control main-selects">
+                            <option value="">-- Selecione o Setor --</option>
+                            @foreach (var sector in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSector(userId))
+                            {
+                                <option uid="@sector.Unit" value="@sector.Key">@sector.Value</option>
+                            }
+                        </select>
+                        <span id="validation-SectorId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Sub-Setor</label>
+                        <select id="SubSectorId" name="SubSectorId" style="" class="form-control main-selects">
+                            <option value="">-- Selecione o Sub-Setor --</option>
+                            @foreach (var subsector in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSubSector(userId))
+                            {
+                                <option uid="@subsector.Unit" sid="@subsector.Sector" value="@subsector.Key">@subsector.Value</option>
+                            }
+                        </select>
+                        <span id="validation-SubSectorId" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <div class="row mb-3">
+                    <div class="form-group col-md-6">
+                        <label class="control-label">Equipamento</label>
+                        <select id="CopyToMotorId" name="CopyToMotorId" style="" class="form-control copy-selects">
+                            <option value="">-- Selecione a Tag --</option>
+                            @foreach (var motor in (List<MotorDropdownModel>)ViewBag.MotorSelect)
+                            {
+                                if (motor.IsSelected == false)
+                                {
+                                    <option uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id">@motor.Name</option>
+                                }
+                                else
+                                {
+                                    <option uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id" selected>@motor.Name</option>
+                                }
+
+                            }
+                        </select>
+                        <span asp-validation-for="MotorId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="control-label">Sensor</label>
+                        <select id="CopyToDeviceId" name="CopyToDeviceId" style="" class="form-control copy-selects">
+                            <option value="">-- Selecione o Sensor --</option>
+                            @if ((KeyValuePair<int?, string>?)ViewBag.DeviceSelect != null)
+                            {
+                                var deviceSelect = (KeyValuePair<int?, string>)ViewBag.DeviceSelect;
+
+                                <option value="@deviceSelect.Key.Value" selected>@deviceSelect.Value</option>
+                            }
+                        </select>
+                        <span asp-validation-for="DeviceId" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary close" type="button" data-dismiss="modal">Cancelar</button>
+                <button id="btnCopyConfig" type="button" class="btn btn-primary">Copiar Configurações</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $('#deviceTab a').on('click', function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+
+        $('.btn-dias_run').on('click', function () {
+            if ($(this).hasClass('active') == false)
+                $(this).addClass('active');
+            else
+                $(this).removeClass('active');
+
+            $('#dias_run').val(setDaysField('#btn-dias_run'));
+        });
+
+        $('.btn-dia_envio_relat').on('click', function () {
+            if ($(this).hasClass('active') == false)
+                $(this).addClass('active');
+            else
+                $(this).removeClass('active');
+
+            $('#dia_envio_relat').val(setDaysField('#btn-dia_envio_relat'));
+        });
+
+        $('#sensor-search').on('click', function (e) {
+            let codeToSearch = $('input[name=codigoSensor]').val();
+            if (codeToSearch != '') {
+                if ($("#codigoSensor option[value='" + codeToSearch + "']").length > 0) {
+                    document.location.href = '@Url.Action("IndexMobile")' + '?codeAttempt=' + $('input[name=codigoSensor]').val();
+                }
+            }
+        });
+
+        $('.aa-field').blur(function () {
+            let alertAcc = $('#rms_acc_red').val();
+            let attentionAcc = $('#rms_acc_yel').val();
+            let alertSpd = $('#rms_spd_red').val();
+            let attentionSpd = $('#rms_spd_yel').val();
+            $('#' + $(this).attr('id') + '_val').html('');
+
+            let alertMsg = '';
+            switch ($(this).attr('id')) {
+                case "rms_acc_red":
+                case "rms_spd_red":
+                    alertMsg = '"Alerta" deve ser maior ou igual a "Atenção"';
+                    break;
+                case "rms_acc_yel":
+                case "rms_spd_yel":
+                    alertMsg = '"Atenção" deve ser menor ou igual a "Alerta"';
+                    break;
+                default:
+                    break;
+            }
+
+            if (alertAcc != '' && attentionAcc != '') {
+                let numAlertAcc = Number(alertAcc);
+                let numAttentionAcc = Number(attentionAcc);
+                if (numAlertAcc < numAttentionAcc) {
+                    $(this).val('');
+                    $('#' + $(this).attr('id') + '_val').html(alertMsg);
+                }
+                    
+            }
+            if (alertSpd != '' && attentionSpd != '') {
+                let numAlertSpd = Number(alertSpd);
+                let numAttentionSpd = Number(attentionSpd);
+                if (numAlertSpd < numAttentionSpd) {
+                    $(this).val('');
+                    $('#' + $(this).attr('id') + '_val').html(alertMsg);
+                }
+
+            }
+        });
+
+        setDaysControl('#btn-dias_run', $('#dias_run').val());
+        setDaysControl('#btn-dia_envio_relat', $('#dia_envio_relat').val());
+
+        $('#quant_horarios_cards').blur(function () {
+            let quantVal = Number($('#quant_horarios_cards').val());
+            let quantAtual = $('.form-hora-item').length;
+
+            if (quantAtual < quantVal) {
+                let horasGroup = '';
+                for (let i = quantAtual; i < quantVal; i++) {
+                    let horaItem = '<div class="form-group col-md-3 form-hora-item">' +
+                        '<input type="time" value="" step="0" asp-for="DeviceConfigurationHorariosEnviosCard[' + i + '].Hora" name="DeviceConfigurationHorariosEnviosCard[' + i + '].Hora" id="DeviceConfigurationHorariosEnviosCard[' + i + '].Hora" class="form-control" />' +
+                        '</div>';
+
+                    horasGroup += horaItem;
+                }
+
+                $('.horas-row').append($(horasGroup));
+            }
+            else {
+                $(".form-hora-item:nth-last-child(-n+" + (quantAtual - quantVal) + ")").remove();
+            }
+
+        });
+
+        $('#btnEditUserSetup').on('click', function () {
+            $('#isEditUserSetup').val('True');
+            $('form').submit();
+        });
+
+        $('#btnCopyConfig').on('click', function () {
+            let toMotor = $('#CopyToMotorId').val();
+            let toDevice = $('#CopyToDeviceId').val();
+
+            if (toMotor != '' && toDevice != '') {
+
+                $.get('@Url.Content("~/DeviceMeasure/GetExistingConfig")?idMotor=' + toMotor + '&idDevice=' + toDevice, function (data) {
+                    if (data.exists == false) {
+                        let toDeviceCode = $('#CopyToDeviceId option:selected').text().split(" - ")[0];
+
+                        $('#MotorId').val(toMotor);
+                        $('#DeviceId').val(toDevice);
+                        $('#codigoSensor').val(toDeviceCode);
+
+                        $('form').attr('action', '@Url.Action("Copy")');
+                        $('form').submit();
+                    }
+                    else
+                    {
+                        alert('Já existe uma configuração para o Sensor selecionado.')
+                    }
+                });
+
+                
+            }
+
+        });
+
+        $('#CopyToMotorId').bind('change', function () {
+            populateDeviceSelect();
+        });
+
+        $('button.close').on('click', function () {
+            $('#copyConfigModal').modal('hide');
+        });
+
+        $('#UnitId').bind('change', function () {
+            populateMotorSelect('u');
+        });
+        $('#SectorId').bind('change', function () {
+            populateMotorSelect('s');
+        });
+        $('#SubSectorId').bind('change', function () {
+            populateMotorSelect('ss');
+        });
+
+        function populateMotorSelect(filtro) {
+
+            $('#CopyToMotorId option').show();
+
+            switch (filtro) {
+                case 'u':
+                    let unitId = $('#UnitId').val();
+                    if (unitId != '') {
+                        $('#CopyToMotorId option[uid!="' + unitId + '"]').hide();
+                        $('#CopyToMotorId option[uid="' + unitId + '"]').show();
+
+                        $('#SectorId option[uid!="' + unitId + '"]').hide();
+                        $('#SectorId option[uid="' + unitId + '"]').show();
+                    }
+                    else {
+                        $('#SectorId option').show();
+                        $('#SubSectorId option').show();
+                    }
+
+                    $('#SectorId').val('');
+                    $('#SubSectorId').val('');
+
+                    break;
+                case 's':
+                    let sectorId = $('#SectorId').val();
+                    if (sectorId != '') {
+                        $('#CopyToMotorId option[sid!="' + sectorId + '"]').hide();
+                        $('#CopyToMotorId option[sid="' + sectorId + '"]').show();
+
+                        $('#SubSectorId option[sid!="' + sectorId + '"]').hide();
+                        $('#SubSectorId option[sid="' + sectorId + '"]').show();
+                    }
+                    else {
+                        $('#SubSectorId option').show();
+                        populateMotorSelect('u');
+                    }
+
+                    $('#SubSectorId').val('');
+
+                    break;
+                case 'ss':
+                    let subsectorId = $('#SubSectorId').val();
+                    if (subsectorId != '') {
+                        $('#CopyToMotorId option[ssid!="' + subsectorId + '"]').hide();
+                        $('#CopyToMotorId option[ssid="' + subsectorId + '"]').show();
+                    }
+                    else
+                        populateMotorSelect('s');
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function populateDeviceSelect() {
+            let masterMotor = $('#MotorId').val();
+            let masterDevice = $('#DeviceId').val();
+            let deviceSelect = $('#CopyToDeviceId');
+            let motorId = $('#CopyToMotorId').val();
+            deviceSelect.find('option').not(':first').remove();
+
+            $.post('@Url.Content("~/Device/GetDeviceByMotorId")', { mId: motorId }, function (data) {
+                $.each(data, function () {
+                    if (masterDevice != this.id)
+                        deviceSelect.append($("<option />").val(this.id).text(this.tag));
+                });
+            });
+        }
+
+        function setDaysField(idPart) {
+            let diasRunString = '_';
+
+            if ($(idPart + '7').hasClass('active'))
+                diasRunString += 'S';
+            else
+                diasRunString += '_';
+
+            if ($(idPart + '6').hasClass('active'))
+                diasRunString += 'S';
+            else
+                diasRunString += '_';
+
+            if ($(idPart + '5').hasClass('active'))
+                diasRunString += 'Q';
+            else
+                diasRunString += '_';
+
+            if ($(idPart + '4').hasClass('active'))
+                diasRunString += 'Q';
+            else
+                diasRunString += '_';
+
+            if ($(idPart + '3').hasClass('active'))
+                diasRunString += 'T';
+            else
+                diasRunString += '_';
+
+            if ($(idPart + '2').hasClass('active'))
+                diasRunString += 'S';
+            else
+                diasRunString += '_';
+
+            if ($(idPart + '1').hasClass('active'))
+                diasRunString += 'D';
+            else
+                diasRunString += '_';
+
+            return diasRunString;
+        }
+
+        function setDaysControl(controlIdPart, fieldString) {
+            let revFieldString = fieldString.split("").reverse().join("");
+            for (var i = 0; i < revFieldString.length; i++) {
+                let currChar = revFieldString.charAt(i);
+                if (['D', 'S', 'T', 'Q'].includes(currChar)) {
+                    $(controlIdPart + (i + 1)).addClass('active');
+                }
+            }
+        }
+
+        function modoContinuoFunc() {
+            if ($('#modo_hora').val() == '0') {
+                $('#inicio_turno').val('');
+                $('#fim_turno').val('');
+                $('#quant_horarios_cards').val('');
+                $('.modo-field').hide();
+            } else {
+                $('.modo-field').show();
+            }
+            
+        }
+
+        function abrirCopyConfigModal() {
+            $('#copyConfigModal').modal('show');
+        }
+
+        $(document).ready(function ($) {
+            $('.decimal-field').mask("000000.00", { reverse: true });
+        });
+
+    </script>
+}
+

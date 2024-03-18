@@ -11,8 +11,14 @@ namespace Core.ApiModel.Request
         [JsonProperty("id")]
         public string Id { get; set; }
 
-        [JsonProperty("versao")]
-        public string versao { get; set; }
+        [JsonProperty("RSSI")]
+        public int RSSI { get; set; }
+
+        [JsonProperty("data_hora")]
+        public string data_hora { get; set; }
+
+        [JsonProperty("ver")]
+        public string ver { get; set; }
 
         [JsonProperty("seq")]
         public int seq { get; set; }
@@ -20,32 +26,32 @@ namespace Core.ApiModel.Request
         [JsonProperty("resets")]
         public int resets { get; set; }
 
-        [JsonProperty("leituras_efetuadas")]
-        public int leituras_efetuadas { get; set; }
+        [JsonProperty("card_lidos")]
+        public int card_lidos { get; set; }
 
-        [JsonProperty("q_cards_enviados")]
-        public int q_cards_enviados { get; set; }
+        [JsonProperty("card_send")]
+        public int card_send { get; set; }
 
-        [JsonProperty("q_relats_enviados")]
-        public int q_relats_enviados { get; set; }
+        [JsonProperty("relat_send")]
+        public int relat_send { get; set; }
 
         [JsonProperty("relat_erros")]
         public int relat_erros { get; set; }
 
-        [JsonProperty("setup_acc")]
-        public List<SetupAcc> setup_acc { get; set; }
+        [JsonProperty("setup_bf")]
+        public List<SetupAcc> setup_bf { get; set; }
 
-        [JsonProperty("setup_spd")]
-        public List<SetupSpd> setup_spd { get; set; }
+        [JsonProperty("setup_af")]
+        public List<SetupSpd> setup_af { get; set; }
 
-        [JsonProperty("FreqFine")]
-        public double FreqFine { get; set; }
+        [JsonProperty("freq")]
+        public double freq { get; set; }
 
         [JsonProperty("temp")]
         public double temp { get; set; }
 
-        [JsonProperty("alarme")]
-        public int alarme { get; set; }
+        [JsonProperty("alrm")]
+        public int alrm { get; set; }
 
         [JsonProperty("rms_acc_X")]
         public double rms_acc_X { get; set; }

@@ -24,7 +24,8 @@ namespace SensorService
         private IQueryable<Motor> GetQuery()
         {
             IQueryable<Motor> tb_Motor = _context.Motor;
-            var query = tb_Motor.Include(d => d.MotorDevices).Include(d => d.Motors).Include(d => d.Sector);
+            var query = tb_Motor.Include(d => d.Company).Include(d => d.MotorDevices).Include(d => d.Motors)
+                .Include(d => d.Sector).ThenInclude(d => d.CompanyUnit).Include(d => d.Sector.ParentSector);
 
             return query;
         }
@@ -133,6 +134,34 @@ namespace SensorService
             var _Motor = _context.Motor.Find(idMotor);
             _context.Remove(_Motor);
             _context.SaveChanges();
+        }
+
+        string IMotorService.GetRelatedLocks(int idMotor)
+        {
+            string locks = "";
+
+            var devices1 = _context.Device.Where(d => d.DeviceMotor.MotorId == idMotor);
+            var deviceConfigs = _context.DeviceConfiguration.Where(d => d.MotorId == idMotor);
+
+            if (devices1.Any())
+            {
+                locks += "pelos sensores: ";
+                locks += string.Join(",", devices1.Select(c => c.Tag));
+            }
+            if (deviceConfigs.Any())
+            {
+                if (devices1.Any() == false)
+                    locks += "pelos sensores: ";
+                else
+                    locks += ", ";
+
+                var devices2Ids = deviceConfigs.Select(d => d.DeviceId);
+                var devices2 = _context.Device.Where(d => devices2Ids.Any(id => id == d.Id));
+
+                locks += string.Join(",", devices2.Select(d => d.Tag));
+            }
+
+            return $"Este equipamento não pode ser removido. Ele é usado {locks}";
         }
 
         #endregion

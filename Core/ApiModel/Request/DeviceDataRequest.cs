@@ -11,6 +11,9 @@ namespace Core.ApiModel.Request
         [JsonProperty("id")]
         public string Id { get; set; }
 
+        [JsonProperty("data_hora")]
+        public string data_hora { get; set; }
+
         [JsonProperty("seq")]
         public int seq { get; set; }
 

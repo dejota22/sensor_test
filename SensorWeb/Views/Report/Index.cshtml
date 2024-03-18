@@ -1,4 +1,5 @@
 ﻿@using Core.DTO
+@using System.Security.Claims
 @model ReportModel
 
 @inject SensorWeb.Resources.CommonLocalizationService localizer
@@ -8,6 +9,7 @@
 
 @{
     Layout = "~/Views/Shared/_Layout_Graficos.cshtml";
+    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 
 <style>
@@ -66,31 +68,42 @@
     <div class="row form-group">
         <div class="row">
             <div class="col-sm-8">
+                <div class="row">
+                    <div class="col-sm border">
+                        <select id="CompanyId" name="CompanyId" style="width:100%;" class="">
+                            <option value="">-- Selecione a Empresa --</option>
+                            @foreach (var company in (List<Core.Company>)ViewBag.UserCompanies)
+                            {
+                                <option value="@company.Id">@company.LegalName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
                 <div class="row" style="margin-bottom:5px;">
                     <div class="col-sm border">
                         <select id="UnitId" name="UnitId" style="width:200px;" class="">
                             <option value="">-- Selecione a Unidade --</option>
-                            @foreach (var unit in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownList())
+                            @foreach (var unit in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownList(userId))
                             {
-                                <option value="@unit.Key">@unit.Value</option>
+                                <option cid="@unit.CompanyId" value="@unit.Key">@unit.Value</option>
                             }
                         </select>
                     </div>
                     <div class="col-sm border">
                         <select id="SectorId" name="SectorId" style="width:200px;" class="">
-                            <option value="">-- Selecione a Unidade --</option>
-                            @foreach (var sector in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSector())
+                            <option value="">-- Selecione o Setor --</option>
+                            @foreach (var sector in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSector(userId))
                             {
-                                <option uid="@sector.Unit" value="@sector.Key">@sector.Value</option>
+                                <option cid="@sector.CompanyId" uid="@sector.Unit" value="@sector.Key">@sector.Value</option>
                             }
                         </select>
                     </div>
                     <div class="col-sm border">
                         <select id="SubSectorId" name="SubSectorId" style="width:200px;" class="">
-                            <option value="">-- Selecione a Unidade --</option>
-                            @foreach (var subsector in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSubSector())
+                            <option value="">-- Selecione o Sub-Setor --</option>
+                            @foreach (var subsector in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSubSector(userId))
                             {
-                                <option uid="@subsector.Unit" sid="@subsector.Sector" value="@subsector.Key">@subsector.Value</option>
+                                <option cid="@subsector.CompanyId" uid="@subsector.Unit" sid="@subsector.Sector" value="@subsector.Key">@subsector.Value</option>
                             }
                         </select>
                     </div>
@@ -106,11 +119,11 @@
                             {
                                 if (motor.IsSelected == false)
                                 {
-                                    <option uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id">@motor.Name</option>
+                                    <option cid="@motor.CompanyId" uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id">@motor.Name</option>
                                 }
                                 else
                                 {
-                                    <option uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id" selected>@motor.Name</option>
+                                    <option cid="@motor.CompanyId" uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id" selected>@motor.Name</option>
                                 }
 
                             }
@@ -401,6 +414,9 @@
                 }
             });
 
+            $('#CompanyId').bind('change', function () {
+                populateMotorSelect('c');
+            });
             $('#UnitId').bind('change', function () {
                 populateMotorSelect('u');
             });
@@ -418,6 +434,13 @@
             $('#DataDeviceId').change(function () {
                 $('#DataDeviceIdName').val($("#DataDeviceId option:selected").text());
             });
+
+            @if (ViewBag.CompanyId != null)
+            {
+                <text>
+                    $('#CompanyId').val('@ViewBag.CompanyId');
+                </text>
+            }
 
             @if (ViewBag.UnitId != null)
             {
@@ -446,6 +469,32 @@
             $('#MotorId option').show();
 
             switch (filtro) {
+                case 'c':
+                    let companyId = $('#CompanyId').val();
+                    if (companyId != '') {
+                        $('#MotorId option[cid!="' + companyId + '"]').hide();
+                        $('#MotorId option[cid="' + companyId + '"]').show();
+
+                        $('#UnitId option[cid!="' + companyId + '"]').hide();
+                        $('#UnitId option[cid="' + companyId + '"]').show();
+
+                        $('#SectorId option[cid!="' + companyId + '"]').hide();
+                        $('#SectorId option[cid="' + companyId + '"]').show();
+
+                        $('#SubSectorId option[cid!="' + companyId + '"]').hide();
+                        $('#SubSectorId option[cid="' + companyId + '"]').show();
+                    }
+                    else {
+                        $('#UnitId option').show();
+                        $('#SectorId option').show();
+                        $('#SubSectorId option').show();
+                    }
+
+                    $('#UnitId').val('');
+                    $('#SectorId').val('');
+                    $('#SubSectorId').val('');
+
+                    break;
                 case 'u':
                     let unitId = $('#UnitId').val();
                     if (unitId != '') {

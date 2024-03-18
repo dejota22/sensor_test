@@ -6,6 +6,7 @@ using Core.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
 using SensorService;
 using SensorWeb.Models;
@@ -18,13 +19,16 @@ using static QRCoder.PayloadGenerator.SwissQrCode;
 
 namespace SensorWeb.Controllers
 {
-    [Authorize(Roles = Constants.Roles.Administrator + "," + Constants.Roles.Supervisor)]
+    [Authorize(Roles = Constants.Roles.Administrator + "," + Constants.Roles.Supervisor + "," + Constants.Roles.Sysadmin + "," + Constants.Roles.User)]
     public class UnitController : BaseController
     {
         ICompanyService _companyService;
         ICompanyUnitService _companyUnitService;
+        IDeviceService _deviceService;
         IUserService _userService;
         ICompanyAlertContactService _companyAlertContactService;
+        IMotorService _motorService;
+        IReceiveService _receiveService;
         IMapper _mapper;
         private readonly IStringLocalizer<Resources.CommonResources> _localizer;
 
@@ -36,15 +40,21 @@ namespace SensorWeb.Controllers
         /// <param name="localizer"></param>
         public UnitController(ICompanyService companyService,
                                   ICompanyUnitService companyUnitService,
+                                  IDeviceService deviceService,
                                   IUserService userService,
                                   ICompanyAlertContactService companyAlertContactService,
+                                  IMotorService motorService,
+                                  IReceiveService receiveService,
                                   IMapper mapper,
                                   IStringLocalizer<Resources.CommonResources> localizer)
         {
             _companyService = companyService;
             _companyUnitService = companyUnitService;
             _companyAlertContactService = companyAlertContactService;
+            _deviceService = deviceService;
             _userService = userService;
+            _motorService = motorService;
+            _receiveService = receiveService;
             _mapper = mapper;
             _localizer = localizer;
         }
@@ -54,13 +64,12 @@ namespace SensorWeb.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _userService.Get(Convert.ToInt32(userId));
-
+            var companies = _companyService.GetAll();
+            var supContacts = _userService.GetAll().Where(u => u.UserTypeId == 3 || u.UserTypeId == 4)
+                    .Select(u => u.Contact);
             var listaCompanyUnit = _companyUnitService.GetAll();
 
-            if (user.UserType.Name != Constants.Roles.Administrator)
-            {
-                listaCompanyUnit = listaCompanyUnit.Where(x => x.Company.ParentCompanyId == user.Contact.CompanyId);
-            }
+            listaCompanyUnit = FilterUnitsByUser(user, listaCompanyUnit, companies, supContacts);
 
             var listaCompanyModel = _mapper.Map<List<CompanyUnitModel>>(listaCompanyUnit);
 
@@ -127,7 +136,7 @@ namespace SensorWeb.Controllers
                     var companyUnit = _companyUnitService.Get(id);
                     companyUnit.CompanyId = CompanyUnitModel.CompanyId;
                     companyUnit.Name = CompanyUnitModel.Name;
-                    companyUnit.Company = _companyService.Get(companyUnit.Id);
+                    companyUnit.Company = _companyService.Get(CompanyUnitModel.CompanyId);
 
                     _companyUnitService.Edit(companyUnit);
                 }
@@ -180,7 +189,7 @@ namespace SensorWeb.Controllers
         {
 
             var hasNamed = _companyUnitService.GetSectorByName(name)
-                .Where(s => s.ParentSectorId == parentSector).Any();
+                .Where(s => s.CompanyUnitId == unitId && s.ParentSectorId == parentSector).Any();
 
             if (hasNamed)
                 return Json(new { success = false, msg = "Não é possível cadastrar. Já existe um setor cadastrado com o mesmo nome." });
@@ -209,7 +218,7 @@ namespace SensorWeb.Controllers
             var unit = _companyUnitService.Get(uId);
             var mainsectors = new List<CompanyUnitSector>();
 
-            if (unit.CompanyUnitSector != null)
+            if (unit?.CompanyUnitSector != null)
                 mainsectors = unit.CompanyUnitSector.Where(s => s.ParentSectorId == null)
                     .Select(s => new CompanyUnitSector() { Id = s.Id, Name = s.Name }).ToList();
 

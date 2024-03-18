@@ -18,6 +18,10 @@
 <script>
 
     $('body').ready(function () {
+
+        $('input').attr('readonly','readonly');
+        $('select').attr('disabled', 'disabled');
+
         hideGroups();
         aFunc($("#TypeId").val());
 
@@ -54,6 +58,8 @@
         $(".bombagroup").hide();
         $(".ventiladorgroup").hide();
         $(".compressorgroup").hide();
+        $(".resfriamentogroup").hide();
+        $(".geradorgroup").hide();
     }
 
     //$(document).on('load', '#TypeId', function () {
@@ -77,6 +83,8 @@
         $(".bombagroup").hide();
         $(".ventiladorgroup").hide();
         $(".compressorgroup").hide();
+        $(".resfriamentogroup").hide();
+        $(".geradorgroup").hide();
     }
 
     function aFunc(typeId) {
@@ -120,6 +128,14 @@
 
         if (typeId == 9) {
             $(".compressorgroup").show();
+        }
+
+        if (typeId == 10) {
+            $(".resfriamentogroup").show();
+        }
+
+        if (typeId == 11) {
+            $(".geradorgroup").show();
         }
     }
 
@@ -198,40 +214,40 @@
             @*<label for="input1" class="col-sm-2 labelbox motorgroup">
             <span class="h6 small bg-white text-muted pt-1 pl-2 pr-2 pb-1">@localizer.Get("EletricMotor")</span>
             </label>*@
-            <div class="mt-n3 motorgroup" id="input1" style="padding-top: 10px; ">
+            <div class="mt-n3" id="input1" style="padding-top: 10px; ">
 
                 @*Motor Eletrico*@
                 <div class="col-md-12 formclasscreate ">
 
-                    <div class="form-group col-md-3" style="display: grid;">
+                    <div class="form-group col-md-3 motorgroup" style="display: grid;">
                         <label asp-for="MachineId" class="control-label"></label>
                         @Html.DropDownListFor(model => model.MachineId, new SelectList(machineService.GetQueryDropDownList(), "Key", "Value"),
                         @localizer.Get("MachineSelect"), new Dictionary<string, object> { { "class", "form-control" } })
                         <span asp-validation-for="MachineId" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md-2 motorgroup redutorgroup bombagroup ventiladorgroup compressorgroup resfriamentogroup geradorgroup">
                         <label asp-for="Name" class="control-label"></label>
                         <input asp-for="Name" class="form-control" />
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md-2 motorgroup resfriamentogroup geradorgroup">
                         <label asp-for="Description" class="control-label"></label>
                         <input asp-for="Description" class="form-control" />
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md-2 motorgroup resfriamentogroup geradorgroup">
                         <label asp-for="Tag" class="control-label"></label>
                         <input asp-for="Tag" class="form-control" />
                         <span asp-validation-for="Tag" class="text-danger"></span>
                     </div>
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md-2 motorgroup">
                         <label asp-for="Manufacturer" class="control-label"></label>
                         <input asp-for="Manufacturer" class="form-control" />
                         <span asp-validation-for="Manufacturer" class="text-danger"></span>
                     </div>
-                    <div class="form-group  col-md-1">
+                    <div class="form-group  col-md-1 motorgroup">
                         <label asp-for="Carcase" class="control-label"></label>
                         <input asp-for="Carcase" class="form-control" />
                         <span asp-validation-for="Carcase" class="text-danger"></span>
@@ -241,7 +257,7 @@
                 </div>
 
                 @*Motor Eletrico*@
-                <div class="col-md-12 formclasscreate">
+                <div class="col-md-12 formclasscreate motorgroup">
 
                     <div class="form-group col-md-1">
                         <label asp-for="CvPotency" class="control-label"></label>
@@ -300,7 +316,7 @@
                 </div>
 
                 @*Motor Eletrico*@
-                <div class="col-md-12 formclasscreate">
+                <div class="col-md-12 formclasscreate motorgroup">
 
                     <div class="form-group col-md-1">
                         <label asp-for="Pf" class="control-label"></label>
@@ -327,7 +343,7 @@
 
 
                 @*Motor Eletrico*@
-                <div class="col-md-12 formclasscreate">
+                <div class="col-md-12 formclasscreate motorgroup">
                     <div class="form-group col-md-6" style="display: grid;">
                         <label asp-for="FixationTypeId" class="control-label"></label>
                         @Html.DropDownListFor(model => model.FixationTypeId, new SelectList(fixationService.GetQueryDropDownList(), "Key", "Value"),

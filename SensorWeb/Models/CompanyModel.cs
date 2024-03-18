@@ -40,7 +40,11 @@ namespace SensorWeb.Models
         public DateTime UpdatedAt { get; set; }
 
         public DateTime? DeletedAt { get; set; }
-       
+
+        public int? DeviceMotorMaxChanges { get; set; }
+
+        public string VikingsSendDataTime { get; set; }
+
         public virtual string UpdatedAtSt { get { return UpdatedAt.ToShortDateString(); } }
     }
 }

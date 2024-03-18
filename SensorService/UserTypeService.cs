@@ -4,6 +4,7 @@ using System.Linq;
 using Core;
 using Core.DTO;
 using Core.Service;
+using Microsoft.EntityFrameworkCore;
 
 namespace SensorService
 {
@@ -62,7 +63,9 @@ namespace SensorService
                          select new SelectListItemDTO()
                          {
                              Key = userType.Id,
-                             Value = userType.Name
+                             Value = userType.Name == "Administrador" ? "Superuser" :
+                                userType.Name == "Sysadmin" ? "Administrador" : 
+                                userType.Name == "Usuário" ? "Analista" : userType.Name,
                          }).Distinct().ToList();
 
             return query;
@@ -128,6 +131,33 @@ namespace SensorService
         List<SelectListItemDTO> IUserTypeService.GetQueryDropDownList()
         {
             return GetQueryDropDownList();
+        }
+
+        List<SelectListItemDTO> IUserTypeService.GetQueryDropDownListStrict(string userId)
+        {
+            var user = _context.User.Include(u => u.Contact).FirstOrDefault(u => u.Id == Convert.ToInt32(userId));
+
+            IQueryable<UserType> tb_userType = _context.UserType;
+            var query = tb_userType.ToList();
+
+            if (user.UserTypeId == 4)
+            {
+                query = query.Where(t => t.Name == "Supervisor" || t.Name == "Usuário").ToList();
+            }
+            else if (user.UserTypeId == 3)
+            {
+                query = query.Where(t => t.Name == "Usuário").ToList();
+            }
+
+            var select = query.Select(t => new SelectListItemDTO()
+            {
+                Key = t.Id,
+                Value = t.Name == "Administrador" ? "Superuser" :
+                t.Name == "Sysadmin" ? "Administrador" :
+                t.Name == "Usuário" ? "Analista" : t.Name,
+            }).Distinct().ToList();
+
+            return select;
         }
     }
 }

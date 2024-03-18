@@ -24,5 +24,6 @@ namespace Core
 
         public virtual ICollection<Machine> Machine { get; set; }
         public virtual ICollection<CompanyUnitSector> SubSectors { get; set; }
+        public virtual ICollection<Motor> Motors { get; set; }
     }
 }

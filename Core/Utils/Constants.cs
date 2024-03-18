@@ -9,6 +9,7 @@ namespace Core.Utils
         public static class Roles
         {
             public const string Administrator = "Administrador";
+            public const string Sysadmin = "Sysadmin";
             public const string Supervisor = "Supervisor";
             public const string User = "Usuário";
         }

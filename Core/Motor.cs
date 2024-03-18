@@ -112,6 +112,8 @@ namespace Core
 
         public bool IsGrouping { get; set; }
 
+        public virtual Company Company { get; set; }
+
         public virtual Motor Group { get; set; }
 
         public virtual CompanyUnitSector Sector { get; set; }

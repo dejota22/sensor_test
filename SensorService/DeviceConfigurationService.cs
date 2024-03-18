@@ -132,6 +132,7 @@ namespace SensorService
                     {
                         var sectorId = device.DeviceMotor?.Motor.SectorId;
 
+                        config.companyName = device.Company?.TradeName;
                         config.MotorId = motorId;
                         config.motorName = device.DeviceMotor?.Motor.Name;
                         config.DeviceId = device.Id;

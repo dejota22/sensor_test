@@ -1,0 +1,55 @@
+﻿@model IEnumerable<MotorModel>
+
+@inject SensorWeb.Resources.CommonLocalizationService localizer
+
+@{
+    Layout = "~/Views/Shared/_Layout_Mobile.cshtml";
+}
+
+<div class="page-title">
+    <h3 class="breadcrumb-header">Equipamentos</h3>
+</div>
+
+
+<div id="main-wrapper">
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="card card-white">
+
+                <div class="card-body">
+                    @foreach (var item in Model)
+                    {
+                        @if (User.IsInRole("Sysadmin") || User.IsInRole("Administrador") || User.IsInRole("Supervisor"))
+                        {
+                            <div class="col-md-12" style="text-align:center;margin-bottom:20px;">
+                                <a href="@Url.Action("EditMobile", "Motor", new { id = item.Id, mdc = ViewBag.DeviceCode })" class="btn btn-primary"
+                                   style="color:white;font-weight:bold;width: 250px;">
+                                    @item.Name
+                                </a>
+                            </div>
+                        }
+                        @*else
+                        {
+                            <div class="col-md-12" style="text-align:center;margin-bottom:20px;">
+                                <a href="@Url.Action("Details", "Motor", new { id = item.Id })" class="btn btn-primary"
+                                   style="color:white;font-weight:bold;width: 250px;">
+                                    @item.Name
+                                </a>
+                            </div>
+                        }*@
+                    }
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- end page main wrapper -->
+<div class="page-footer">
+    <p>IotNest/Vibração &copy; <span class="current-year"></span>. Conteúdo de uso exclusivo.</p>
+</div>

@@ -1,6 +1,11 @@
-﻿@model SensorWeb.Models.DeviceModel
+﻿@using System.Security.Claims
+@model SensorWeb.Models.DeviceModel
 @inject SensorWeb.Resources.CommonLocalizationService localizer
 @inject Core.Service.ICompanyService companyService
+
+@{
+    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
 
 <h4 class="screenTitle">@localizer.Get("DeviceTitle") </h4>
 <hr />
@@ -22,12 +27,12 @@
 
             <div class="form-group col-md-4">
                 <label asp-for="CompanyId" class="control-label"></label>
-                @Html.DropDownListFor(model => model.CompanyId, new SelectList(companyService.GetQueryDropDownList(), "Key", "Value"),
+                @Html.DropDownListFor(model => model.CompanyId, new SelectList(companyService.GetQueryDropDownListStrict(userId), "Key", "Value"),
                                       @localizer.Get("CompanySelect"), new Dictionary<string, object> { { "class", "form-control" } })
                 <span asp-validation-for="CompanyId" class="text-danger"></span>
             </div>
 
-           <div class="row">
+           <div class="row" style="display:none;">
                 <div class="form-group col-md-3" style="display: grid;">
                     <label class="control-label">Frequencia</label>
                     <select name="Frequency" id="Frequency" class="form-control" asp-for="Frequency" style="width:100%">
@@ -93,7 +98,7 @@
                 </div>
            </div>
 
-            <div class="row">
+            <div class="row" style="display:none;">
                 <div class="form-group col-md-3" style="display: grid;">
                     <label class="control-label">Lines</label>
                     <select name="Lines" id="Lines" asp-for="Lines" style="width:100%" class="form-control">
@@ -137,7 +142,7 @@
                 </div>
             </div>
             
-            <div class="row">
+            <div class="row" style="display:none;">
                 <div class="form-group col-md-3" style="display: grid;">
                     <label class="control-label">Bateria</label>
                     <input value="100%" asp-for="Battery" name="Battery" id="Battery" class="form-control" />
@@ -163,7 +168,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" style="display:none;">
                 <div class="form-group col-md-3" style="display: grid;">
                     <label class="control-label">Global em aceleração</label>
                     <input placeholder="Mínimo mm/s" asp-for="AccelerationMin" name="AccelerationMin" id="AccelerationMin" class="form-control" />

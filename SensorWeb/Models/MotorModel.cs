@@ -302,6 +302,13 @@ namespace SensorWeb.Models
         public int? UnitId { get; set; }
         [Display(Name = "Setor")]
         public int? SetorId { get; set; }
+
+        public bool? IsMobile { get; set; }
+        public string MobileDeviceCode { get; set; }
+
+        public virtual CompanyUnit Unit { get; set; }
+
+        public virtual Company Company { get; set; }
     }
 
 

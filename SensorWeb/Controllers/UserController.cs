@@ -2,6 +2,7 @@
 using Core;
 using Core.Service;
 using Core.Utils;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -9,6 +10,7 @@ using SensorWeb.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace SensorWeb.Controllers
 {
@@ -33,13 +35,23 @@ namespace SensorWeb.Controllers
         // GET: UserController
         public ActionResult Index()
         {
-            var listaUsuarios = _userService.GetAll();
-            var listaUserModel = _mapper.Map<List<UserModel>>(listaUsuarios);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _userService.Get(Convert.ToInt32(userId));
+            var userCompany = user.Contact.CompanyId;
+            var companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany).ToList();
 
-            //foreach (var userModel in listaUserModel)
-            //{
-            //    userModel.Contact = _mapper.Map<List<ContactModel>>(_userService.GetAll())
-            //}
+            var listaUsuarios = _userService.GetAll();
+
+            if (user.UserType.Name == Constants.Roles.Sysadmin)
+            {
+                listaUsuarios = listaUsuarios.Where(u => (u.UserTypeId == 2 ||  u.UserTypeId == 3) && (u.Contact.CompanyId == userCompany || companies.Any(y => y.Id == u.Contact.CompanyId)) || u.Id == Convert.ToInt32(userId));
+            }
+            else if (user.UserType.Name == Constants.Roles.Supervisor)
+            {
+                listaUsuarios = listaUsuarios.Where(u => (u.UserTypeId == 2 && u.Contact.CompanyId == userCompany) || u.Id == Convert.ToInt32(userId));
+            }
+
+            var listaUserModel = _mapper.Map<List<UserModel>>(listaUsuarios);
 
             return View(listaUserModel.OrderBy(x => x.Contact.FirstName));
         }
@@ -71,9 +83,26 @@ namespace SensorWeb.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    if (userModel.Password != userModel.PasswordConfirm)
+                    if (userModel.Password.Length < 6)
+                    {
+                        ViewData["Error"] = "A senha deve ter no mínimo 6 caracteres";
+                        return View(userModel);
+                    }
+                    else if (!userModel.Password.Any(p => char.IsDigit(p)) || !userModel.Password.Any(p => char.IsLetter(p)))
+                    {
+                        ViewData["Error"] = "A senha deve ter números e letras";
+                        return View(userModel);
+                    }
+                    else if (userModel.Password != userModel.PasswordConfirm)
                     {
                         ViewData["Error"] = _localizer.Get("Incorrect Password");
+                        return View(userModel);
+                    }
+
+                    var existingUser = _userService.GetByEmail(userModel.Email);
+                    if (existingUser != null)
+                    {
+                        ViewData["Error"] = "Já existe um usuário cadastrado com o mesmo e-mail";
                         return View(userModel);
                     }
 
@@ -127,6 +156,8 @@ namespace SensorWeb.Controllers
                     userModelNew.Contact.Rg = userModel.Contact.Rg;
                     userModelNew.Contact.CompanyId = userModel.Contact.CompanyId;
                     userModelNew.UserTypeId = userModel.UserTypeId;
+
+                    userModelNew.Email = userModel.Email;
 
                     if (!String.IsNullOrEmpty(userModel.PasswordConfirm))
                     {

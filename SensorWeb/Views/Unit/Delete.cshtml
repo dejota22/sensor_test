@@ -2,10 +2,10 @@
 @inject SensorWeb.Resources.CommonLocalizationService localizer
 
 
-<h4 style="color:white; text-align:center">@localizer.Get("CompanyTitle") </h4>
+<h4 style="text-align:center">@localizer.Get("CompanyTitle") </h4>
 <hr />
 
-<h5 style="color:white;">@localizer.Get("DeleteRegister")?</h5>
+<h5 style="">@localizer.Get("DeleteRegister")?</h5>
 <div class="row screenCreate">
     <div class="col-md-12 formclasscreate">
         <dl class="row">
@@ -16,7 +16,7 @@
                 @Html.DisplayFor(model => model.Company.LegalName)
             </dd>
             <dt class="col-sm-2">
-                Nome
+                Nome Unidade
             </dt>
             <dd class="col-sm-10">
                 @Html.DisplayFor(model => model.Name)

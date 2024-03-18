@@ -25,6 +25,8 @@ namespace Core
         public virtual DbSet<CompanyUser> CompanyUser { get; set; }
         public virtual DbSet<Compressor> Compressor { get; set; }
         public virtual DbSet<CompressorType> CompressorType { get; set; }
+        public virtual DbSet<ConfigLog> ConfigLog { get; set; }
+        public virtual DbSet<ConfigParams> ConfigParams { get; set; }
         public virtual DbSet<Contact> Contact { get; set; }
         public virtual DbSet<CompanyAlertContact> CompanyAlertContact { get; set; }
         public virtual DbSet<Coupling> Coupling { get; set; }
@@ -61,7 +63,7 @@ namespace Core
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 //optionsBuilder.UseMySQL("server=localhost;port=3306;user=root;password=Rick@159989;database=mydb");
-                optionsBuilder.UseMySQL("server=iotdev.cwupbex41i4c.us-east-2.rds.amazonaws.com;port=3306;user=admin;password=OiW65^X1f9T6;database=sensorDB");
+                optionsBuilder.UseMySQL("server=iot-prod.cluster-cwupbex41i4c.us-east-2.rds.amazonaws.com;port=3306;user=admin;password=FmUtuMSzoFLPu2ZMZ8Ct;database=sensorDB;SslMode=None");
             }
         }
 
@@ -149,6 +151,10 @@ namespace Core
                     .HasColumnName("website")
                     .HasMaxLength(255)
                     .IsUnicode(false);
+
+                entity.Property(e => e.DeviceMotorMaxChanges).HasColumnName("limit_motor_device_changes");
+
+                entity.Property(e => e.VikingsSendDataTime).HasColumnName("vikings_send_data_time");
 
                 entity.Property(e => e.CompanyTypeId).HasColumnName("company_type_id");
                 entity.HasOne(d => d.CompanyType)
@@ -422,6 +428,42 @@ namespace Core
                 entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
             });
 
+            modelBuilder.Entity<ConfigLog>(entity =>
+            {
+                entity.ToTable("config_changelog");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Name).HasColumnName("name");
+
+                entity.Property(e => e.PrimaryId).HasColumnName("primary_id");
+
+                entity.Property(e => e.SecondaryId).HasColumnName("secondary_id");
+
+                entity.Property(e => e.PrimaryName).HasColumnName("primary_name");
+
+                entity.Property(e => e.SecondaryName).HasColumnName("secondary_name");
+
+                entity.Property(e => e.UserName).HasColumnName("user_name");
+
+                entity.Property(e => e.IsChange).HasColumnName("is_change");
+
+                entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+
+                entity.Property(e => e.Description).HasColumnName("description");
+            });
+
+            modelBuilder.Entity<ConfigParams>(entity =>
+            {
+                entity.ToTable("config_params");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Name).HasColumnName("name");
+
+                entity.Property(e => e.Value).HasColumnName("value");
+            });
+
             modelBuilder.Entity<Contact>(entity =>
             {
                 entity.ToTable("contact");
@@ -689,6 +731,8 @@ namespace Core
                 entity.Property(e => e.CrestFactorMin).HasColumnName("crest_factormin");
 
                 entity.Property(e => e.CrestFactorMax).HasColumnName("crest_factormax");
+
+                entity.Property(e => e.DeviceMotorMaxChanges).HasColumnName("limit_motor_device_changes");
 
                 entity.HasOne(d => d.Company)
                     .WithMany(p => p.Device)
@@ -1405,6 +1449,12 @@ namespace Core
                     .HasForeignKey(d => d.GroupId)
                     .OnDelete(DeleteBehavior.SetNull)
                     .HasConstraintName("fk_motor_motor1");
+
+                entity.HasOne(d => d.Company)
+                    .WithMany(p => p.Motors)
+                    .HasForeignKey(d => d.CompanyId)
+                    .OnDelete(DeleteBehavior.SetNull)
+                    .HasConstraintName("fk_motor_company1");
             });
 
             modelBuilder.Entity<Pulley>(entity =>
@@ -1642,6 +1692,7 @@ namespace Core
 
                 entity.Property(e => e.id).HasColumnName("id");
                 entity.Property(e => e.gtw).HasColumnName("gtw");
+                entity.Property(e => e.data_hora).HasColumnName("data_hora");
                 entity.Property(e => e.seq).HasColumnName("seq");
                 entity.Property(e => e.temp).HasColumnName("temp");
                 entity.Property(e => e.dec).HasColumnName("dec");
@@ -1689,6 +1740,8 @@ namespace Core
 
                 entity.Property(e => e.id).HasColumnName("id");
                 entity.Property(e => e.gtw).HasColumnName("gtw");
+                entity.Property(e => e.RSSI).HasColumnName("RSSI");
+                entity.Property(e => e.data_hora).HasColumnName("data_hora");
                 entity.Property(e => e.ver).HasColumnName("ver");
                 entity.Property(e => e.seq).HasColumnName("seq");
                 entity.Property(e => e.resets).HasColumnName("resets");

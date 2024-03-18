@@ -21,5 +21,6 @@ namespace Core.Service
         int GetlastCode();
 
         List<SelectListItemDTO> GetQueryDropDownList();
+        List<SelectListItemDTO> GetQueryDropDownListStrict(string userId);
     }
 }

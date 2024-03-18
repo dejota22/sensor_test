@@ -14,12 +14,16 @@ namespace Core.Service
         void Remove(int idCompany);
 
         IEnumerable<Company> GetByName(string name);
-        IEnumerable<Company> GetAll();
+        IEnumerable<Company> GetAll(bool full = false);
 
         IEnumerable<CompanyDTO> GetAllDTO();
 
         int GetlastCode();
 
         List<SelectListItemDTO> GetQueryDropDownList();
+        List<SelectListItemDTO> GetQueryDropDownListStrict(string userId);
+
+        string GetRelatedLocks(int idEmpresa);
+        List<SelectListCustomItemDTO> GetQueryDropDownListStrictCustom(string userId);
     }
 }

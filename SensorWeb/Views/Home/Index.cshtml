@@ -1,9 +1,18 @@
-﻿@model IEnumerable<MotorModel>
+﻿@model IEnumerable<HomeDashModel>
 @inject SensorWeb.Resources.CommonLocalizationService localizer
 
 @{
-    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout_Graficos.cshtml";
 }
+
+<style>
+    .mini-sqr {
+        width: 8px;
+        height: 8px;
+        display:block;
+        margin-top: 5px;
+    }
+</style>
 
 <div id="main-wrapper">
     <div class="row">
@@ -12,50 +21,109 @@
                 <div class="card-heading clearfix">
                     <table style="width: 100%;">
                         <tr>
-                            <td><h4 class="card-title">Listagem de sensores</h4></td>                            
+                            <td><h4 class="card-title">Dashboard</h4></td>                            
                         </tr>
                     </table>
                 </div>
 
                 <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Empresa</label>
+                            <select id="CompanyId" name="CompanyId" style="" class="form-control main-selects">
+                                <option value="0">Todas</option>
+                                @{
+                                    var listCompany = (List<Core.Company>)ViewBag.UserCompanies;
+                                }
+
+                                @foreach (var company in listCompany)
+                                {
+
+                                        <option value="@company.Id">@company.LegalName</option>
+
+
+                                }
+                            </select>
+                            <span id="validation-UnitId" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="form-group col-md-3">
+                            <br />
+                            <button id="filterBtn" type="button" class="btn btn-primary">Filtrar</button>
+                        </div>
+
+                    </div>
+
                     <div class="table-responsive">
                         <table id="example" class="display table" style="width:100%;text-align:center">
                             <thead>
                                 <tr>
                                     <th>
-                                        Equipamento
+                                        Empresa
                                     </th>
                                     <th>
-                                        Sensor
+                                        Unidade
                                     </th>
                                     <th>
-                                        Id
+                                        Sensores
                                     </th>
-                                    <th>
-                                        Alarme
-                                    </th>
+                                    <th></th>
                                 </tr>
                             </thead>
 
                             <tbody>
                                 @foreach (var item in Model)
                                 {
-                                    string lineColor = item.Alarm >= 7 ? "background-color:crimson;" : item.Alarm >= 1 ? "background-color:gold;" : "";
-                                    string alarmName = item.Alarm == 0 ? "Sem Alarme" : new int[] { 1, 4, 7, 10 }.Contains(item.Alarm) ? "Alarme Eixo X" :
-                                        new int[] { 2, 5, 8, 11 }.Contains(item.Alarm) ? "Alarme Eixo Y" : new int[] { 3, 6, 9, 12 }.Contains(item.Alarm) ? "Alarme Eixo Z" : "";
+                                    <tr class="comp-row row_@item.CompanyId">
+                                        <td style="vertical-align:middle;">
+                                            <label style="font-weight:bold;">@item.CompanyName</label>
+                                        </td>
+                                        <td style="vertical-align:middle;">
+                                            <label id="unitlabel_@(item.UnitId)_@(item.CompanyId)" class="unit-label" style="cursor:pointer;font-weight:bold;">@item.UnitName</label>
+                                        </td>
+                                        <td style="width:300px;">
+                                            <div id="unitdash_@(item.UnitId)_@(item.CompanyId)" class="unit-dash" style="width:280px;height:280px;margin:auto;">
 
-                                    <tr style="@lineColor">
-                                        <td>
-                                            @item.Name
+                                            </div>
                                         </td>
                                         <td>
-                                            @item.Device.Tag
-                                        </td>
-                                        <td>
-                                            @item.Device.Code
-                                        </td>
-                                        <td>
-                                            @alarmName
+                                            <div style="width:110px;font-size:13px;margin-top: 90px;">
+                                                <div class="row">
+                                                    <div class="col-1" style="padding: 0;">
+                                                        <span class="mini-sqr" style="background-color:#fd0000;"></span>
+                                                    </div>
+                                                    <div class="col-8" style="text-align:left;">
+                                                        Alerta
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-1" style="padding: 0;">
+                                                        <span class="mini-sqr" style="background-color:#ffff00;"></span>
+                                                    </div>
+                                                    <div class="col-8" style="text-align:left;">
+                                                        Atenção
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-1" style="padding: 0;">
+                                                        <span class="mini-sqr" style="background-color:#00af50;"></span>
+                                                    </div>
+                                                    <div class="col-8" style="text-align:left;">
+                                                        Normal
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-1" style="padding: 0;">
+                                                        <span class="mini-sqr" style="background-color:lightgray;"></span>
+                                                    </div>
+                                                    <div class="col-8" style="text-align:left;">
+                                                        Sem Sinal
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 }
@@ -67,3 +135,134 @@
         </div>
     </div>
 </div>
+
+@section Scripts
+    {
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.event.drag.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.mousewheel.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.canvaswrapper.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.colorhelpers.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.pie.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.saturated.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.browser.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.drawSeries.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.uiConstants.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.navigate.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.touchNavigate.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.hover.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.touch.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.time.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.selection.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.legend.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.tooltip.js")"></script>
+    <script language="javascript" type="text/javascript" src="@Url.Content("~/js/source/jquery.flot.axislabels.js")"></script>
+
+    <script type="text/javascript">
+        var valor_data = [];
+        var ids_dict = [];
+
+        $(window).on('pageshow', function () {
+            $('#preloader').hide();
+        });
+
+        $(document).ready(function () {
+
+            //$('#MotorId').bind('change', function () {
+            //    populateDeviceSelect();
+            //});
+
+            $('.unit-dash').each(function(i) {
+                let unitId = this.id.split('_')[1];
+                let companyId = this.id.split('_')[2];
+                let companyFilterId = $('#CompanyId').val();
+                let dashWrapper = $(this);
+
+                $.get('@Url.Action("HomeDashLvl1_Upd", "Home")?idUnit=' + unitId + '&idCompany=' + companyId + '&idCompanyFilter=' + companyFilterId, function (data) {
+                    valor_data = [];
+
+                    $.each(data, function (index, value) {
+                        let iColor = value.alertStatus == "Alerta" ? "#fd0000"
+                            : value.alertStatus == "Atenção" ? "#ffff00"
+                                : value.alertStatus == "Normal" ? "#00af50" : "lightgray";
+                        valor_data.push({ label: value.alertStatus, data: value.alertQtd, color: iColor });
+                        //ids_dict.push(unitId);
+                    });
+
+                    drawPie(dashWrapper);
+                });
+            });
+
+            $('#filterBtn').click(function () {
+                let companyId = $('#CompanyId').val();
+
+                //$('#preloader').fadeIn();
+                //window.location.href = '@Url.Action("Index", "Home")?idCompany=' + companyId;
+
+                if (companyId != 0) {
+                    $('.comp-row').hide();
+                    $('.row_' + companyId).show();
+                }
+                else { $('.comp-row').show(); }
+            });
+
+            $('.unit-label').on('click', function(){
+                let unitId = $(this).attr('id').split('_')[1];
+                let companyId = $(this).attr('id').split('_')[2];
+
+                $('#preloader').fadeIn();
+                if (unitId != '0')
+                    window.location.href = '@Url.Action("HomeDashLvl2", "Home")?idUnit=' + unitId + '&idCompany=' + companyId;
+                else
+                    window.location.href = '@Url.Action("HomeDashLvl3", "Home")?idCompany=' + companyId;
+            });
+        });
+
+        function drawPie(pieWrapper) {
+            var options = {
+                series: {
+                    pie: {
+                        show: true,
+                        label: {
+                            show: true,
+                            radius: 1/2,
+                            formatter: function (label, series) {
+                                return '<div style="font-size:11pt;text-align:center;padding:2px;'
+                                    + 'color:#000;font-weight:bold;">' + series.data[0][1] + '</div>';
+                            }
+                        }
+                    }
+                },
+                grid: {
+                    clickable: true,
+                    hoverable: true
+                }
+            };
+
+            var plot = $.plot(pieWrapper, valor_data, options);
+
+            pieWrapper.bind("plotclick", function (event, pos, item) {
+                if (item) {
+                    let unitId = event.target.id.split('_')[1];
+                    let companyId = event.target.id.split('_')[2];
+                    let sensorLvl = item.series.label;
+
+                    $('#preloader').fadeIn();
+
+                    if (unitId != '0')
+                        window.location.href = '@Url.Action("HomeDashLvl2", "Home")?idUnit=' + unitId + '&idCompany=' + companyId + '&lvlAlert=' + sensorLvl;
+                    else
+                        window.location.href = '@Url.Action("HomeDashLvl3", "Home")?idCompany=' + companyId + '&lvlAlert=' + sensorLvl;
+                }
+            });
+            pieWrapper.bind("plothover", function (event, pos, obj) {
+                if (obj != null && pos != null)
+                    $(this).css('cursor','pointer');
+                else if (pos.x == null)
+                    $(this).css('cursor', 'default');
+            });
+
+        }
+
+    </script>
+}

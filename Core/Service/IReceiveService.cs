@@ -9,7 +9,7 @@ namespace Core.Service
     {
         int InsertGlobal(ReceiveGlobal receiveGlobal);
 
-        int InsertData(ReceiveData receiveData);
+        int InsertData(ReceiveData receiveData, Sensor sensor);
 
         ReceiveGlobal GetGlobal(int id);
 
@@ -32,5 +32,9 @@ namespace Core.Service
             DateTime? endDate, string gravidade, int skip = 0);
         int ListDeviceCodeAlarmeCount(int? deviceId, int? motorId, DateTime? startDate,
             DateTime? endDate, string gravidade);
+
+        IEnumerable<DataGlobalHomeModel> ListDeviceAlarmes(int? deviceId, int? motorId);
+        IEnumerable<DataGlobalHomeModel> ListDeviceAlarmesAgregado(int? deviceId, int? motorId);
+        IEnumerable<DataDeviceExport> GetDataDadoExportByDataReceiveId(int idDataReceive);
     }
 }

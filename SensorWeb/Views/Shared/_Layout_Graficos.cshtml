@@ -88,7 +88,7 @@
                     <ul class="accordion-menu">
                         <li>
                             <a href="/Home/Index">
-                                <i class="menu-icon icon-home4"></i><span>Home</span>
+                                <i class="menu-icon icon-home4"></i><span>Dashboard</span>
                             </a>
                         </li>
                         <li>
@@ -112,7 +112,11 @@
                                 <li>
                                     <a href="#!"><span>@localizer.Get("Users")</span><i class="accordion-icon fa fa-angle-left"></i></a>
                                     <ul>
-                                        <li>@Html.ActionLink(@localizer.Get("User Register"), "Index", "User")</li>
+                                        @if (User.IsInRole("Sysadmin") || User.IsInRole("Administrador") || User.IsInRole("Supervisor"))
+                                        {
+                                            <li>@Html.ActionLink(@localizer.Get("User Register"), "Index", "User")</li>
+                                        }
+                                        <li>@Html.ActionLink(@localizer.Get("Change Password"), "ChangePassword", "User")</li>
                                     </ul>
                                 </li>
                                 <li>
@@ -127,7 +131,7 @@
                         </li>
                         <li>
                             <a href="#!">
-                                <i class="menu-icon icon-meter"></i><span>Dashboard</span><i class="accordion-icon fa fa-angle-left"></i>
+                                <i class="menu-icon icon-meter"></i><span>Analytics</span><i class="accordion-icon fa fa-angle-left"></i>
                             </a>
                             <ul>
                                 @*<li>@Html.ActionLink(@localizer.Get("Devices"), "Index", "DashBoard")</li>*@
@@ -159,6 +163,14 @@
                                 <i class="menu-icon icon-cog"></i><span>Configuração Sensor</span>
                             </a>
                         </li>
+                        @if (User.IsInRole("Administrador"))
+                        {
+                            <li>
+                                <a href="/Config/Index">
+                                    <i class="menu-icon icon-cog"></i><span>Parâmetros do Sistema</span>
+                                </a>
+                            </li>
+                        }
                         <li>
                             <a href="/Login/Logout">
                                 <i class="menu-icon icon-exit"></i><span>Sair</span>

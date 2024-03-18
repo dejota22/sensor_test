@@ -1,0 +1,75 @@
+﻿@inject SensorWeb.Resources.CommonLocalizationService localizer
+@inject Core.Service.ICompanyService companyService
+
+@{
+    Layout = "~/Views/Shared/_Layout_Mobile.cshtml";
+}
+
+<h4 class="screenTitle">Escolher Ação</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+
+        @if (ViewBag.UserHasPermission == true)
+        {
+            <div class="col-md-12" style="text-align:center;margin-bottom:20px;">
+                <h3>@ViewBag.DeviceName</h3>
+                <h4>@ViewBag.DeviceCode</h4>
+            </div>
+
+            @if (ViewBag.DeviceId != 0)
+            {
+                <div class="col-md-12" style="text-align:center;margin-bottom:20px;">
+                    <a href="@Url.Action("EditMobile", "Device", new { id = (int)ViewBag.DeviceId })" class="btn btn-primary"
+                       style="color:white;font-weight:bold;width: 250px;">
+                        Cadastro de Sensor
+                    </a>
+                </div>
+            }
+
+            @if (ViewBag.DeviceId != 0 && ViewBag.MotorId != 0)
+            {
+                <div class="col-md-12" style="text-align:center;margin-bottom:20px;">
+                    <a href="@Url.Action("IndexMobile", "DeviceMeasure", new { codeAttempt = ViewBag.DeviceCode })" class="btn btn-primary"
+                       style="color:white;font-weight:bold;width: 250px;">
+                        Configuração de Sensor
+                    </a>
+                </div>
+            }
+
+            @if ((User.IsInRole("Sysadmin") || User.IsInRole("Administrador") || User.IsInRole("Supervisor")) && ViewBag.MotorId != 0)
+            {
+                <div class="col-md-12" style="text-align:center;margin-bottom:20px;">
+                    <a href="@Url.Action("EditMobile", "Motor", new { id = (int)ViewBag.MotorId, mdc = ViewBag.DeviceCode  })" class="btn btn-primary"
+                       style="color:white;font-weight:bold;width: 250px;">
+                        Cadastro de Equipamento
+                    </a>
+                </div>
+            }
+            else if (ViewBag.MotorId == 0)
+            {
+                <div class="col-md-12" style="text-align:center;margin-bottom:20px;">
+                    <a href="@Url.Action("IndexMobile", "Motor", new { mdc = ViewBag.DeviceCode  })" class="btn btn-primary"
+                       style="color:white;font-weight:bold;width: 250px;">
+                        Cadastro de Equipamento
+                    </a>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-md-12" style="text-align:center;">
+                <h2 style="color:crimson;">Você não possui permissão para visualizar este sensor.</h2>
+            </div>
+        }
+
+    </div>
+</div>
+<hr />
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

@@ -16,7 +16,7 @@ using static QRCoder.PayloadGenerator.SwissQrCode;
 
 namespace SensorWeb.Controllers
 {
-    [Authorize(Roles = Constants.Roles.Administrator + "," + Constants.Roles.Supervisor)]
+    [Authorize]
     public class CompanyController : BaseController
     {
         ICompanyService _companyService;
@@ -52,13 +52,9 @@ namespace SensorWeb.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = _userService.Get(Convert.ToInt32(userId));
-
             var listaCompany = _companyService.GetAll();
 
-            if (user.UserType.Name != Constants.Roles.Administrator)
-            {
-                listaCompany = listaCompany.Where(x => x.ParentCompanyId == user.Contact.CompanyId);
-            }
+            listaCompany = FilterCompaniesByUser(user, listaCompany);
 
             var listaCompanyModel = _mapper.Map<List<CompanyModel>>(listaCompany);
 
@@ -78,7 +74,6 @@ namespace SensorWeb.Controllers
         {
             CompanyModel companyModel = new CompanyModel()
             {
-                Id = _companyService.GetlastCode(),
                 CompanyType = GetCompanyType(),
             };
 
@@ -120,6 +115,24 @@ namespace SensorWeb.Controllers
 
             if (CompanyModel != null)
                 CompanyModel.CompanyType = GetCompanyType();
+
+            var userId = LoggedUserId;
+            var user = _userService.Get(Convert.ToInt32(userId));
+
+            if (Company.CompanyTypeId == 2)
+            {
+                CompanyModel.CompanyType.Clear();
+                CompanyModel.CompanyType.Add(new SelectListItemDTO() { Key = 2, Value = "Distribuidor" });
+            }
+
+            //if (user.UserType.Name == Constants.Roles.Administrator)
+            //{
+            //    CompanyModel.CompanyType.Add(new SelectListItemDTO()
+            //    {
+            //        Key = 1,
+            //        Value = "Administrador"
+            //    });
+            //}
 
             ViewBag.Contacts = _companyAlertContactService.GetByCompany(id).ToList();
 
@@ -171,7 +184,9 @@ namespace SensorWeb.Controllers
             }
             catch
             {
-                return View();
+                ViewBag.ErrorMsg = _companyService.GetRelatedLocks(id);
+
+                return View(CompanyModel);
             }
         }
 
@@ -186,7 +201,7 @@ namespace SensorWeb.Controllers
                 list.Add(new SelectListItemDTO() { Key = 2, Value = "Distribuidor" });
                 list.Add(new SelectListItemDTO() { Key = 3, Value = "Consumidor Final" });
             }
-            else if (user.UserType.Name == Constants.Roles.Supervisor)
+            else if (user.UserType.Name == Constants.Roles.Sysadmin)
             {
                 list.Add(new SelectListItemDTO() { Key = 3, Value = "Consumidor Final" });
             }

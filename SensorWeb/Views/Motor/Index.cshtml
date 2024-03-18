@@ -21,7 +21,7 @@
                     <table style="width: 100%;">
                         <tr>
                             <td><h4 class="card-title">@localizer.Get("MotorTitle")</h4></td>
-                            @if (User.IsInRole("Administrador"))
+                            @if (User.IsInRole("Sysadmin") || User.IsInRole("Administrador") || User.IsInRole("Supervisor"))
                             {
                                 <td style="text-align:right">
 
@@ -42,9 +42,9 @@
                         <table id="example" class="display table" style="width:100%;text-align:center">
                             <thead>
                                 <tr>
-                                    <th>
+                                    @*<th>
                                         @Html.DisplayNameFor(modelItem => modelItem.Id)
-                                    </th>
+                                    </th>*@
                                     <th>
                                         @Html.DisplayNameFor(modelItem => modelItem.TypeId)
                                     </th>
@@ -57,6 +57,12 @@
                                     <th>
                                         @Html.DisplayNameFor(modelItem => modelItem.Description)
                                     </th>
+                                    @if (User.IsInRole("Administrador") || User.IsInRole("Sysadmin"))
+                                    {
+                                        <th>
+                                            @Html.DisplayNameFor(modelItem => modelItem.CompanyId)
+                                        </th>
+                                    }
                                     @*<th class="sccentralize">
                                     @Html.DisplayNameFor(modelItem => modelItem.UpdatedAt)
                                     </th>*@
@@ -71,9 +77,9 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td>
+                                        @*<td>
                                             @Html.DisplayFor(modelItem => item.Id)
-                                        </td>
+                                        </td>*@
                                         <td>
                                             @{
                                                 switch (item.TypeId)
@@ -92,6 +98,12 @@
                                                         break;
                                                     case 9:
                                                         <text>Compressor</text>
+                                                        break;
+                                                    case 10:
+                                                        <text>Torre de Resfriamento</text>
+                                                        break;
+                                                    case 11:
+                                                        <text>Gerador</text>
                                                         break;
                                                     default:
                                                         <text></text>
@@ -128,13 +140,44 @@
                                             @Html.DisplayFor(modelItem => item.Name)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Description)
+                                            @{
+                                                switch (item.TypeId)
+                                                {
+                                                    case 6:
+                                                        @Html.DisplayFor(modelItem => item.ReducerDescription)
+                                                        break;
+                                                    case 7:
+                                                        @Html.DisplayFor(modelItem => item.PumpDescription)
+                                                        break;
+                                                    case 8:
+                                                        @Html.DisplayFor(modelItem => item.ExhaustFanDescription)
+                                                        break;
+                                                    case 9:
+                                                        @Html.DisplayFor(modelItem => item.CompressorDescription)
+                                                        break;
+                                                    default:
+                                                        @Html.DisplayFor(modelItem => item.Description)
+                                                        break;
+                                                }
+                                            }
                                         </td>
+                                        @if (User.IsInRole("Administrador"))
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Company.LegalName)
+                                            </td>
+                                        }
+                                        else if (User.IsInRole("Sysadmin") && item.Company.CompanyTypeId == 2)
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Company.LegalName)
+                                            </td>
+                                        }
                                         <td>
                                             <table style="width:100%">
                                                 <tr>
                                                     <td style="padding:0 4px"><a href="@Url.Action("Details", "Motor", new { id = item.Id })" title="@localizer.Get("View")"><i class="fas fa-eye"></i></a></td>
-                                                    @if (User.IsInRole("Administrador"))
+                                                    @if (User.IsInRole("Sysadmin") || User.IsInRole("Administrador") || User.IsInRole("Supervisor"))
                                                     {
                                                         <td style="padding:0 4px"><a href="@Url.Action("Edit", "Motor", new { id = item.Id })" title="@localizer.Get("Edit")"><i class="fas fa-edit" style="color:#ff6a00"></i></a></td>
                                                         <td style="padding:0 4px"><a href="@Url.Action("Delete", "Motor", new { id = item.Id })" title="@localizer.Get("Delete")" style="color:#ff0000"><i class="fas fa-window-close"></i></a></td>

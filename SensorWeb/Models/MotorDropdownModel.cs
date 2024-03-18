@@ -10,6 +10,7 @@ namespace SensorWeb.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public int? CompanyId { get; set; }
         public int? UnitId { get; set; }
         public int? SectorId { get; set; }
         public int? SubSectorId { get; set; }

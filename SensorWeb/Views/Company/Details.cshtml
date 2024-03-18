@@ -9,19 +9,19 @@
                 <div class="col-md-12 formclasscreate ">
 
 
-                    <div class="form-group col-md-2">
+                    @*<div class="form-group col-md-2">
                         <label asp-for="Id" class="control-label"></label>
                         <input asp-for="Id" class="form-control" readonly />
                         <span asp-validation-for="Id" class="text-danger"></span>
-                    </div>
+                    </div>*@
                     <div class="form-group col-md-5">
                         <label asp-for="LegalName" class="control-label"></label>
-                        <input asp-for="LegalName" class="form-control" />
+                        <input asp-for="LegalName" class="form-control" readonly />
                         <span asp-validation-for="LegalName" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-5">
                         <label asp-for="TradeName" class="control-label"></label>
-                        <input asp-for="TradeName" class="form-control" />
+                        <input asp-for="TradeName" class="form-control" readonly />
                         <span asp-validation-for="TradeName" class="text-danger"></span>
 
                     </div>
@@ -31,17 +31,17 @@
 
                     <div class="form-group col-md-2">
                         <label asp-for="Cnpj" class="control-label"></label>
-                        <input asp-for="Cnpj" class="form-control" />
+                        <input asp-for="Cnpj" class="form-control" readonly />
                         <span asp-validation-for="Cnpj" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-7 ">
                         <label asp-for="Website" class="control-label"></label>
-                        <input asp-for="Website" class="form-control" />
+                        <input asp-for="Website" class="form-control" readonly />
                         <span asp-validation-for="Website" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3">
                         <label asp-for="Country" class="control-label"></label>
-                        <input asp-for="Country" class="form-control" />
+                        <input asp-for="Country" class="form-control" readonly />
                         <span asp-validation-for="Country" class="text-danger"></span>
                     </div>
 
@@ -61,5 +61,14 @@
     </div>*@
 
 @section Scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function ($) {
+
+            $('#Cnpj').mask("00.000.000/0000-00", { reverse: true });
+
+        });
+
+    </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

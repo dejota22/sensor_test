@@ -11,27 +11,28 @@ namespace SensorWeb.Models
     {
         [Display(Name = "Code")]
         [Key]
-        [Required(ErrorMessage = "Required")]
+        [Required(ErrorMessage = "Obrigatório")]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Required")]
-        [StringLength(45, MinimumLength = 10, ErrorMessage = "Invalid Email")]
+        [Required(ErrorMessage = "Obrigatório")]
+        [StringLength(45, MinimumLength = 10, ErrorMessage = "E-mail inválido")]
+        [EmailAddress(ErrorMessage = "E-mail inválido")]
         public string Email { get; set; }
 
-        [Display(Name = "Password")]
-        [Required(ErrorMessage = "Required")]
+        [Display(Name = "Senha")]
+        [Required(ErrorMessage = "Obrigatório")]
         public string Password { get; set; }
 
-        [Display(Name = "Password Confirm")]
+        [Display(Name = "Confirmar Senha")]
        // [Required(ErrorMessage = "Required")]
         public string PasswordConfirm { get; set; }
 
         [Display(Name = "UserTypeId")]
-        [Required(ErrorMessage = "Required")]
+        [Required(ErrorMessage = "Obrigatório")]
         public int UserTypeId { get; set; }
 
         [Display(Name = "ContactId")]
-        [Required(ErrorMessage = "Required")]
+        [Required(ErrorMessage = "Obrigatório")]
         public int ContactId { get; set; }
 
         [Display(Name = "IsActive")]

@@ -1,4 +1,5 @@
 ﻿@using Core.DTO
+@using System.Security.Claims
 @model Core.DTO.DeviceConfigurationModel
 
 @inject SensorWeb.Resources.CommonLocalizationService localizer
@@ -9,6 +10,10 @@
 @inject Core.Service.ICompanyService companyService
 @inject Core.Service.ICompanyUnitService unitService
 
+
+@{
+    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
 <h4 style="text-align:center">Configuração Sensor</h4>
 <hr />
 <div class="container">
@@ -17,15 +22,14 @@
 
         <div>
             <div class="form-group" style="margin-top:0px">
-                @if (User.IsInRole("Administrador") || User.IsInRole("Supervisor"))
-                {
+
                     <input type="submit" value="Configurar Sensor" class="btn btn-primary" />
-                }
+
                 
                 <input type="hidden" id="isEdit" name="isEdit" value="@Model.isEdit.ToString()" />
                 <input type="hidden" id="Id" name="Id" value="@Model.Id" />
 
-                @if (Model.Id != 0 && (User.IsInRole("Administrador") || User.IsInRole("Supervisor")))
+                @if (Model.Id != 0)
                 {
                     <button type="button" class="btn btn-warning" style="margin-left:40px;" onclick="javascript:abrirCopyConfigModal();">Copiar Configurações</button>
                 }
@@ -39,7 +43,7 @@
         <div class="row">
             <div class="form-group col-md-4">
                 <label class="control-label">Código do Sensor </label>
-                <input value="@Model.codigoSensor" list="codigoSensor" name="codigoSensor" class="form-control" />
+                <input value="@Model.codigoSensor" list="codigoSensor" name="codigoSensor" class="form-control" autocomplete="off" />
                 <datalist id="codigoSensor">
                     @foreach(string code in ViewBag.AllCodes)
                     {
@@ -65,6 +69,10 @@
         {
             <div class="row desc-row">
                 <div class="form-group col-md-4">
+                    <label class="control-label">Empresa: </label>
+                    <input type="text" asp-for="companyName" id="companyName" name="companyName" value="@Model.companyName" class="form-control" readonly />
+                </div>
+                <div class="form-group col-md-4">
                     <label class="control-label">Unidade: </label>
                     <input type="text" asp-for="unitName" id="unitName" name="unitName" value="@Model.unitName" class="form-control" readonly />
                 </div>
@@ -72,13 +80,14 @@
                     <label asp-for="sectorName" class="control-label">Setor: </label>
                     <input type="text" asp-for="sectorName" id="sectorName" name="sectorName" value="@Model.sectorName" class="form-control" readonly />
                 </div>
+                
+            </div>
+
+            <div class="row desc-row">
                 <div class="form-group col-md-4">
                     <label asp-for="subSectorName" class="control-label">Sub-Setor: </label>
                     <input type="text" asp-for="subSectorName" id="subSectorName" name="subSectorName" value="@Model.subSectorName" class="form-control" readonly />
                 </div>
-            </div>
-
-            <div class="row desc-row">
                 <div class="form-group col-md-4">
                     <label class="control-label">Máquina: </label>
                     <input type="text" asp-for="motorName" id="motorName" name="motorName" value="@Model.motorName" class="form-control" readonly />
@@ -100,7 +109,10 @@
                 <a class="nav-item nav-link active" id="config-tab" data-toggle="tab" href="#config" role="tab" aria-controls="config" aria-selected="true">Medições</a>
                 <a class="nav-item nav-link" id="tempo-tab" data-toggle="tab" href="#tempo" role="tab" aria-controls="tempo" aria-selected="false">Configuração Análises</a>
                 <a class="nav-item nav-link" id="limites-tab" data-toggle="tab" href="#limites" role="tab" aria-controls="limites" aria-selected="false">Alarmes</a>
-                <a class="nav-item nav-link" id="lora-tab" data-toggle="tab" href="#lora" role="tab" aria-controls="lora" aria-selected="false">Lora</a>
+                @if (User.IsInRole("Administrador"))
+                {
+                    <a class="nav-item nav-link" id="lora-tab" data-toggle="tab" href="#lora" role="tab" aria-controls="lora" aria-selected="false">Lora</a>
+                }
                 <a class="nav-item nav-link" id="old-tab" data-toggle="tab" href="#old" role="tab" aria-controls="old" aria-selected="false" style="display:none;">OLD</a>
 
             </div>
@@ -525,14 +537,14 @@
 
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">RMS Aceleração - Alerta <i class="fa fa-info-circle" title="Limite inferior da zona de severidade vermelha"></i></label>
-                        <input type="text" value="@(Model.rms_acc_red.HasValue ? Model.rms_acc_red.Value.ToString("0.00") : "")" asp-for="rms_acc_red" name="rms_acc_red" id="rms_acc_red" class="form-control decimal-field aa-field" />
-                        <span asp-validation-for="rms_acc_red" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">RMS Aceleração - Atenção <i class="fa fa-info-circle" title="Limite inferior da zona de severidade amarela"></i></label>
                         <input type="text" value="@(Model.rms_acc_yel.HasValue ? Model.rms_acc_yel.Value.ToString("0.00") : "")" asp-for="rms_acc_yel" name="rms_acc_yel" id="rms_acc_yel" class="form-control decimal-field aa-field" />
-                        <span asp-validation-for="rms_acc_yel" class="text-danger"></span>
+                        <span asp-validation-for="rms_acc_yel" id="rms_acc_yel_val" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">RMS Aceleração - Alerta <i class="fa fa-info-circle" title="Limite inferior da zona de severidade vermelha"></i></label>
+                        <input type="text" value="@(Model.rms_acc_red.HasValue ? Model.rms_acc_red.Value.ToString("0.00") : "")" asp-for="rms_acc_red" name="rms_acc_red" id="rms_acc_red" class="form-control decimal-field aa-field" />
+                        <span asp-validation-for="rms_acc_red" id="rms_acc_red_val" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">Valor Mínimo Máquina Operante <i class="fa fa-info-circle" title="Menor valor considerado para identificação de máquina em funcionamento"></i></label>
@@ -548,14 +560,14 @@
 
                 <div class="row">
                     <div class="form-group col-md-3" style="display: grid;">
-                        <label class="control-label">RMS Velocidade - Alerta <i class="fa fa-info-circle" title="Limite inferior da zona de severidade vermelha"></i></label>
-                        <input type="text" value="@(Model.rms_spd_red.HasValue ? Model.rms_spd_red.Value.ToString("0.00") : "")" asp-for="rms_spd_red" name="rms_spd_red" id="rms_spd_red" class="form-control decimal-field aa-field" />
-                        <span asp-validation-for="rms_spd_red" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-3" style="display: grid;">
                         <label class="control-label">RMS Velocidade - Atenção <i class="fa fa-info-circle" title="Limite inferior da zona de severidade amarela"></i></label>
                         <input type="text" value="@(Model.rms_spd_yel.HasValue ? Model.rms_spd_yel.Value.ToString("0.00") : "")" asp-for="rms_spd_yel" name="rms_spd_yel" id="rms_spd_yel" class="form-control decimal-field aa-field" />
-                        <span asp-validation-for="rms_spd_yel" class="text-danger"></span>
+                        <span asp-validation-for="rms_spd_yel" id="rms_spd_yel_val" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-3" style="display: grid;">
+                        <label class="control-label">RMS Velocidade - Alerta <i class="fa fa-info-circle" title="Limite inferior da zona de severidade vermelha"></i></label>
+                        <input type="text" value="@(Model.rms_spd_red.HasValue ? Model.rms_spd_red.Value.ToString("0.00") : "")" asp-for="rms_spd_red" name="rms_spd_red" id="rms_spd_red" class="form-control decimal-field aa-field" />
+                        <span asp-validation-for="rms_spd_red" id="rms_spd_red_val" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -807,13 +819,32 @@
 
                 <div class="row">
 
+                    <div class="form-group col-md-12">
+                        <label class="control-label">Empresa</label>
+                        <select id="CompanyId" name="CompanyId" style="" class="form-control main-selects">
+                            @*@if (User.IsInRole("Administrador") || User.IsInRole("Sysadmin"))
+                            {*@
+                                <option value="">-- Selecione a Empresa --</option>
+                            @*}*@
+                            @foreach (var company in (List<Core.Company>)ViewBag.UserCompanies)
+                            {
+                                <option value="@company.Id">@company.LegalName</option>
+                            }
+                        </select>
+                        <span id="validation-CompanyId" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <div class="row">
+
                     <div class="form-group col-md-4">
                         <label class="control-label">Unidade</label>
                         <select id="UnitId" name="UnitId" style="" class="form-control main-selects">
                             <option value="">-- Selecione a Unidade --</option>
-                            @foreach (var unit in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownList())
+                            @foreach (var unit in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownList(userId))
                             {
-                                <option value="@unit.Key">@unit.Value</option>
+                                <option cid="@unit.CompanyId" value="@unit.Key">@unit.Value</option>
                             }
                         </select>
                         <span id="validation-UnitId" class="text-danger"></span>
@@ -822,10 +853,10 @@
                     <div class="form-group col-md-4">
                         <label class="control-label">Setor</label>
                         <select id="SectorId" name="SectorId" style="" class="form-control main-selects">
-                            <option value="">-- Selecione a Unidade --</option>
-                            @foreach (var sector in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSector())
+                            <option value="">-- Selecione o Setor --</option>
+                            @foreach (var sector in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSector(userId))
                             {
-                                <option uid="@sector.Unit" value="@sector.Key">@sector.Value</option>
+                                <option cid="@sector.CompanyId" uid="@sector.Unit" value="@sector.Key">@sector.Value</option>
                             }
                         </select>
                         <span id="validation-SectorId" class="text-danger"></span>
@@ -834,10 +865,10 @@
                     <div class="form-group col-md-4">
                         <label class="control-label">Sub-Setor</label>
                         <select id="SubSectorId" name="SubSectorId" style="" class="form-control main-selects">
-                            <option value="">-- Selecione a Unidade --</option>
-                            @foreach (var subsector in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSubSector())
+                            <option value="">-- Selecione o Sub-Setor --</option>
+                            @foreach (var subsector in (List<SelectListCustomItemDTO>)unitService.GetQueryDropDownListSubSector(userId))
                             {
-                                <option uid="@subsector.Unit" sid="@subsector.Sector" value="@subsector.Key">@subsector.Value</option>
+                                <option cid="@subsector.CompanyId" uid="@subsector.Unit" sid="@subsector.Sector" value="@subsector.Key">@subsector.Value</option>
                             }
                         </select>
                         <span id="validation-SubSectorId" class="text-danger"></span>
@@ -854,11 +885,11 @@
                             {
                                 if (motor.IsSelected == false)
                                 {
-                                    <option uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id">@motor.Name</option>
+                                    <option cid="@motor.CompanyId" uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id">@motor.Name</option>
                                 }
                                 else
                                 {
-                                    <option uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id" selected>@motor.Name</option>
+                                    <option cid="@motor.CompanyId" uid="@motor.UnitId" sid="@motor.SectorId" ssid="@motor.SubSectorId" value="@motor.Id" selected>@motor.Name</option>
                                 }
 
                             }
@@ -917,8 +948,12 @@
         });
 
         $('#sensor-search').on('click', function (e) {
-            if ($('input[name=codigoSensor]').val() != '')
-                document.location.href = '@Url.Action("Index")' + '?codeAttempt=' + $('input[name=codigoSensor]').val();
+            let codeToSearch = $('input[name=codigoSensor]').val();
+            if (codeToSearch != '') {
+                if ($("#codigoSensor option[value='" + codeToSearch + "']").length > 0) {
+                    document.location.href = '@Url.Action("Index")' + '?codeAttempt=' + $('input[name=codigoSensor]').val();
+                }
+            }
         });
 
         $('.aa-field').blur(function () {
@@ -926,18 +961,39 @@
             let attentionAcc = $('#rms_acc_yel').val();
             let alertSpd = $('#rms_spd_red').val();
             let attentionSpd = $('#rms_spd_yel').val();
+            $('#' + $(this).attr('id') + '_val').html('');
+
+            let alertMsg = '';
+            switch ($(this).attr('id')) {
+                case "rms_acc_red":
+                case "rms_spd_red":
+                    alertMsg = '"Alerta" deve ser maior ou igual a "Atenção"';
+                    break;
+                case "rms_acc_yel":
+                case "rms_spd_yel":
+                    alertMsg = '"Atenção" deve ser menor ou igual a "Alerta"';
+                    break;
+                default:
+                    break;
+            }
 
             if (alertAcc != '' && attentionAcc != '') {
                 let numAlertAcc = Number(alertAcc);
                 let numAttentionAcc = Number(attentionAcc);
-                if (numAlertAcc < numAttentionAcc)
+                if (numAlertAcc < numAttentionAcc) {
                     $(this).val('');
+                    $('#' + $(this).attr('id') + '_val').html(alertMsg);
+                }
+                    
             }
             if (alertSpd != '' && attentionSpd != '') {
                 let numAlertSpd = Number(alertSpd);
                 let numAttentionSpd = Number(attentionSpd);
-                if (numAlertSpd < numAttentionSpd)
+                if (numAlertSpd < numAttentionSpd) {
                     $(this).val('');
+                    $('#' + $(this).attr('id') + '_val').html(alertMsg);
+                }
+                    
             }
         });
 
@@ -1007,6 +1063,9 @@
             $('#copyConfigModal').modal('hide');
         });
 
+        $('#CompanyId').bind('change', function () {
+            populateMotorSelect('c');
+        });
         $('#UnitId').bind('change', function () {
             populateMotorSelect('u');
         });
@@ -1022,6 +1081,33 @@
             $('#CopyToMotorId option').show();
 
             switch (filtro) {
+
+                case 'c':
+                    let companyId = $('#CompanyId').val();
+                    if (companyId != '') {
+                        $('#CopyToMotorId option[cid!="' + companyId + '"]').hide();
+                        $('#CopyToMotorId option[cid="' + companyId + '"]').show();
+
+                        $('#UnitId option[cid!="' + companyId + '"]').hide();
+                        $('#UnitId option[cid="' + companyId + '"]').show();
+
+                        $('#SectorId option[cid!="' + companyId + '"]').hide();
+                        $('#SectorId option[cid="' + companyId + '"]').show();
+
+                        $('#SubSectorId option[cid!="' + companyId + '"]').hide();
+                        $('#SubSectorId option[cid="' + companyId + '"]').show();
+                    }
+                    else {
+                        $('#UnitId option').show();
+                        $('#SectorId option').show();
+                        $('#SubSectorId option').show();
+                    }
+
+                    $('#UnitId').val('');
+                    $('#SectorId').val('');
+                    $('#SubSectorId').val('');
+
+                    break;
                 case 'u':
                     let unitId = $('#UnitId').val();
                     if (unitId != '') {
@@ -1079,16 +1165,10 @@
             let motorId = $('#CopyToMotorId').val();
             deviceSelect.find('option').not(':first').remove();
 
-            //$.post('@Url.Content("~/Device/GetDeviceByMotorId")', { mId: motorId }, function (data) {
-            //    $.each(data, function () {
-            //        if (masterDevice != this.id)
-            //            deviceSelect.append($("<option />").val(this.id).text(this.tag));
-            //    });
-            //});
-
-            $.post('@Url.Content("~/Device/GetFreeDevice")', function (data) {
+            $.post('@Url.Content("~/Device/GetDeviceByMotorId")', { mId: motorId }, function (data) {
                 $.each(data, function () {
-                    deviceSelect.append($("<option />").val(this.id).text(this.tag));
+                    if (masterDevice != this.id)
+                        deviceSelect.append($("<option />").val(this.id).text(this.tag));
                 });
             });
         }

@@ -5,6 +5,7 @@ using Core.Service;
 using Core.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using SensorService;
@@ -25,6 +26,7 @@ namespace SensorWeb.Controllers
         ICompanyService _companyService;
         IDeviceService _deviceService;
         ICompanyUnitService _companyUnitService;
+        IConfigService _configService;
         private readonly IStringLocalizer<Resources.CommonResources> _localizer;
 
         private readonly ILogger<MotorController> _logger;
@@ -39,6 +41,7 @@ namespace SensorWeb.Controllers
                                   ICompanyService CompanyService,
                                   IDeviceService DeviceService,
                                   ICompanyUnitService CompanyUnitService,
+                                  IConfigService ConfigService,
                                   IMapper mapper,
                                   IStringLocalizer<Resources.CommonResources> localizer,
                                   ILogger<MotorController> logger)
@@ -48,6 +51,7 @@ namespace SensorWeb.Controllers
             _companyService = CompanyService;
             _deviceService = DeviceService;
             _companyUnitService = CompanyUnitService;
+            _configService = ConfigService;
             _mapper = mapper;
             _localizer = localizer;
             _logger = logger;
@@ -65,12 +69,36 @@ namespace SensorWeb.Controllers
 
                 var listaMotors = _MotorService.GetAllEquipamento();
 
+                listaMotors = FilterMotorsByUser(user, listaMotors, companies);
+
                 var listaMotorModel = _mapper.Map<List<MotorModel>>(listaMotors);
 
-                if (user.UserType.Name != Constants.Roles.Administrator)
-                {
-                    listaMotorModel = listaMotorModel.Where(x => x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId)).ToList();
-                }
+                return View(listaMotorModel.OrderBy(x => x.Id));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation($"Erro:{ex.Message}");
+                throw;
+            }
+
+        }
+
+        public ActionResult IndexMobile(string mdc)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = _userService.Get(Convert.ToInt32(userId));
+                var userCompany = user.Contact.CompanyId;
+                var companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany).ToList();
+
+                var listaMotors = _MotorService.GetAllEquipamento().Where(m => m.Name != null);
+
+                listaMotors = FilterMotorsByUser(user, listaMotors, companies);
+
+                var listaMotorModel = _mapper.Map<List<MotorModel>>(listaMotors);
+
+                ViewBag.DeviceCode = mdc;
 
                 return View(listaMotorModel.OrderBy(x => x.Id));
             }
@@ -103,7 +131,7 @@ namespace SensorWeb.Controllers
             }
 
             ViewBag.MotorDevices = _deviceService.GetAll()
-                    .Where(x => x.DeviceMotor.MotorId == id).ToList();
+                    .Where(x => x.DeviceMotor != null && x.DeviceMotor.MotorId == id).ToList();
 
             return View(MotorModel);
         }
@@ -114,11 +142,16 @@ namespace SensorWeb.Controllers
             var userId = LoggedUserId;
             var user = _userService.Get(Convert.ToInt32(userId));
             var userCompany = user.Contact.CompanyId;
-            var companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany).ToList();
+            var companies = _companyService.GetAll().ToList();
+
+            if (user.UserType.Name != Constants.Roles.Administrator)
+            {
+                companies = companies.Where(x => x.Id == userCompany).ToList();
+            }
 
             var motorModel = new MotorModel
             {
-                Companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany || x.Id == userCompany)
+                Companies = companies
                     .Select(y => new SelectListItemDTO()
                     {
                         Key = y.Id,
@@ -146,21 +179,26 @@ namespace SensorWeb.Controllers
             var userId = LoggedUserId;
             var user = _userService.Get(Convert.ToInt32(userId));
             var userCompany = user.Contact.CompanyId;
-            var companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany).ToList();
+            var companies = _companyService.GetAll().ToList();
 
-            motorModel.Companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany || x.Id == userCompany)
+            if (user.UserType.Name != Constants.Roles.Administrator)
+            {
+                companies = companies.Where(x => x.Id == userCompany).ToList();
+            }
+
+            motorModel.Companies = companies
                     .Select(y => new SelectListItemDTO()
                     {
                         Key = y.Id,
                         Value = y.TradeName
                     }).Distinct().ToList();
 
-            //motorModel.Devices = _deviceService.GetAll().Where(x => x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId))
-            //        .Select(y => new SelectListItemDTO()
-            //        {
-            //            Key = y.Id,
-            //            Value = y.Tag
-            //        }).Distinct().ToList();
+            motorModel.Units = _companyUnitService.GetAll().Where(x => x.CompanyId == userCompany)
+                    .Select(y => new SelectListItemDTO()
+                    {
+                        Key = y.Id,
+                        Value = y.Name
+                    }).Distinct().ToList();
 
             return View("Create", motorModel);
         }
@@ -196,7 +234,12 @@ namespace SensorWeb.Controllers
             var userId = LoggedUserId;
             var user = _userService.Get(Convert.ToInt32(userId));
             var userCompany = user.Contact.CompanyId;
-            var companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany).ToList();
+            var companies = _companyService.GetAll().ToList();
+
+            if (user.UserType.Name != Constants.Roles.Administrator)
+            {
+                companies = companies.Where(x => x.Id == userCompany).ToList();
+            }
 
             var motor = _MotorService.Get(id);
             var motorModel = _mapper.Map<MotorModel>(motor);
@@ -217,7 +260,7 @@ namespace SensorWeb.Controllers
                     }
                 }
 
-                motorModel.Companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany || x.Id == userCompany)
+                motorModel.Companies = companies
                 .Select(y => new SelectListItemDTO()
                 {
                     Key = y.Id,
@@ -228,7 +271,7 @@ namespace SensorWeb.Controllers
 
                 motorModel.Devices = allDevices
                     .Where(x => (x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId))
-                        && x.DeviceMotorId == null)
+                        && x.DeviceMotorId == null && x.CompanyId == motor.CompanyId)
                     .Select(y => new SelectListItemDTO()
                     {
                         Key = y.Id,
@@ -249,6 +292,72 @@ namespace SensorWeb.Controllers
             return View(motorModel);
         }
 
+        public ActionResult EditMobile(int id, string mdc)
+        {
+            var userId = LoggedUserId;
+            var user = _userService.Get(Convert.ToInt32(userId));
+            var userCompany = user.Contact.CompanyId;
+            var companies = _companyService.GetAll().ToList();
+
+            if (user.UserType.Name != Constants.Roles.Administrator)
+            {
+                companies = companies.Where(x => x.Id == userCompany).ToList();
+            }
+
+            var motor = _MotorService.Get(id);
+            var motorModel = _mapper.Map<MotorModel>(motor);
+
+            if (motorModel != null)
+            {
+                if (motor.SectorId != null)
+                {
+                    var sector = _companyUnitService.GetSector(motor.SectorId.Value);
+
+                    ViewBag.UnitName = sector.CompanyUnit.Name;
+                    ViewBag.SectorName = sector.Name;
+
+                    if (sector.ParentSectorId != null)
+                    {
+                        ViewBag.SectorName = sector.ParentSector.Name;
+                        ViewBag.SubSectorName = sector.Name;
+                    }
+                }
+
+                motorModel.Companies = companies
+                .Select(y => new SelectListItemDTO()
+                {
+                    Key = y.Id,
+                    Value = y.TradeName
+                }).Distinct().ToList();
+
+                var allDevices = _deviceService.GetAll();
+
+                motorModel.Devices = allDevices
+                    .Where(x => (x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId))
+                        && x.DeviceMotorId == null && x.Code == mdc)
+                    .Select(y => new SelectListItemDTO()
+                    {
+                        Key = y.Id,
+                        Value = y.Tag
+                    }).Distinct().ToList();
+
+                ViewBag.MotorDevices = allDevices
+                    .Where(x => x.DeviceMotor?.MotorId == id).ToList();
+            }
+
+            motorModel.Units = _companyUnitService.GetAll().Where(x => x.CompanyId == userCompany)
+                .Select(y => new SelectListItemDTO()
+                {
+                    Key = y.Id,
+                    Value = y.Name
+                }).Distinct().ToList();
+
+            motorModel.MobileDeviceCode = mdc;
+            ViewBag.DeviceCode = mdc;
+
+            return View(motorModel);
+        }
+
         // POST: MotorController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -263,7 +372,10 @@ namespace SensorWeb.Controllers
 
                 }
 
-                return RedirectToAction(nameof(Index));
+                if (MotorModel.IsMobile != null && MotorModel.IsMobile == true)
+                    return RedirectToAction("ActionQR", "Device", new { dCode = MotorModel.MobileDeviceCode });
+                else
+                    return RedirectToAction(nameof(Index));
             }
             catch
             {
@@ -291,7 +403,8 @@ namespace SensorWeb.Controllers
             }
             catch
             {
-                return View();
+                ViewBag.ErrorMsg = _MotorService.GetRelatedLocks(id);
+                return View(MotorModel);
             }
         }
 
@@ -299,26 +412,81 @@ namespace SensorWeb.Controllers
         public JsonResult InsertMotorDevice(int mId, int dId, string planoMedicao, string orientacaoSensor)
         {
             var device = _deviceService.Get(dId);
-            var motor = _MotorService.Get(mId);
+            var deviceMaxChanges = device.DeviceMotorMaxChanges;
 
-            if (device != null)
+            if (deviceMaxChanges == null)
             {
-                var motorDevice = new DeviceMotor()
-                {
-                    MotorId = mId,
-                    MeasurementPlan = planoMedicao,
-                    SensorOrientation = orientacaoSensor
-                };
-
-                motor.MotorDevices.Add(motorDevice);
-                _MotorService.Edit(motor);
-
-                device.Company = null;
-                device.DeviceMotor = motorDevice;
-                _deviceService.Edit(device);
+                deviceMaxChanges = device.Company?.DeviceMotorMaxChanges;
             }
 
-            return Json(new { success = true });
+            if (deviceMaxChanges == null)
+            {
+                var configParam = _configService.GetByNameParam("NumeroMudancasSensorEquipamento");
+                if (configParam != null && !string.IsNullOrWhiteSpace(configParam.Value))
+                    deviceMaxChanges = int.Parse(configParam.Value);
+            }
+
+            var deviceLogs = _configService.GetLogByPrimary(dId).Where(l => l.Name == "DeviceMotorChange");
+            var lastDeviceLog = deviceLogs.OrderByDescending(l => l.CreatedAt).FirstOrDefault();
+            var changesCount = deviceLogs.Where(l => l.IsChange == true).Count();
+
+            if (deviceMaxChanges == null || changesCount < deviceMaxChanges
+                || (changesCount == deviceMaxChanges && lastDeviceLog.SecondaryId == mId))
+            {
+                var motor = _MotorService.Get(mId);
+
+                if (device != null)
+                {
+                    var motorDevice = new DeviceMotor()
+                    {
+                        MotorId = mId,
+                        MeasurementPlan = planoMedicao,
+                        SensorOrientation = orientacaoSensor
+                    };
+
+                    motor.MotorDevices.Add(motorDevice);
+                    _MotorService.Edit(motor);
+
+                    device.Company = null;
+                    device.DeviceMotor = motorDevice;
+                    _deviceService.Edit(device);
+
+                    var isChange = false;
+                    if (lastDeviceLog != null && lastDeviceLog.SecondaryId != mId)
+                    {
+                        isChange = true;
+                    }
+
+                    var userId = LoggedUserId;
+                    var user = _userService.Get(Convert.ToInt32(userId));
+
+                    ConfigLog log = new ConfigLog()
+                    {
+                        Name = "DeviceMotorChange",
+                        PrimaryId = dId,
+                        SecondaryId = mId,
+                        PrimaryName = device.Tag,
+                        SecondaryName = motor.Name,
+                        UserName = $"{userId} - {user.Email}",
+                        IsChange = isChange,
+                        Description = $"{TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).ToString("dd/MM/yyyy HH:mm")} {motor.Name} {user.Email} {(isChange == true ? (" - Mudança " + (changesCount + 1)) : "")}"
+                    };
+
+                    _configService.InsertLog(log);
+                }
+
+                return Json(new { success = true });
+            }
+            else
+            {
+                return Json(new { success = false, logs = deviceLogs.Select(l => new ConfigLogModel()
+                {
+                    data = l.CreatedAt.ToString("dd/MM/yyyy HH:mm"),
+                    equip = l.SecondaryName,
+                    user = l.UserName.Split(" - ")[1],
+                    change = l.IsChange == true ? (l.Description.Split(" - ").Last()) : ""
+                }) });
+            }
         }
 
         [HttpPost]
@@ -333,6 +501,8 @@ namespace SensorWeb.Controllers
 
                 if (device != null)
                 {
+                    //TODO: desativar config. sensor
+
                     device.Company = null;
                     device.DeviceMotorId = null; device.DeviceMotor = null;
                     _deviceService.Edit(device);
@@ -361,7 +531,11 @@ namespace SensorWeb.Controllers
 
                 var listaMotorModel = _mapper.Map<List<MotorModel>>(listaMotors);
 
-                if (user.UserType.Name != Constants.Roles.Administrator)
+                if (user.UserType.Name == Constants.Roles.Supervisor || user.UserType.Name == Constants.Roles.User)
+                {
+                    listaMotorModel = listaMotorModel.Where(x => x.CompanyId == userCompany).ToList();
+                }
+                else if (user.UserType.Name == Constants.Roles.Sysadmin)
                 {
                     listaMotorModel = listaMotorModel.Where(x => x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId)).ToList();
                 }
@@ -381,18 +555,23 @@ namespace SensorWeb.Controllers
             var userId = LoggedUserId;
             var user = _userService.Get(Convert.ToInt32(userId));
             var userCompany = user.Contact.CompanyId;
-            var companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany).ToList();
+            var companies = _companyService.GetAll().ToList();
+
+            if (user.UserType.Name != Constants.Roles.Administrator)
+            {
+                companies = companies.Where(x => x.Id == user.Contact.CompanyId || (x.ParentCompanyId == userCompany && x.CompanyTypeId == 3)).ToList();
+            }
 
             var motorModel = new MotorModel
             {
-                Companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany || x.Id == userCompany)
+                Companies = companies
                     .Select(y => new SelectListItemDTO()
                     {
                         Key = y.Id,
                         Value = y.TradeName
                     }).Distinct().ToList(),
 
-                Units = _companyUnitService.GetAll().Where(x => x.CompanyId == userCompany)
+                Units = _companyUnitService.GetAll().Where(x => companies.Any(c => c.Id == x.CompanyId))
                     .Select(y => new SelectListItemDTO()
                     {
                         Key = y.Id,
@@ -432,7 +611,12 @@ namespace SensorWeb.Controllers
             var userId = LoggedUserId;
             var user = _userService.Get(Convert.ToInt32(userId));
             var userCompany = user.Contact.CompanyId;
-            var companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany).ToList();
+            var companies = _companyService.GetAll().ToList();
+
+            if (user.UserType.Name != Constants.Roles.Administrator)
+            {
+                companies = companies.Where(x => x.Id == user.Contact.CompanyId || (x.ParentCompanyId == userCompany && x.CompanyTypeId == 3)).ToList();
+            }
 
             var motor = _MotorService.Get(id);
             var motorModel = _mapper.Map<MotorModel>(motor);
@@ -457,9 +641,7 @@ namespace SensorWeb.Controllers
 
                 var allMotors = _MotorService.GetAllEquipamento();
 
-                motorModel.Equips = allMotors
-                    .Where(x => x.GroupId == null && x.SectorId == motor.SectorId &&
-                        (x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId)))
+                motorModel.Equips = GetListaMotorsFromUser()
                     .Select(y => new SelectListItemDTO()
                     {
                         Key = y.Id,
@@ -468,9 +650,15 @@ namespace SensorWeb.Controllers
 
                 ViewBag.Motors = allMotors
                     .Where(x => x.GroupId == id).ToList();
+
+                motorModel.Companies = companies.Select(y => new SelectListItemDTO()
+                {
+                    Key = y.Id,
+                    Value = y.TradeName
+                }).Distinct().ToList();
             }
 
-            motorModel.Units = _companyUnitService.GetAll().Where(x => x.CompanyId == userCompany)
+            motorModel.Units = _companyUnitService.GetAll().Where(x => companies.Any(c => c.Id == x.CompanyId))
                 .Select(y => new SelectListItemDTO()
                 {
                     Key = y.Id,
@@ -596,5 +784,34 @@ namespace SensorWeb.Controllers
         }
 
         #endregion
+
+        private IEnumerable<Motor> GetListaMotorsFromUser()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _userService.Get(Convert.ToInt32(userId));
+            var userCompany = user.Contact.CompanyId;
+            var companies = _companyService.GetAll().Where(x => x.ParentCompanyId == userCompany).ToList();
+
+            var listaMotors = _MotorService.GetAllEquipamento();
+
+            if (user.UserType.Name == Constants.Roles.Supervisor || user.UserType.Name == Constants.Roles.User)
+            {
+                listaMotors = listaMotors.Where(x => x.CompanyId == userCompany).ToList();
+            }
+            else if (user.UserType.Name == Constants.Roles.Sysadmin)
+            {
+                listaMotors = listaMotors.Where(x => x.CompanyId == userCompany || companies.Any(y => y.Id == x.CompanyId)).ToList();
+            }
+
+            return listaMotors;
+        }
+    }
+
+    public class ConfigLogModel
+    {
+        public string data {  get; set; }
+        public string equip { get; set; }
+        public string user { get; set; }
+        public string change { get; set; }
     }
 }

@@ -24,7 +24,7 @@
                         <tr>
                             <td><h4 class="card-title">@localizer.Get("CompanyTitle")</h4></td>
 
-                            @if (User.IsInRole("Administrador"))
+                            @if (User.IsInRole("Administrador") || ViewBag.AdminInDistribuidor == true)
                             {
                                 <td style="text-align:right">
 
@@ -47,9 +47,9 @@
                         <table id="example" class="display table" style="width:100%;text-align:center">
                             <thead>
                                 <tr>
-                                    <th>
+                                    @*<th>
                                         @Html.DisplayNameFor(modelItem => modelItem.Id)
-                                    </th>
+                                    </th>*@
                                     <th>
                                         @Html.DisplayNameFor(modelItem => modelItem.LegalName)
                                     </th>
@@ -71,14 +71,21 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td>
+                                        @*<td>
                                             @Html.DisplayFor(modelItem => item.Id)
-                                        </td>
+                                        </td>*@
                                         <td>
                                             @Html.DisplayFor(modelItem => item.LegalName)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Cnpj)
+                                            @if (item.Cnpj.Length == 14)
+                                            {
+                                                @($"{item.Cnpj.Substring(0, 2)}.{item.Cnpj.Substring(2, 3)}.{item.Cnpj.Substring(5, 3)}/{item.Cnpj.Substring(8, 4)}-{item.Cnpj.Substring(12, 2)}")
+                                            }
+                                            else
+                                            {
+                                                @item.Cnpj
+                                            }
                                         </td>
                                         <td class="sccentralize">
                                             @Html.DisplayFor(modelItem => item.UpdatedAtSt)
@@ -87,9 +94,12 @@
                                             <table style="width:100%">
                                                 <tr>
                                                     <td style="padding:0 4px"><a href="@Url.Action("Details", "Company", new { id = item.Id })" title="@localizer.Get("View")"><i class="fas fa-eye"></i></a></td>
-                                                    @if (User.IsInRole("Administrador"))
+                                                    @if (User.IsInRole("Administrador") || ViewBag.AdminInDistribuidor == true)
                                                     {
                                                         <td style="padding:0 4px"><a href="@Url.Action("Edit", "Company", new { id = item.Id })" title="@localizer.Get("Edit")"><i class="fas fa-edit" style="color:#ff6a00"></i></a></td>
+                                                    }
+                                                    @if (User.IsInRole("Administrador"))
+                                                    {
                                                         <td style="padding:0 4px"><a href="@Url.Action("Delete", "Company", new { id = item.Id })" title="@localizer.Get("Delete")" style="color:#ff0000"><i class="fas fa-window-close"></i></a></td>
                                                     }
                                                 </tr>
