@@ -112,7 +112,7 @@
 
                     @Html.DropDownListFor(model => model.UserTypeId,
                      /*new SelectList(ViewBag.ListUserType, t => t.StateName.ToString()), "Key", "Value")*/
-                     new SelectList(userTypeService.GetQueryDropDownListStrict(userId), "Key", "Value")
+                     new SelectList(userTypeService.GetQueryDropDownListStrict(userId), "Key", "Value", Model.UserTypeId)
                          , @localizer.Get("UserTypeSelect"), new Dictionary<string, object> { { "class", "form-control" } })
 
 
@@ -182,17 +182,21 @@
     <script type="text/javascript">
 
         $(document).ready(function ($) {
-            $('#UserTypeId option:not(:selected)').hide();
             $('#Contact_CompanyId').on('change', function () {
-                userTypeChanger();
+                userTypeChanger(true);
             });
 
-            userTypeChanger();
+            userTypeChanger(false);
         });
 
-        function userTypeChanger() {
-            $('#UserTypeId').val('');
-            $('#UserTypeId option').hide();
+        function userTypeChanger(hideType) {
+            if (hideType) {
+                $('#UserTypeId').val('');
+                $('#UserTypeId option').hide();
+            }
+            else {
+                $('#UserTypeId option:not(:selected)').hide();
+            }
 
             let companyType = $("#Contact_CompanyId option:selected").attr('ctid');
 

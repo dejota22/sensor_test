@@ -48,7 +48,7 @@
             <div class="col-md-12 formclasscreate">
                 <div class="form-group col-md-5">
                     <label class="control-label">HoraEnvioDadoVikings</label>
-                    <input asp-for="VikingsSendDataTime" class="form-control horatype" placeholder="HH:MM" onblur="validateTimeInput(this)" />
+                    <input asp-for="VikingsSendDataTime" class="form-control horatype" value="@Model.VikingsSendDataTime" placeholder="HH:MM" onblur="validateTimeInput(this)" />
                 </div>
             </div>
         }

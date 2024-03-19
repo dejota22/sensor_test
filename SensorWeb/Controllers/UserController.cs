@@ -85,12 +85,12 @@ namespace SensorWeb.Controllers
                 {
                     if (userModel.Password.Length < 6)
                     {
-                        ViewData["Error"] = "A senha deve ter no mínimo 6 caracteres";
+                        ViewData["Error"] = "A senha deve ter no minimo 6 caracteres";
                         return View(userModel);
                     }
                     else if (!userModel.Password.Any(p => char.IsDigit(p)) || !userModel.Password.Any(p => char.IsLetter(p)))
                     {
-                        ViewData["Error"] = "A senha deve ter números e letras";
+                        ViewData["Error"] = "A senha deve ter numeros e letras";
                         return View(userModel);
                     }
                     else if (userModel.Password != userModel.PasswordConfirm)
@@ -102,7 +102,7 @@ namespace SensorWeb.Controllers
                     var existingUser = _userService.GetByEmail(userModel.Email);
                     if (existingUser != null)
                     {
-                        ViewData["Error"] = "Já existe um usuário cadastrado com o mesmo e-mail";
+                        ViewData["Error"] = "Ja existe um usuario cadastrado com o mesmo e-mail";
                         return View(userModel);
                     }
 

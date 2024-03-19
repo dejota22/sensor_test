@@ -124,15 +124,11 @@ namespace SensorWeb.Controllers
                 CompanyModel.CompanyType.Clear();
                 CompanyModel.CompanyType.Add(new SelectListItemDTO() { Key = 2, Value = "Distribuidor" });
             }
-
-            //if (user.UserType.Name == Constants.Roles.Administrator)
-            //{
-            //    CompanyModel.CompanyType.Add(new SelectListItemDTO()
-            //    {
-            //        Key = 1,
-            //        Value = "Administrador"
-            //    });
-            //}
+            else if (Company.CompanyTypeId == 1)
+            {
+                CompanyModel.CompanyType.Clear();
+                CompanyModel.CompanyType.Add(new SelectListItemDTO() { Key = 1, Value = "Administrador" });
+            }
 
             ViewBag.Contacts = _companyAlertContactService.GetByCompany(id).ToList();
 
