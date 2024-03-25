@@ -30,13 +30,13 @@ Certifique-se de ter o Docker instalado em sua máquina. Você pode baixar e ins
 4. Execute os contêineres:
 
     ```bash
-    docker run -d -p 8080:80 sensorweb
+    docker run -d -p 8090:80 sensorweb
     docker run -d -p 8081:80 sensorapi
     ```
 
 5. Agora, você pode acessar suas aplicações:
 
-    - SensorWeb: [http://localhost:8080](http://localhost:8080)
+    - SensorWeb: [http://localhost:8090](http://localhost:8090)
     - SensorApi: [http://localhost:8081](http://localhost:8081)
 
 
