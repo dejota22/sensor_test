@@ -57,16 +57,6 @@ namespace Core
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserType> UserType { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                //optionsBuilder.UseMySQL("server=localhost;port=3306;user=root;password=Rick@159989;database=mydb");
-                optionsBuilder.UseMySQL("server=iot-prod.cluster-cwupbex41i4c.us-east-2.rds.amazonaws.com;port=3306;user=admin;password=FmUtuMSzoFLPu2ZMZ8Ct;database=sensorDB;SslMode=None");
-            }
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuationType>(entity =>
