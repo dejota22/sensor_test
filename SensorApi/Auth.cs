@@ -14,9 +14,9 @@ namespace SensorApi
         private readonly IUserService _userService;
 
         private readonly string key;
-        public Auth(string key, IUserService userService)
+        public Auth(IUserService userService)
         {
-            this.key = key;
+            this.key = "3FJRhIppOMZ3Z0MkKsBfiej4M9Ms1j5k";
             _userService = userService;
         }        
         public string Authentication(string username, string password)

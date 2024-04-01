@@ -74,7 +74,7 @@ namespace SensorApi
             container.RegisterType<IUserService, UserService>();
             UserService _userService = container.Resolve<UserService>();            
 
-            services.AddSingleton<IJwtAuth>(new Auth(key, _userService));
+            services.AddTransient<IJwtAuth, Auth>();
 
             services.AddSwaggerGen(c =>
             {
