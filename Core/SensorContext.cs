@@ -6,10 +6,6 @@ namespace Core
 {
     public partial class SensorContext : DbContext
     {
-        public SensorContext()
-        {
-        }
-
         public SensorContext(DbContextOptions<SensorContext> options)
             : base(options)
         {
