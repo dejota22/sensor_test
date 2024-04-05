@@ -164,7 +164,7 @@
                     <option value="">-- Selecione os Dados --</option>
                     @foreach (var d in (IEnumerable<Core.ReceiveData>)ViewBag.DeviceData)
                     {
-                        string itemText = string.Format("{0} - Tipo: {1} - Eixo: {2} - Freq: {3}", d.DataReceive.ToString("dd/MM/yyyy HH:mm:ss"),
+                        string itemText = string.Format("{0} - Tipo: {1} - Eixo: {2} - Freq: {3}", d.data_hora.Value.ToString("dd/MM/yyyy HH:mm:ss"),
                             (d.tipo == 1 ? "ACC" : "SPD"), SensorWeb.Controllers.ReportController.GetSetupInfo("eixo", d.setup_eixo), 
                             SensorWeb.Controllers.ReportController.GetSetupInfo("freq", d.setup_freq_cut));
 

@@ -348,10 +348,10 @@ namespace SensorService
                 qReportType = 1;
 
             var listaData = GetQueryData().Where(d => d.DeviceConfiguration.DeviceId == deviceId && d.DeviceConfiguration.MotorId == motorId && 
-                d.DataReceive >= startDate && d.DataReceive <= endDate && d.tipo == qReportType && d.setup_eixo == eixo).ToList();
+                d.data_hora >= startDate && d.data_hora <= endDate && d.tipo == qReportType && d.setup_eixo == eixo).ToList();
 
             var listaGlobal = GetQueryGlobal().Where(d => d.DeviceConfiguration.DeviceId == deviceId && d.DeviceConfiguration.MotorId == motorId &&
-                d.DataReceive >= startDate && d.DataReceive <= endDate).ToList();
+                d.data_hora >= startDate && d.data_hora <= endDate).ToList();
 
             return MontaListaReportRMSCrista(listaData, listaGlobal, reportType, eixo);
         }
@@ -1049,7 +1049,7 @@ namespace SensorService
 
             var listDataMod = listData.Select(d => new RMSCristaModelResponse()
             {
-                DataReceive = (long)(d.DataReceive.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds),
+                DataReceive = (long)(d.data_hora.Value.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds),
                 Value = reportType == 1 ? d.rms_acc : reportType == 2 ? d.rms_spd : reportType == 3 ? d.ftr_crista : 0,
                 Origem = "Completo",
                 DataDevice = d.IdReceiveData
@@ -1061,7 +1061,7 @@ namespace SensorService
                 foreach (var data in listGlobal)
                 {
                     var globalMod = new RMSCristaModelResponse();
-                    globalMod.DataReceive = (long)(data.DataReceive.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds);
+                    globalMod.DataReceive = (long)(data.data_hora.Value.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds);
                     globalMod.Origem = "Global";
 
                     if (reportType == 1 && eixo == 1)

@@ -359,14 +359,20 @@ namespace SensorApi.Controllers
 
         private ReceiveGlobal GenerateEntityFromDeviceGlobalRequest(DeviceGlobalRequest deviceGlobal, int idDeviceConfiguration)
         {
+            DateTime tryDataHora = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
+            try
+            {
+                tryDataHora = DateTime.ParseExact(deviceGlobal.data_hora, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch { }
+
             return new ReceiveGlobal()
             {
                 id = deviceGlobal.Id,
                 IdDeviceConfiguration = idDeviceConfiguration,
                 gtw = deviceGlobal.gtw,
                 RSSI = deviceGlobal.RSSI,
-                data_hora = DateTime.ParseExact(deviceGlobal.data_hora, "yyyy-MM-dd HH:mm:ss",
-                                       System.Globalization.CultureInfo.InvariantCulture),
+                data_hora = tryDataHora,
                 ver = deviceGlobal.ver,
                 seq = deviceGlobal.seq,
                 resets = deviceGlobal.resets,
@@ -875,13 +881,20 @@ namespace SensorApi.Controllers
 
         private ReceiveData GenerateEntityFromDeviceDataRequest(DeviceDataRequest deviceData, int idDeviceConfiguration)
         {
+            DateTime tryDataHora = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"));
+            try
+            {
+                tryDataHora = DateTime.ParseExact(deviceData.data_hora, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch { }
+
             return new ReceiveData()
             {
                 id = deviceData.Id,
                 IdDeviceConfiguration = idDeviceConfiguration,
                 gtw = deviceData.gtw,
-                data_hora = DateTime.ParseExact(deviceData.data_hora, "yyyy-MM-dd HH:mm:ss",
-                                       System.Globalization.CultureInfo.InvariantCulture),
+
+                data_hora = tryDataHora,
                 seq = deviceData.seq,
                 alarme = deviceData.alarme,
                 dec = deviceData.dec,

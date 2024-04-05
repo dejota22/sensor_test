@@ -507,7 +507,7 @@ namespace SensorWeb.Controllers
                 {
                     if (receiveDataAndGlobal.Any(rdg => rdg.id == data.id) == false)
                     {
-                        receiveDataAndGlobal.Add(new DataAndGlobalModel() { id = data.id, alarm = data.alarme, dataReceive = data.DataReceive });
+                        receiveDataAndGlobal.Add(new DataAndGlobalModel() { id = data.id, alarm = data.alarme, dataReceive = data.data_hora.Value });
                     }
                 }
             }
@@ -517,7 +517,7 @@ namespace SensorWeb.Controllers
                 {
                     if (receiveDataAndGlobal.Any(rdg => rdg.id == global.id) == false)
                     {
-                        receiveDataAndGlobal.Add(new DataAndGlobalModel() { id = global.id, alarm = global.alrm, dataReceive = global.DataReceive });
+                        receiveDataAndGlobal.Add(new DataAndGlobalModel() { id = global.id, alarm = global.alrm, dataReceive = global.data_hora.Value });
                     }
                 }
             }
@@ -548,7 +548,7 @@ namespace SensorWeb.Controllers
                 {
                     if (receiveDataAndGlobal.Any(rdg => rdg.id == data.id) == false)
                     {
-                        receiveDataAndGlobal.Add(new DataAndGlobalModel() { id = data.id, alarm = data.alarme, dataReceive = data.DataReceive });
+                        receiveDataAndGlobal.Add(new DataAndGlobalModel() { id = data.id, alarm = data.alarme, dataReceive = data.data_hora.Value });
                     }
                 }
             }
@@ -558,7 +558,7 @@ namespace SensorWeb.Controllers
                 {
                     if (receiveDataAndGlobal.Any(rdg => rdg.id == global.id) == false)
                     {
-                        receiveDataAndGlobal.Add(new DataAndGlobalModel() { id = global.id, alarm = global.alrm, dataReceive = global.DataReceive });
+                        receiveDataAndGlobal.Add(new DataAndGlobalModel() { id = global.id, alarm = global.alrm, dataReceive = global.data_hora.Value });
                     }
                 }
             }
