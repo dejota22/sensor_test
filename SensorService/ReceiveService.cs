@@ -17,6 +17,7 @@ using Org.BouncyCastle.Asn1.X500;
 using Org.BouncyCastle.Asn1.X509;
 using System.Numerics;
 using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 //using Renci.SshNet.Messages;
 
 namespace SensorService

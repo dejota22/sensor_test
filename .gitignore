@@ -399,3 +399,5 @@ FodyWeavers.xsd
 *.sln.iml
 /SensorWeb/appsettings.json
 /SensorApi/appsettings.json
+/SensorApi/Dockerfile
+/SensorWeb/Dockerfile

@@ -20,7 +20,7 @@ namespace Core
         public string gtw { get; set; }
         [Column(TypeName = "varchar(45)")]
         public int? RSSI { get; set; }
-        public string data_hora { get; set; }
+        public DateTime? data_hora { get; set; }
         public string ver { get; set; }
         public int seq { get; set; }
         public int resets { get; set; }
