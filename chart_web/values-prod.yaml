@@ -1,0 +1,42 @@
+environment: prod
+
+appPort: 80
+
+minReplicas: 1
+
+## HPA (Horizontal Pod Autoscaler)
+hpa:
+  ## max number pods
+  maxReplicas: 3
+  ## Scaling metric type
+  # currently possible to scale by "cpu", "memory", "requests_per_second", "requests_latency", jvm_memory_heap_used", "jvm_gc_pause_seconds" or "rabbitmq_queue_messages_ready"
+  scalingBy: cpu
+  targetAverage: 80
+
+
+podAntiAffinity: soft
+
+nodeSelector:
+  env: prod
+  alloc: apps
+  kubernetes.io/arch: amd64
+
+ingress:
+  domain: vibracao.iotnest.com.br
+
+image:
+  repository: arn:aws:ecr:sa-east-1:665586886687:repository/sensorweb
+  tag: prod
+  pullPolicy: Always
+
+resources:
+  ## Ideally, there should be no limits.
+  ## https://engineering.indeedblog.com/blog/2019/12/cpu-throttling-regression-fix/
+  # limits:
+  #   cpu: 1
+  #   memory: 1Gi
+  # requests:
+  #   cpu: 200m
+  #   memory: 0.5Gi
+
+

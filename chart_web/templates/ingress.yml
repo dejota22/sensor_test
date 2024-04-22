@@ -1,0 +1,56 @@
+{{- if .Values.ingress }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+{{- if .Values.ingress.domain }}
+    external-dns.alpha.kubernetes.io/hostname: {{ .Values.ingress.domain }}
+{{- end }}
+{{- if .Values.ingress.domainInternal }}
+    external-dns.alpha.kubernetes.io/internal-hostname: {{ .Values.ingress.domainInternal }}
+{{- end }}
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-default
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10000m"
+    nginx.ingress.kubernetes.io/server-snippet: |
+      ## Block for custom code on server block
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      ## Block for custom code on location code
+{{- if .Values.ingress.force_ssl }}
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+{{- end }}
+  labels:
+    app: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    # use-cloudflare-solver: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+{{- if .Values.ingress.tls }}
+    - secretName: {{ .Values.ingress.tls }}
+{{- else }}
+    - secretName: {{ .Release.Name }}-le-cert
+{{- end }}
+{{- if .Values.ingress.domain }}
+      hosts:
+        - {{ .Values.ingress.domain }}
+  rules:
+    - host: {{ .Values.ingress.domain }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Chart.Name }}
+                port:
+                  number: 80
+{{- end }}
+{{- end }}

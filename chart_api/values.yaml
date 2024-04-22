@@ -1,0 +1,141 @@
+environment: local
+
+## Application confs
+### App is java?
+appJava: false
+### Port
+appPort: 80
+
+### Custom Command App Start
+customCommandApp: []
+#  - "sh"
+#  - "-c"
+
+### Custom Args App Start
+customArgsApp: []
+#  - "ls -lah"
+
+### time in seconds that the cluster waits to give a teminate in the pod
+terminationGracePeriodSeconds: 30
+
+### min number pods
+minReplicas: 1
+
+### Container size (request/limits)
+resources: {}
+#  limits:
+#    cpu: 30m
+#    memory: 40Mi
+#  requests:
+#    cpu: 15m
+#    memory: 20Mi
+
+## Pod Affinity
+# Allow Values (soft/hard)
+podAntiAffinity: soft
+
+## AWS IAM Role
+### Application needs integration with AWS services (via API calls) 
+arnIAMrole: ""
+
+## Container image confs
+image:
+  repository: ""
+  tag: web
+  pullPolicy: Always
+  pullSecret: []
+
+
+## Enviroment variables
+extraEnv: []
+#  - name: NEWRELIC_APPNAME
+#    value: app-example
+#  - name: NEWRELIC_LICENSE_KEY
+#    valueFrom:
+#      secretKeyRef:
+#        name: app-example-overlay
+#        key: newrelic_license_key
+
+
+## Health Check
+### ALB TargetGroup
+albHealthCheckPath: /health
+
+### readinessprobe indicates whether the Container is ready to service requests.
+readinessProbe: {}
+#  httpHeaders: []
+#  #- name: Authorization
+#  #  value: Basic XYZ
+#  path: /health
+#  ### Number of seconds after the container has started before liveness probes are initiated
+#  initialDelaySeconds: 5
+#  ### Number of seconds after which the probe times out
+#  timeoutSeconds: 3
+#  ### How often (in seconds) to perform the probe
+#  periodSeconds: 10
+#  ### Minimum consecutive failures for the probe to be considered failed after having succeeded
+#  failureThreshold: 3
+#  ### Minimum consecutive successes for the probe to be considered successful after having failed
+#  successThreshold: 1
+
+### livenessprobe indicates whether the Container is running.
+livenessProbe: {}
+#  httpHeaders: []
+#  #- name: Authorization
+#  #  value: Basic XYZ
+#  path: /health
+#  ### Number of seconds after the container has started before liveness probes are initiated
+#  initialDelaySeconds: 5
+#  ### Number of seconds after which the probe times out
+#  timeoutSeconds: 3
+#  ### How often (in seconds) to perform the probe
+#  periodSeconds: 10
+#  ### Minimum consecutive failures for the probe to be considered failed after having succeeded
+#  failureThreshold: 3
+#  ### Minimum consecutive successes for the probe to be considered successful after having failed
+#  successThreshold: 1
+
+
+## HPA (Horizontal Pod Autoscaler)
+hpa: {}
+  #apiVersionCustomDeployment: extensions/v1beta1
+  ### max number pods
+  #maxReplicas: 10
+  ### Scaling metric type
+  ## currently possible to scale by "cpu", "memory", "requests_per_second", "requests_latency", jvm_memory_heap_used", "jvm_gc_pause_seconds" or "rabbitmq_queue_messages_ready"
+  #scalingBy: cpu
+  ### Threshold 
+  ## percentage unit considered for cpu or memory
+  ## e.g.: 80 = 80%
+  #targetAverage: 80
+  ## milli-unit considered for requests_per_second, jvm_memory_heap_used or jvm_gc_pause_seconds
+  ## e.g.: 1 request per second = 1000m
+  ## e.g.: 1 second request latency = 1000m
+  ## e.g.: 70% memory heap utilization = 70000m
+  ## e.g.: 1 second garber collection pause = 1000m
+  #targetAverage: 70000m
+  ## short unit considered for rabbitmq_queue_messages_ready
+  ## e.g.: 100 = 100 messages
+  #targetAverage: 100
+  #rabbitService: rabbitmq-prod-rabbitmq-ha
+  #rabbitQueue: queue-name
+
+
+## Annotations
+annotations: []
+
+## InitContainers
+initContainers: []
+
+## Volumes
+volumes: []
+  # - name: sensitive-config
+  #   secret:
+  #     secretName: app-name
+
+## Volume mounts
+volumeMounts: []
+  # - name: sensitive-config
+  #   mountPath: "/sensitive-config"
+  #   readOnly: true
+

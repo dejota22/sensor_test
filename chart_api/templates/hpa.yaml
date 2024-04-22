@@ -1,0 +1,45 @@
+{{- if .Values.hpa }}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
+  minReplicas: {{ .Values.minReplicas }}
+  scaleTargetRef:
+{{- if not .Values.hpa.apiVersionCustomDeployment }}
+    apiVersion: apps/v1
+{{- else }}
+    apiVersion: {{ .Values.hpa.apiVersionCustomDeployment }}
+{{- end }}
+    kind: Deployment
+    name: {{ .Release.Name }}
+  metrics:
+  {{- if or (eq .Values.hpa.scalingBy "cpu") (eq .Values.hpa.scalingBy "memory") }}
+  - type: Resource
+    resource:
+      name: {{ .Values.hpa.scalingBy }}
+      targetAverageUtilization: {{ .Values.hpa.targetAverage }}
+  {{- else if or (eq .Values.hpa.scalingBy  "requests_per_second") (eq .Values.hpa.scalingBy  "requests_latency") (eq .Values.hpa.scalingBy  "jvm_memory_heap_used") (eq .Values.hpa.scalingBy  "jvm_gc_pause_seconds") }}
+  - type: Pods
+    pods:
+      metricName: {{ .Values.hpa.scalingBy }}
+      targetAverageValue: "{{ .Values.hpa.targetAverage }}"
+   {{- else if eq .Values.hpa.scalingBy  "rabbitmq_queue_messages_ready" }}
+  - type: External
+    external:
+      metricName: rabbitmq_queue_messages_ready
+      metricSelector:
+        matchLabels:
+          service: {{ .Values.hpa.rabbitService }}
+          queue: {{ .Values.hpa.rabbitQueue }}
+          self: "1"
+      targetValue: "{{ .Values.hpa.targetAverage }}"
+  {{- end }}
+{{- end }}

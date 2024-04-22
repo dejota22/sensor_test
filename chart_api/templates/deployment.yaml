@@ -1,0 +1,152 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.minReplicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+        revision: {{ .Release.Revision|quote }}
+      annotations:
+{{- if .Values.arnIAMrole }}
+        iam.amazonaws.com/role: "{{ .Values.arnIAMrole }}"
+{{- end }}
+{{- if .Values.annotations }}
+{{ toYaml .Values.annotations | indent 8 }}
+{{- end }}
+    spec:
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+{{- if eq .Values.podAntiAffinity "hard" }}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: "kubernetes.io/hostname"
+              labelSelector:
+                matchLabels:
+                  app: {{ .Release.Name }}
+{{- else if eq .Values.podAntiAffinity "soft" }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    app: {{ .Release.Name }}
+{{- end }}
+{{- if .Values.initContainers }}
+      initContainers:
+{{ toYaml .Values.initContainers | indent 6 }}
+{{- end }}
+      containers:
+      - name: {{ .Release.Name }}
+        ports:
+        - name: application
+          containerPort: {{ .Values.appPort }}
+{{- if .Values.appJava }}
+        - name: monitoring
+          containerPort: 4444
+{{- end }}
+{{- if not .Values.image.repository }}
+        image: "039138080420.dkr.ecr.sa-east-1.amazonaws.com/{{ .Release.Name }}:{{ .Values.image.tag }}"
+{{- else }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+{{- end }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{- if .Values.customCommandApp }}
+        command:
+{{ toYaml .Values.customCommandApp | indent 8 }}
+{{- end }}
+{{- if .Values.customArgsApp }}
+        args:
+{{ toYaml .Values.customArgsApp | indent 8 }}
+{{- end }}
+{{- if .Values.readinessProbe }}
+        readinessProbe:
+          httpGet:
+{{- if .Values.readinessProbe.httpHeaders }}
+            httpHeaders:
+{{ toYaml .Values.readinessProbe.httpHeaders | indent 14 }}
+{{- end }}
+            path: {{ .Values.readinessProbe.path }}
+{{- if .Values.appJava }}
+            port: 4444
+{{- else }}
+            port: {{ .Values.appPort }}
+{{- end }}
+            scheme: HTTP
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          successThreshold: {{ .Values.readinessProbe.successThreshold }}
+{{- end }}
+{{- if .Values.livenessProbe }}
+        livenessProbe:
+          httpGet:
+{{- if .Values.livenessProbe.httpHeaders }}
+            httpHeaders:
+{{ toYaml .Values.livenessProbe.httpHeaders | indent 14 }}
+{{- end }}
+            path: {{ .Values.livenessProbe.path }}
+{{- if .Values.appJava }}
+            port: 4444
+{{- else }}
+            port: {{ .Values.appPort }}
+{{- end }}
+            scheme: HTTP
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          successThreshold: {{ .Values.livenessProbe.successThreshold }}
+{{- end }}
+{{- if .Values.resources }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+{{- end }}
+
+        envFrom:
+          - secretRef:
+              name: {{ .Release.Name }}-app-secret
+{{- if .Values.envFrom }}
+{{ toYaml .Values.envFrom | indent 10 }}
+{{- end }}
+        
+        env:
+          - name: ENVIRONMENT
+            value: {{ .Values.environment | quote }}
+{{- if .Values.extraEnv }}
+{{ toYaml .Values.extraEnv | indent 10 }}
+{{- end }}
+        
+        volumeMounts:
+{{- if .Values.volumeMounts }}
+{{ toYaml .Values.volumeMounts | indent 8 }}
+{{- end }}
+
+{{- if .Values.image.pullSecret }}
+      imagePullSecrets: 
+        - name: {{ .Values.image.pullSecret }}
+{{- end }}
+
+      volumes:
+{{- if .Values.volumes }}
+{{ toYaml .Values.volumes | indent 6 }}
+{{- end }}

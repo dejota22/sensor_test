@@ -23,14 +23,14 @@ Certifique-se de ter o Docker instalado em sua máquina. Você pode baixar e ins
 3. Construa as imagens Docker para SensorWeb e SensorApi:
 
     ```bash
-    docker build -t sensorweb -f Dockerfile.sensorweb .
-    docker build -t sensorapi -f Dockerfile.sensorapi .
+    docker build -t sensorweb -f Dockerfile.sensorweb . --build-arg ENV_KEY=hlg
+    docker build -t sensorapi -f Dockerfile.sensorapi . --build-arg ENV_KEY=hlg
     ```
 
 4. Execute os contêineres:
 
     ```bash
-    docker run -d -p 8090:80 sensorweb
+    docker run -d -p 8090:80 sensorweb 
     docker run -d -p 8081:80 sensorapi
     ```
 
